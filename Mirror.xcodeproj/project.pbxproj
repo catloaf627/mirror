@@ -105,13 +105,13 @@
 			path = MirrorProfile;
 			sourceTree = "<group>";
 		};
-		4A379B3E28E0379E00785CAE /* MirrorColors */ = {
+		4A379B3E28E0379E00785CAE /* MirrorUI */ = {
 			isa = PBXGroup;
 			children = (
 				4A379B3F28E0381A00785CAE /* UIColor+MirrorColor.h */,
 				4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */,
 			);
-			path = MirrorColors;
+			path = MirrorUI;
 			sourceTree = "<group>";
 		};
 		4AFB779428DF4A380064CBCA = {
@@ -137,7 +137,7 @@
 			children = (
 				4AFB77B128DF4A3B0064CBCA /* Info.plist */,
 				4AFB77AC28DF4A3B0064CBCA /* Assets.xcassets */,
-				4A379B3E28E0379E00785CAE /* MirrorColors */,
+				4A379B3E28E0379E00785CAE /* MirrorUI */,
 				4A379B3928E0340600785CAE /* MirrorSetups */,
 				4A379B3B28E0370400785CAE /* MirrorTimeTracker */,
 				4A379B3C28E0371700785CAE /* MirrorHistory */,

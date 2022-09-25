@@ -7,8 +7,9 @@
 
 #import "TimeTrackerViewController.h"
 #import "UIColor+MirrorColor.h"
+#import <Masonry/Masonry.h>
 
-@interface TimeTrackerViewController ()
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
 @end
 
@@ -16,7 +17,38 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self  p_setupUI];
+}
+
+- (void)p_setupUI
+{
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+    
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"TimeTrackerCollectionViewCell"];
+    collectionView.delegate = self;
+    collectionView.dataSource = self;
+    collectionView.backgroundColor = self.view.backgroundColor;
+    [self.view addSubview:collectionView];
+    [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.view).offset(kNavBarAndStatusBarHeight);
+            make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
+    }];
+    
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TimeTrackerCollectionViewCell" forIndexPath:indexPath];
+    cell.backgroundColor = [UIColor greenColor];
+    return cell;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return 300;
 }
 
 
