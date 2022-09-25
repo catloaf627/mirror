@@ -6,6 +6,7 @@
 //
 
 #import "TimeTrackerViewController.h"
+#import "UIColor+MirrorColor.h"
 
 @interface TimeTrackerViewController ()
 
@@ -15,7 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
 }
 
 

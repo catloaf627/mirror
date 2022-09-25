@@ -6,6 +6,7 @@
 //
 
 #import "ProfileViewController.h"
+#import "UIColor+MirrorColor.h"
 
 @interface ProfileViewController ()
 
@@ -15,7 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
 }
 
 

@@ -7,15 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */; };
+		4A379B4428E03D0B00785CAE /* TabbarControllerGenerater.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4328E03D0B00785CAE /* TabbarControllerGenerater.m */; };
 		4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */; };
 		4AE4171C28DF614A008A6A18 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171B28DF614A008A6A18 /* HistoryViewController.m */; };
 		4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* ProfileViewController.m */; };
-		4AE4172728DF62C9008A6A18 /* history_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4172128DF62C9008A6A18 /* history_selected.png */; };
-		4AE4172828DF62C9008A6A18 /* profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4172228DF62C9008A6A18 /* profile.png */; };
-		4AE4172928DF62C9008A6A18 /* history.png in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4172328DF62C9008A6A18 /* history.png */; };
-		4AE4172A28DF62C9008A6A18 /* profile_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4172428DF62C9008A6A18 /* profile_selected.png */; };
-		4AE4172B28DF62C9008A6A18 /* timetracker_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4172528DF62C9008A6A18 /* timetracker_selected.png */; };
-		4AE4172C28DF62C9008A6A18 /* timetracker.png in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4172628DF62C9008A6A18 /* timetracker.png */; };
 		4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A128DF4A380064CBCA /* AppDelegate.m */; };
 		4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A428DF4A380064CBCA /* SceneDelegate.m */; };
 		4AFB77AD28DF4A3B0064CBCA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AFB77AC28DF4A3B0064CBCA /* Assets.xcassets */; };
@@ -24,18 +20,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4A379B3F28E0381A00785CAE /* UIColor+MirrorColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+MirrorColor.h"; sourceTree = "<group>"; };
+		4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MirrorColor.m"; sourceTree = "<group>"; };
+		4A379B4228E03D0B00785CAE /* TabbarControllerGenerater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabbarControllerGenerater.h; sourceTree = "<group>"; };
+		4A379B4328E03D0B00785CAE /* TabbarControllerGenerater.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabbarControllerGenerater.m; sourceTree = "<group>"; };
 		4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerViewController.h; sourceTree = "<group>"; };
 		4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerViewController.m; sourceTree = "<group>"; };
 		4AE4171A28DF614A008A6A18 /* HistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
 		4AE4171B28DF614A008A6A18 /* HistoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
 		4AE4171D28DF6155008A6A18 /* ProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		4AE4171E28DF6155008A6A18 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
-		4AE4172128DF62C9008A6A18 /* history_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = history_selected.png; sourceTree = "<group>"; };
-		4AE4172228DF62C9008A6A18 /* profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile.png; sourceTree = "<group>"; };
-		4AE4172328DF62C9008A6A18 /* history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = history.png; sourceTree = "<group>"; };
-		4AE4172428DF62C9008A6A18 /* profile_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_selected.png; sourceTree = "<group>"; };
-		4AE4172528DF62C9008A6A18 /* timetracker_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timetracker_selected.png; sourceTree = "<group>"; };
-		4AE4172628DF62C9008A6A18 /* timetracker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = timetracker.png; sourceTree = "<group>"; };
 		4AFB779D28DF4A380064CBCA /* Mirror.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mirror.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AFB77A028DF4A380064CBCA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4AFB77A128DF4A380064CBCA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -70,17 +64,54 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		4AE4172028DF62B7008A6A18 /* MirrorAssets */ = {
+		4A379B3928E0340600785CAE /* MirrorSetups */ = {
 			isa = PBXGroup;
 			children = (
-				4AE4172128DF62C9008A6A18 /* history_selected.png */,
-				4AE4172328DF62C9008A6A18 /* history.png */,
-				4AE4172428DF62C9008A6A18 /* profile_selected.png */,
-				4AE4172228DF62C9008A6A18 /* profile.png */,
-				4AE4172528DF62C9008A6A18 /* timetracker_selected.png */,
-				4AE4172628DF62C9008A6A18 /* timetracker.png */,
+				4AFB77B228DF4A3B0064CBCA /* main.m */,
+				4AFB77A028DF4A380064CBCA /* AppDelegate.h */,
+				4AFB77A128DF4A380064CBCA /* AppDelegate.m */,
+				4AFB77A328DF4A380064CBCA /* SceneDelegate.h */,
+				4AFB77A428DF4A380064CBCA /* SceneDelegate.m */,
+				4A379B4228E03D0B00785CAE /* TabbarControllerGenerater.h */,
+				4A379B4328E03D0B00785CAE /* TabbarControllerGenerater.m */,
 			);
-			path = MirrorAssets;
+			path = MirrorSetups;
+			sourceTree = "<group>";
+		};
+		4A379B3B28E0370400785CAE /* MirrorTimeTracker */ = {
+			isa = PBXGroup;
+			children = (
+				4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */,
+				4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */,
+			);
+			path = MirrorTimeTracker;
+			sourceTree = "<group>";
+		};
+		4A379B3C28E0371700785CAE /* MirrorHistory */ = {
+			isa = PBXGroup;
+			children = (
+				4AE4171A28DF614A008A6A18 /* HistoryViewController.h */,
+				4AE4171B28DF614A008A6A18 /* HistoryViewController.m */,
+			);
+			path = MirrorHistory;
+			sourceTree = "<group>";
+		};
+		4A379B3D28E0372700785CAE /* MirrorProfile */ = {
+			isa = PBXGroup;
+			children = (
+				4AE4171D28DF6155008A6A18 /* ProfileViewController.h */,
+				4AE4171E28DF6155008A6A18 /* ProfileViewController.m */,
+			);
+			path = MirrorProfile;
+			sourceTree = "<group>";
+		};
+		4A379B3E28E0379E00785CAE /* MirrorColors */ = {
+			isa = PBXGroup;
+			children = (
+				4A379B3F28E0381A00785CAE /* UIColor+MirrorColor.h */,
+				4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */,
+			);
+			path = MirrorColors;
 			sourceTree = "<group>";
 		};
 		4AFB779428DF4A380064CBCA = {
@@ -104,20 +135,13 @@
 		4AFB779F28DF4A380064CBCA /* Mirror */ = {
 			isa = PBXGroup;
 			children = (
-				4AE4172028DF62B7008A6A18 /* MirrorAssets */,
-				4AFB77A028DF4A380064CBCA /* AppDelegate.h */,
-				4AFB77A128DF4A380064CBCA /* AppDelegate.m */,
-				4AFB77A328DF4A380064CBCA /* SceneDelegate.h */,
-				4AFB77A428DF4A380064CBCA /* SceneDelegate.m */,
-				4AFB77AC28DF4A3B0064CBCA /* Assets.xcassets */,
 				4AFB77B128DF4A3B0064CBCA /* Info.plist */,
-				4AFB77B228DF4A3B0064CBCA /* main.m */,
-				4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */,
-				4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */,
-				4AE4171A28DF614A008A6A18 /* HistoryViewController.h */,
-				4AE4171B28DF614A008A6A18 /* HistoryViewController.m */,
-				4AE4171D28DF6155008A6A18 /* ProfileViewController.h */,
-				4AE4171E28DF6155008A6A18 /* ProfileViewController.m */,
+				4AFB77AC28DF4A3B0064CBCA /* Assets.xcassets */,
+				4A379B3E28E0379E00785CAE /* MirrorColors */,
+				4A379B3928E0340600785CAE /* MirrorSetups */,
+				4A379B3B28E0370400785CAE /* MirrorTimeTracker */,
+				4A379B3C28E0371700785CAE /* MirrorHistory */,
+				4A379B3D28E0372700785CAE /* MirrorProfile */,
 			);
 			path = Mirror;
 			sourceTree = "<group>";
@@ -188,13 +212,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4AE4172928DF62C9008A6A18 /* history.png in Resources */,
 				4AFB77AD28DF4A3B0064CBCA /* Assets.xcassets in Resources */,
-				4AE4172828DF62C9008A6A18 /* profile.png in Resources */,
-				4AE4172A28DF62C9008A6A18 /* profile_selected.png in Resources */,
-				4AE4172C28DF62C9008A6A18 /* timetracker.png in Resources */,
-				4AE4172B28DF62C9008A6A18 /* timetracker_selected.png in Resources */,
-				4AE4172728DF62C9008A6A18 /* history_selected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,6 +271,8 @@
 				4AE4171C28DF614A008A6A18 /* HistoryViewController.m in Sources */,
 				4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */,
 				4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */,
+				4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */,
+				4A379B4428E03D0B00785CAE /* TabbarControllerGenerater.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
