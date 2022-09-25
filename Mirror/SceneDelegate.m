@@ -7,7 +7,11 @@
 
 #import "SceneDelegate.h"
 
-@interface SceneDelegate ()
+#import "TimeTrackerViewController.h"
+#import "HistoryViewController.h"
+#import "ProfileViewController.h"
+
+@interface SceneDelegate ()<UITabBarControllerDelegate>
 
 @end
 
@@ -15,9 +19,13 @@
 
 
 - (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
-    // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-    // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-    // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+    // 由于删除了storyboard，所以需要自己手动创建UIWindow
+    // 类似于iPad可以分屏，所以有多个scene
+    UIWindowScene *windowScene = (UIWindowScene *)scene;
+    _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
+    _window.rootViewController = [self mirrorRootVC];
+    [_window makeKeyAndVisible];
+    _window.windowScene = windowScene;
 }
 
 
@@ -51,6 +59,58 @@
     // Called as the scene transitions from the foreground to the background.
     // Use this method to save data, release shared resources, and store enough scene-specific state information
     // to restore the scene back to its current state.
+}
+
+- (UINavigationController *)mirrorRootVC
+{
+    TimeTrackerViewController *timeTrackerVC = [[TimeTrackerViewController alloc]init];
+    HistoryViewController *historyVC = [[HistoryViewController alloc]init];
+    ProfileViewController *profileVC = [[ProfileViewController alloc]init];
+    
+    //create a tabbar controller
+    UITabBarController *tabbarController  = [[UITabBarController alloc] init];
+    
+    //add 4 view controllers to tabbar controller
+    [tabbarController setViewControllers:@[profileVC, timeTrackerVC, historyVC]];
+    tabbarController.selectedIndex = 1;
+    tabbarController.tabBar.barTintColor = [UIColor whiteColor];
+    tabbarController.tabBar.backgroundImage = [UIImage new];
+    tabbarController.tabBar.shadowImage = [UIImage new];
+    [tabbarController.tabBar setSelectedImageTintColor:[UIColor blackColor]];
+    
+    
+    UITabBarItem *profileItem = [tabbarController.tabBar.items objectAtIndex:0];
+    [profileItem setTitle:@"Me"];
+    [profileItem setFinishedSelectedImage:[UIImage systemImageNamed:@"person.fill"] withFinishedUnselectedImage:[UIImage systemImageNamed:@"person"]];
+    [profileItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateSelected];
+    [profileItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
+    [profileItem imageInsets];
+    
+    UITabBarItem *timeTrackerItem = [tabbarController.tabBar.items objectAtIndex:1];
+    [timeTrackerItem setTitle:@"Start"];
+    [timeTrackerItem setFinishedSelectedImage:[UIImage systemImageNamed:@"clock.fill"] withFinishedUnselectedImage:[UIImage systemImageNamed:@"clock"]];
+    [timeTrackerItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateSelected];
+    [timeTrackerItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
+    [timeTrackerItem imageInsets];
+    
+
+    UITabBarItem *historyItem = [tabbarController.tabBar.items objectAtIndex:2];
+    [historyItem setTitle:@"Data"];
+    [historyItem setFinishedSelectedImage:[UIImage systemImageNamed:@"chart.bar.fill"] withFinishedUnselectedImage:[UIImage systemImageNamed:@"chart.bar"]];
+    [historyItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateSelected];
+    [historyItem setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} forState:UIControlStateNormal];
+    [historyItem imageInsets];
+    
+    
+    //@protovol <UITabBarControllerDelegate>
+    tabbarController.delegate = self;
+    
+    //init navigation controller with tabbar controller (nc needs a root view)
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tabbarController];
+    
+    [navigationController.navigationBar removeFromSuperview];
+    
+    return navigationController;
 }
 
 
