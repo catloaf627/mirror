@@ -8,6 +8,7 @@
 #import "TimeTrackerViewController.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
+#import "TimeTrackerTaskCollectionViewCell.h"
 
 @interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
 
@@ -26,7 +27,7 @@
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-    [collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"TimeTrackerCollectionViewCell"];
+    [collectionView registerClass:[TimeTrackerTaskCollectionViewCell class] forCellWithReuseIdentifier:@"TimeTrackerTaskCollectionViewCell"];
     collectionView.delegate = self;
     collectionView.dataSource = self;
     collectionView.backgroundColor = self.view.backgroundColor;
@@ -41,8 +42,7 @@
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TimeTrackerCollectionViewCell" forIndexPath:indexPath];
-    cell.backgroundColor = [UIColor greenColor];
+    TimeTrackerTaskCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TimeTrackerTaskCollectionViewCell" forIndexPath:indexPath];
     return cell;
 }
 

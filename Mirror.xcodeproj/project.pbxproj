@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		015564DE28E1A32E008AB06C /* TimeTrackerDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 015564DD28E1A32E008AB06C /* TimeTrackerDataManager.m */; };
+		015564E428E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */; };
+		015564E728E1A884008AB06C /* TimeTrackerTaskModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 015564E628E1A884008AB06C /* TimeTrackerTaskModel.m */; };
 		4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */; };
 		4A379B4428E03D0B00785CAE /* TabbarControllerGenerater.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4328E03D0B00785CAE /* TabbarControllerGenerater.m */; };
 		4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */; };
@@ -20,6 +23,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		015564DC28E1A32E008AB06C /* TimeTrackerDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerDataManager.h; sourceTree = "<group>"; };
+		015564DD28E1A32E008AB06C /* TimeTrackerDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerDataManager.m; sourceTree = "<group>"; };
+		015564E228E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerTaskCollectionViewCell.h; sourceTree = "<group>"; };
+		015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerTaskCollectionViewCell.m; sourceTree = "<group>"; };
+		015564E528E1A884008AB06C /* TimeTrackerTaskModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerTaskModel.h; sourceTree = "<group>"; };
+		015564E628E1A884008AB06C /* TimeTrackerTaskModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerTaskModel.m; sourceTree = "<group>"; };
 		4A379B3F28E0381A00785CAE /* UIColor+MirrorColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+MirrorColor.h"; sourceTree = "<group>"; };
 		4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MirrorColor.m"; sourceTree = "<group>"; };
 		4A379B4228E03D0B00785CAE /* TabbarControllerGenerater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabbarControllerGenerater.h; sourceTree = "<group>"; };
@@ -83,6 +92,12 @@
 			children = (
 				4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */,
 				4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */,
+				015564DC28E1A32E008AB06C /* TimeTrackerDataManager.h */,
+				015564DD28E1A32E008AB06C /* TimeTrackerDataManager.m */,
+				015564E228E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.h */,
+				015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */,
+				015564E528E1A884008AB06C /* TimeTrackerTaskModel.h */,
+				015564E628E1A884008AB06C /* TimeTrackerTaskModel.m */,
 			);
 			path = MirrorTimeTracker;
 			sourceTree = "<group>";
@@ -165,7 +180,7 @@
 				4AFB779928DF4A380064CBCA /* Sources */,
 				4AFB779A28DF4A380064CBCA /* Frameworks */,
 				4AFB779B28DF4A380064CBCA /* Resources */,
-				9F0BF9EAB63AFB9979BD8EE5 /* [CP] Embed Pods Frameworks */,
+				52E4E382364126EE8084D210 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -219,7 +234,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		9F0BF9EAB63AFB9979BD8EE5 /* [CP] Embed Pods Frameworks */ = {
+		52E4E382364126EE8084D210 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -268,11 +283,14 @@
 				4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4AFB77B328DF4A3B0064CBCA /* main.m in Sources */,
+				015564E728E1A884008AB06C /* TimeTrackerTaskModel.m in Sources */,
 				4AE4171C28DF614A008A6A18 /* HistoryViewController.m in Sources */,
 				4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */,
 				4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */,
 				4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */,
 				4A379B4428E03D0B00785CAE /* TabbarControllerGenerater.m in Sources */,
+				015564E428E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m in Sources */,
+				015564DE28E1A32E008AB06C /* TimeTrackerDataManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
