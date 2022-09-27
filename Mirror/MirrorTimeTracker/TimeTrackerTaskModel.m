@@ -10,12 +10,13 @@
 
 @implementation TimeTrackerTaskModel
 
-- (instancetype)initWithTitle:(NSString *)taskName color:(UIColor *)color
+- (instancetype)initWithTitle:(NSString *)taskName color:(UIColor *)color pulseColor:(UIColor *)pulseColor
 {
     self = [super init];
     if (self) {
         _taskName = taskName;
         _color = color;
+        _pulseColor = pulseColor;
         _timeInfo = [MirrorLanguage stringWithKey:@"tap_to_start" Language:MirrorLanguageTypeEnglish];
     }
     return self;

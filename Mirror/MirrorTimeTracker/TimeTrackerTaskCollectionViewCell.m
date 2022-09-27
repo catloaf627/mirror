@@ -14,6 +14,7 @@
 @property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *timeInfoLabel;
+@property (nonatomic, assign) BOOL shouldStopAnimation;
 
 @end
 
@@ -45,6 +46,37 @@
         make.top.mas_equalTo(self.taskNameLabel.mas_bottom).offset(8);
         make.centerX.mas_equalTo(self);
     }];
+}
+
+- (void)p_convertToColor:(UIColor *)color
+{
+    if (self.shouldStopAnimation) {
+        self.isAnimating = NO; //更新当前cell状态
+        return;
+    }
+    
+    [UIView animateKeyframesWithDuration:2.0  delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+        self.isAnimating = YES; //更新当前cell状态
+        self.contentView.backgroundColor = color;
+    } completion:^(BOOL finished) {
+        if (CGColorEqualToColor(self.contentView.backgroundColor.CGColor, self.taskModel.color.CGColor)) {
+            [self p_convertToColor:self.taskModel.pulseColor];
+        } else {
+            [self p_convertToColor:self.taskModel.color];
+        }
+    }];
+}
+
+- (void)didStartAnimation
+{
+    self.shouldStopAnimation = NO;
+    [self p_convertToColor: self.taskModel.pulseColor];
+}
+
+- (void)didStopAnimation
+{
+    self.shouldStopAnimation = YES;
+    self.contentView.backgroundColor = self.taskModel.color;
 }
 
 #pragma mark - Getters

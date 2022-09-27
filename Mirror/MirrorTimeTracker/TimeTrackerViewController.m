@@ -63,6 +63,16 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 # pragma mark - Collection view delegate
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    TimeTrackerTaskCollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    if (cell.isAnimating) {
+        [cell didStopAnimation];
+    } else {
+        [cell didStartAnimation];
+    }
+}
+
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TimeTrackerTaskCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TimeTrackerTaskCollectionViewCell" forIndexPath:indexPath];
