@@ -10,7 +10,12 @@
 #import <Masonry/Masonry.h>
 #import "TimeTrackerTaskCollectionViewCell.h"
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource>
+static CGFloat const kCellSpacing = 16; // cell之间的上下间距
+static CGFloat const kCollectionViewPadding = 20; // 左右留白
+
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+
+@property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
 
@@ -24,21 +29,34 @@
 - (void)p_setupUI
 {
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-    
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
-    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-    [collectionView registerClass:[TimeTrackerTaskCollectionViewCell class] forCellWithReuseIdentifier:@"TimeTrackerTaskCollectionViewCell"];
-    collectionView.delegate = self;
-    collectionView.dataSource = self;
-    collectionView.backgroundColor = self.view.backgroundColor;
-    [self.view addSubview:collectionView];
-    [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.view);
+    [self.view addSubview:self.collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
+            make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
             make.top.mas_equalTo(self.view).offset(kNavBarAndStatusBarHeight);
             make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
-    
 }
+
+#pragma mark - Getters
+- (UICollectionView *)collectionView
+{
+    if (!_collectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.backgroundColor = self.view.backgroundColor;
+        
+        [_collectionView registerClass:[TimeTrackerTaskCollectionViewCell class] forCellWithReuseIdentifier:@"TimeTrackerTaskCollectionViewCell"];
+        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
+        
+    }
+    return _collectionView;
+}
+
+# pragma mark - Collection view delegate
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -48,7 +66,50 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 300;
+    return 27;
+}
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionReusableView *theView;
+    if (kind == UICollectionElementKindSectionHeader) {
+        theView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
+    }
+    
+    if (kind == UICollectionElementKindSectionFooter) {
+        theView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer" forIndexPath:indexPath];
+    }
+    
+    if (indexPath.section == 0) {
+        return theView;
+    } else {
+        return UICollectionReusableView.new;
+    }
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake((kScreenWidth - kCollectionViewPadding - kCollectionViewPadding -kCellSpacing)/2, 90);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(kScreenWidth, 0);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
+{
+    return CGSizeMake(kScreenWidth, 40);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    return kCellSpacing;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return kCellSpacing;
 }
 
 

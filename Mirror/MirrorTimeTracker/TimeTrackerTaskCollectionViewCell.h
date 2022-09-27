@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static CGFloat const kInterspacing = 16;
+
 @interface TimeTrackerTaskCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
