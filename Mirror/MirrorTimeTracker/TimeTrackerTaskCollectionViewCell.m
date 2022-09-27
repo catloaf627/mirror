@@ -7,9 +7,11 @@
 
 #import "TimeTrackerTaskCollectionViewCell.h"
 #import <Masonry/Masonry.h>
+#import "UIColor+MirrorColor.h"
 
 @interface TimeTrackerTaskCollectionViewCell ()
 
+@property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *timeInfoLabel;
 
@@ -17,25 +19,30 @@
 
 @implementation TimeTrackerTaskCollectionViewCell
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self p_setupUI];
-    }
-    return self;
-}
-
 + (NSString *)identifier
 {
     return NSStringFromClass(self.class);
 }
 
+- (void)configWithModel:(TimeTrackerTaskModel *)taskModel
+{
+    self.taskModel = taskModel;
+    self.contentView.backgroundColor = taskModel.color;
+    [self p_setupUI];
+}
+
 - (void)p_setupUI
 {
-    self.contentView.backgroundColor = [UIColor colorWithRed:255/255.0 green:245/255.0 blue:250/255.0 alpha:1];
+    self.contentView.backgroundColor = self.taskModel.color;
     [self.contentView addSubview:self.taskNameLabel];
     [self.contentView addSubview:self.timeInfoLabel];
+    [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.centerY.mas_equalTo(self);
+    }];
+    [self.timeInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.taskNameLabel.mas_bottom);
+        make.centerX.mas_equalTo(self);
+    }];
 }
 
 #pragma mark - Getters
@@ -44,7 +51,8 @@
 {
     if (!_taskNameLabel) {
         _taskNameLabel = [[UILabel alloc] init];
-
+        _taskNameLabel.text = self.taskModel.taskName;
+        _taskNameLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
     }
     return _taskNameLabel;
 }
@@ -53,7 +61,8 @@
 {
     if (!_timeInfoLabel) {
         _timeInfoLabel = [[UILabel alloc] init];
-
+        _timeInfoLabel.text = self.taskModel.timeInfo;
+        _timeInfoLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
     }
     return _timeInfoLabel;
 }

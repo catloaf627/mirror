@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *timeInfo;
 @property (nonatomic, strong) UIColor *color;
 
+- (instancetype)initWithTitle:(NSString *)taskName color:(UIColor *)color;
 - (void)didStartTask;
 - (void)didStopTask;
 

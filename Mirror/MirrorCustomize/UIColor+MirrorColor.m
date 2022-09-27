@@ -13,12 +13,13 @@
 {
     switch (colorType) {
         case MirrorColorTypeBackground:
-            return [UIColor whiteColor]; //gizmo 暂时写死
-        case MirrorColorTypeIconText:
-            return [UIColor grayColor]; //gizmo 暂时写死
-        case MirrorColorTypeIconTextHightlight:
-            return [UIColor blackColor]; //gizmo 暂时写死
-            
+            return [UIColor whiteColor];
+        case MirrorColorTypeTabbarIconText:
+            return [UIColor grayColor];
+        case MirrorColorTypeTabbarIconTextHightlight:
+            return [UIColor blackColor];
+        case MirrorColorTypeText:
+            return [UIColor blackColor];
         default:
             break;
     }

@@ -9,6 +9,8 @@
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "TimeTrackerTaskCollectionViewCell.h"
+#import "TimeTrackerDataManager.h"
+#import "MirrorDefaultDataManager.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -16,6 +18,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 @interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) TimeTrackerDataManager *dataManager;
 
 @end
 
@@ -23,6 +26,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.dataManager.tasks = [[MirrorDefaultDataManager sharedInstance] mirrorDefaultTimeTrackerData]; //gizmo 暂时写死
     [self  p_setupUI];
 }
 
@@ -61,12 +65,15 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TimeTrackerTaskCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TimeTrackerTaskCollectionViewCell" forIndexPath:indexPath];
+    TimeTrackerTaskModel *taskModel = self.dataManager.tasks[indexPath.item];
+    [cell configWithModel:taskModel];
+    
     return cell;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 27;
+    return self.dataManager.tasks.count;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
@@ -110,6 +117,15 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return kCellSpacing;
+}
+
+#pragma mark - Getters
+- (TimeTrackerDataManager *)dataManager
+{
+    if (!_dataManager) {
+        _dataManager = [[TimeTrackerDataManager alloc]init];
+    }
+    return _dataManager;
 }
 
 
