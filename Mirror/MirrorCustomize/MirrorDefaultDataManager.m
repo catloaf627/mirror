@@ -6,6 +6,7 @@
 //
 
 #import "MirrorDefaultDataManager.h"
+#import "UIColor+MirrorColor.h"
 
 @implementation MirrorDefaultDataManager
 
@@ -22,9 +23,13 @@
 - (NSArray<TimeTrackerTaskModel *> *)mirrorDefaultTimeTrackerData
 {
     NSArray<TimeTrackerTaskModel *> *tasks = @[
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Study" color:[UIColor yellowColor]],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Sleep" color:[UIColor blueColor]],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Social" color:[UIColor systemPinkColor]],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Pink" color:[UIColor mirrorColorNamed:MirrorColorTypeCellPink]],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Orange" color:[UIColor mirrorColorNamed:MirrorColorTypeCellOrange]],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Yellow" color:[UIColor mirrorColorNamed:MirrorColorTypeCellYellow]],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Green" color:[UIColor mirrorColorNamed:MirrorColorTypeCellGreen]],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Blue" color:[UIColor mirrorColorNamed:MirrorColorTypeCellBlue]],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Purple" color:[UIColor mirrorColorNamed:MirrorColorTypeCellPurple]],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Gray" color:[UIColor mirrorColorNamed:MirrorColorTypeCellGray]],
     ];
     return tasks;
 }

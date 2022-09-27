@@ -10,10 +10,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, MirrorColorType) {
-    MirrorColorTypeBackground,         // 主背景色
+    MirrorColorTypeBackground,               // 主背景色
     MirrorColorTypeTabbarIconText,           // tabbar item 未选中的颜色
     MirrorColorTypeTabbarIconTextHightlight, // tabbar item 被选中的颜色
-    MirrorColorTypeText,
+    MirrorColorTypeText,                     // 文字颜色
+    MirrorColorTypeCellPink,
+    MirrorColorTypeCellOrange,
+    MirrorColorTypeCellYellow,
+    MirrorColorTypeCellGreen,
+    MirrorColorTypeCellBlue,
+    MirrorColorTypeCellPurple,
+    MirrorColorTypeCellGray,
 };
 
 @interface UIColor (MirrorColor)

@@ -34,6 +34,7 @@
 - (void)p_setupUI
 {
     self.contentView.backgroundColor = self.taskModel.color;
+    self.contentView.layer.cornerRadius = 14;
     [self.contentView addSubview:self.taskNameLabel];
     [self.contentView addSubview:self.timeInfoLabel];
     [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
