@@ -12,6 +12,7 @@
 #import "ProfileViewController.h"
 
 #import "UIColor+MirrorColor.h"
+#import "MirrorLanguage.h"
 
 @implementation TabbarControllerGenerater
 
@@ -31,11 +32,13 @@
     tabbarController.tabBar.backgroundImage = [UIImage new];
     tabbarController.tabBar.shadowImage = [UIImage new];
     
-    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:@"Me" imageName:@"person" selectedImageName:@"person.fill"];
+    MirrorLanguageType language = MirrorLanguageTypeChinese; //gizmo 暂时写死
     
-    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:@"Start" imageName:@"clock" selectedImageName:@"clock.fill"];
+    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"me" Language:language] imageName:@"person" selectedImageName:@"person.fill"];
     
-    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:@"Data" imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
+    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"start" Language:language] imageName:@"clock" selectedImageName:@"clock.fill"];
+    
+    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"data" Language:language] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
     
     return tabbarController;
 }

@@ -13,11 +13,11 @@
 {
     switch (colorType) {
         case MirrorColorTypeBackground:
-            return [UIColor whiteColor];
+            return [UIColor whiteColor]; //gizmo 暂时写死
         case MirrorColorTypeIconText:
-            return [UIColor grayColor];
+            return [UIColor grayColor]; //gizmo 暂时写死
         case MirrorColorTypeIconTextHightlight:
-            return [UIColor blackColor];
+            return [UIColor blackColor]; //gizmo 暂时写死
             
         default:
             break;

@@ -33,7 +33,7 @@
 
 - (void)p_setupUI
 {
-    self.contentView.backgroundColor = [UIColor colorWithRed:245/255.0 green:218/255.0 blue:223/255.0 alpha:1];
+    self.contentView.backgroundColor = [UIColor colorWithRed:255/255.0 green:245/255.0 blue:250/255.0 alpha:1];
     [self.contentView addSubview:self.taskNameLabel];
     [self.contentView addSubview:self.timeInfoLabel];
 }
