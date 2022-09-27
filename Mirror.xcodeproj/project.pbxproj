@@ -14,6 +14,7 @@
 		4A379B4428E03D0B00785CAE /* TabbarControllerGenerater.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4328E03D0B00785CAE /* TabbarControllerGenerater.m */; };
 		4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4628E2F33B00785CAE /* MirrorLanguage.m */; };
 		4A379B4B28E2F73A00785CAE /* MirrorDefaultDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4A28E2F73A00785CAE /* MirrorDefaultDataManager.m */; };
+		4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B5328E31BD200785CAE /* MirrorMacro.m */; };
 		4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */; };
 		4AE4171C28DF614A008A6A18 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171B28DF614A008A6A18 /* HistoryViewController.m */; };
 		4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* ProfileViewController.m */; };
@@ -39,6 +40,8 @@
 		4A379B4628E2F33B00785CAE /* MirrorLanguage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorLanguage.m; sourceTree = "<group>"; };
 		4A379B4928E2F73A00785CAE /* MirrorDefaultDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorDefaultDataManager.h; sourceTree = "<group>"; };
 		4A379B4A28E2F73A00785CAE /* MirrorDefaultDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorDefaultDataManager.m; sourceTree = "<group>"; };
+		4A379B5228E31BD200785CAE /* MirrorMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorMacro.h; sourceTree = "<group>"; };
+		4A379B5328E31BD200785CAE /* MirrorMacro.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorMacro.m; sourceTree = "<group>"; };
 		4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerViewController.h; sourceTree = "<group>"; };
 		4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerViewController.m; sourceTree = "<group>"; };
 		4AE4171A28DF614A008A6A18 /* HistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
@@ -135,6 +138,8 @@
 				4A379B4628E2F33B00785CAE /* MirrorLanguage.m */,
 				4A379B4928E2F73A00785CAE /* MirrorDefaultDataManager.h */,
 				4A379B4A28E2F73A00785CAE /* MirrorDefaultDataManager.m */,
+				4A379B5228E31BD200785CAE /* MirrorMacro.h */,
+				4A379B5328E31BD200785CAE /* MirrorMacro.m */,
 			);
 			path = MirrorCustomize;
 			sourceTree = "<group>";
@@ -301,6 +306,7 @@
 				4A379B4B28E2F73A00785CAE /* MirrorDefaultDataManager.m in Sources */,
 				4A379B4428E03D0B00785CAE /* TabbarControllerGenerater.m in Sources */,
 				015564E428E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m in Sources */,
+				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,
 				4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */,
 				015564DE28E1A32E008AB06C /* TimeTrackerDataManager.m in Sources */,
 			);
