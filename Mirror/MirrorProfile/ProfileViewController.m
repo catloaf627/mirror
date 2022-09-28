@@ -13,6 +13,7 @@
 #import "AvatarCollectionViewCell.h"
 #import "ThemeCollectionViewCell.h"
 #import "LanguageCollectionViewCell.h"
+#import "TabbarControllerGenerater.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -31,6 +32,27 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 @end
 
 @implementation ProfileViewController
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)reloadVC
+{
+    self.collectionView = nil;
+    [TabbarControllerGenerater updateMeTabItemWithTabController:self.tabBarController];
+    [self viewDidLoad];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -52,6 +74,20 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 
 # pragma mark - Collection view delegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.item >= self.dataSource.count) {
+        return;
+    } else if (indexPath.item == MirrorSettingTypeAvatar) {
+        // glick avatar cell
+    } else if (indexPath.item == MirrorSettingTypeTheme) {
+        // click theme
+        [UIColor switchTheme];
+    }  else if (indexPath.item == MirrorSettingTypeLanguage) {
+        
+    }
+}
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {

@@ -28,19 +28,33 @@
     //add 4 view controllers to tabbar controller
     [tabbarController setViewControllers:@[profileVC, timeTrackerVC, historyVC]];
     tabbarController.selectedIndex = 1;
-    tabbarController.tabBar.barTintColor = [UIColor whiteColor];
+    tabbarController.tabBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     tabbarController.tabBar.backgroundImage = [UIImage new];
     tabbarController.tabBar.shadowImage = [UIImage new];
     
-    MirrorLanguageType language = MirrorLanguageTypeChinese; //gizmo 暂时写死
-    
-    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"me" Language:language] imageName:@"person" selectedImageName:@"person.fill"];
-    
-    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"start" Language:language] imageName:@"clock" selectedImageName:@"clock.fill"];
-    
-    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"data" Language:language] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
+    [TabbarControllerGenerater updateMeTabItemWithTabController:tabbarController];
+    [TabbarControllerGenerater updateTimeTabItemWithTabController:tabbarController];
+    [TabbarControllerGenerater updateHistoryTabItemWithTabController:tabbarController];
     
     return tabbarController;
+}
+
++ (void)updateMeTabItemWithTabController:(UITabBarController *)tabbarController
+{
+    MirrorLanguageType language = MirrorLanguageTypeChinese; //gizmo 暂时写死
+    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"me" Language:language] imageName:@"person" selectedImageName:@"person.fill"];
+}
+
++ (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController
+{
+    MirrorLanguageType language = MirrorLanguageTypeChinese; //gizmo 暂时写死
+    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"start" Language:language] imageName:@"clock" selectedImageName:@"clock.fill"];
+}
+
++ (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
+{
+    MirrorLanguageType language = MirrorLanguageTypeChinese; //gizmo 暂时写死
+    [TabbarControllerGenerater tabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage stringWithKey:@"data" Language:language] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
 }
 
 + (UITabBarItem *)tabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName

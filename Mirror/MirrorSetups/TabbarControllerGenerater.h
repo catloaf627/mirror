@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TabbarControllerGenerater : NSObject
 
 + (UITabBarController *)mirrorTabVC;
++ (void)updateMeTabItemWithTabController:(UITabBarController *)tabbarController;
++ (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController;
++ (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController;
 
 @end
 

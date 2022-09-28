@@ -13,6 +13,7 @@
 #import "TimeTrackerDataManager.h"
 #import "MirrorDefaultDataManager.h"
 #import "MirrorMacro.h"
+#import "TabbarControllerGenerater.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -25,6 +26,27 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 @end
 
 @implementation TimeTrackerViewController
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)reloadVC
+{
+    self.collectionView = nil;
+    [TabbarControllerGenerater updateTimeTabItemWithTabController:self.tabBarController];
+    [self viewDidLoad];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
