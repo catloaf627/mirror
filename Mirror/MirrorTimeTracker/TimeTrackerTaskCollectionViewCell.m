@@ -67,13 +67,13 @@
     }];
 }
 
-- (void)didStartAnimation
+- (void)startAnimation
 {
     self.shouldStopAnimation = NO;
     [self p_convertToColor: self.taskModel.pulseColor];
 }
 
-- (void)didStopAnimation
+- (void)stopAnimation
 {
     self.shouldStopAnimation = YES;
     self.contentView.backgroundColor = self.taskModel.color;

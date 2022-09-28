@@ -17,8 +17,8 @@ static CGFloat const kInterspacing = 16;
 @property (nonatomic, assign) BOOL isAnimating;
 
 - (void)configWithModel:(TimeTrackerTaskModel *)taskModel;
-- (void)didStartAnimation;
-- (void)didStopAnimation;
+- (void)startAnimation;
+- (void)stopAnimation;
 
 @end
 
