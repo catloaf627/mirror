@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, MirrorColorType) {
     MirrorColorTypeTabbarIconText,           // tabbar item 未选中的颜色
     MirrorColorTypeTabbarIconTextHightlight, // tabbar item 被选中的颜色
     MirrorColorTypeText,                     // 文字颜色
+    MirrorColorTypeShadow,                   // 阴影颜色
     MirrorColorTypeCellPink,
     MirrorColorTypeCellPinkPulse,
     MirrorColorTypeCellOrange,

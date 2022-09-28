@@ -9,7 +9,7 @@
 
 @implementation UIColor (MirrorColor)
 
-static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleDark;
+static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
 
 + (void)switchTheme
 {
@@ -32,6 +32,8 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleDark;
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor blackColor] : [UIColor whiteColor];
         case MirrorColorTypeText:
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor blackColor] : [UIColor whiteColor];
+        case MirrorColorTypeShadow:
+            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor grayColor] : [UIColor lightGrayColor];
         case MirrorColorTypeCellPink:
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightPink] : [UIColor mirror_darkPink];
         case MirrorColorTypeCellPinkPulse:
