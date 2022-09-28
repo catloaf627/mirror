@@ -98,10 +98,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [cell configWithModel:taskModel];
         return cell;
     }
-    
-    
-    
-    return [UICollectionViewCell new];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section

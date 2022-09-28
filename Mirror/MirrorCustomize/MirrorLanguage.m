@@ -16,8 +16,10 @@
     [mirrorDict setValue:@[@"Me", @"我的"] forKey:@"me"];
     [mirrorDict setValue:@[@"Start", @"冲鸭"] forKey:@"start"];
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
-    //time tracker cell
+    // time tracker cell
     [mirrorDict setValue:@[@"Tap to start", @"点击开始"] forKey:@"tap_to_start"];
+    // nickname
+    [mirrorDict setValue:@[@"nickname", @"你的昵称"] forKey:@"nickname"];
     
     return [mirrorDict valueForKey:key][language];
 }
