@@ -53,10 +53,14 @@ static CGFloat const kShadowWidth = 5;
     [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.centerY.mas_equalTo(self).offset(-8);
+        make.left.offset(8);
+        make.right.offset(-8);
     }];
     [self.timeInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.taskNameLabel.mas_bottom).offset(8);
         make.centerX.mas_equalTo(self);
+        make.left.offset(8);
+        make.right.offset(-8);
     }];
 }
 
@@ -101,6 +105,7 @@ static CGFloat const kShadowWidth = 5;
         _taskNameLabel.text = self.taskModel.taskName;
         _taskNameLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _taskNameLabel.numberOfLines = 1;
+        _taskNameLabel.textAlignment = NSTextAlignmentCenter;
         _taskNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:22];
     }
     return _taskNameLabel;
@@ -113,6 +118,7 @@ static CGFloat const kShadowWidth = 5;
         _timeInfoLabel.text = self.taskModel.timeInfo;
         _timeInfoLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _timeInfoLabel.numberOfLines = 1;
+        _timeInfoLabel.textAlignment = NSTextAlignmentCenter;
         _timeInfoLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
     }
     return _timeInfoLabel;
