@@ -63,13 +63,17 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 # pragma mark - Collection view delegate
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
-    TimeTrackerTaskCollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    if (cell.isAnimating) {
-        [cell didStopAnimation];
-    } else {
-        [cell didStartAnimation];
+    TimeTrackerTaskCollectionViewCell *selectedCell = (TimeTrackerTaskCollectionViewCell *)[collectionView cellForItemAtIndexPath:selectedIndexPath];
+    if (selectedCell.isAnimating) { // 点击了正在计时的selectedCell，停止selectedCell的计时
+        [selectedCell didStopAnimation];
+    } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
+        for (int i=0; i<self.dataManager.tasks.count; i++) {
+            TimeTrackerTaskCollectionViewCell *cell = (TimeTrackerTaskCollectionViewCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            [cell didStopAnimation];
+        }
+        [selectedCell didStartAnimation];
     }
 }
 
