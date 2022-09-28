@@ -13,8 +13,7 @@ static CGFloat const kShadowWidth = 5;
 
 @interface TimeTrackerAddTaskCollectionViewCell ()
 
-@property (nonatomic, strong) UIView *horizontalLine;
-@property (nonatomic, strong) UIView *verticalLine;
+@property (nonatomic, strong) UIImageView *addIconView;
 
 @end
 
@@ -53,42 +52,24 @@ static CGFloat const kShadowWidth = 5;
     self.contentView.layer.shadowRadius = kShadowWidth/2;
     self.contentView.layer.shadowOpacity = 1;
     
-    [self.contentView addSubview:self.horizontalLine];
-    [self.contentView addSubview:self.verticalLine];
-    
-    [self.verticalLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.contentView addSubview:self.addIconView];
+    [self.addIconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.centerY.offset(0);
-        make.height.mas_equalTo(self.contentView).multipliedBy(0.6);
-        make.width.mas_equalTo(7);
-    }];
-    
-    [self.horizontalLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.centerY.offset(0);
-        make.height.mas_equalTo(7);
-        make.width.mas_equalTo(_verticalLine.mas_height);
+        make.width.mas_equalTo(50);
+        make.height.mas_equalTo(50);
     }];
 }
 
 #pragma mark - Getters
 
-- (UIView *)horizontalLine
+- (UIImageView *)addIconView
 {
-    if (!_horizontalLine) {
-        _horizontalLine = [UIView new];
-        _horizontalLine.backgroundColor = [UIColor colorWithRed:199/255.0 green: 198/255.0  blue:193/255.0 alpha:1];
-        _horizontalLine.layer.cornerRadius = 3;
+    if (!_addIconView) {
+        UIImage *image = [[UIImage systemImageNamed:@"plus"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        _addIconView = [[UIImageView alloc]initWithImage:image];
+        [_addIconView setTintColor:[UIColor colorWithRed:199/255.0 green: 198/255.0  blue:193/255.0 alpha:1]];
     }
-    return _horizontalLine;
-}
-
-- (UIView *)verticalLine
-{
-    if (!_verticalLine) {
-        _verticalLine = [UIView new];
-        _verticalLine.backgroundColor = [UIColor colorWithRed:199/255.0 green: 198/255.0  blue:193/255.0 alpha:1];
-        _verticalLine.layer.cornerRadius = 3;
-    }
-    return _verticalLine;
+    return _addIconView;
 }
 
 
