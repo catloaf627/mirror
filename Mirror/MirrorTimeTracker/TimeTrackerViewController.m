@@ -9,6 +9,7 @@
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "TimeTrackerTaskCollectionViewCell.h"
+#import "TimeTrackerAddTaskCollectionViewCell.h"
 #import "TimeTrackerDataManager.h"
 #import "MirrorDefaultDataManager.h"
 #import "MirrorMacro.h"
@@ -53,9 +54,8 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = self.view.backgroundColor;
         
-        [_collectionView registerClass:[TimeTrackerTaskCollectionViewCell class] forCellWithReuseIdentifier:@"TimeTrackerTaskCollectionViewCell"];
-        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
-        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
+        [_collectionView registerClass:[TimeTrackerTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier]];
+        [_collectionView registerClass:[TimeTrackerAddTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier]];
         
     }
     return _collectionView;
@@ -65,13 +65,22 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
+    // 点击了add task model [+]
+    TimeTrackerTaskModel *selectedModel = self.dataManager.tasks[selectedIndexPath.item];
+    if (selectedModel.isAddTaskModel) {
+        return;
+    }
+    
+    // 点击了task model
     TimeTrackerTaskCollectionViewCell *selectedCell = (TimeTrackerTaskCollectionViewCell *)[collectionView cellForItemAtIndexPath:selectedIndexPath];
     if (selectedCell.isAnimating) { // 点击了正在计时的selectedCell，停止selectedCell的计时
         [selectedCell stopAnimation];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         for (int i=0; i<self.dataManager.tasks.count; i++) {
             TimeTrackerTaskCollectionViewCell *cell = (TimeTrackerTaskCollectionViewCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            [cell stopAnimation];
+            if ([cell respondsToSelector:@selector(stopAnimation)]) { // 因为循环的时候也会循环到[+]，[+]并没有stopAnimation方法，这里控制一下，避免崩溃
+                [cell stopAnimation];
+            }
         }
         [selectedCell startAnimation];
     }
@@ -79,11 +88,20 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    TimeTrackerTaskCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TimeTrackerTaskCollectionViewCell" forIndexPath:indexPath];
     TimeTrackerTaskModel *taskModel = self.dataManager.tasks[indexPath.item];
-    [cell configWithModel:taskModel];
+    if (taskModel.isAddTaskModel) {
+        TimeTrackerAddTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell setupAddTaskCell];
+        return cell;
+    } else {
+        TimeTrackerTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configWithModel:taskModel];
+        return cell;
+    }
     
-    return cell;
+    
+    
+    return [UICollectionViewCell new];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
