@@ -70,7 +70,8 @@
 - (void)startAnimation
 {
     self.shouldStopAnimation = NO;
-    [self p_convertToColor: self.taskModel.pulseColor];
+    self.contentView.backgroundColor = self.taskModel.pulseColor; // 瞬间变成深色
+    [self p_convertToColor: self.taskModel.color]; // 开始闪烁
 }
 
 - (void)stopAnimation
