@@ -9,6 +9,8 @@
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 
+static CGFloat const kShadowWidth = 5;
+
 @interface TimeTrackerTaskCollectionViewCell ()
 
 @property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
@@ -34,8 +36,18 @@
 
 - (void)p_setupUI
 {
+    [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.offset(kShadowWidth);
+        make.right.offset(-kShadowWidth);
+        make.top.offset(kShadowWidth);
+        make.bottom.offset(-kShadowWidth);
+    }];
     self.contentView.backgroundColor = self.taskModel.color;
     self.contentView.layer.cornerRadius = 14;
+    self.contentView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.contentView.layer.shadowRadius = kShadowWidth/2;
+    self.contentView.layer.shadowOpacity = 1;
+    
     [self.contentView addSubview:self.taskNameLabel];
     [self.contentView addSubview:self.timeInfoLabel];
     [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
