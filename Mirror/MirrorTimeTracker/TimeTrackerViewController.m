@@ -70,52 +70,63 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             make.top.mas_equalTo(self.view).offset(kNavBarAndStatusBarHeight);
             make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
-    UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(cellGetlongPressed:)];
-    longPressRecognizer.minimumPressDuration = 1.0;
-    [self.collectionView addGestureRecognizer:longPressRecognizer];
 }
 
-// 长按唤起task编辑页面
-- (void)cellGetlongPressed:(UILongPressGestureRecognizer *)longPressRecognizer
+#pragma mark - Actions
+
+// double click开始计时/停止计时
+- (void)cellGetDoubleClicked:(UITapGestureRecognizer *)doubleTapRecognizer
 {
-    CGPoint touchPoint = [longPressRecognizer locationInView:self.collectionView];
-    if (longPressRecognizer.state == UIGestureRecognizerStateBegan) {
-        NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:touchPoint];
-        if (indexPath == nil) { //
-            return;
-        }
-        TimeTrackerTaskModel *task = self.dataManager.tasks[indexPath.item];
-        if (task.isAddTaskModel) {
-            return;
-        }
-        UIViewController *vc = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks index:indexPath.item];
-        [self.navigationController presentViewController:vc animated:YES completion:nil];
+    CGPoint touchPoint = [doubleTapRecognizer locationInView:self.collectionView];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:touchPoint];
+    if (indexPath == nil) {
+        return;
     }
-}
-
-# pragma mark - Collection view delegate
-
-// 轻按开始计时
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
-{
-    // 点击了add task model [+]
-    TimeTrackerTaskModel *selectedModel = self.dataManager.tasks[selectedIndexPath.item];
-    if (selectedModel.isAddTaskModel) {
+    TimeTrackerTaskModel *task = self.dataManager.tasks[indexPath.item];
+    if (task.isAddTaskModel) {
         return;
     }
     
     // 点击了task model
-    TimeTrackerTaskCollectionViewCell *selectedCell = (TimeTrackerTaskCollectionViewCell *)[collectionView cellForItemAtIndexPath:selectedIndexPath];
+    TimeTrackerTaskCollectionViewCell *selectedCell = (TimeTrackerTaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
     if (selectedCell.isAnimating) { // 点击了正在计时的selectedCell，停止selectedCell的计时
         [selectedCell stopAnimation];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         for (int i=0; i<self.dataManager.tasks.count; i++) {
-            TimeTrackerTaskCollectionViewCell *cell = (TimeTrackerTaskCollectionViewCell *)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            TimeTrackerTaskCollectionViewCell *cell = (TimeTrackerTaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
             if ([cell respondsToSelector:@selector(stopAnimation)]) { // 因为循环的时候也会循环到[+]，[+]并没有stopAnimation方法，这里控制一下，避免崩溃
                 [cell stopAnimation];
             }
         }
         [selectedCell startAnimation];
+    }
+}
+
+
+// swipe唤起task编辑页面
+- (void)cellGetSwiped:(UISwipeGestureRecognizer *)swipeRecognizer
+{
+    CGPoint touchPoint = [swipeRecognizer locationInView:self.collectionView];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:touchPoint];
+    if (indexPath == nil) {
+        return;
+    }
+    TimeTrackerTaskModel *task = self.dataManager.tasks[indexPath.item];
+    if (task.isAddTaskModel) {
+        return;
+    }
+    UIViewController *vc = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks index:indexPath.item];
+    [self.navigationController presentViewController:vc animated:YES completion:nil];
+}
+
+# pragma mark - Collection view delegate
+
+// 轻点[+]
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
+{
+    TimeTrackerTaskModel *selectedModel = self.dataManager.tasks[selectedIndexPath.item];
+    if (selectedModel.isAddTaskModel) {
+        // 点击了add task model [+]
     }
 }
 
@@ -167,6 +178,12 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [_collectionView registerClass:[TimeTrackerTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier]];
         [_collectionView registerClass:[TimeTrackerAddTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier]];
         
+        UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(cellGetSwiped:)];
+        swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+        [_collectionView addGestureRecognizer:swipeRecognizer];
+        UITapGestureRecognizer *tapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellGetDoubleClicked:)];
+        tapRecogniser.numberOfTapsRequired = 2;
+        [_collectionView addGestureRecognizer:tapRecogniser];
     }
     return _collectionView;
 }

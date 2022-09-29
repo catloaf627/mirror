@@ -34,7 +34,7 @@ static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
     [mirrorDict setValue:@[@"Start", @"冲鸭"] forKey:@"start"];
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
     // time tracker cell
-    [mirrorDict setValue:@[@"Tap to start", @"点击开始"] forKey:@"tap_to_start"];
+    [mirrorDict setValue:@[@"Double click to start", @"双击开始计时"] forKey:@"double_click_to_start"];
     // nickname
     [mirrorDict setValue:@[@"nickname", @"你的昵称"] forKey:@"nickname"];
     // Profile cell - theme
