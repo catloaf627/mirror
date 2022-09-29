@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TimeTrackerDataManager : NSObject
 
-@property (nonatomic, strong) NSArray<TimeTrackerTaskModel *> *tasks;
+@property (nonatomic, strong) NSMutableArray<TimeTrackerTaskModel *> *tasks;
 
 @end
 

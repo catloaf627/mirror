@@ -14,6 +14,7 @@
 #import "MirrorDefaultDataManager.h"
 #import "MirrorMacro.h"
 #import "MirrorTabsManager.h"
+#import "EditTaskViewController.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -69,10 +70,32 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             make.top.mas_equalTo(self.view).offset(kNavBarAndStatusBarHeight);
             make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
+    UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(cellGetlongPressed:)];
+    longPressRecognizer.minimumPressDuration = 1.0;
+    [self.collectionView addGestureRecognizer:longPressRecognizer];
+}
+
+// 长按唤起task编辑页面
+- (void)cellGetlongPressed:(UILongPressGestureRecognizer *)longPressRecognizer
+{
+    CGPoint touchPoint = [longPressRecognizer locationInView:self.collectionView];
+    if (longPressRecognizer.state == UIGestureRecognizerStateBegan) {
+        NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:touchPoint];
+        if (indexPath == nil) { //
+            return;
+        }
+        TimeTrackerTaskModel *task = self.dataManager.tasks[indexPath.item];
+        if (task.isAddTaskModel) {
+            return;
+        }
+        UIViewController *vc = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks index:indexPath.item];
+        [self.navigationController presentViewController:vc animated:YES completion:nil];
+    }
 }
 
 # pragma mark - Collection view delegate
 
+// 轻按开始计时
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
     // 点击了add task model [+]

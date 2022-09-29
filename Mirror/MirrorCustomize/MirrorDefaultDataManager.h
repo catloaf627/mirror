@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (NSArray<TimeTrackerTaskModel *> *)mirrorDefaultTimeTrackerData;
+- (NSMutableArray<TimeTrackerTaskModel *> *)mirrorDefaultTimeTrackerData;
 
 @end
 

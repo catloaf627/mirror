@@ -20,9 +20,9 @@
     return instance;
 }
 
-- (NSArray<TimeTrackerTaskModel *> *)mirrorDefaultTimeTrackerData
+- (NSMutableArray<TimeTrackerTaskModel *> *)mirrorDefaultTimeTrackerData
 {
-    NSArray<TimeTrackerTaskModel *> *tasks = @[
+    NSMutableArray<TimeTrackerTaskModel *> *tasks = @[
     [[TimeTrackerTaskModel alloc]initWithTitle:@"Pink" color:[UIColor mirrorColorNamed:MirrorColorTypeCellPink] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellPinkPulse] isAddTask:NO],
     [[TimeTrackerTaskModel alloc]initWithTitle:@"Orange" color:[UIColor mirrorColorNamed:MirrorColorTypeCellOrange] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellOrangePulse] isAddTask:NO],
     [[TimeTrackerTaskModel alloc]initWithTitle:@"Yellow" color:[UIColor mirrorColorNamed:MirrorColorTypeCellYellow] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellYellowPulse] isAddTask:NO],
