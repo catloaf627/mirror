@@ -33,7 +33,7 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
         case MirrorColorTypeText:
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor blackColor] : [UIColor whiteColor];
         case MirrorColorTypeShadow:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor grayColor] : [UIColor lightGrayColor];
+            return [UIColor grayColor];
         case MirrorColorTypeCellPink:
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightPink] : [UIColor mirror_darkPink];
         case MirrorColorTypeCellPinkPulse:
