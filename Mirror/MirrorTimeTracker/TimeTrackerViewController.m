@@ -119,6 +119,33 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.navigationController presentViewController:vc animated:YES completion:nil];
 }
 
+- (void)cellGetLongPressed:(UILongPressGestureRecognizer *)longPressRecognizer
+{
+    CGPoint touchPoint = [longPressRecognizer locationInView:self.collectionView];
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:touchPoint];
+    if (indexPath == nil) {
+        return;
+    }
+    TimeTrackerTaskModel *task = self.dataManager.tasks[indexPath.item];
+    if (task.isAddTaskModel) {
+        return;
+    }
+    switch (longPressRecognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            [self.collectionView beginInteractiveMovementForItemAtIndexPath:indexPath];
+            break;
+        case UIGestureRecognizerStateChanged:
+            [self.collectionView updateInteractiveMovementTargetPosition:[longPressRecognizer locationInView:self.collectionView]];
+            break;
+        case UIGestureRecognizerStateEnded:
+            [self.collectionView endInteractiveMovement];
+            break;
+        default:
+            [self.collectionView cancelInteractiveMovement];
+            break;
+    }
+}
+
 # pragma mark - Collection view delegate
 
 // 轻点[+]
@@ -164,6 +191,21 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return kCellSpacing;
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    NSLog(@"gizmo move %ld to %ld", (long)sourceIndexPath.item, (long)destinationIndexPath.item);
+    NSMutableArray *tasks = [self.dataManager.tasks mutableCopy];
+    TimeTrackerTaskModel *taskModel = tasks[sourceIndexPath.item];
+    [tasks removeObjectAtIndex:sourceIndexPath.item];
+    [tasks insertObject:taskModel atIndex:destinationIndexPath.item];
+    self.dataManager.tasks = tasks;
+}
+
 #pragma mark - Getters
 
 - (UICollectionView *)collectionView
@@ -178,12 +220,20 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [_collectionView registerClass:[TimeTrackerTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier]];
         [_collectionView registerClass:[TimeTrackerAddTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier]];
         
-        UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(cellGetSwiped:)];
-        swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-        [_collectionView addGestureRecognizer:swipeRecognizer];
+        // 双击手势
         UITapGestureRecognizer *tapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cellGetDoubleClicked:)];
         tapRecogniser.numberOfTapsRequired = 2;
         [_collectionView addGestureRecognizer:tapRecogniser];
+        
+        // 滑动手势
+        UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(cellGetSwiped:)];
+        swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+        [_collectionView addGestureRecognizer:swipeRecognizer];
+        
+        // 长按手势
+        UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(cellGetLongPressed:)];
+        longPressRecognizer.minimumPressDuration = 1;
+        [_collectionView addGestureRecognizer:longPressRecognizer];
     }
     return _collectionView;
 }
