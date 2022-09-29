@@ -6,6 +6,7 @@
 //
 
 #import "EditTaskViewController.h"
+#import "MirrorMacro.h"
 
 @interface EditTaskViewController ()
 
@@ -26,6 +27,14 @@
         _label.text = _model.taskName;
     }
     return self;
+}
+
+- (void)viewDidLayoutSubviews
+{
+    // 编辑task页面为半屏
+    [self.view setFrame:CGRectMake(0, kScreenHeight/5 *2, kScreenWidth, kScreenHeight/5*3)];
+    self.view.layer.cornerRadius = 20;
+    self.view.layer.masksToBounds = YES;
 }
 
 - (void)viewDidLoad {

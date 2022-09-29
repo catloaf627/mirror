@@ -119,6 +119,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.navigationController presentViewController:vc animated:YES completion:nil];
 }
 
+// long press唤起编辑顺序
 - (void)cellGetLongPressed:(UILongPressGestureRecognizer *)longPressRecognizer
 {
     CGPoint touchPoint = [longPressRecognizer locationInView:self.collectionView];
@@ -198,7 +199,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    NSLog(@"gizmo move %ld to %ld", (long)sourceIndexPath.item, (long)destinationIndexPath.item);
     NSMutableArray *tasks = [self.dataManager.tasks mutableCopy];
     TimeTrackerTaskModel *taskModel = tasks[sourceIndexPath.item];
     [tasks removeObjectAtIndex:sourceIndexPath.item];
