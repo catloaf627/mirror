@@ -7,7 +7,7 @@
 
 #import "HistoryViewController.h"
 #import "UIColor+MirrorColor.h"
-#import "TabbarControllerGenerater.h"
+#import "MirrorTabsManager.h"
 
 @interface HistoryViewController ()
 
@@ -26,7 +26,7 @@
 
 - (void)reloadVC
 {
-    [TabbarControllerGenerater updateHistoryTabItemWithTabController:self.tabBarController];
+    [MirrorTabsManager updateHistoryTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
 

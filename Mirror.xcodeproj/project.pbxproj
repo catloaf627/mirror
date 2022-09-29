@@ -11,7 +11,7 @@
 		015564E428E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */; };
 		015564E728E1A884008AB06C /* TimeTrackerTaskModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 015564E628E1A884008AB06C /* TimeTrackerTaskModel.m */; };
 		4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */; };
-		4A379B4428E03D0B00785CAE /* TabbarControllerGenerater.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4328E03D0B00785CAE /* TabbarControllerGenerater.m */; };
+		4A379B4428E03D0B00785CAE /* MirrorTabsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4328E03D0B00785CAE /* MirrorTabsManager.m */; };
 		4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4628E2F33B00785CAE /* MirrorLanguage.m */; };
 		4A379B4B28E2F73A00785CAE /* MirrorDefaultDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4A28E2F73A00785CAE /* MirrorDefaultDataManager.m */; };
 		4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B5328E31BD200785CAE /* MirrorMacro.m */; };
@@ -38,8 +38,8 @@
 		015564E628E1A884008AB06C /* TimeTrackerTaskModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerTaskModel.m; sourceTree = "<group>"; };
 		4A379B3F28E0381A00785CAE /* UIColor+MirrorColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+MirrorColor.h"; sourceTree = "<group>"; };
 		4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MirrorColor.m"; sourceTree = "<group>"; };
-		4A379B4228E03D0B00785CAE /* TabbarControllerGenerater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabbarControllerGenerater.h; sourceTree = "<group>"; };
-		4A379B4328E03D0B00785CAE /* TabbarControllerGenerater.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabbarControllerGenerater.m; sourceTree = "<group>"; };
+		4A379B4228E03D0B00785CAE /* MirrorTabsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorTabsManager.h; sourceTree = "<group>"; };
+		4A379B4328E03D0B00785CAE /* MirrorTabsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorTabsManager.m; sourceTree = "<group>"; };
 		4A379B4528E2F33B00785CAE /* MirrorLanguage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorLanguage.h; sourceTree = "<group>"; };
 		4A379B4628E2F33B00785CAE /* MirrorLanguage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorLanguage.m; sourceTree = "<group>"; };
 		4A379B4928E2F73A00785CAE /* MirrorDefaultDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorDefaultDataManager.h; sourceTree = "<group>"; };
@@ -102,8 +102,8 @@
 				4AFB77A128DF4A380064CBCA /* AppDelegate.m */,
 				4AFB77A328DF4A380064CBCA /* SceneDelegate.h */,
 				4AFB77A428DF4A380064CBCA /* SceneDelegate.m */,
-				4A379B4228E03D0B00785CAE /* TabbarControllerGenerater.h */,
-				4A379B4328E03D0B00785CAE /* TabbarControllerGenerater.m */,
+				4A379B4228E03D0B00785CAE /* MirrorTabsManager.h */,
+				4A379B4328E03D0B00785CAE /* MirrorTabsManager.m */,
 			);
 			path = MirrorSetups;
 			sourceTree = "<group>";
@@ -328,7 +328,7 @@
 				4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */,
 				4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */,
 				4A379B4B28E2F73A00785CAE /* MirrorDefaultDataManager.m in Sources */,
-				4A379B4428E03D0B00785CAE /* TabbarControllerGenerater.m in Sources */,
+				4A379B4428E03D0B00785CAE /* MirrorTabsManager.m in Sources */,
 				015564E428E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m in Sources */,
 				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,
 				4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */,

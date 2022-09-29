@@ -13,7 +13,7 @@
 #import "TimeTrackerDataManager.h"
 #import "MirrorDefaultDataManager.h"
 #import "MirrorMacro.h"
-#import "TabbarControllerGenerater.h"
+#import "MirrorTabsManager.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -47,7 +47,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [TabbarControllerGenerater updateTimeTabItemWithTabController:self.tabBarController];
+    [MirrorTabsManager updateTimeTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
 

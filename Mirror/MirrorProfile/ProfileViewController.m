@@ -13,7 +13,7 @@
 #import "AvatarCollectionViewCell.h"
 #import "ThemeCollectionViewCell.h"
 #import "LanguageCollectionViewCell.h"
-#import "TabbarControllerGenerater.h"
+#import "MirrorTabsManager.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [TabbarControllerGenerater updateMeTabItemWithTabController:self.tabBarController];
+    [MirrorTabsManager updateMeTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
 

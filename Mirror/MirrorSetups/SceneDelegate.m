@@ -6,7 +6,7 @@
 //
 
 #import "SceneDelegate.h"
-#import "TabbarControllerGenerater.h"
+#import "MirrorTabsManager.h"
 
 @interface SceneDelegate ()<UITabBarControllerDelegate>
 
@@ -22,7 +22,7 @@
     _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     
     //@protovol <UITabBarControllerDelegate>
-    UITabBarController *tabbarController = [TabbarControllerGenerater mirrorTabVC];
+    UITabBarController *tabbarController = [MirrorTabsManager mirrorTabVC];
     tabbarController.delegate = self;
     
     //init navigation controller with tabbar controller (nc needs a root view)

@@ -1,5 +1,5 @@
 //
-//  TabbarControllerGenerater.h
+//  MirrorTabsManager.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2022/9/25.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TabbarControllerGenerater : NSObject
+@interface MirrorTabsManager : NSObject
 
 + (UITabBarController *)mirrorTabVC;
 + (void)updateMeTabItemWithTabController:(UITabBarController *)tabbarController;

@@ -6,7 +6,7 @@
 //
 
 #import "AppDelegate.h"
-#import "TabbarControllerGenerater.h"
+#import "MirrorTabsManager.h"
 @interface AppDelegate ()<UITabBarControllerDelegate>
 
 @end
@@ -17,7 +17,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // 由于删除了storyboard，所以需要自己手动创建UIWindow
     _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-    UITabBarController *tabbarController = [TabbarControllerGenerater mirrorTabVC];
+    UITabBarController *tabbarController = [MirrorTabsManager mirrorTabVC];
     //@protovol <UITabBarControllerDelegate>
     tabbarController.delegate = self;
     
