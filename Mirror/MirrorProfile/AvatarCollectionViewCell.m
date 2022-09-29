@@ -79,7 +79,7 @@ static CGFloat const kAvatarWidth = 96;
 {
     if (!_nickname) {
         _nickname = [UILabel new];
-        _nickname.text = [MirrorLanguage stringWithKey:@"nickname" Language:MirrorLanguageTypeEnglish];
+        _nickname.text = [MirrorLanguage mirror_stringWithKey:@"nickname"];
         _nickname.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse];
         _nickname.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
     }

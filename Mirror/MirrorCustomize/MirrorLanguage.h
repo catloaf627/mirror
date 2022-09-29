@@ -17,7 +17,8 @@ typedef NS_ENUM(NSInteger, MirrorLanguageType) {
 
 @interface MirrorLanguage : NSObject
 
-+(NSString *)stringWithKey:(NSString *)key Language:(MirrorLanguageType)language;
++ (void)switchLanguage;
++(NSString *)mirror_stringWithKey:(NSString *)key;
 
 @end
 

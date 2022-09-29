@@ -14,6 +14,7 @@
 #import "ThemeCollectionViewCell.h"
 #import "LanguageCollectionViewCell.h"
 #import "MirrorTabsManager.h"
+#import "MirrorLanguage.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -38,6 +39,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     self = [super init];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
     }
     return self;
 }
@@ -53,6 +55,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    // 更新tab item
     [MirrorTabsManager updateMeTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
@@ -88,7 +91,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         // click theme
         [UIColor switchTheme];
     }  else if (indexPath.item == MirrorSettingTypeLanguage) {
-        
+        [MirrorLanguage switchLanguage];
     }
 }
 

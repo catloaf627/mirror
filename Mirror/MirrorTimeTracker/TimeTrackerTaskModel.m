@@ -17,7 +17,7 @@
         _taskName = taskName;
         _color = color;
         _pulseColor = pulseColor;
-        _timeInfo = [MirrorLanguage stringWithKey:@"tap_to_start" Language:MirrorLanguageTypeEnglish];
+        _timeInfo = [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
         _isAddTaskModel = isAddTaskModel;
     }
     return self;

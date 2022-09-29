@@ -7,9 +7,21 @@
 
 #import "MirrorLanguage.h"
 
+static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
+
 @implementation MirrorLanguage
 
-+(NSString *)stringWithKey:(NSString *)key Language:(MirrorLanguageType)language
++ (void)switchLanguage
+{
+    if (_languageType == MirrorLanguageTypeEnglish) {
+        _languageType = MirrorLanguageTypeChinese;
+    } else {
+        _languageType = MirrorLanguageTypeEnglish;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchLanguageNotification" object:nil];
+}
+
++ (NSString *)mirror_stringWithKey:(NSString *)key
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
     // tabs
@@ -21,7 +33,7 @@
     // nickname
     [mirrorDict setValue:@[@"nickname", @"你的昵称"] forKey:@"nickname"];
     
-    return [mirrorDict valueForKey:key][language];
+    return [mirrorDict valueForKey:key][_languageType];
 }
 
 

@@ -32,6 +32,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     self = [super init];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
     }
     return self;
 }
@@ -47,6 +48,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    // 更新tab item
     [MirrorTabsManager updateTimeTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
