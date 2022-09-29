@@ -21,6 +21,11 @@ static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchLanguageNotification" object:nil];
 }
 
++ (BOOL)isChinese
+{
+    return _languageType == MirrorLanguageTypeChinese;
+}
+
 + (NSString *)mirror_stringWithKey:(NSString *)key
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
@@ -32,6 +37,10 @@ static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
     [mirrorDict setValue:@[@"Tap to start", @"点击开始"] forKey:@"tap_to_start"];
     // nickname
     [mirrorDict setValue:@[@"nickname", @"你的昵称"] forKey:@"nickname"];
+    // Profile cell - theme
+    [mirrorDict setValue:@[@"Apply darkmode", @"启用深色模式"] forKey:@"apply_darkmode"];
+    // Profile cell - language
+    [mirrorDict setValue:@[@"Apply Chinese", @"使用中文"] forKey:@"apply_chinese"];
     
     return [mirrorDict valueForKey:key][_languageType];
 }

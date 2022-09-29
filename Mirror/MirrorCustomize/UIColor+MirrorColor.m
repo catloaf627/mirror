@@ -21,6 +21,11 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchThemeNotification" object:nil];
 }
 
++ (BOOL)isDarkMode
+{
+    return _interfaceStyle == MirrorUserInterfaceStyleDark;
+}
+
 + (UIColor *)mirrorColorNamed:(MirrorColorType)colorType
 {
     switch (colorType) {

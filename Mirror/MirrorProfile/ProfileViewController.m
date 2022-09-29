@@ -88,10 +88,9 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     } else if (indexPath.item == MirrorSettingTypeAvatar) {
         // glick avatar cell
     } else if (indexPath.item == MirrorSettingTypeTheme) {
-        // click theme
-        [UIColor switchTheme];
+        // Do nothing (use toggle to switch theme)
     }  else if (indexPath.item == MirrorSettingTypeLanguage) {
-        [MirrorLanguage switchLanguage];
+        // Do nothing (use toggle to switch language)
     }
 }
 
@@ -123,9 +122,9 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         case MirrorSettingTypeAvatar:
             return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 140);
         case MirrorSettingTypeTheme:
-            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 80);
+            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
         case MirrorSettingTypeLanguage:
-            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 80);
+            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
         default:
             break;
     }

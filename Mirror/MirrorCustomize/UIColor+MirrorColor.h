@@ -41,6 +41,7 @@ typedef NS_ENUM(NSInteger, MirrorColorType) {
 @interface UIColor (MirrorColor)
 
 + (void)switchTheme;
++ (BOOL)isDarkMode;
 + (UIColor *)mirrorColorNamed:(MirrorColorType)colorType;
 
 @end
