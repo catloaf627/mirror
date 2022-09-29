@@ -49,7 +49,10 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 - (void)reloadVC
 {
+    // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
+    // 将vc.view里的所有subviews从父view上移除
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [TabbarControllerGenerater updateMeTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
