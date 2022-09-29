@@ -34,6 +34,10 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor blackColor] : [UIColor whiteColor];
         case MirrorColorTypeShadow:
             return [UIColor grayColor];
+        case MirrorColorTypeAddTaskCellBG:
+            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1] : [UIColor colorWithRed:15/255.0 green:15/255.0 blue:15/255.0 alpha:1];
+        case MirrorColorTypeAddTaskCellPlus:
+            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor colorWithRed:200/255.0 green: 200/255.0  blue:200/255.0 alpha:1] : [UIColor colorWithRed:55/255.0 green: 55/255.0  blue:55/255.0 alpha:1];
         case MirrorColorTypeCellPink:
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightPink] : [UIColor mirror_darkPink];
         case MirrorColorTypeCellPinkPulse:

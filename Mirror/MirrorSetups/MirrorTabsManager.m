@@ -41,19 +41,16 @@
 
 + (void)updateMeTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    MirrorLanguageType language = MirrorLanguageTypeChinese; //gizmo 暂时写死
     [MirrorTabsManager tabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"me"] imageName:@"person" selectedImageName:@"person.fill"];
 }
 
 + (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    MirrorLanguageType language = MirrorLanguageTypeChinese; //gizmo 暂时写死
     [MirrorTabsManager tabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"clock" selectedImageName:@"clock.fill"];
 }
 
 + (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    MirrorLanguageType language = MirrorLanguageTypeChinese; //gizmo 暂时写死
     [MirrorTabsManager tabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
 }
 

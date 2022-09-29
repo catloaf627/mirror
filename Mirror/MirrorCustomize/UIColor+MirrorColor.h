@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, MirrorColorType) {
     MirrorColorTypeTabbarIconTextHightlight, // tabbar item 被选中的颜色
     MirrorColorTypeText,                     // 文字颜色
     MirrorColorTypeShadow,                   // 阴影颜色
+    MirrorColorTypeAddTaskCellBG,            // add task cell的背景颜色
+    MirrorColorTypeAddTaskCellPlus,          // add task cell的加号颜色
     MirrorColorTypeCellPink,
     MirrorColorTypeCellPinkPulse,
     MirrorColorTypeCellOrange,
