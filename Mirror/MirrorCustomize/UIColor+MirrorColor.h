@@ -31,6 +31,8 @@ typedef NS_ENUM(NSInteger, MirrorColorType) {
     MirrorColorTypeCellYellowPulse,
     MirrorColorTypeCellGreen,
     MirrorColorTypeCellGreenPulse,
+    MirrorColorTypeCellTeal,
+    MirrorColorTypeCellTealPulse,
     MirrorColorTypeCellBlue,
     MirrorColorTypeCellBluePulse,
     MirrorColorTypeCellPurple,

@@ -10,13 +10,16 @@
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
+#import "ColorCollectionViewCell.h"
 
-@interface EditTaskViewController ()
+@interface EditTaskViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
 @property (nonatomic, strong) UIColor *taskColor;
 @property (nonatomic, strong) UITextField *editTaskNameTextField;
 @property (nonatomic, strong) UILabel *editTaskNameHint;
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) NSArray<MirrorColorModel *> *colorBlocks;
 
 @end
 
@@ -49,6 +52,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     self.taskModel.taskName = self.editTaskNameTextField.text; // 保存taskname
+    self.taskModel.color = self.taskColor;
     [self.delegate updateTasks];
 }
 
@@ -67,6 +71,52 @@
         make.centerX.offset(0);
         make.width.mas_equalTo(kScreenWidth - 40);
     }];
+    
+    [self.view addSubview:self.collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.editTaskNameHint.mas_bottom).offset(16);
+        make.centerX.offset(0);
+        make.width.mas_equalTo(kScreenWidth - 40);
+        make.height.mas_equalTo([self p_colorBlockWidth]);
+    }];
+}
+
+#pragma mark - Collection view delegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UIColor *selectedColor = self.colorBlocks[indexPath.item].color;
+    self.view.backgroundColor = selectedColor;
+    self.collectionView.backgroundColor = selectedColor;
+    self.taskColor = selectedColor;
+    [collectionView reloadData];
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return kMaxTaskNum;
+}
+
+// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MirrorColorModel *taskModel = (MirrorColorModel *)self.colorBlocks[indexPath.item];
+    taskModel.isSelected = CGColorEqualToColor(taskModel.color.CGColor, self.taskColor.CGColor);
+    
+    ColorCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ColorCollectionViewCell identifier] forIndexPath:indexPath];
+    [cell configWithModel:taskModel];
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat width = [self p_colorBlockWidth];
+    return CGSizeMake(width, width);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 0;
 }
 
 #pragma mark - Getters
@@ -95,6 +145,47 @@
         
     }
     return _editTaskNameHint;
+}
+
+- (UICollectionView *)collectionView
+{
+    if (!_collectionView){
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.backgroundColor = self.view.backgroundColor;
+        
+        [_collectionView registerClass:[ColorCollectionViewCell class] forCellWithReuseIdentifier:[ColorCollectionViewCell identifier]];
+    }
+    return _collectionView;
+}
+
+- (NSArray<MirrorColorModel *> *)colorBlocks
+{
+    MirrorColorModel *pinkModel = [MirrorColorModel new];
+    pinkModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellPink];
+    MirrorColorModel *orangeModel = [MirrorColorModel new];
+    orangeModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellOrange];
+    MirrorColorModel *yellowModel = [MirrorColorModel new];
+    yellowModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellYellow];
+    MirrorColorModel *greenModel = [MirrorColorModel new];
+    greenModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellGreen];
+    MirrorColorModel *tealModel = [MirrorColorModel new];
+    tealModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellTeal];
+    MirrorColorModel *blueModel = [MirrorColorModel new];
+    blueModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellBlue];
+    MirrorColorModel *purpleModel = [MirrorColorModel new];
+    purpleModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellPurple];
+    MirrorColorModel *grayModel = [MirrorColorModel new];
+    grayModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellGray];
+    return @[pinkModel,orangeModel,yellowModel,greenModel,tealModel,blueModel,purpleModel,grayModel];
+}
+
+#pragma mark - Private methods
+- (CGFloat)p_colorBlockWidth
+{
+    return (kScreenWidth - 40)/kMaxTaskNum;
 }
 
 @end

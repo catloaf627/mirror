@@ -61,6 +61,10 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightGreen] : [UIColor mirror_darkGreen];
         case MirrorColorTypeCellGreenPulse:
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkGreen] : [UIColor mirror_lightGreen];
+        case MirrorColorTypeCellTeal:
+            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightTeal] : [UIColor mirror_darkTeal];
+        case MirrorColorTypeCellTealPulse:
+            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkTeal] : [UIColor mirror_lightTeal];
         case MirrorColorTypeCellBlue:
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightBlue] : [UIColor mirror_darkBlue];
         case MirrorColorTypeCellBluePulse:
@@ -118,6 +122,16 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
     return [UIColor colorWithRed:122/255.0 green:103/255.0 blue:71/255.0 alpha:1]; // 莫兰迪深绿
 }
 
++ (UIColor *)mirror_lightTeal
+{
+    return [UIColor colorWithRed:212/255.0 green:231/255.0 blue:234/255.0 alpha:1]; // 莫兰迪青
+}
+
++ (UIColor *)mirror_darkTeal
+{
+    return [UIColor colorWithRed:69/255.0 green:137/255.0 blue:148/255.0 alpha:1]; // 莫兰迪深青
+}
+
 + (UIColor *)mirror_lightBlue
 {
     return [UIColor colorWithRed:193/255.0 green:203/255.0 blue:215/255.0 alpha:1]; // 莫兰迪蓝
@@ -125,7 +139,7 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
 
 + (UIColor *)mirror_darkBlue
 {
-    return [UIColor colorWithRed:134/255.0 green:150/255.0 blue:167/255.0 alpha:1]; // 莫兰迪深蓝
+    return [UIColor colorWithRed:104/255.0 green:120/255.0 blue:137/255.0 alpha:1]; // 莫兰迪深蓝
 }
 
 + (UIColor *)mirror_lightPurple

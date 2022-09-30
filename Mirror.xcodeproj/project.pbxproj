@@ -20,6 +20,7 @@
 		4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B328E4762E006F02DE /* ThemeCollectionViewCell.m */; };
 		4ADDC5B728E476A8006F02DE /* LanguageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B628E476A8006F02DE /* LanguageCollectionViewCell.m */; };
 		4ADDC5BA28E5B95F006F02DE /* EditTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B928E5B95F006F02DE /* EditTaskViewController.m */; };
+		4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5BC28E6DF8B006F02DE /* ColorCollectionViewCell.m */; };
 		4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */; };
 		4AE4171C28DF614A008A6A18 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171B28DF614A008A6A18 /* HistoryViewController.m */; };
 		4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* ProfileViewController.m */; };
@@ -57,6 +58,8 @@
 		4ADDC5B628E476A8006F02DE /* LanguageCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LanguageCollectionViewCell.m; sourceTree = "<group>"; };
 		4ADDC5B828E5B95F006F02DE /* EditTaskViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditTaskViewController.h; sourceTree = "<group>"; };
 		4ADDC5B928E5B95F006F02DE /* EditTaskViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditTaskViewController.m; sourceTree = "<group>"; };
+		4ADDC5BB28E6DF8B006F02DE /* ColorCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ColorCollectionViewCell.h; sourceTree = "<group>"; };
+		4ADDC5BC28E6DF8B006F02DE /* ColorCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorCollectionViewCell.m; sourceTree = "<group>"; };
 		4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerViewController.h; sourceTree = "<group>"; };
 		4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerViewController.m; sourceTree = "<group>"; };
 		4AE4171A28DF614A008A6A18 /* HistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
@@ -126,6 +129,8 @@
 				015564E628E1A884008AB06C /* TimeTrackerTaskModel.m */,
 				4ADDC5B828E5B95F006F02DE /* EditTaskViewController.h */,
 				4ADDC5B928E5B95F006F02DE /* EditTaskViewController.m */,
+				4ADDC5BB28E6DF8B006F02DE /* ColorCollectionViewCell.h */,
+				4ADDC5BC28E6DF8B006F02DE /* ColorCollectionViewCell.m */,
 			);
 			path = MirrorTimeTracker;
 			sourceTree = "<group>";
@@ -322,6 +327,7 @@
 			files = (
 				4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
+				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,
 				4A379B5728E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.m in Sources */,
 				4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */,
 				4ADDC5B728E476A8006F02DE /* LanguageCollectionViewCell.m in Sources */,
