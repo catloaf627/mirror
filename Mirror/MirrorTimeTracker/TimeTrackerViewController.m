@@ -270,7 +270,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         
         // 滑动手势
         UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(cellGetSwiped:)];
-        swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+        swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight | UISwipeGestureRecognizerDirectionLeft;
         [_collectionView addGestureRecognizer:swipeRecognizer];
         
         // 长按手势
