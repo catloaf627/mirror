@@ -53,7 +53,8 @@ static CGFloat const kEditTaskVCPadding = 20;
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    self.taskModel.taskName = self.editTaskNameTextField.text; // 保存taskname
+    NSString *currentText = ![self.editTaskNameTextField.text isEqualToString:@""] ? self.editTaskNameTextField.text : [MirrorLanguage mirror_stringWithKey:@"untitled"];
+    self.taskModel.taskName = currentText; // 保存taskname
     self.taskModel.color = self.taskColor; // 保存color
     [self.delegate updateTasks];
 }
