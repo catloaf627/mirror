@@ -123,14 +123,10 @@
 				015564DD28E1A32E008AB06C /* TimeTrackerDataManager.m */,
 				015564E228E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.h */,
 				015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */,
-				4A379B5528E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.h */,
-				4A379B5628E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.m */,
 				015564E528E1A884008AB06C /* TimeTrackerTaskModel.h */,
 				015564E628E1A884008AB06C /* TimeTrackerTaskModel.m */,
-				4ADDC5B828E5B95F006F02DE /* EditTaskViewController.h */,
-				4ADDC5B928E5B95F006F02DE /* EditTaskViewController.m */,
-				4ADDC5BB28E6DF8B006F02DE /* ColorCollectionViewCell.h */,
-				4ADDC5BC28E6DF8B006F02DE /* ColorCollectionViewCell.m */,
+				4ADDC5BF28E6FB3D006F02DE /* MirrorTaskAdd */,
+				4ADDC5BE28E6FB09006F02DE /* MirrorTaskEdit */,
 			);
 			path = MirrorTimeTracker;
 			sourceTree = "<group>";
@@ -172,6 +168,26 @@
 				4A379B5328E31BD200785CAE /* MirrorMacro.m */,
 			);
 			path = MirrorCustomize;
+			sourceTree = "<group>";
+		};
+		4ADDC5BE28E6FB09006F02DE /* MirrorTaskEdit */ = {
+			isa = PBXGroup;
+			children = (
+				4ADDC5B828E5B95F006F02DE /* EditTaskViewController.h */,
+				4ADDC5B928E5B95F006F02DE /* EditTaskViewController.m */,
+				4ADDC5BB28E6DF8B006F02DE /* ColorCollectionViewCell.h */,
+				4ADDC5BC28E6DF8B006F02DE /* ColorCollectionViewCell.m */,
+			);
+			path = MirrorTaskEdit;
+			sourceTree = "<group>";
+		};
+		4ADDC5BF28E6FB3D006F02DE /* MirrorTaskAdd */ = {
+			isa = PBXGroup;
+			children = (
+				4A379B5528E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.h */,
+				4A379B5628E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.m */,
+			);
+			path = MirrorTaskAdd;
 			sourceTree = "<group>";
 		};
 		4AFB779428DF4A380064CBCA = {
