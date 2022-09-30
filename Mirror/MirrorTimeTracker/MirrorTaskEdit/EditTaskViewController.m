@@ -52,7 +52,7 @@ static CGFloat const kEditTaskVCPadding = 20;
 - (void)viewDidDisappear:(BOOL)animated
 {
     NSString *currentText = ![self.editTaskNameTextField.text isEqualToString:@""] ? self.editTaskNameTextField.text : [MirrorLanguage mirror_stringWithKey:@"untitled"];
-    self.taskModel.taskName = currentText; // 保存taskname
+    self.taskModel.taskName = currentText; //taskname退出时更新
     [self.delegate updateTasks];
 }
 
@@ -88,7 +88,7 @@ static CGFloat const kEditTaskVCPadding = 20;
     // 选中某色块时，更新背景颜色为该色块颜色，更新model的颜色为该色块颜色
     MirrorColorType selectedColor =  self.colorBlocks[indexPath.item].color;
     self.view.backgroundColor = [UIColor mirrorColorNamed:selectedColor];
-    self.taskModel.color = selectedColor;
+    self.taskModel.color = selectedColor; // 颜色实时更新
     [collectionView reloadData];
 }
 
