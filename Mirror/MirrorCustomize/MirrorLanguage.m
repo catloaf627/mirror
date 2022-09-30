@@ -36,7 +36,7 @@ static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
     // time tracker cell
     [mirrorDict setValue:@[@"Double click to start", @"双击开始计时"] forKey:@"double_click_to_start"];
     // nickname
-    [mirrorDict setValue:@[@"nickname", @"你的昵称"] forKey:@"nickname"];
+    [mirrorDict setValue:@[@"nickname", @"我的昵称"] forKey:@"nickname"];
     // Profile cell - theme
     [mirrorDict setValue:@[@"Apply darkmode", @"启用深色模式"] forKey:@"apply_darkmode"];
     // Profile cell - language
