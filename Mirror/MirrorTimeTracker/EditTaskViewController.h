@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface EditTaskViewController : UIViewController
 
 @property (nonatomic, strong) UIViewController<EditTaskProtocol> *delegate;
-- (instancetype)initWithTasks:(NSMutableArray<TimeTrackerTaskModel *> *)tasks index:(NSInteger)index;
+- (instancetype)initWithTasks:(TimeTrackerTaskModel *)task;
 
 @end
 

@@ -12,21 +12,19 @@
 
 @interface EditTaskViewController ()
 
+@property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
 @property (nonatomic, strong) UIColor *taskColor;
 @property (nonatomic, strong) UITextField *editTaskNameTextField;
-@property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
-@property (nonatomic, assign) NSInteger taskIndex;
 
 @end
 
 @implementation EditTaskViewController
 
-- (instancetype)initWithTasks:(NSMutableArray<TimeTrackerTaskModel *> *)tasks index:(NSInteger)index
+- (instancetype)initWithTasks:(TimeTrackerTaskModel *)task
 {
     self = [super init];
     if (self) {
-        self.taskIndex = index;
-        self.taskModel = tasks[index];
+        self.taskModel = task;
         self.taskColor = _taskModel.color;
         self.editTaskNameTextField.text = _taskModel.taskName;
     }
@@ -36,7 +34,7 @@
 - (void)viewDidLayoutSubviews
 {
     // 编辑task页面为半屏
-    [self.view setFrame:CGRectMake(0, kScreenHeight/5 *2, kScreenWidth, kScreenHeight/5*3)];
+    [self.view setFrame:CGRectMake(0, kScreenHeight/5*1, kScreenWidth, kScreenHeight/5*4)];
     self.view.layer.cornerRadius = 20;
     self.view.layer.masksToBounds = YES;
 }
@@ -57,8 +55,9 @@
     self.view.backgroundColor = _taskColor;
     [self.view addSubview:self.editTaskNameTextField];
     [self.editTaskNameTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.offset(14);
+        make.top.offset(20);
         make.centerX.offset(0);
+        make.width.mas_equalTo(kScreenWidth - 40);
     }];
 }
 
@@ -72,6 +71,7 @@
         _editTaskNameTextField.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _editTaskNameTextField.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         _editTaskNameTextField.enabled = YES;
+        _editTaskNameTextField.textAlignment = NSTextAlignmentCenter;
     }
     return _editTaskNameTextField;
 }

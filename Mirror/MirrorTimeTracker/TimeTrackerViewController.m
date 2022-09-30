@@ -115,7 +115,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (task.isAddTaskModel) {
         return;
     }
-    EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks index:indexPath.item];
+    EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks[indexPath.item]];
     editVC.delegate = self;
     [self.navigationController presentViewController:editVC animated:YES completion:nil];
 }
