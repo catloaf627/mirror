@@ -33,6 +33,11 @@ static CGFloat const kShadowWidth = 5;
     self.taskNameLabel.text = taskModel.taskName;
     self.contentView.backgroundColor = taskModel.color;
     [self p_setupUI];
+    if (taskModel.isOngoing) {
+        [self startAnimation];
+    } else {
+        [self stopAnimation];
+    }
 }
 
 - (void)p_setupUI
@@ -68,12 +73,9 @@ static CGFloat const kShadowWidth = 5;
 - (void)p_convertToColor:(UIColor *)color
 {
     if (self.shouldStopAnimation) {
-        self.isAnimating = NO; //更新当前cell状态
         return;
     }
-    
     [UIView animateKeyframesWithDuration:2.0  delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-        self.isAnimating = YES; //更新当前cell状态
         self.contentView.backgroundColor = color;
     } completion:^(BOOL finished) {
         if (CGColorEqualToColor(self.contentView.backgroundColor.CGColor, self.taskModel.color.CGColor)) {
@@ -87,14 +89,14 @@ static CGFloat const kShadowWidth = 5;
 - (void)startAnimation
 {
     self.shouldStopAnimation = NO;
-    self.contentView.backgroundColor = self.taskModel.pulseColor; // 瞬间变成深色
+    self.contentView.backgroundColor = self.taskModel.pulseColor; // 瞬间变成pulse色
     [self p_convertToColor: self.taskModel.color]; // 开始闪烁
 }
 
 - (void)stopAnimation
 {
     self.shouldStopAnimation = YES;
-    self.contentView.backgroundColor = self.taskModel.color;
+    self.contentView.backgroundColor = self.taskModel.color; // 瞬间变回原色
 }
 
 #pragma mark - Getters

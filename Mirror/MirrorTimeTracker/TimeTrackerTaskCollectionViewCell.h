@@ -14,12 +14,8 @@ static CGFloat const kInterspacing = 16;
 
 @interface TimeTrackerTaskCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, assign) BOOL isAnimating;
-
 + (NSString *)identifier;
 - (void)configWithModel:(TimeTrackerTaskModel *)taskModel;
-- (void)startAnimation;
-- (void)stopAnimation;
 
 @end
 

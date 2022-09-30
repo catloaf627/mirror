@@ -88,18 +88,19 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
     
     // 点击了task model
-    TimeTrackerTaskCollectionViewCell *selectedCell = (TimeTrackerTaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-    if (selectedCell.isAnimating) { // 点击了正在计时的selectedCell，停止selectedCell的计时
-        [selectedCell stopAnimation];
+    TimeTrackerTaskModel *selectedModel = self.dataManager.tasks[indexPath.item];
+    if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
+        selectedModel.isOngoing = NO;
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         for (int i=0; i<self.dataManager.tasks.count; i++) {
-            TimeTrackerTaskCollectionViewCell *cell = (TimeTrackerTaskCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            if ([cell respondsToSelector:@selector(stopAnimation)]) { // 因为循环的时候也会循环到[+]，[+]并没有stopAnimation方法，这里控制一下，避免崩溃
-                [cell stopAnimation];
+            TimeTrackerTaskModel *model = self.dataManager.tasks[i];
+            if ([model respondsToSelector:@selector(setIsOngoing:)]) { // 因为循环的时候也会循环到[+]，[+]并没有isOngoing属性，这里控制一下，避免崩溃
+                model.isOngoing = NO;
             }
         }
-        [selectedCell startAnimation];
+        selectedModel.isOngoing = YES;
     }
+    [self.collectionView reloadData];
 }
 
 
