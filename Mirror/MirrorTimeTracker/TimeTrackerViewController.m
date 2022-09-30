@@ -115,7 +115,10 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
     TimeTrackerTaskModel *task = self.dataManager.tasks[indexPath.item];
     if (task.isAddTaskModel) {
-        return;
+        // 左滑或者右滑[+]均可以像点击一样唤起add task
+        AddTaskViewController *addVC = [AddTaskViewController new];
+        addVC.delegate = self;
+        [self.navigationController presentViewController:addVC animated:YES completion:nil];
     }
     EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks[indexPath.item]];
     editVC.delegate = self;
