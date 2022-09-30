@@ -35,8 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 // Font
 // https://stackoverflow.com/questions/8090916/fonts-on-ios-device
 
+// Max number of colors
+#define kMaxColorNum (8)
 // Max number of tasks
-#define kMaxTaskNum (8)
+#define kMaxTaskNum (20)
 
 @interface MirrorMacro : NSObject
 

@@ -21,6 +21,8 @@ static CGFloat const kEditTaskVCPadding = 20;
 @property (nonatomic, strong) UILabel *editTaskNameHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray<MirrorColorModel *> *colorBlocks;
+@property (nonatomic, strong) UIButton *archiveButton;
+@property (nonatomic, strong) UIButton *deleteBtton;
 
 @end
 
@@ -79,6 +81,35 @@ static CGFloat const kEditTaskVCPadding = 20;
         make.width.mas_equalTo(kScreenWidth - 2*kEditTaskVCPadding);
         make.height.mas_equalTo([self p_colorBlockWidth]);
     }];
+    [self.view addSubview:self.archiveButton];
+    [self.view addSubview:self.deleteBtton];
+    [self.archiveButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
+        make.left.offset(kEditTaskVCPadding);
+        make.width.mas_equalTo(kScreenWidth/2-kEditTaskVCPadding);
+        make.height.mas_equalTo(40);
+    }];
+    [self.deleteBtton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
+        make.left.mas_equalTo(self.archiveButton.mas_right).offset(0);
+        make.width.mas_equalTo(kScreenWidth/2-kEditTaskVCPadding);
+        make.height.mas_equalTo(40);
+    }];
+}
+
+#pragma mark - Actions
+
+- (void)clickDeleteButton
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate deleteTask:self.taskModel];
+    }];
+}
+
+- (void)clickArchiveButton
+{
+    // gizmo 归档操作
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Collection view delegate
@@ -94,7 +125,7 @@ static CGFloat const kEditTaskVCPadding = 20;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return kMaxTaskNum;
+    return kMaxColorNum;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -182,10 +213,49 @@ static CGFloat const kEditTaskVCPadding = 20;
     return @[pinkModel,orangeModel,yellowModel,greenModel,tealModel,blueModel,purpleModel,grayModel];
 }
 
+- (UIButton *)archiveButton
+{
+    if (!_archiveButton) {
+        _archiveButton = [UIButton new];
+        // icon
+        [_archiveButton setImage:[[UIImage systemImageNamed:@"checkmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _archiveButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        // title
+        [_archiveButton setTitle:[MirrorLanguage mirror_stringWithKey:@"archive"] forState:UIControlStateNormal];
+        [_archiveButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
+        _archiveButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+        // padding
+        _archiveButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
+        // action
+        [_archiveButton addTarget:self action:@selector(clickArchiveButton) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _archiveButton;
+}
+
+- (UIButton *)deleteBtton
+{
+    if (!_deleteBtton) {
+        _deleteBtton = [UIButton new];
+        // icon
+        [_deleteBtton setImage:[[UIImage systemImageNamed:@"xmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _deleteBtton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        // title
+        [_deleteBtton setTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] forState:UIControlStateNormal];
+        [_deleteBtton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
+        _deleteBtton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+        // padding
+        _deleteBtton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
+        // action
+        [_deleteBtton addTarget:self action:@selector(clickDeleteButton) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _deleteBtton;
+}
+
 #pragma mark - Private methods
+
 - (CGFloat)p_colorBlockWidth
 {
-    return (kScreenWidth - 2*kEditTaskVCPadding)/kMaxTaskNum;
+    return (kScreenWidth - 2*kEditTaskVCPadding)/kMaxColorNum;
 }
 
 @end

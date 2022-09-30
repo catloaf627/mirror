@@ -157,12 +157,33 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView reloadData];
 }
 
+- (void)deleteTask:(TimeTrackerTaskModel *)model
+{
+    NSMutableArray<TimeTrackerTaskModel *> *tasks = [self.dataManager.tasks mutableCopy];
+    [tasks removeObject:model];
+    // 如果删除完了一个task后发现，最后一个元素不是[+]，且此时数量不足kMaxTaskNum，在尾部添加[+]
+    if (!tasks[tasks.count-1].isAddTaskModel && tasks.count < kMaxTaskNum) {
+        [tasks insertObject:[[TimeTrackerTaskModel alloc]initWithTitle:nil colorType:nil isAddTask:YES] atIndex:tasks.count];
+    }
+    self.dataManager.tasks = tasks;
+    [self.collectionView reloadData];
+}
+
 # pragma mark - AddTaskProtocol
 
 - (void)addNewTask:(TimeTrackerTaskModel *)newTask
 {
     NSMutableArray<TimeTrackerTaskModel *> *tasks = [self.dataManager.tasks mutableCopy];
-    [tasks insertObject:newTask atIndex:0];
+    if (tasks[tasks.count-1].isAddTaskModel) { //如果最后一个元素是add task
+        [tasks insertObject:newTask atIndex:tasks.count-1]; //插入最后一个元素之前
+    } else {
+        [tasks insertObject:newTask atIndex:tasks.count]; //插入队伍最后
+    }
+    // 如果添加完了一个task后发现，包括[+]数量超过了kMaxTaskNum，这个时候删掉最后的[+]
+    if (tasks.count > kMaxTaskNum) {
+        tasks = [[tasks subarrayWithRange:NSMakeRange(0, kMaxTaskNum)] mutableCopy];
+    }
+    
     self.dataManager.tasks = tasks;
     [self.collectionView reloadData];
 }

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol EditTaskProtocol <NSObject>
 
 - (void)updateTasks;
+- (void)deleteTask:(TimeTrackerTaskModel *)model;
 
 @end
 

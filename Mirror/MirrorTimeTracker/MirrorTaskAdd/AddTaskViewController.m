@@ -20,8 +20,8 @@ static CGFloat const kAddTaskVCPadding = 20;
 @property (nonatomic, strong) UILabel *addTaskNameHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray<MirrorColorModel *> *colorBlocks;
-@property (nonatomic, strong) UIButton *createButton;
 @property (nonatomic, strong) UIButton *discardButton;
+@property (nonatomic, strong) UIButton *createButton;
 
 @end
 
@@ -40,7 +40,7 @@ static CGFloat const kAddTaskVCPadding = 20;
     self.view.layer.masksToBounds = YES;
 }
 
-- (void)createTask
+- (void)clickCreateBtn
 {
     [self dismissViewControllerAnimated:YES completion:^{
         NSString *currentText = ![self.editTaskNameTextField.text isEqualToString:@""] ? self.editTaskNameTextField.text : [MirrorLanguage mirror_stringWithKey:@"untitled"];
@@ -49,7 +49,7 @@ static CGFloat const kAddTaskVCPadding = 20;
     }];
 }
 
-- (void)discardTask
+- (void)clickDiscardButton
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -106,7 +106,7 @@ static CGFloat const kAddTaskVCPadding = 20;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return kMaxTaskNum;
+    return kMaxColorNum;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -218,7 +218,7 @@ static CGFloat const kAddTaskVCPadding = 20;
         // padding
         _createButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
         // action
-        [_createButton addTarget:self action:@selector(createTask) forControlEvents:UIControlEventTouchUpInside];
+        [_createButton addTarget:self action:@selector(clickCreateBtn) forControlEvents:UIControlEventTouchUpInside];
     }
     return _createButton;
 }
@@ -237,7 +237,7 @@ static CGFloat const kAddTaskVCPadding = 20;
         // padding
         _discardButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
         // action
-        [_discardButton addTarget:self action:@selector(discardTask) forControlEvents:UIControlEventTouchUpInside];
+        [_discardButton addTarget:self action:@selector(clickDiscardButton) forControlEvents:UIControlEventTouchUpInside];
     }
     return _discardButton;
 }
@@ -246,7 +246,7 @@ static CGFloat const kAddTaskVCPadding = 20;
 
 - (CGFloat)p_colorBlockWidth
 {
-    return (kScreenWidth - 2*kAddTaskVCPadding)/kMaxTaskNum;
+    return (kScreenWidth - 2*kAddTaskVCPadding)/kMaxColorNum;
 }
 
 
