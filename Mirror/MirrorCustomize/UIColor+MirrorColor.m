@@ -37,6 +37,8 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor blackColor] : [UIColor whiteColor];
         case MirrorColorTypeText:
             return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor blackColor] : [UIColor whiteColor];
+        case MirrorColorTypeTextHint: // 和cell gray pulse一样
+            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkGray] : [UIColor mirror_lightGray];
         case MirrorColorTypeShadow:
             return [UIColor grayColor];
         case MirrorColorTypeAddTaskCellBG:

@@ -9,12 +9,14 @@
 #import "MirrorMacro.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
+#import "MirrorLanguage.h"
 
 @interface EditTaskViewController ()
 
 @property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
 @property (nonatomic, strong) UIColor *taskColor;
 @property (nonatomic, strong) UITextField *editTaskNameTextField;
+@property (nonatomic, strong) UILabel *editTaskNameHint;
 
 @end
 
@@ -59,6 +61,12 @@
         make.centerX.offset(0);
         make.width.mas_equalTo(kScreenWidth - 40);
     }];
+    [self.view addSubview:self.editTaskNameHint];
+    [self.editTaskNameHint mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.editTaskNameTextField.mas_bottom).offset(8);
+        make.centerX.offset(0);
+        make.width.mas_equalTo(kScreenWidth - 40);
+    }];
 }
 
 #pragma mark - Getters
@@ -74,6 +82,19 @@
         _editTaskNameTextField.textAlignment = NSTextAlignmentCenter;
     }
     return _editTaskNameTextField;
+}
+
+- (UILabel *)editTaskNameHint
+{
+    if (!_editTaskNameHint) {
+        _editTaskNameHint = [UILabel new];
+        _editTaskNameHint.text = [MirrorLanguage mirror_stringWithKey:@"edit_taskname_hint"];
+        _editTaskNameHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        _editTaskNameHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:12];
+        _editTaskNameHint.textAlignment = NSTextAlignmentCenter;
+        
+    }
+    return _editTaskNameHint;
 }
 
 @end
