@@ -11,6 +11,8 @@
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 
+static MirrorColorType const languageColorType = MirrorColorTypeCellOrange;
+
 @interface LanguageCollectionViewCell ()
 
 @property (nonatomic, strong) UILabel *applyChineseLabel;
@@ -32,7 +34,7 @@
 
 - (void)p_setupUI
 {
-    self.contentView.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeCellOrange];
+    self.contentView.backgroundColor = [UIColor mirrorColorNamed:languageColorType];
     self.contentView.layer.cornerRadius = 15;
     [self.contentView addSubview:self.languageToggle];
     [self.languageToggle mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -61,7 +63,7 @@
 {
     if (!_languageToggle) {
         _languageToggle = [UISwitch new];
-        _languageToggle.onTintColor = [UIColor mirrorColorNamed:MirrorColorTypeCellOrangePulse];
+        _languageToggle.onTintColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:languageColorType]];  // toggle颜色使用pulse
         [_languageToggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
         if ([MirrorLanguage isChinese]) {
             [_languageToggle setOn:YES animated:YES];

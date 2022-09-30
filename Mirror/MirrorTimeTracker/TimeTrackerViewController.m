@@ -255,14 +255,4 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return _dataManager;
 }
 
-
-- (void)gizmo_printTasksWithString:(NSString *)info
-{
-    NSLog(@"--------------------gizmo %@", info);
-    for (int i=0; i<self.dataManager.tasks.count; i++) {
-        TimeTrackerTaskModel *model = self.dataManager.tasks[i];
-        NSLog(@"gizmo name %@", model.taskName);
-    }
-}
-
 @end

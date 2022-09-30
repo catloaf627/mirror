@@ -17,7 +17,7 @@ static CGFloat const kEditTaskVCPadding = 20;
 @interface EditTaskViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
-@property (nonatomic, strong) UIColor *taskColor;
+@property (nonatomic, assign) MirrorColorType taskColor;
 @property (nonatomic, strong) UITextField *editTaskNameTextField;
 @property (nonatomic, strong) UILabel *editTaskNameHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -60,7 +60,7 @@ static CGFloat const kEditTaskVCPadding = 20;
 
 - (void)p_setupUI
 {
-    self.view.backgroundColor = _taskColor;
+    self.view.backgroundColor = [UIColor mirrorColorNamed:_taskColor];
     [self.view addSubview:self.editTaskNameTextField];
     [self.editTaskNameTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.offset(20);
@@ -88,8 +88,8 @@ static CGFloat const kEditTaskVCPadding = 20;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     // 选中某色块时，更新背景颜色为该色块颜色，更新model的颜色为该色块颜色
-    UIColor *selectedColor = self.colorBlocks[indexPath.item].color;
-    self.view.backgroundColor = selectedColor;
+    MirrorColorType *selectedColor =  self.colorBlocks[indexPath.item].color;
+    self.view.backgroundColor = [UIColor mirrorColorNamed:selectedColor];
     self.taskColor = selectedColor;
     [collectionView reloadData];
 }
@@ -103,7 +103,7 @@ static CGFloat const kEditTaskVCPadding = 20;
 {
     // 展示所有色块
     MirrorColorModel *taskModel = (MirrorColorModel *)self.colorBlocks[indexPath.item];
-    taskModel.isSelected = CGColorEqualToColor(taskModel.color.CGColor, self.taskColor.CGColor); // 如果某色块和当前model的颜色一致，标记为选中
+    taskModel.isSelected = CGColorEqualToColor([UIColor mirrorColorNamed:taskModel.color].CGColor, [UIColor mirrorColorNamed:self.taskColor].CGColor); // 如果某色块和当前model的颜色一致，标记为选中
     ColorCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ColorCollectionViewCell identifier] forIndexPath:indexPath];
     // 更新色块（颜色、是否选中）
     [cell configWithModel:taskModel];
@@ -166,21 +166,21 @@ static CGFloat const kEditTaskVCPadding = 20;
 - (NSArray<MirrorColorModel *> *)colorBlocks
 {
     MirrorColorModel *pinkModel = [MirrorColorModel new];
-    pinkModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellPink];
+    pinkModel.color = MirrorColorTypeCellPink;
     MirrorColorModel *orangeModel = [MirrorColorModel new];
-    orangeModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellOrange];
+    orangeModel.color = MirrorColorTypeCellOrange;
     MirrorColorModel *yellowModel = [MirrorColorModel new];
-    yellowModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellYellow];
+    yellowModel.color = MirrorColorTypeCellYellow;
     MirrorColorModel *greenModel = [MirrorColorModel new];
-    greenModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellGreen];
+    greenModel.color = MirrorColorTypeCellGreen;
     MirrorColorModel *tealModel = [MirrorColorModel new];
-    tealModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellTeal];
+    tealModel.color = MirrorColorTypeCellTeal;
     MirrorColorModel *blueModel = [MirrorColorModel new];
-    blueModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellBlue];
+    blueModel.color = MirrorColorTypeCellBlue;
     MirrorColorModel *purpleModel = [MirrorColorModel new];
-    purpleModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellPurple];
+    purpleModel.color = MirrorColorTypeCellPurple;
     MirrorColorModel *grayModel = [MirrorColorModel new];
-    grayModel.color = [UIColor mirrorColorNamed:MirrorColorTypeCellGray];
+    grayModel.color = MirrorColorTypeCellGray;
     return @[pinkModel,orangeModel,yellowModel,greenModel,tealModel,blueModel,purpleModel,grayModel];
 }
 

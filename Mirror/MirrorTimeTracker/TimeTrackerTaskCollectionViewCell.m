@@ -16,7 +16,6 @@ static CGFloat const kShadowWidth = 5;
 @property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *timeInfoLabel;
-@property (nonatomic, assign) BOOL shouldStopAnimation;
 
 @end
 
@@ -31,12 +30,13 @@ static CGFloat const kShadowWidth = 5;
 {
     self.taskModel = taskModel;
     self.taskNameLabel.text = taskModel.taskName;
-    self.contentView.backgroundColor = taskModel.color;
+    self.contentView.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
     [self p_setupUI];
-    if (taskModel.isOngoing) {
-        [self startAnimation];
-    } else {
-        [self stopAnimation];
+    if (!taskModel.isOngoing) { // stop animation
+        self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color]; // 瞬间变回原色
+    } else { // start animation
+        self.contentView.backgroundColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:self.taskModel.color]]; // 瞬间变成pulse色
+        [self p_convertToColor:self.taskModel.color]; // 开始闪烁
     }
 }
 
@@ -48,7 +48,7 @@ static CGFloat const kShadowWidth = 5;
         make.top.offset(kShadowWidth);
         make.bottom.offset(-kShadowWidth);
     }];
-    self.contentView.backgroundColor = self.taskModel.color;
+    self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color];
     self.contentView.layer.cornerRadius = 14;
     self.contentView.layer.shadowColor = [UIColor mirrorColorNamed:MirrorColorTypeShadow].CGColor;
     self.contentView.layer.shadowRadius = kShadowWidth/2;
@@ -70,34 +70,22 @@ static CGFloat const kShadowWidth = 5;
     }];
 }
 
-- (void)p_convertToColor:(UIColor *)color
+- (void)p_convertToColor:(MirrorColorType)color
 {
-    if (self.shouldStopAnimation) {
-        return;
-    }
     [UIView animateKeyframesWithDuration:2.0  delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-        self.contentView.backgroundColor = color;
+        self.contentView.backgroundColor = [UIColor mirrorColorNamed:color];
     } completion:^(BOOL finished) {
-        if (CGColorEqualToColor(self.contentView.backgroundColor.CGColor, self.taskModel.color.CGColor)) {
-            [self p_convertToColor:self.taskModel.pulseColor];
+        if (!finished) {
+            return;
+        }
+        if (CGColorEqualToColor(self.contentView.backgroundColor.CGColor, [UIColor mirrorColorNamed:self.taskModel.color].CGColor)) {
+            [self p_convertToColor:[UIColor mirror_getPulseColorType:self.taskModel.color]];
         } else {
             [self p_convertToColor:self.taskModel.color];
         }
     }];
 }
 
-- (void)startAnimation
-{
-    self.shouldStopAnimation = NO;
-    self.contentView.backgroundColor = self.taskModel.pulseColor; // 瞬间变成pulse色
-    [self p_convertToColor: self.taskModel.color]; // 开始闪烁
-}
-
-- (void)stopAnimation
-{
-    self.shouldStopAnimation = YES;
-    self.contentView.backgroundColor = self.taskModel.color; // 瞬间变回原色
-}
 
 #pragma mark - Getters
 

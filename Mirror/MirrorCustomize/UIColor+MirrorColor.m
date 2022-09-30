@@ -82,6 +82,30 @@ static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
     }
 }
 
++ (MirrorColorType)mirror_getPulseColorType:(MirrorColorType)color
+{
+    switch (color) {
+        case MirrorColorTypeCellPink:
+            return MirrorColorTypeCellPinkPulse;
+        case MirrorColorTypeCellOrange:
+            return MirrorColorTypeCellOrangePulse;
+        case MirrorColorTypeCellYellow:
+            return MirrorColorTypeCellYellowPulse;
+        case MirrorColorTypeCellGreen:
+            return MirrorColorTypeCellGreenPulse;
+        case MirrorColorTypeCellTeal:
+            return MirrorColorTypeCellTealPulse;
+        case MirrorColorTypeCellBlue:
+            return MirrorColorTypeCellBluePulse;
+        case MirrorColorTypeCellPurple:
+            return MirrorColorTypeCellPurplePulse;
+        case MirrorColorTypeCellGray:
+            return MirrorColorTypeCellGrayPulse;
+        default:
+            return MirrorColorTypeBackground;
+    }
+}
+
 + (UIColor *)mirror_lightPink
 {
     return [UIColor colorWithRed:224/255.0 green:205/255.0 blue:207/255.0 alpha:1]; // 莫兰迪粉

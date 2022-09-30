@@ -10,6 +10,7 @@
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 
+static MirrorColorType const themeColorType = MirrorColorTypeCellPink;
 
 @interface ThemeCollectionViewCell ()
 
@@ -32,7 +33,7 @@
 
 - (void)p_setupUI
 {
-    self.contentView.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeCellPink];
+    self.contentView.backgroundColor = [UIColor mirrorColorNamed:themeColorType];
     self.contentView.layer.cornerRadius = 15;
     [self.contentView addSubview:self.themeToggle];
     [self.themeToggle mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -61,7 +62,7 @@
 {
     if (!_themeToggle) {
         _themeToggle = [UISwitch new];
-        _themeToggle.onTintColor = [UIColor mirrorColorNamed:MirrorColorTypeCellPinkPulse];
+        _themeToggle.onTintColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:themeColorType]]; // toggle颜色使用pulse
         [_themeToggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
         if ([UIColor isDarkMode]) {
             [_themeToggle setOn:YES animated:YES];

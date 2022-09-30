@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "UIColor+MirrorColor.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,11 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isAddTaskModel;
 @property (nonatomic, strong) NSString *taskName;
 @property (nonatomic, strong) NSString *timeInfo;
-@property (nonatomic, strong) UIColor *color;
-@property (nonatomic, strong) UIColor *pulseColor;
+@property (nonatomic, assign) MirrorColorType color;
 @property (nonatomic, assign) BOOL isOngoing;
 
-- (instancetype)initWithTitle:(NSString *)taskName color:(UIColor *)color pulseColor:(UIColor *)pulseColor isAddTask:(BOOL)isAddTaskModel;
+- (instancetype)initWithTitle:(NSString *)taskName colorType:(MirrorColorType)colorType isAddTask:(BOOL)isAddTaskModel;
 - (void)didStartTask;
 - (void)didStopTask;
 

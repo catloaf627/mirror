@@ -23,17 +23,17 @@
 - (NSMutableArray<TimeTrackerTaskModel *> *)mirrorDefaultTimeTrackerData
 {
     NSMutableArray<TimeTrackerTaskModel *> *tasks = @[
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Pink" color:[UIColor mirrorColorNamed:MirrorColorTypeCellPink] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellPinkPulse] isAddTask:NO],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Orange" color:[UIColor mirrorColorNamed:MirrorColorTypeCellOrange] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellOrangePulse] isAddTask:NO],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Yellow" color:[UIColor mirrorColorNamed:MirrorColorTypeCellYellow] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellYellowPulse] isAddTask:NO],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Green" color:[UIColor mirrorColorNamed:MirrorColorTypeCellGreen] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellGreenPulse] isAddTask:NO],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Teal" color:[UIColor mirrorColorNamed:MirrorColorTypeCellTeal] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellTealPulse] isAddTask:NO],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Blue" color:[UIColor mirrorColorNamed:MirrorColorTypeCellBlue] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellBluePulse] isAddTask:NO],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Purple" color:[UIColor mirrorColorNamed:MirrorColorTypeCellPurple] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellPurplePulse] isAddTask:NO],
-    [[TimeTrackerTaskModel alloc]initWithTitle:@"Gray" color:[UIColor mirrorColorNamed:MirrorColorTypeCellGray] pulseColor:[UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse] isAddTask:NO],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Pink" colorType:MirrorColorTypeCellPink isAddTask:NO],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Orange" colorType:MirrorColorTypeCellOrange isAddTask:NO],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Yellow" colorType:MirrorColorTypeCellYellow isAddTask:NO],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Green" colorType:MirrorColorTypeCellGreen isAddTask:NO],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Teal" colorType:MirrorColorTypeCellTeal isAddTask:NO],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Blue" colorType:MirrorColorTypeCellBlue isAddTask:NO],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Purple" colorType:MirrorColorTypeCellPurple isAddTask:NO],
+    [[TimeTrackerTaskModel alloc]initWithTitle:@"Gray" colorType:MirrorColorTypeCellGray isAddTask:NO],
     
     //cell数量不足8的时候必加add task cell
-    [[TimeTrackerTaskModel alloc]initWithTitle:nil color:nil pulseColor:nil isAddTask:YES],
+    [[TimeTrackerTaskModel alloc]initWithTitle:nil colorType:nil isAddTask:YES],
     ];
     return tasks;
 }

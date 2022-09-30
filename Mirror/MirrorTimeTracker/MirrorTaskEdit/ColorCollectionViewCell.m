@@ -29,7 +29,7 @@
         make.width.height.mas_equalTo(width/2);
         make.centerX.centerY.offset(0);
     }];
-    self.backgroundColor = model.color;
+    self.backgroundColor = [UIColor mirrorColorNamed:model.color];
     self.selectedMarkView.hidden = !model.isSelected;
 }
 
