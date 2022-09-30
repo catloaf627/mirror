@@ -19,7 +19,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditTaskProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) TimeTrackerDataManager *dataManager;
@@ -115,8 +115,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (task.isAddTaskModel) {
         return;
     }
-    UIViewController *vc = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks index:indexPath.item];
-    [self.navigationController presentViewController:vc animated:YES completion:nil];
+    EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks index:indexPath.item];
+    editVC.delegate = self;
+    [self.navigationController presentViewController:editVC animated:YES completion:nil];
 }
 
 // long press唤起编辑顺序
@@ -145,6 +146,13 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [self.collectionView cancelInteractiveMovement];
             break;
     }
+}
+
+# pragma mark - EditTaskProtocol
+
+- (void)updateTasks
+{
+    [self.collectionView reloadData];
 }
 
 # pragma mark - Collection view delegate
@@ -246,5 +254,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return _dataManager;
 }
 
+
+- (void)gizmo_printTasksWithString:(NSString *)info
+{
+    NSLog(@"--------------------gizmo %@", info);
+    for (int i=0; i<self.dataManager.tasks.count; i++) {
+        TimeTrackerTaskModel *model = self.dataManager.tasks[i];
+        NSLog(@"gizmo name %@", model.taskName);
+    }
+}
 
 @end

@@ -30,6 +30,7 @@ static CGFloat const kShadowWidth = 5;
 - (void)configWithModel:(TimeTrackerTaskModel *)taskModel
 {
     self.taskModel = taskModel;
+    self.taskNameLabel.text = taskModel.taskName;
     self.contentView.backgroundColor = taskModel.color;
     [self p_setupUI];
 }

@@ -10,8 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol EditTaskProtocol <NSObject>
+
+- (void)updateTasks;
+
+@end
+
 @interface EditTaskViewController : UIViewController
 
+@property (nonatomic, strong) UIViewController<EditTaskProtocol> *delegate;
 - (instancetype)initWithTasks:(NSMutableArray<TimeTrackerTaskModel *> *)tasks index:(NSInteger)index;
 
 @end
