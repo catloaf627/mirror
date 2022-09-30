@@ -208,8 +208,16 @@ static CGFloat const kAddTaskVCPadding = 20;
 {
     if (!_createButton) {
         _createButton = [UIButton new];
-        [_createButton setImage:[[UIImage systemImageNamed:@"clock.fill"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        // icon
+        [_createButton setImage:[[UIImage systemImageNamed:@"checkmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         _createButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        // title
+        [_createButton setTitle:[MirrorLanguage mirror_stringWithKey:@"create"] forState:UIControlStateNormal];
+        [_createButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
+        _createButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+        // padding
+        _createButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
+        // action
         [_createButton addTarget:self action:@selector(createTask) forControlEvents:UIControlEventTouchUpInside];
     }
     return _createButton;
@@ -219,8 +227,16 @@ static CGFloat const kAddTaskVCPadding = 20;
 {
     if (!_discardButton) {
         _discardButton = [UIButton new];
-        [_discardButton setImage:[[UIImage systemImageNamed:@"person.fill"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        // icon
+        [_discardButton setImage:[[UIImage systemImageNamed:@"xmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         _discardButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        // title
+        [_discardButton setTitle:[MirrorLanguage mirror_stringWithKey:@"discard"] forState:UIControlStateNormal];
+        [_discardButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
+        _discardButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+        // padding
+        _discardButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
+        // action
         [_discardButton addTarget:self action:@selector(discardTask) forControlEvents:UIControlEventTouchUpInside];
     }
     return _discardButton;

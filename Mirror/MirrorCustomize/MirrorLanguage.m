@@ -47,7 +47,8 @@ static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
     [mirrorDict setValue:@[@"Untitled", @"未命名"] forKey:@"untitled"];
     // Profile add cell
     [mirrorDict setValue:@[@"Enter task title", @"输入任务名称"] forKey:@"enter_task_title"];
-//    [mirrorDict setValue:@[@"Create task", @"创建任务"] forKey:@"create_task"];
+    [mirrorDict setValue:@[@"Create", @"创建"] forKey:@"create"];
+    [mirrorDict setValue:@[@"Discard", @"放弃"] forKey:@"discard"];
     [mirrorDict setValue:@[@"Enter a title to create a new task", @"输入名称以创建新的任务"] forKey:@"add_taskname_hint"];
     
     
