@@ -15,11 +15,12 @@
 #import "MirrorMacro.h"
 #import "MirrorTabsManager.h"
 #import "EditTaskViewController.h"
+#import "AddTaskViewController.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditTaskProtocol>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditTaskProtocol, AddTaskProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) TimeTrackerDataManager *dataManager;
@@ -156,6 +157,16 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView reloadData];
 }
 
+# pragma mark - AddTaskProtocol
+
+- (void)addNewTask:(TimeTrackerTaskModel *)newTask
+{
+    NSMutableArray<TimeTrackerTaskModel *> *tasks = [self.dataManager.tasks mutableCopy];
+    [tasks insertObject:newTask atIndex:0];
+    self.dataManager.tasks = tasks;
+    [self.collectionView reloadData];
+}
+
 # pragma mark - Collection view delegate
 
 // 轻点[+]
@@ -163,7 +174,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 {
     TimeTrackerTaskModel *selectedModel = self.dataManager.tasks[selectedIndexPath.item];
     if (selectedModel.isAddTaskModel) {
-        // 点击了add task model [+]
+        AddTaskViewController *addVC = [AddTaskViewController new];
+        addVC.delegate = self;
+        [self.navigationController presentViewController:addVC animated:YES completion:nil];
     }
 }
 
