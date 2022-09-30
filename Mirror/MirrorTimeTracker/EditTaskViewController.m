@@ -12,6 +12,8 @@
 #import "MirrorLanguage.h"
 #import "ColorCollectionViewCell.h"
 
+static CGFloat const kEditTaskVCPadding = 20;
+
 @interface EditTaskViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
@@ -52,7 +54,7 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     self.taskModel.taskName = self.editTaskNameTextField.text; // 保存taskname
-    self.taskModel.color = self.taskColor;
+    self.taskModel.color = self.taskColor; // 保存color
     [self.delegate updateTasks];
 }
 
@@ -63,20 +65,20 @@
     [self.editTaskNameTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.offset(20);
         make.centerX.offset(0);
-        make.width.mas_equalTo(kScreenWidth - 40);
+        make.width.mas_equalTo(kScreenWidth - 2*kEditTaskVCPadding);
     }];
     [self.view addSubview:self.editTaskNameHint];
     [self.editTaskNameHint mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.editTaskNameTextField.mas_bottom).offset(8);
         make.centerX.offset(0);
-        make.width.mas_equalTo(kScreenWidth - 40);
+        make.width.mas_equalTo(kScreenWidth - 2*kEditTaskVCPadding);
     }];
     
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.editTaskNameHint.mas_bottom).offset(16);
         make.centerX.offset(0);
-        make.width.mas_equalTo(kScreenWidth - 40);
+        make.width.mas_equalTo(kScreenWidth - 2*kEditTaskVCPadding);
         make.height.mas_equalTo([self p_colorBlockWidth]);
     }];
 }
@@ -85,9 +87,9 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    // 选中某色块时，更新背景颜色为该色块颜色，更新model的颜色为该色块颜色
     UIColor *selectedColor = self.colorBlocks[indexPath.item].color;
     self.view.backgroundColor = selectedColor;
-    self.collectionView.backgroundColor = selectedColor;
     self.taskColor = selectedColor;
     [collectionView reloadData];
 }
@@ -97,13 +99,13 @@
     return kMaxTaskNum;
 }
 
-// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    // 展示所有色块
     MirrorColorModel *taskModel = (MirrorColorModel *)self.colorBlocks[indexPath.item];
-    taskModel.isSelected = CGColorEqualToColor(taskModel.color.CGColor, self.taskColor.CGColor);
-    
+    taskModel.isSelected = CGColorEqualToColor(taskModel.color.CGColor, self.taskColor.CGColor); // 如果某色块和当前model的颜色一致，标记为选中
     ColorCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ColorCollectionViewCell identifier] forIndexPath:indexPath];
+    // 更新色块（颜色、是否选中）
     [cell configWithModel:taskModel];
     return cell;
 }
@@ -154,7 +156,7 @@
         _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
-        _collectionView.backgroundColor = self.view.backgroundColor;
+        _collectionView.backgroundColor = [UIColor clearColor];
         
         [_collectionView registerClass:[ColorCollectionViewCell class] forCellWithReuseIdentifier:[ColorCollectionViewCell identifier]];
     }
@@ -185,7 +187,7 @@
 #pragma mark - Private methods
 - (CGFloat)p_colorBlockWidth
 {
-    return (kScreenWidth - 40)/kMaxTaskNum;
+    return (kScreenWidth - 2*kEditTaskVCPadding)/kMaxTaskNum;
 }
 
 @end
