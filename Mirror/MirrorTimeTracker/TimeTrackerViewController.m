@@ -76,7 +76,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 #pragma mark - Actions
 
 // 长按唤起task编辑页面
-- (void)cellGetLongPressed:(UISwipeGestureRecognizer *)swipeRecognizer
+- (void)cellGetsLongPressed:(UISwipeGestureRecognizer *)swipeRecognizer
 {
     CGPoint touchPoint = [swipeRecognizer locationInView:self.collectionView];
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:touchPoint];
@@ -135,7 +135,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 # pragma mark - Collection view delegate
 
-// 轻点[+]
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
     TimeTrackerTaskModel *selectedModel = self.dataManager.tasks[selectedIndexPath.item];
@@ -209,7 +208,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [_collectionView registerClass:[TimeTrackerAddTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier]];
         
         // 长按手势
-        UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(cellGetLongPressed:)];
+        UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(cellGetsLongPressed:)];
         longPressRecognizer.minimumPressDuration = 0.5;
         [_collectionView addGestureRecognizer:longPressRecognizer];
         

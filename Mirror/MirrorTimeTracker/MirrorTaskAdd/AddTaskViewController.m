@@ -12,6 +12,7 @@
 #import "MirrorLanguage.h"
 #import "UIColor+MirrorColor.h"
 static CGFloat const kAddTaskVCPadding = 20;
+static CGFloat const kHeightRatio = 0.8;
 
 @interface AddTaskViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -35,9 +36,12 @@ static CGFloat const kAddTaskVCPadding = 20;
 - (void)viewDidLayoutSubviews
 {
     // 创建task页面为半屏
-    [self.view setFrame:CGRectMake(0, kScreenHeight/5*1, kScreenWidth, kScreenHeight/5*4)];
+    [self.view setFrame:CGRectMake(0, kScreenHeight*(1-kHeightRatio), kScreenWidth, kScreenHeight*kHeightRatio)];
     self.view.layer.cornerRadius = 20;
     self.view.layer.masksToBounds = YES;
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(viewGetsTapped:)];
+    tapRecognizer.numberOfTapsRequired = 1;
+    [self.view.superview addGestureRecognizer:tapRecognizer];
 }
 
 - (void)clickCreateBtn
@@ -129,6 +133,15 @@ static CGFloat const kAddTaskVCPadding = 20;
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
     return 0;
+}
+
+#pragma mark - Actions
+- (void)viewGetsTapped:(UIGestureRecognizer *)tapRecognizer
+{
+    CGPoint touchPoint = [tapRecognizer locationInView:self.view];
+    if (touchPoint.y <= 0) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark - Getters

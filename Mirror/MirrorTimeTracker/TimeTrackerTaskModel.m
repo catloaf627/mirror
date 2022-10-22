@@ -16,7 +16,7 @@
     if (self) {
         _taskName = taskName;
         _color = colorType;
-        _timeInfo = [MirrorLanguage mirror_stringWithKey:@"double_click_to_start"];
+        _timeInfo = [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
         _isAddTaskModel = isAddTaskModel;
     }
     return self;
