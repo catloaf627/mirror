@@ -7,21 +7,23 @@
 
 #import "MirrorLanguage.h"
 
+static NSString *const kPreferredChinese = @"MirrorUserPreferredChinese";
+
 @implementation MirrorLanguage
 
 + (void)switchLanguage
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredChinese"];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:kPreferredChinese]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kPreferredChinese];
     } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredChinese"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kPreferredChinese];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchLanguageNotification" object:nil];
 }
 
 + (BOOL)isChinese
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kPreferredChinese]) {
         return YES;
     } else {
         return NO;

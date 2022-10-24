@@ -7,21 +7,23 @@
 
 #import "UIColor+MirrorColor.h"
 
+static NSString *const kPreferredDark = @"MirrorUserPreferredDarkMode";
+
 @implementation UIColor (MirrorColor)
 
 + (void)switchTheme
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredDarkMode"]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredDarkMode"];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:kPreferredDark]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kPreferredDark];
     } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredDarkMode"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kPreferredDark];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchThemeNotification" object:nil];
 }
 
 + (BOOL)isDarkMode
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredDarkMode"]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kPreferredDark]) {
         return YES;
     } else {
         return NO;
@@ -30,7 +32,7 @@
 
 + (UIColor *)mirrorColorNamed:(MirrorColorType)colorType
 {
-    BOOL isLight = ![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredDarkMode"];
+    BOOL isLight = ![[NSUserDefaults standardUserDefaults] boolForKey:kPreferredDark];
     switch (colorType) {
         case MirrorColorTypeBackground:
             return isLight ? [UIColor whiteColor] : [UIColor blackColor];
