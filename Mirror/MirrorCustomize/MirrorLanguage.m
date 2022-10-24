@@ -7,23 +7,25 @@
 
 #import "MirrorLanguage.h"
 
-static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
-
 @implementation MirrorLanguage
 
 + (void)switchLanguage
 {
-    if (_languageType == MirrorLanguageTypeEnglish) {
-        _languageType = MirrorLanguageTypeChinese;
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredChinese"];
     } else {
-        _languageType = MirrorLanguageTypeEnglish;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredChinese"];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchLanguageNotification" object:nil];
 }
 
 + (BOOL)isChinese
 {
-    return _languageType == MirrorLanguageTypeChinese;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"]) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 + (NSString *)mirror_stringWithKey:(NSString *)key
@@ -54,8 +56,8 @@ static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
     [mirrorDict setValue:@[@"Enter a title to create a new task", @"输入名称以创建新的任务"] forKey:@"add_taskname_hint"];
     [mirrorDict setValue:@[@"yesterday", @"昨天"] forKey:@"yesterday"];
     
-    
-    return [mirrorDict valueForKey:key][_languageType];
+    NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
+    return [mirrorDict valueForKey:key][index];
 }
 
 

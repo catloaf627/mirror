@@ -9,74 +9,77 @@
 
 @implementation UIColor (MirrorColor)
 
-static MirrorUserInterfaceStyle _interfaceStyle = MirrorUserInterfaceStyleLight;
-
 + (void)switchTheme
 {
-    if (_interfaceStyle == MirrorUserInterfaceStyleLight) {
-        _interfaceStyle = MirrorUserInterfaceStyleDark;
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredDarkMode"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredDarkMode"];
     } else {
-        _interfaceStyle = MirrorUserInterfaceStyleLight;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredDarkMode"];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchThemeNotification" object:nil];
 }
 
 + (BOOL)isDarkMode
 {
-    return _interfaceStyle == MirrorUserInterfaceStyleDark;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredDarkMode"]) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 + (UIColor *)mirrorColorNamed:(MirrorColorType)colorType
 {
+    BOOL isLight = ![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredDarkMode"];
     switch (colorType) {
         case MirrorColorTypeBackground:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor whiteColor] : [UIColor blackColor];
+            return isLight ? [UIColor whiteColor] : [UIColor blackColor];
         case MirrorColorTypeTabbarIconText:
             return [UIColor grayColor];
         case MirrorColorTypeTabbarIconTextHightlight:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor blackColor] : [UIColor whiteColor];
+            return isLight ? [UIColor blackColor] : [UIColor whiteColor];
         case MirrorColorTypeText:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor blackColor] : [UIColor whiteColor];
+            return isLight ? [UIColor blackColor] : [UIColor whiteColor];
         case MirrorColorTypeTextHint: // 和cell gray pulse一样
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkGray] : [UIColor mirror_lightGray];
+            return isLight ? [UIColor mirror_darkGray] : [UIColor mirror_lightGray];
         case MirrorColorTypeShadow:
             return [UIColor grayColor];
         case MirrorColorTypeAddTaskCellBG:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1] : [UIColor colorWithRed:15/255.0 green:15/255.0 blue:15/255.0 alpha:1];
+            return isLight ? [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1] : [UIColor colorWithRed:15/255.0 green:15/255.0 blue:15/255.0 alpha:1];
         case MirrorColorTypeAddTaskCellPlus:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor colorWithRed:200/255.0 green: 200/255.0  blue:200/255.0 alpha:1] : [UIColor colorWithRed:55/255.0 green: 55/255.0  blue:55/255.0 alpha:1];
+            return isLight ? [UIColor colorWithRed:200/255.0 green: 200/255.0  blue:200/255.0 alpha:1] : [UIColor colorWithRed:55/255.0 green: 55/255.0  blue:55/255.0 alpha:1];
         case MirrorColorTypeCellPink:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightPink] : [UIColor mirror_darkPink];
+            return isLight ? [UIColor mirror_lightPink] : [UIColor mirror_darkPink];
         case MirrorColorTypeCellPinkPulse:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkPink] : [UIColor mirror_lightPink];
+            return isLight ? [UIColor mirror_darkPink] : [UIColor mirror_lightPink];
         case MirrorColorTypeCellOrange:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightOrange] : [UIColor mirror_darkOrange];
+            return isLight ? [UIColor mirror_lightOrange] : [UIColor mirror_darkOrange];
         case MirrorColorTypeCellOrangePulse:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkOrange] : [UIColor mirror_lightOrange];
+            return isLight ? [UIColor mirror_darkOrange] : [UIColor mirror_lightOrange];
         case MirrorColorTypeCellYellow:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightYellow] : [UIColor mirror_darkYellow];
+            return isLight ? [UIColor mirror_lightYellow] : [UIColor mirror_darkYellow];
         case MirrorColorTypeCellYellowPulse:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkYellow] : [UIColor mirror_lightYellow];
+            return isLight ? [UIColor mirror_darkYellow] : [UIColor mirror_lightYellow];
         case MirrorColorTypeCellGreen:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightGreen] : [UIColor mirror_darkGreen];
+            return isLight ? [UIColor mirror_lightGreen] : [UIColor mirror_darkGreen];
         case MirrorColorTypeCellGreenPulse:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkGreen] : [UIColor mirror_lightGreen];
+            return isLight ? [UIColor mirror_darkGreen] : [UIColor mirror_lightGreen];
         case MirrorColorTypeCellTeal:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightTeal] : [UIColor mirror_darkTeal];
+            return isLight ? [UIColor mirror_lightTeal] : [UIColor mirror_darkTeal];
         case MirrorColorTypeCellTealPulse:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkTeal] : [UIColor mirror_lightTeal];
+            return isLight ? [UIColor mirror_darkTeal] : [UIColor mirror_lightTeal];
         case MirrorColorTypeCellBlue:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightBlue] : [UIColor mirror_darkBlue];
+            return isLight ? [UIColor mirror_lightBlue] : [UIColor mirror_darkBlue];
         case MirrorColorTypeCellBluePulse:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkBlue] : [UIColor mirror_lightBlue];
+            return isLight ? [UIColor mirror_darkBlue] : [UIColor mirror_lightBlue];
         case MirrorColorTypeCellPurple:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightPurple] : [UIColor mirror_darkPurple];
+            return isLight ? [UIColor mirror_lightPurple] : [UIColor mirror_darkPurple];
         case MirrorColorTypeCellPurplePulse:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkPurple] : [UIColor mirror_lightPurple];
+            return isLight ? [UIColor mirror_darkPurple] : [UIColor mirror_lightPurple];
         case MirrorColorTypeCellGray:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_lightGray] : [UIColor mirror_darkGray];
+            return isLight ? [UIColor mirror_lightGray] : [UIColor mirror_darkGray];
         case MirrorColorTypeCellGrayPulse:
-            return _interfaceStyle == MirrorUserInterfaceStyleLight ? [UIColor mirror_darkGray] : [UIColor mirror_lightGray];
+            return isLight ? [UIColor mirror_darkGray] : [UIColor mirror_lightGray];
         default:
             return [UIColor clearColor];
     }

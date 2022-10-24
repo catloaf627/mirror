@@ -9,12 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, MirrorLanguageType) {
-    MirrorLanguageTypeEnglish,
-    MirrorLanguageTypeChinese,
-};
-
-
 @interface MirrorLanguage : NSObject
 
 + (void)switchLanguage;
