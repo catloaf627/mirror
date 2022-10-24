@@ -11,8 +11,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MirrorLanguage : NSObject
 
-+ (void)switchLanguage;
-+ (BOOL)isChinese;
 +(NSString *)mirror_stringWithKey:(NSString *)key;
 
 @end

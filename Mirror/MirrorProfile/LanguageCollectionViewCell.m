@@ -8,10 +8,10 @@
 #import "LanguageCollectionViewCell.h"
 #import "UIColor+MirrorColor.h"
 
-#import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 
 static MirrorColorType const languageColorType = MirrorColorTypeCellOrange;
+static NSString *const kPreferredChinese = @"MirrorUserPreferredChinese";
 
 @implementation LanguageCollectionViewCell
 
@@ -24,7 +24,7 @@ static MirrorColorType const languageColorType = MirrorColorTypeCellOrange;
 {
     [super configCellWithTitle:@"apply_chinese" color:languageColorType];
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-    if ([MirrorLanguage isChinese]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kPreferredChinese]) {
         [self.toggle setOn:YES animated:YES];
     } else {
         [self.toggle setOn:NO animated:YES];
@@ -33,7 +33,12 @@ static MirrorColorType const languageColorType = MirrorColorTypeCellOrange;
 
 
 - (void)switchChanged:(UISwitch *)sender {
-    [MirrorLanguage switchLanguage];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:kPreferredChinese]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kPreferredChinese];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kPreferredChinese];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchLanguageNotification" object:nil];
 }
 
 @end

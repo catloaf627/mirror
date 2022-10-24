@@ -7,10 +7,10 @@
 
 #import "ThemeCollectionViewCell.h"
 #import "UIColor+MirrorColor.h"
-#import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 
 static MirrorColorType const themeColorType = MirrorColorTypeCellPink;
+static NSString *const kPreferredDark = @"MirrorUserPreferredDarkMode";
 
 @implementation ThemeCollectionViewCell
 
@@ -23,7 +23,7 @@ static MirrorColorType const themeColorType = MirrorColorTypeCellPink;
 {
     [super configCellWithTitle:@"apply_darkmode" color:themeColorType];
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-    if ([UIColor isDarkMode]) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kPreferredDark]) {
         [self.toggle setOn:YES animated:YES];
     } else {
         [self.toggle setOn:NO animated:YES];
@@ -31,7 +31,12 @@ static MirrorColorType const themeColorType = MirrorColorTypeCellPink;
 }
 
 - (void)switchChanged:(UISwitch *)sender {
-    [UIColor switchTheme];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:kPreferredDark]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kPreferredDark];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kPreferredDark];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchThemeNotification" object:nil];
 }
     
 
