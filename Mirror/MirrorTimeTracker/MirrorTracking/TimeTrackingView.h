@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TimeTrackingViewProtocol <NSObject>
 
-- (void)foldTimeTrackingView;
+- (void)closeTimeTrackingView;
 
 @end
 

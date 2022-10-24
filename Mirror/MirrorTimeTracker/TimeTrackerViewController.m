@@ -136,7 +136,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 #pragma mark - TimeTrackingViewProtocol
 
-- (void)foldTimeTrackingView
+- (void)closeTimeTrackingView
 {
     for (UIView *view in self.view.subviews) {
         if ([view isKindOfClass:TimeTrackingView.class]) {
@@ -146,7 +146,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self p_stopAllTasks];
 }
 
-- (void)unfoldTimeTrackingViewWithTask:(TimeTrackerTaskModel *)task
+- (void)openTimeTrackingViewWithTask:(TimeTrackerTaskModel *)task
 {
     TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTask:task];
     timeTrackingView.delegate = self;
@@ -185,11 +185,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
         selectedModel.isOngoing = NO;
-        [self foldTimeTrackingView];
+        [self closeTimeTrackingView];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [self p_stopAllTasks];
         selectedModel.isOngoing = YES;
-        [self unfoldTimeTrackingViewWithTask:selectedModel];
+        [self openTimeTrackingViewWithTask:selectedModel];
     }
     [self.collectionView reloadData];
 }

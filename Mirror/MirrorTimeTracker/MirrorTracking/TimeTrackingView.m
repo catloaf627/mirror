@@ -185,7 +185,7 @@ static CGFloat const kDashSpacing = 10;
     NSTimeInterval timeInterval = [nowTime timeIntervalSinceDate:startTime];
     self.timeIntervalLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval];
     if (timeInterval >= 86400 || timeInterval < 0) { // 超过一天或者interval为负数立即停止计时
-        [self.delegate foldTimeTrackingView];
+        [self.delegate closeTimeTrackingView];
     }
     if (![[dayFormatter stringFromDate:nowTime] isEqualToString:[dayFormatter stringFromDate:startTime]]) { // 如果两个时间不在同一天（跨越了0点），给startTime一个[昨天]的标记
         self.yesterdayLabel.hidden = NO;
@@ -196,7 +196,7 @@ static CGFloat const kDashSpacing = 10;
 
 - (void)stopButtonClicked
 {
-    [self.delegate foldTimeTrackingView];
+    [self.delegate closeTimeTrackingView];
 }
 
 #pragma mark - Getters
