@@ -25,6 +25,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) TimeTrackerDataManager *dataManager;
+@property (nonatomic, assign) BOOL applyImmersiveMode;
 
 @end
 
@@ -36,6 +37,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchImmersiveModeNotification" object:nil];
     }
     return self;
 }
@@ -59,6 +61,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.dataManager.tasks = [[MirrorDefaultDataManager sharedInstance] mirrorDefaultTimeTrackerData]; //gizmo 暂时写死
+    self.applyImmersiveMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredImmersiveMode"];
     [self  p_setupUI];
 }
 
@@ -185,11 +188,15 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
         selectedModel.isOngoing = NO;
-        [self closeTimeTrackingView];
+        if (self.applyImmersiveMode) {
+            [self closeTimeTrackingView];
+        }
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [self p_stopAllTasks];
         selectedModel.isOngoing = YES;
-        [self openTimeTrackingViewWithTask:selectedModel];
+        if (self.applyImmersiveMode) {
+            [self openTimeTrackingViewWithTask:selectedModel];
+        }
     }
     [self.collectionView reloadData];
 }
