@@ -14,7 +14,7 @@
 static CGFloat const kAddTaskVCPadding = 20;
 static CGFloat const kHeightRatio = 0.8;
 
-@interface AddTaskViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface AddTaskViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) TimeTrackerTaskModel *brandNewTaskModel; //新创建的task，由于OC不允许使用new作为property的前缀，这里使用了brand new
 @property (nonatomic, strong) UITextField *editTaskNameTextField;
@@ -41,6 +41,7 @@ static CGFloat const kHeightRatio = 0.8;
     self.view.layer.masksToBounds = YES;
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(viewGetsTapped:)];
     tapRecognizer.numberOfTapsRequired = 1;
+    tapRecognizer.delegate = self;
     [self.view.superview addGestureRecognizer:tapRecognizer];
 }
 
@@ -136,11 +137,24 @@ static CGFloat const kHeightRatio = 0.8;
 }
 
 #pragma mark - Actions
+// 给superview添加了点击手势（为了在点击上方不属于self.view的地方可以dismiss掉self）
 - (void)viewGetsTapped:(UIGestureRecognizer *)tapRecognizer
 {
     CGPoint touchPoint = [tapRecognizer locationInView:self.view];
     if (touchPoint.y <= 0) {
         [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+// 这里需要判断下，如果点击的位置属于self.view，这时候忽略superview上的手势
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    CGPoint touchPoint = [touch locationInView:self.view];
+    if (touchPoint.y <= 0) {
+        return YES;
+    } else {
+        return NO;
     }
 }
 
