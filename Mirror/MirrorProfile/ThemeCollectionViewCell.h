@@ -6,10 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ToggleCollectionViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ThemeCollectionViewCell : UICollectionViewCell
+@interface ThemeCollectionViewCell : ToggleCollectionViewCell
 
 + (NSString *)identifier;
 - (void)configCell;

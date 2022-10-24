@@ -12,13 +12,6 @@
 
 static MirrorColorType const themeColorType = MirrorColorTypeCellPink;
 
-@interface ThemeCollectionViewCell ()
-
-@property (nonatomic, strong) UILabel *applyDarkModeLabel;
-@property (nonatomic, strong) UISwitch *themeToggle;
-
-@end
-
 @implementation ThemeCollectionViewCell
 
 + (NSString *)identifier
@@ -28,53 +21,16 @@ static MirrorColorType const themeColorType = MirrorColorTypeCellPink;
 
 - (void)configCell
 {
-    [self p_setupUI];
-}
-
-- (void)p_setupUI
-{
-    self.contentView.backgroundColor = [UIColor mirrorColorNamed:themeColorType];
-    self.contentView.layer.cornerRadius = 15;
-    [self.contentView addSubview:self.themeToggle];
-    [self.themeToggle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.offset(0);
-        make.right.offset(-30);
-    }];
-    [self.contentView addSubview:self.applyDarkModeLabel];
-    [self.applyDarkModeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.offset(0);
-        make.left.offset(30);
-    }];
-}
-
-- (UILabel *)applyDarkModeLabel
-{
-    if (!_applyDarkModeLabel) {
-        _applyDarkModeLabel = [UILabel new];
-        _applyDarkModeLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        _applyDarkModeLabel.text = [MirrorLanguage mirror_stringWithKey:@"apply_darkmode"];
-        _applyDarkModeLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
+    [super configCellWithTitle:@"apply_darkmode" color:themeColorType];
+    [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+    if ([UIColor isDarkMode]) {
+        [self.toggle setOn:YES animated:YES];
+    } else {
+        [self.toggle setOn:NO animated:YES];
     }
-    return _applyDarkModeLabel;
-}
-
-- (UISwitch *)themeToggle
-{
-    if (!_themeToggle) {
-        _themeToggle = [UISwitch new];
-        _themeToggle.onTintColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:themeColorType]]; // toggle颜色使用pulse
-        [_themeToggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-        if ([UIColor isDarkMode]) {
-            [_themeToggle setOn:YES animated:YES];
-        } else {
-            [_themeToggle setOn:NO animated:YES];
-        }
-    }
-    return _themeToggle;
 }
 
 - (void)switchChanged:(UISwitch *)sender {
-   // Do something
     [UIColor switchTheme];
 }
     
