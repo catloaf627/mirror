@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *timeInfo;
 @property (nonatomic, assign) MirrorColorType color;
 @property (nonatomic, assign) BOOL isOngoing;
+@property (nonatomic, assign) NSDate *startTime; //只有isOngoing为YES的时候才会用到startTime
 
 - (instancetype)initWithTitle:(NSString *)taskName colorType:(MirrorColorType)colorType isAddTask:(BOOL)isAddTaskModel;
 - (void)didStartTask;

@@ -52,6 +52,7 @@ static MirrorLanguageType _languageType = MirrorLanguageTypeEnglish;
     [mirrorDict setValue:@[@"Create", @"创建"] forKey:@"create"];
     [mirrorDict setValue:@[@"Discard", @"放弃"] forKey:@"discard"];
     [mirrorDict setValue:@[@"Enter a title to create a new task", @"输入名称以创建新的任务"] forKey:@"add_taskname_hint"];
+    [mirrorDict setValue:@[@"yesterday", @"昨天"] forKey:@"yesterday"];
     
     
     return [mirrorDict valueForKey:key][_languageType];

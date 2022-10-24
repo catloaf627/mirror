@@ -16,11 +16,12 @@
 #import "MirrorTabsManager.h"
 #import "EditTaskViewController.h"
 #import "AddTaskViewController.h"
+#import "TimeTrackingView.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditTaskProtocol, AddTaskProtocol>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditTaskProtocol, AddTaskProtocol, TimeTrackingViewProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) TimeTrackerDataManager *dataManager;
@@ -133,6 +134,42 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView reloadData];
 }
 
+#pragma mark - TimeTrackingViewProtocol
+
+- (void)foldTimeTrackingView
+{
+    for (UIView *view in self.view.subviews) {
+        if ([view isKindOfClass:TimeTrackingView.class]) {
+            [view removeFromSuperview];
+        }
+    }
+    [self p_stopAllTasks];
+}
+
+- (void)unfoldTimeTrackingViewWithTask:(TimeTrackerTaskModel *)task
+{
+    TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTask:task];
+    timeTrackingView.delegate = self;
+    [self.view addSubview:timeTrackingView];
+    [timeTrackingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.offset(0);
+    }];
+}
+
+#pragma mark - Private methods
+
+- (void)p_stopAllTasks
+{
+    for (int i=0; i<self.dataManager.tasks.count; i++) {
+        TimeTrackerTaskModel *model = self.dataManager.tasks[i];
+        if ([model respondsToSelector:@selector(setIsOngoing:)]) { // 因为循环的时候也会循环到[+]，[+]并没有isOngoing属性，这里控制一下，避免崩溃
+            model.isOngoing = NO;
+        }
+    }
+    [self.collectionView reloadData];
+}
+
+
 # pragma mark - Collection view delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
@@ -143,18 +180,16 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         AddTaskViewController *addVC = [AddTaskViewController new];
         addVC.delegate = self;
         [self.navigationController presentViewController:addVC animated:YES completion:nil];
+        return;
     }
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
         selectedModel.isOngoing = NO;
+        [self foldTimeTrackingView];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
-        for (int i=0; i<self.dataManager.tasks.count; i++) {
-            TimeTrackerTaskModel *model = self.dataManager.tasks[i];
-            if ([model respondsToSelector:@selector(setIsOngoing:)]) { // 因为循环的时候也会循环到[+]，[+]并没有isOngoing属性，这里控制一下，避免崩溃
-                model.isOngoing = NO;
-            }
-        }
+        [self p_stopAllTasks];
         selectedModel.isOngoing = YES;
+        [self unfoldTimeTrackingViewWithTask:selectedModel];
     }
     [self.collectionView reloadData];
 }
