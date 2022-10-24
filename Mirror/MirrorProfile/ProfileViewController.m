@@ -13,6 +13,7 @@
 #import "AvatarCollectionViewCell.h"
 #import "ThemeCollectionViewCell.h"
 #import "LanguageCollectionViewCell.h"
+#import "ImmersiveCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
 
@@ -23,6 +24,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeAvatar,
     MirrorSettingTypeTheme,
     MirrorSettingTypeLanguage,
+    MirrorSettingTypeImmersive,
 };
 
 @interface ProfileViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -40,6 +42,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchImmersiveModeNotification" object:nil];
     }
     return self;
 }
@@ -89,7 +92,9 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         // glick avatar cell
     } else if (indexPath.item == MirrorSettingTypeTheme) {
         // Do nothing (use toggle to switch theme)
-    }  else if (indexPath.item == MirrorSettingTypeLanguage) {
+    } else if (indexPath.item == MirrorSettingTypeLanguage) {
+        // Do nothing (use toggle to switch language)
+    } else if (indexPath.item == MirrorSettingTypeImmersive) {
         // Do nothing (use toggle to switch language)
     }
 }
@@ -110,6 +115,10 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         LanguageCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[LanguageCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
+    } else if (indexPath.item == MirrorSettingTypeImmersive) {
+        ImmersiveCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ImmersiveCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
     }
     
     return [UICollectionViewCell new];
@@ -124,6 +133,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         case MirrorSettingTypeTheme:
             return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
         case MirrorSettingTypeLanguage:
+            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
+        case MirrorSettingTypeImmersive:
             return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
         default:
             break;
@@ -158,6 +169,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[AvatarCollectionViewCell class] forCellWithReuseIdentifier:[AvatarCollectionViewCell identifier]];
         [_collectionView registerClass:[ThemeCollectionViewCell class] forCellWithReuseIdentifier:[ThemeCollectionViewCell identifier]];
         [_collectionView registerClass:[LanguageCollectionViewCell class] forCellWithReuseIdentifier:[LanguageCollectionViewCell identifier]];
+        [_collectionView registerClass:[ImmersiveCollectionViewCell class] forCellWithReuseIdentifier:[ImmersiveCollectionViewCell identifier]];
         
     }
     return _collectionView;
@@ -166,7 +178,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage)];
+        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeImmersive)];
     }
     return _dataSource;
 }
