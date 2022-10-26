@@ -188,6 +188,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     } else {
         TimeTrackerTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configWithModel:taskModel];
+        if (taskModel.isOngoing && self.applyImmersiveMode) [self openTimeTrackingViewWithTask:taskModel];
         return cell;
     }
 }
