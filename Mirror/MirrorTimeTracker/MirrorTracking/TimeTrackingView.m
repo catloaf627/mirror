@@ -12,6 +12,8 @@
 #import "MirrorMacro.h"
 #import "MirrorLanguage.h"
 
+#import "MirrorStorage.h"
+
 static CGFloat const kPadding = 20;
 
 static CGFloat const kTaskNameSize = 35;
@@ -184,9 +186,9 @@ static CGFloat const kDashSpacing = 10;
     // update time interval
     NSTimeInterval timeInterval = [nowTime timeIntervalSinceDate:startTime];
     self.timeIntervalLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval];
-    if (timeInterval >= 86400 || timeInterval < 0) { // 超过一天或者interval为负数立即停止计时
-        [self.delegate closeTimeTrackingView];
-    }
+//    if (timeInterval >= 86400 || timeInterval < 0) { // 超过一天或者interval为负数立即停止计时
+//        [self.delegate closeTimeTrackingView];
+//    }
     if (![[dayFormatter stringFromDate:nowTime] isEqualToString:[dayFormatter stringFromDate:startTime]]) { // 如果两个时间不在同一天（跨越了0点），给startTime一个[昨天]的标记
         self.yesterdayLabel.hidden = NO;
     }
