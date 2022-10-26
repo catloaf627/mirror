@@ -23,6 +23,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)editTask:(TimeTrackerTaskModel *)task fromName:(NSString *)oldTaskName;
 
+- (void)startTask:(TimeTrackerTaskModel *)task;
+
+- (void)stopTask:(TimeTrackerTaskModel *)task;
+
+- (void)stopAllTasks;
+
 - (void)addTask:(TimeTrackerTaskModel *)task onDate:(NSString *)date time:(NSInteger)seconds;
 
 - (NSInteger)getTimeFromTask:(TimeTrackerTaskModel *)task OnDate:(NSString *)date;

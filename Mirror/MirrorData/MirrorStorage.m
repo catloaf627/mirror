@@ -66,6 +66,44 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
+- (void)startTask:(TimeTrackerTaskModel *)task
+{
+    // 在本地取出mirror dict
+    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    // 更新task的ongoing状态
+    NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
+    [taskDict setValue:@(YES) forKey:@"isOngoing"];
+    [mirrorDict setValue:taskDict forKey:task.taskName];
+    // 将mirror dict存回本地
+    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+}
+
+- (void)stopTask:(TimeTrackerTaskModel *)task
+{
+    // 在本地取出mirror dict
+    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    // 更新task的ongoing状态
+    NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
+    [taskDict setValue:@(NO) forKey:@"isOngoing"];
+    [mirrorDict setValue:taskDict forKey:task.taskName];
+    // 将mirror dict存回本地
+    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+}
+
+- (void)stopAllTasks
+{
+    // 在本地取出mirror dict
+    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    // 更新tasks的ongoing状态
+    for (id key in mirrorDict.allKeys) {
+        NSMutableDictionary *taskDict = [mirrorDict[key] mutableCopy];
+        [taskDict setValue:@(NO) forKey:@"isOngoing"];
+        [mirrorDict setValue:taskDict forKey:key];
+    }
+    // 将mirror dict存回本地
+    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+}
+
 - (void)addTask:(TimeTrackerTaskModel *)task onDate:(NSString *)date time:(NSInteger)seconds
 {
     // 在本地取出mirror dict

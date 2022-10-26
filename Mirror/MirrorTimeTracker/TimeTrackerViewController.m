@@ -145,12 +145,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)p_stopAllTasks
 {
-    for (int i=0; i<self.dataManager.tasks.count; i++) {
-        TimeTrackerTaskModel *model = self.dataManager.tasks[i];
-        if ([model respondsToSelector:@selector(setIsOngoing:)]) { // 因为循环的时候也会循环到[+]，[+]并没有isOngoing属性，这里控制一下，避免崩溃
-            model.isOngoing = NO;
-        }
-    }
+    [[MirrorStorage sharedInstance] stopAllTasks];
     [self.collectionView reloadData];
 }
 
@@ -169,13 +164,13 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
-        selectedModel.isOngoing = NO;
+        [[MirrorStorage sharedInstance] stopTask:selectedModel];
         if (self.applyImmersiveMode) {
             [self closeTimeTrackingView];
         }
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [self p_stopAllTasks];
-        selectedModel.isOngoing = YES;
+        [[MirrorStorage sharedInstance] startTask:selectedModel];
         if (self.applyImmersiveMode) {
             [self openTimeTrackingViewWithTask:selectedModel];
         }

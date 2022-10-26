@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Max number of colors
 #define kMaxColorNum (8)
 // Max number of tasks
-#define kMaxTaskNum (20)
+#define kMaxTaskNum (8)
 
 @interface MirrorMacro : NSObject
 
