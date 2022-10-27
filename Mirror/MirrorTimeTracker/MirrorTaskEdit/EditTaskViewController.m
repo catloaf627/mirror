@@ -11,6 +11,7 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "ColorCollectionViewCell.h"
+#import "MirrorStorage.h"
 
 static CGFloat const kEditTaskVCPadding = 20;
 static CGFloat const kHeightRatio = 0.8;
@@ -60,7 +61,7 @@ static CGFloat const kHeightRatio = 0.8;
 - (void)viewDidDisappear:(BOOL)animated
 {
     NSString *currentText = ![self.editTaskNameTextField.text isEqualToString:@""] ? self.editTaskNameTextField.text : [MirrorLanguage mirror_stringWithKey:@"untitled"];
-    self.taskModel.taskName = currentText; //taskname退出时更新
+    [[MirrorStorage sharedInstance] editTask:self.taskModel name:currentText]; //taskname退出时更新
     [self.delegate updateTasks];
 }
 
@@ -126,7 +127,8 @@ static CGFloat const kHeightRatio = 0.8;
     // 选中某色块时，更新背景颜色为该色块颜色，更新model的颜色为该色块颜色
     MirrorColorType selectedColor =  self.colorBlocks[indexPath.item].color;
     self.view.backgroundColor = [UIColor mirrorColorNamed:selectedColor];
-    self.taskModel.color = selectedColor; // 颜色实时更新
+    self.taskModel.color = selectedColor; // 这里更新self.taskModel.color是为了可以实时更新选中的小桃心位置（cellForItemAtIndexPath:里使用到了self.taskModel.color）
+    [[MirrorStorage sharedInstance] editTask:self.taskModel color:selectedColor];
     [collectionView reloadData];
 }
 
