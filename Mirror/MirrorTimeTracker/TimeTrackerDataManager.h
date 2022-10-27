@@ -12,7 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TimeTrackerDataManager : NSObject
 
+// TimeTrackerViewController专用
 @property (nonatomic, strong) NSMutableArray<TimeTrackerTaskModel *> *tasks;
+// HistoryViewController专用
+@property (nonatomic, strong) NSMutableArray<TimeTrackerTaskModel *> *activatedTasks;
+@property (nonatomic, strong) NSMutableArray<TimeTrackerTaskModel *> *archivedTasks;
 
 @end
 

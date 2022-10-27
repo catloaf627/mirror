@@ -30,4 +30,36 @@
     return _tasks;
 }
 
+- (NSMutableArray<TimeTrackerTaskModel *> *)activatedTasks
+{
+    _activatedTasks = [NSMutableArray new];
+    NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"MirrorDict"];
+    for (id taskName in dict.allKeys) {
+        MirrorColorType color = [UIColor colorFromString:dict[taskName][@"color"]];
+        BOOL isArchived = [dict[taskName][@"isArchived"] boolValue];
+        BOOL isOngoing = [dict[taskName][@"isOngoing"] boolValue];
+        if (!isArchived) {
+            TimeTrackerTaskModel *model = [[TimeTrackerTaskModel alloc]initWithTitle:taskName colorType:color isArchived:isArchived isOngoing:isOngoing isAddTask:NO];
+            [_activatedTasks addObject:model];
+        }
+    }
+    return _activatedTasks;
+}
+
+- (NSMutableArray<TimeTrackerTaskModel *> *)archivedTasks
+{
+    _archivedTasks = [NSMutableArray new];
+    NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"MirrorDict"];
+    for (id taskName in dict.allKeys) {
+        MirrorColorType color = [UIColor colorFromString:dict[taskName][@"color"]];
+        BOOL isArchived = [dict[taskName][@"isArchived"] boolValue];
+        BOOL isOngoing = [dict[taskName][@"isOngoing"] boolValue];
+        if (isArchived) {
+            TimeTrackerTaskModel *model = [[TimeTrackerTaskModel alloc]initWithTitle:taskName colorType:color isArchived:isArchived isOngoing:isOngoing isAddTask:NO];
+            [_archivedTasks addObject:model];
+        }
+    }
+    return _archivedTasks;
+}
+
 @end
