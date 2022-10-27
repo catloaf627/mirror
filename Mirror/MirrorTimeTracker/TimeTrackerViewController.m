@@ -111,6 +111,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView reloadData];
 }
 
+- (void)archiveTask:(TimeTrackerTaskModel *)model
+{
+    [[MirrorStorage sharedInstance] archiveTask:model];
+    [self.collectionView reloadData];
+}
 # pragma mark - AddTaskProtocol
 
 - (void)addNewTask:(TimeTrackerTaskModel *)newTask

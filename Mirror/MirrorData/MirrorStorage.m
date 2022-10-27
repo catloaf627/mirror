@@ -47,7 +47,9 @@ static NSString *const kMirrorDict = @"MirrorDict";
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
     // 更新task的archive状态
-    [mirrorDict[task.taskName] setValue:@(YES) forKey:@"isArchived"];
+    NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
+    [taskDict setValue:@(YES) forKey:@"isArchived"];
+    [mirrorDict setValue:taskDict forKey:task.taskName];
     // 将mirror dict存回本地
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }

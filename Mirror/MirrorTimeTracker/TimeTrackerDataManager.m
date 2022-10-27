@@ -18,8 +18,10 @@
         MirrorColorType color = [UIColor colorFromString:dict[taskName][@"color"]];
         BOOL isArchived = [dict[taskName][@"isArchived"] boolValue];
         BOOL isOngoing = [dict[taskName][@"isOngoing"] boolValue];
-        TimeTrackerTaskModel *model = [[TimeTrackerTaskModel alloc]initWithTitle:taskName colorType:color isArchived:isArchived isOngoing:isOngoing isAddTask:NO];
-        [_tasks addObject:model];
+        if (!isArchived) {
+            TimeTrackerTaskModel *model = [[TimeTrackerTaskModel alloc]initWithTitle:taskName colorType:color isArchived:isArchived isOngoing:isOngoing isAddTask:NO];
+            [_tasks addObject:model];
+        }
     }
     if (_tasks.count < kMaxTaskNum) {
         //cell数量不足的时候必加add task cell

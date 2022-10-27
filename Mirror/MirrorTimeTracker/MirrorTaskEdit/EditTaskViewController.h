@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateTasks;
 - (void)deleteTask:(TimeTrackerTaskModel *)model;
+- (void)archiveTask:(TimeTrackerTaskModel *)model;
 
 @end
 

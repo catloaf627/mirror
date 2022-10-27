@@ -114,8 +114,9 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)clickArchiveButton
 {
-    // gizmo 归档操作
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate archiveTask:self.taskModel];
+    }];
 }
 
 #pragma mark - Collection view delegate
