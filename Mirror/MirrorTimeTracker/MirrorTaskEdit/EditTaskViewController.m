@@ -25,6 +25,7 @@ static CGFloat const kHeightRatio = 0.8;
 @property (nonatomic, strong) NSArray<MirrorColorModel *> *colorBlocks;
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UIButton *saveButton;
+@property (nonatomic, assign) MirrorColorType selectedColor;
 
 @end
 
@@ -36,6 +37,7 @@ static CGFloat const kHeightRatio = 0.8;
     if (self) {
         self.taskModel = task;
         self.editTaskNameTextField.text = _taskModel.taskName;
+        self.selectedColor = _taskModel.color;
     }
     return self;
 }
@@ -56,13 +58,6 @@ static CGFloat const kHeightRatio = 0.8;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self p_setupUI];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    NSString *currentText = ![self.editTaskNameTextField.text isEqualToString:@""] ? self.editTaskNameTextField.text : [MirrorLanguage mirror_stringWithKey:@"untitled"];
-    [[MirrorStorage sharedInstance] editTask:self.taskModel name:currentText]; //taskname退出时更新
-    [self.delegate updateTasks];
 }
 
 - (void)p_setupUI
@@ -108,8 +103,25 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)clickSaveButton
 {
-    // 什么都不用做，只要viewDidDisappear，信息就会被保存
-    [self dismissViewControllerAnimated:YES completion:nil];
+    NSString *currentText = self.editTaskNameTextField.text;
+    BOOL textIsEmpty = !currentText || [currentText isEqualToString:@""];
+    TaskNameExistsType existType = [[MirrorStorage sharedInstance] taskNameExists:currentText];
+    if (textIsEmpty) {
+        UIAlertController* newNameIsEmptyAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"name_field_cannot_be_empty"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction* understandAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"gotcha"] style:UIAlertActionStyleDefault handler:nil];
+        [newNameIsEmptyAlert addAction:understandAction];
+        [self presentViewController:newNameIsEmptyAlert animated:YES completion:nil];
+    } else if (existType != TaskNameExistsTypeValid) {
+        UIAlertController* newNameIsDuplicateAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"task_cannot_be_duplicated"] message: [MirrorLanguage mirror_stringWithKey:existType == TaskNameExistsTypeExistsInCurrentTasks ? @"this_task_exists_in_current_task_list" : @"this_task_exists_in_the_archived_task_list"] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* understandAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"gotcha"] style:UIAlertActionStyleDefault handler:nil];
+        [newNameIsDuplicateAlert addAction:understandAction];
+        [self presentViewController:newNameIsDuplicateAlert animated:YES completion:nil];
+    } else {
+        [[MirrorStorage sharedInstance] editTask:self.taskModel name:currentText];
+        [[MirrorStorage sharedInstance] editTask:self.taskModel color:self.selectedColor];
+        [self.delegate updateTasks];
+    }
 }
 
 - (void)clickDeleteButton
@@ -141,11 +153,10 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    // 选中某色块时，更新背景颜色为该色块颜色，更新model的颜色为该色块颜色
+    // 选中某色块时，更新背景颜色为该色块颜色，更新selectedColor为该色块颜色
     MirrorColorType selectedColor =  self.colorBlocks[indexPath.item].color;
     self.view.backgroundColor = [UIColor mirrorColorNamed:selectedColor];
-    self.taskModel.color = selectedColor; // 这里更新self.taskModel.color是为了可以实时更新选中的小桃心位置（cellForItemAtIndexPath:里使用到了self.taskModel.color）
-    [[MirrorStorage sharedInstance] editTask:self.taskModel color:selectedColor];
+    self.selectedColor = selectedColor;
     [collectionView reloadData];
 }
 
@@ -158,7 +169,7 @@ static CGFloat const kHeightRatio = 0.8;
 {
     // 展示所有色块
     MirrorColorModel *taskModel = (MirrorColorModel *)self.colorBlocks[indexPath.item];
-    taskModel.isSelected = CGColorEqualToColor([UIColor mirrorColorNamed:taskModel.color].CGColor, [UIColor mirrorColorNamed:self.taskModel.color].CGColor); // 如果某色块和当前model的颜色一致，标记为选中
+    taskModel.isSelected = CGColorEqualToColor([UIColor mirrorColorNamed:taskModel.color].CGColor, [UIColor mirrorColorNamed:self.selectedColor].CGColor); // 如果某色块和当前选中的颜色一致，标记为选中
     ColorCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ColorCollectionViewCell identifier] forIndexPath:indexPath];
     // 更新色块（颜色、是否选中）
     [cell configWithModel:taskModel];

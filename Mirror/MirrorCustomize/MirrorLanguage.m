@@ -29,7 +29,6 @@
     // Profile edit cell - hint
     [mirrorDict setValue:@[@"Click task name to edit (Your data won't be affected)", @"点击任务名称进行编辑（任务数据并不会受到影响）"] forKey:@"edit_taskname_hint"];
     // Profile edit cell
-    [mirrorDict setValue:@[@"Untitled", @"未命名"] forKey:@"untitled"];
     [mirrorDict setValue:@[@"Delete task?", @"删除此任务？"] forKey:@"delete_task_?"];
     [mirrorDict setValue:@[@"You can also archive this task", @"你也可以选择归档此任务"] forKey:@"you_can_also_archive_this_task"];
     [mirrorDict setValue:@[@"Save", @"保存"] forKey:@"save"];
