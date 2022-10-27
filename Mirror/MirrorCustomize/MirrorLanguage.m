@@ -41,6 +41,15 @@
     [mirrorDict setValue:@[@"Create", @"创建"] forKey:@"create"];
     [mirrorDict setValue:@[@"Discard", @"放弃"] forKey:@"discard"];
     [mirrorDict setValue:@[@"Enter a title to create a new task", @"输入名称以创建新的任务"] forKey:@"add_taskname_hint"];
+    [mirrorDict setValue:@[@"Name field cannot be empty", @"任务名不能为空"] forKey:@"name_field_cannot_be_empty"];
+    [mirrorDict setValue:@[@"Gotcha", @"知道啦"] forKey:@"gotcha"];
+    [mirrorDict setValue:@[@"Task cannot be duplicated", @"任务不可重复"] forKey:@"task_cannot_be_duplicated"];
+    [mirrorDict setValue:@[@"This task exists in current task list", @"这个任务已经存在于当前任务列表中"] forKey:@"this_task_exists_in_current_task_list"];
+    [mirrorDict setValue:@[@"This task exists in the archived task list. You can activate it in [Data]", @"这个任务已经存在于归档任务列表中。你可以在【数据】中重新激活此任务。"] forKey:@"this_task_exists_in_the_archived_task_list"];
+    
+    
+    
+    // label
     [mirrorDict setValue:@[@"yesterday", @"昨天"] forKey:@"yesterday"];
     
     NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;

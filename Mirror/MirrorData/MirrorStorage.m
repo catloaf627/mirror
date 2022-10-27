@@ -128,6 +128,21 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
+- (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
+{
+    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    for (id key in mirrorDict.allKeys) {
+        if ([key isEqualToString:newTaskName]) {
+            if ([mirrorDict[key][@"isArchived"] boolValue]) {
+                return TaskNameExistsTypeExistsInArchivedTasks;
+            } else {
+                return TaskNameExistsTypeExistsInCurrentTasks;
+            }
+        }
+    }
+    return TaskNameExistsTypeValid;
+}
+
 - (NSInteger)getTimeFromTask:(TimeTrackerTaskModel *)task OnDate:(NSString *)date
 {
     // 在本地取出mirror dict

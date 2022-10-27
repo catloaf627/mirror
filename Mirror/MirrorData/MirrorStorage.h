@@ -11,6 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, TaskNameExistsType) {
+    TaskNameExistsTypeValid, // 库里没有这个taskname，taskname合格
+    TaskNameExistsTypeExistsInCurrentTasks,
+    TaskNameExistsTypeExistsInArchivedTasks,
+};
+
 @interface MirrorStorage : NSObject
 
 + (instancetype)sharedInstance;
@@ -32,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stopAllTasks;
 
 - (void)addTask:(TimeTrackerTaskModel *)task onDate:(NSString *)date time:(NSInteger)seconds;
+
+- (TaskNameExistsType)taskNameExists:(NSString *)newTaskName;
 
 - (NSInteger)getTimeFromTask:(TimeTrackerTaskModel *)task OnDate:(NSString *)date;
 

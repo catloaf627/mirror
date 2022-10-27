@@ -11,6 +11,8 @@
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 #import "UIColor+MirrorColor.h"
+#import "MirrorStorage.h"
+
 static CGFloat const kAddTaskVCPadding = 20;
 static CGFloat const kHeightRatio = 0.8;
 
@@ -47,11 +49,27 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)clickCreateBtn
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        NSString *currentText = ![self.editTaskNameTextField.text isEqualToString:@""] ? self.editTaskNameTextField.text : [MirrorLanguage mirror_stringWithKey:@"untitled"];
-        self.brandNewTaskModel.taskName = currentText; //taskname退出时更新
-        [self.delegate addNewTask:self.brandNewTaskModel];
-    }];
+    NSString *currentText = self.editTaskNameTextField.text;
+    BOOL textIsEmpty = !currentText || [currentText isEqualToString:@""];
+    TaskNameExistsType existType = [[MirrorStorage sharedInstance] taskNameExists:currentText];
+    if (textIsEmpty) {
+        UIAlertController* newNameIsEmptyAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"name_field_cannot_be_empty"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction* understandAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"gotcha"] style:UIAlertActionStyleDefault handler:nil];
+        [newNameIsEmptyAlert addAction:understandAction];
+        [self presentViewController:newNameIsEmptyAlert animated:YES completion:nil];
+    } else if (existType != TaskNameExistsTypeValid) {
+        UIAlertController* newNameIsDuplicateAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"task_cannot_be_duplicated"] message: [MirrorLanguage mirror_stringWithKey:existType == TaskNameExistsTypeExistsInCurrentTasks ? @"this_task_exists_in_current_task_list" : @"this_task_exists_in_the_archived_task_list"] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* understandAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"gotcha"] style:UIAlertActionStyleDefault handler:nil];
+        [newNameIsDuplicateAlert addAction:understandAction];
+        [self presentViewController:newNameIsDuplicateAlert animated:YES completion:nil];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:^{
+            self.brandNewTaskModel.taskName = currentText; //taskname退出时更新
+            [self.delegate addNewTask:self.brandNewTaskModel];
+        }];
+    }
+
 }
 
 - (void)clickDiscardButton

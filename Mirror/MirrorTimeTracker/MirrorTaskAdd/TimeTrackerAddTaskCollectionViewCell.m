@@ -48,10 +48,6 @@ static CGFloat const kShadowWidth = 5;
     }];
     self.contentView.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
     self.contentView.layer.cornerRadius = 14;
-//    self.contentView.layer.shadowColor = [UIColor mirrorColorNamed:MirrorColorTypeShadow].CGColor;
-//    self.contentView.layer.shadowRadius = kShadowWidth/2;
-//    self.contentView.layer.shadowOpacity = 1;
-    
     [self.contentView addSubview:self.addIconView];
     [self.addIconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.centerY.offset(0);
