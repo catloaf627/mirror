@@ -54,26 +54,15 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
-- (void)editTask:(TimeTrackerTaskModel *)task color:(MirrorColorType)newColor
+- (void)editTask:(TimeTrackerTaskModel *)task color:(MirrorColorType)newColor name:(NSString *)newName
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
-    // 更新task的color
+    // 更新task的color和taskname
     NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
-    [taskDict setValue:[UIColor stringFromColor:newColor] forKey:@"color"];
-    [mirrorDict setValue:taskDict forKey:task.taskName];
-    // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
-}
-
-- (void)editTask:(TimeTrackerTaskModel *)task name:(NSString *)newName
-{
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
-    // 更新task的name
-    NSMutableDictionary *value = mirrorDict[task.taskName];
     [mirrorDict removeObjectForKey:task.taskName];
-    [mirrorDict setValue:value forKey:newName];
+    [taskDict setValue:[UIColor stringFromColor:newColor] forKey:@"color"];
+    [mirrorDict setValue:taskDict forKey:newName];
     // 将mirror dict存回本地
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }

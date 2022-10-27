@@ -104,23 +104,30 @@ static CGFloat const kHeightRatio = 0.8;
 - (void)clickSaveButton
 {
     NSString *currentText = self.editTaskNameTextField.text;
+    BOOL textIsTheSame = [currentText isEqualToString:self.taskModel.taskName];
     BOOL textIsEmpty = !currentText || [currentText isEqualToString:@""];
     TaskNameExistsType existType = [[MirrorStorage sharedInstance] taskNameExists:currentText];
-    if (textIsEmpty) {
+    if (textIsTheSame) { // taskname和之前一样，允许修改并退出
+        [[MirrorStorage sharedInstance] editTask:self.taskModel color:self.selectedColor name:currentText];
+        [self.delegate dismissViewControllerAnimated:YES completion:^{
+            [self.delegate updateTasks];
+        }];
+    } else if (textIsEmpty) { // taskname为空，不允许修改
         UIAlertController* newNameIsEmptyAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"name_field_cannot_be_empty"] message:nil preferredStyle:UIAlertControllerStyleAlert];
 
         UIAlertAction* understandAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"gotcha"] style:UIAlertActionStyleDefault handler:nil];
         [newNameIsEmptyAlert addAction:understandAction];
         [self presentViewController:newNameIsEmptyAlert animated:YES completion:nil];
-    } else if (existType != TaskNameExistsTypeValid) {
+    } else if (existType != TaskNameExistsTypeValid) { // taskname重复了，不允许修改
         UIAlertController* newNameIsDuplicateAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"task_cannot_be_duplicated"] message: [MirrorLanguage mirror_stringWithKey:existType == TaskNameExistsTypeExistsInCurrentTasks ? @"this_task_exists_in_current_task_list" : @"this_task_exists_in_the_archived_task_list"] preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction* understandAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"gotcha"] style:UIAlertActionStyleDefault handler:nil];
         [newNameIsDuplicateAlert addAction:understandAction];
         [self presentViewController:newNameIsDuplicateAlert animated:YES completion:nil];
-    } else {
-        [[MirrorStorage sharedInstance] editTask:self.taskModel name:currentText];
-        [[MirrorStorage sharedInstance] editTask:self.taskModel color:self.selectedColor];
-        [self.delegate updateTasks];
+    } else { // taskname valid，允许修改并退出
+        [[MirrorStorage sharedInstance] editTask:self.taskModel color:self.selectedColor name:currentText];
+        [self.delegate dismissViewControllerAnimated:YES completion:^{
+            [self.delegate updateTasks];
+        }];
     }
 }
 

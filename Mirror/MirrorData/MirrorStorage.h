@@ -27,9 +27,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 - (void)archiveTask:(TimeTrackerTaskModel *)task;
 
-- (void)editTask:(TimeTrackerTaskModel *)task color:(MirrorColorType)newColor;
-
-- (void)editTask:(TimeTrackerTaskModel *)task name:(NSString *)newName;
+- (void)editTask:(TimeTrackerTaskModel *)task color:(MirrorColorType)newColor name:(NSString *)newName;
 
 - (void)startTask:(TimeTrackerTaskModel *)task;
 
