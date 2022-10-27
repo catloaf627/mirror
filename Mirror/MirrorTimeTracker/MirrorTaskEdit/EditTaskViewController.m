@@ -23,8 +23,8 @@ static CGFloat const kHeightRatio = 0.8;
 @property (nonatomic, strong) UILabel *editTaskNameHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray<MirrorColorModel *> *colorBlocks;
-@property (nonatomic, strong) UIButton *archiveButton;
-@property (nonatomic, strong) UIButton *deleteBtton;
+@property (nonatomic, strong) UIButton *deleteButton;
+@property (nonatomic, strong) UIButton *saveButton;
 
 @end
 
@@ -88,17 +88,17 @@ static CGFloat const kHeightRatio = 0.8;
         make.width.mas_equalTo(kScreenWidth - 2*kEditTaskVCPadding);
         make.height.mas_equalTo([self p_colorBlockWidth]);
     }];
-    [self.view addSubview:self.archiveButton];
-    [self.view addSubview:self.deleteBtton];
-    [self.archiveButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.deleteButton];
+    [self.view addSubview:self.saveButton];
+    [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
         make.left.offset(kEditTaskVCPadding);
         make.width.mas_equalTo(kScreenWidth/2-kEditTaskVCPadding);
         make.height.mas_equalTo(40);
     }];
-    [self.deleteBtton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.saveButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
-        make.left.mas_equalTo(self.archiveButton.mas_right).offset(0);
+        make.left.mas_equalTo(self.deleteButton.mas_right).offset(0);
         make.width.mas_equalTo(kScreenWidth/2-kEditTaskVCPadding);
         make.height.mas_equalTo(40);
     }];
@@ -106,19 +106,36 @@ static CGFloat const kHeightRatio = 0.8;
 
 #pragma mark - Actions
 
-- (void)clickDeleteButton
+- (void)clickSaveButton
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.delegate deleteTask:self.taskModel];
-    }];
+    // 什么都不用做，只要viewDidDisappear，信息就会被保存
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)clickArchiveButton
+- (void)clickDeleteButton
 {
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.delegate archiveTask:self.taskModel];
+    UIAlertController* deleteButtonAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete_task_?"] message:[MirrorLanguage mirror_stringWithKey:@"you_can_also_archive_this_task"] preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* deleteAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self.delegate deleteTask:self.taskModel];
+        }];
     }];
+    
+    UIAlertAction* archiveAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"archive"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self.delegate archiveTask:self.taskModel];
+        }];
+    }];
+    
+    UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:nil];
+
+    [deleteButtonAlert addAction:deleteAction];
+    [deleteButtonAlert addAction:archiveAction];
+    [deleteButtonAlert addAction:cancelAction];
+    [self presentViewController:deleteButtonAlert animated:YES completion:nil];
 }
+
 
 #pragma mark - Collection view delegate
 
@@ -244,42 +261,42 @@ static CGFloat const kHeightRatio = 0.8;
     return @[pinkModel,orangeModel,yellowModel,greenModel,tealModel,blueModel,purpleModel,grayModel];
 }
 
-- (UIButton *)archiveButton
+- (UIButton *)deleteButton
 {
-    if (!_archiveButton) {
-        _archiveButton = [UIButton new];
+    if (!_deleteButton) {
+        _deleteButton = [UIButton new];
         // icon
-        [_archiveButton setImage:[[UIImage systemImageNamed:@"checkmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _archiveButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_deleteButton setImage:[[UIImage systemImageNamed:@"xmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _deleteButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         // title
-        [_archiveButton setTitle:[MirrorLanguage mirror_stringWithKey:@"archive"] forState:UIControlStateNormal];
-        [_archiveButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
-        _archiveButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+        [_deleteButton setTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] forState:UIControlStateNormal];
+        [_deleteButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
+        _deleteButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         // padding
-        _archiveButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
+        _deleteButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
         // action
-        [_archiveButton addTarget:self action:@selector(clickArchiveButton) forControlEvents:UIControlEventTouchUpInside];
+        [_deleteButton addTarget:self action:@selector(clickDeleteButton) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _archiveButton;
+    return _deleteButton;
 }
 
-- (UIButton *)deleteBtton
+- (UIButton *)saveButton
 {
-    if (!_deleteBtton) {
-        _deleteBtton = [UIButton new];
+    if (!_saveButton) {
+        _saveButton = [UIButton new];
         // icon
-        [_deleteBtton setImage:[[UIImage systemImageNamed:@"xmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _deleteBtton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_saveButton setImage:[[UIImage systemImageNamed:@"checkmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _saveButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         // title
-        [_deleteBtton setTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] forState:UIControlStateNormal];
-        [_deleteBtton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
-        _deleteBtton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+        [_saveButton setTitle:[MirrorLanguage mirror_stringWithKey:@"save"] forState:UIControlStateNormal];
+        [_saveButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
+        _saveButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         // padding
-        _deleteBtton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
+        _saveButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
         // action
-        [_deleteBtton addTarget:self action:@selector(clickDeleteButton) forControlEvents:UIControlEventTouchUpInside];
+        [_saveButton addTarget:self action:@selector(clickSaveButton) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _deleteBtton;
+    return _saveButton;
 }
 
 #pragma mark - Private methods
