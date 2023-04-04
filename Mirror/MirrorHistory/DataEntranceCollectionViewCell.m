@@ -76,7 +76,7 @@
     if (!_titleLabel) {
         _titleLabel = [UILabel new];
         _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:12];
-        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellPlus];
+        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
     }
     return _titleLabel;
 }
