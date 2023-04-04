@@ -27,7 +27,7 @@
 - (void)configCellWithModel:(TimeTrackerTaskModel *)model
 {
     self.backgroundColor = [UIColor mirrorColorNamed:model.color];
-    self.layer.cornerRadius = 15;
+    self.layer.cornerRadius = 14;
     self.taskNameLabel.text = model.taskName;
     [self p_setupUI];
 }

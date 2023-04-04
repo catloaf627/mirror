@@ -37,7 +37,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchImmersiveModeNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchImmersiveModeNotification" object:nil]; // 比其他vc多监听一个通知
     }
     return self;
 }
@@ -71,7 +71,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
             make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
-            make.top.mas_equalTo(self.view).offset(kNavBarAndStatusBarHeight);
+            make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
             make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
 }

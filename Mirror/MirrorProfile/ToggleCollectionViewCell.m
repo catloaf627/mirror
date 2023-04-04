@@ -20,7 +20,7 @@
 - (void)configCellWithTitle:(NSString *)title color:(MirrorColorType)color
 {
     self.contentView.backgroundColor = [UIColor mirrorColorNamed:color];
-    self.contentView.layer.cornerRadius = 15;
+    self.contentView.layer.cornerRadius = 14;
     self.toggle.onTintColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:color]]; // toggle颜色使用pulse
     self.label.text = [MirrorLanguage mirror_stringWithKey:title];
     

@@ -32,6 +32,12 @@
         default:
             break;
     }
+    [self p_setupUI];
+}
+
+- (void)p_setupUI
+{
+    self.contentView.layer.cornerRadius = 14;
 }
 
 @end

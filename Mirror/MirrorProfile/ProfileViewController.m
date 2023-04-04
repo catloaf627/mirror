@@ -42,7 +42,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchImmersiveModeNotification" object:nil];
     }
     return self;
 }
@@ -76,7 +75,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
-        make.top.mas_equalTo(self.view).offset(kNavBarAndStatusBarHeight);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
 }

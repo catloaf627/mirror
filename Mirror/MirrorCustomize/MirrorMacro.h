@@ -19,8 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define kStatusBarHeight (CGFloat)(kIs_iPhoneX?(44.0):(20.0))
 /*导航栏高度*/
 #define kNavBarHeight (44)
-/*状态栏和导航栏总高度*/
-#define kNavBarAndStatusBarHeight (CGFloat)(kIs_iPhoneX?(88.0):(64.0))
 /*TabBar高度*/
 #define kTabBarHeight (CGFloat)(kIs_iPhoneX?(49.0 + 34.0):(49.0))
 /*顶部安全区域远离高度*/
@@ -29,8 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define kBottomSafeHeight (CGFloat)(kIs_iPhoneX?(34.0):(0))
 /*iPhoneX的状态栏高度差值*/
 #define kTopBarDifHeight (CGFloat)(kIs_iPhoneX?(24.0):(0))
-/*导航条和Tabbar总高度*/
-#define kNavAndTabHeight (kNavBarAndStatusBarHeight + kTabBarHeight)
 
 // Font
 // https://stackoverflow.com/questions/8090916/fonts-on-ios-device

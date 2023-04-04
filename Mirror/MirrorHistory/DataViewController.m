@@ -11,7 +11,7 @@
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
 #import "DataEntranceCollectionViewCell.h"
-#import "DataHistogramCollectionViewCell.h"
+#import "HistogramView.h"
 // 跳转
 #import "TodayDataViewController.h"
 
@@ -21,7 +21,7 @@ static CGFloat const kCellSpacing = 20;
 @interface DataViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-// 数据源为本地数据
+@property (nonatomic, strong) HistogramView *histogramView;
 
 @end
 
@@ -33,7 +33,6 @@ static CGFloat const kCellSpacing = 20;
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchImmersiveModeNotification" object:nil];
     }
     return self;
 }
@@ -76,8 +75,15 @@ static CGFloat const kCellSpacing = 20;
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.view).offset(kNavBarAndStatusBarHeight);
-        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.height.mas_equalTo(80 * 2 + 20); // 两行cell加上他们的行间距
+    }];
+    [self.view addSubview:self.histogramView];
+    [self.histogramView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
+        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
 }
 
@@ -85,65 +91,32 @@ static CGFloat const kCellSpacing = 20;
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (section == 0) {
-        return 4; // Today, This month, This year, All data
-    }
-    if (section == 1) {
-        return 1; // histogram (default: Today)
-    }
-    return 0;
+    return 4;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0) {
-        DataEntranceCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[DataEntranceCollectionViewCell identifier] forIndexPath:indexPath];
-        [cell configCellWithIndex:indexPath.item];
-        return cell;
-    } else {
-        DataHistogramCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[DataHistogramCollectionViewCell identifier] forIndexPath:indexPath];
-        [cell configCell];
-        return cell;
-    }
+    DataEntranceCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[DataEntranceCollectionViewCell identifier] forIndexPath:indexPath];
+    [cell configCellWithIndex:indexPath.item];
+    return cell;
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0) {
-        return CGSizeMake((kScreenWidth - 3*kCellSpacing)/2, 80);
-    } else {
-        return CGSizeMake(kScreenWidth - 2*kCellSpacing, 120);
-    }
-}
-
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionReusableView *header;
-    if (kind == UICollectionElementKindSectionHeader) {
-        header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
-    }
-    return header;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
-{
-    return CGSizeMake(kScreenWidth, 10);
+    return CGSizeMake((kScreenWidth - 3*kCellSpacing)/2, 80);
 }
 
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section != 0) {
-        return;
-    }
     switch (indexPath.item) {
         case 0:
             [self.navigationController pushViewController:[TodayDataViewController new] animated:YES];
@@ -180,13 +153,17 @@ static CGFloat const kCellSpacing = 20;
         _collectionView.backgroundColor = self.view.backgroundColor;
         
         [_collectionView registerClass:[DataEntranceCollectionViewCell class] forCellWithReuseIdentifier:[DataEntranceCollectionViewCell identifier]];
-        [_collectionView registerClass:[DataHistogramCollectionViewCell class] forCellWithReuseIdentifier:[DataHistogramCollectionViewCell identifier]];
-        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     }
     return _collectionView;
 }
 
-
+- (HistogramView *)histogramView
+{
+    if (!_histogramView) {
+        _histogramView = [HistogramView new]; //本地读取
+    }
+    return _histogramView;
+}
 
 
 @end
