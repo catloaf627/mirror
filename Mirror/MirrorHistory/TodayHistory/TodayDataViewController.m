@@ -29,53 +29,26 @@ typedef NS_ENUM(NSInteger, DataSectionType) {
 
 @implementation TodayDataViewController
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchImmersiveModeNotification" object:nil];
-    }
-    return self;
-}
-
-- (void)reloadVC
-{
-    // 将vc.view里的所有subviews全部置为nil
-    self.collectionView = nil;
-    // 将vc.view里的所有subviews从父view上移除
-    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新tab item
-    [MirrorTabsManager updateHistoryTabItemWithTabController:self.tabBarController];
-    [self viewDidLoad];
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self p_setupUI];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [self.collectionView reloadData];
 }
 
 - (void)p_setupUI
 {
+    // navibar
+    self.navigationController.navigationBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground]; // navibar颜色为背景色
+    self.navigationController.navigationBar.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 返回箭头颜色为文案颜色
+    self.navigationController.navigationBar.shadowImage = [UIImage new]; // navibar底部1pt下划线隐藏
+    [self.view addSubview:self.navigationController.navigationBar]; // 给需要navigationbar的vc添加navigationbar
+    // collection view
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCellSpacing);
         make.right.mas_equalTo(self.view).offset(-kCellSpacing);
-        make.top.mas_equalTo(self.view).offset(kNavBarAndStatusBarHeight);
-        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
+        make.top.mas_equalTo(self.navigationController.navigationBar.mas_bottom);
+        make.bottom.mas_equalTo(self.view);
     }];
 }
 
