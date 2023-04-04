@@ -6,6 +6,7 @@
 //
 
 #import "HistogramView.h"
+#import "UIColor+MirrorColor.h"
 
 @implementation HistogramView
 
@@ -13,7 +14,7 @@
 {
     self = [super init];
     if (self) {
-        self.backgroundColor = [UIColor systemPinkColor];
+        self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
         self.layer.cornerRadius = 14;
     }
     return self;

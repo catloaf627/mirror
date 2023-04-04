@@ -41,6 +41,7 @@ static CGFloat const kCellSpacing = 20;
 {
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
+    self.histogramView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tab item
