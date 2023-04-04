@@ -20,7 +20,11 @@
 		4A406C1729070FC1001E83A1 /* ImmersiveCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C1629070FC1001E83A1 /* ImmersiveCollectionViewCell.m */; };
 		4A406C1A29071939001E83A1 /* MirrorStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C1929071939001E83A1 /* MirrorStorage.m */; };
 		4A406C2129073E36001E83A1 /* NSMutableDictionary+MirrorDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C2029073E36001E83A1 /* NSMutableDictionary+MirrorDictionary.m */; };
-		4AD17689290B0E24003A8C4A /* TaskDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD17688290B0E24003A8C4A /* TaskDataCollectionViewCell.m */; };
+		4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* DataViewController.m */; };
+		4A7CCD2A29DBC8C800879D9C /* TodayDataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2929DBC8C800879D9C /* TodayDataViewController.m */; };
+		4A7CCD2D29DBCAB200879D9C /* TodayDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2C29DBCAB200879D9C /* TodayDataCollectionViewCell.m */; };
+		4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */; };
+		4A7CCD3329DBCF8A00879D9C /* DataHistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD3229DBCF8A00879D9C /* DataHistogramCollectionViewCell.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
 		4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B328E4762E006F02DE /* ThemeCollectionViewCell.m */; };
 		4ADDC5B728E476A8006F02DE /* LanguageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B628E476A8006F02DE /* LanguageCollectionViewCell.m */; };
@@ -28,7 +32,6 @@
 		4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5BC28E6DF8B006F02DE /* ColorCollectionViewCell.m */; };
 		4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5C728E73935006F02DE /* AddTaskViewController.m */; };
 		4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */; };
-		4AE4171C28DF614A008A6A18 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171B28DF614A008A6A18 /* HistoryViewController.m */; };
 		4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* ProfileViewController.m */; };
 		4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A128DF4A380064CBCA /* AppDelegate.m */; };
 		4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A428DF4A380064CBCA /* SceneDelegate.m */; };
@@ -64,8 +67,16 @@
 		4A406C1929071939001E83A1 /* MirrorStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorStorage.m; sourceTree = "<group>"; };
 		4A406C1F29073E36001E83A1 /* NSMutableDictionary+MirrorDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+MirrorDictionary.h"; sourceTree = "<group>"; };
 		4A406C2029073E36001E83A1 /* NSMutableDictionary+MirrorDictionary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+MirrorDictionary.m"; sourceTree = "<group>"; };
-		4AD17687290B0E24003A8C4A /* TaskDataCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskDataCollectionViewCell.h; sourceTree = "<group>"; };
-		4AD17688290B0E24003A8C4A /* TaskDataCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskDataCollectionViewCell.m; sourceTree = "<group>"; };
+		4A7CCD2429DBC7CF00879D9C /* DataViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataViewController.h; sourceTree = "<group>"; };
+		4A7CCD2529DBC7CF00879D9C /* DataViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataViewController.m; sourceTree = "<group>"; };
+		4A7CCD2829DBC8C800879D9C /* TodayDataViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayDataViewController.h; sourceTree = "<group>"; };
+		4A7CCD2929DBC8C800879D9C /* TodayDataViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayDataViewController.m; sourceTree = "<group>"; };
+		4A7CCD2B29DBCAB200879D9C /* TodayDataCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayDataCollectionViewCell.h; sourceTree = "<group>"; };
+		4A7CCD2C29DBCAB200879D9C /* TodayDataCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayDataCollectionViewCell.m; sourceTree = "<group>"; };
+		4A7CCD2E29DBCEB200879D9C /* DataEntranceCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataEntranceCollectionViewCell.h; sourceTree = "<group>"; };
+		4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataEntranceCollectionViewCell.m; sourceTree = "<group>"; };
+		4A7CCD3129DBCF8A00879D9C /* DataHistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataHistogramCollectionViewCell.h; sourceTree = "<group>"; };
+		4A7CCD3229DBCF8A00879D9C /* DataHistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataHistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4ADDC5AF28E4704B006F02DE /* AvatarCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvatarCollectionViewCell.h; sourceTree = "<group>"; };
 		4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AvatarCollectionViewCell.m; sourceTree = "<group>"; };
 		4ADDC5B228E4762E006F02DE /* ThemeCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeCollectionViewCell.h; sourceTree = "<group>"; };
@@ -80,8 +91,6 @@
 		4ADDC5C728E73935006F02DE /* AddTaskViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTaskViewController.m; sourceTree = "<group>"; };
 		4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerViewController.h; sourceTree = "<group>"; };
 		4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerViewController.m; sourceTree = "<group>"; };
-		4AE4171A28DF614A008A6A18 /* HistoryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
-		4AE4171B28DF614A008A6A18 /* HistoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
 		4AE4171D28DF6155008A6A18 /* ProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		4AE4171E28DF6155008A6A18 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		4AFB779D28DF4A380064CBCA /* Mirror.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mirror.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,10 +171,13 @@
 		4A379B3C28E0371700785CAE /* MirrorHistory */ = {
 			isa = PBXGroup;
 			children = (
-				4AE4171A28DF614A008A6A18 /* HistoryViewController.h */,
-				4AE4171B28DF614A008A6A18 /* HistoryViewController.m */,
-				4AD17687290B0E24003A8C4A /* TaskDataCollectionViewCell.h */,
-				4AD17688290B0E24003A8C4A /* TaskDataCollectionViewCell.m */,
+				4A7CCD2429DBC7CF00879D9C /* DataViewController.h */,
+				4A7CCD2529DBC7CF00879D9C /* DataViewController.m */,
+				4A7CCD2E29DBCEB200879D9C /* DataEntranceCollectionViewCell.h */,
+				4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */,
+				4A7CCD3129DBCF8A00879D9C /* DataHistogramCollectionViewCell.h */,
+				4A7CCD3229DBCF8A00879D9C /* DataHistogramCollectionViewCell.m */,
+				4A7CCD2729DBC7E100879D9C /* TodayHistory */,
 			);
 			path = MirrorHistory;
 			sourceTree = "<group>";
@@ -211,6 +223,17 @@
 				4A406C2029073E36001E83A1 /* NSMutableDictionary+MirrorDictionary.m */,
 			);
 			path = MirrorData;
+			sourceTree = "<group>";
+		};
+		4A7CCD2729DBC7E100879D9C /* TodayHistory */ = {
+			isa = PBXGroup;
+			children = (
+				4A7CCD2829DBC8C800879D9C /* TodayDataViewController.h */,
+				4A7CCD2929DBC8C800879D9C /* TodayDataViewController.m */,
+				4A7CCD2B29DBCAB200879D9C /* TodayDataCollectionViewCell.h */,
+				4A7CCD2C29DBCAB200879D9C /* TodayDataCollectionViewCell.m */,
+			);
+			path = TodayHistory;
 			sourceTree = "<group>";
 		};
 		4ADDC5BE28E6FB09006F02DE /* MirrorTaskEdit */ = {
@@ -389,17 +412,20 @@
 			files = (
 				4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
+				4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */,
 				4A406C2129073E36001E83A1 /* NSMutableDictionary+MirrorDictionary.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,
+				4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */,
 				4A379B5728E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.m in Sources */,
+				4A7CCD3329DBCF8A00879D9C /* DataHistogramCollectionViewCell.m in Sources */,
 				4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */,
 				4A406C1A29071939001E83A1 /* MirrorStorage.m in Sources */,
 				4ADDC5B728E476A8006F02DE /* LanguageCollectionViewCell.m in Sources */,
 				4AFB77B328DF4A3B0064CBCA /* main.m in Sources */,
 				4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */,
 				015564E728E1A884008AB06C /* TimeTrackerTaskModel.m in Sources */,
-				4AE4171C28DF614A008A6A18 /* HistoryViewController.m in Sources */,
 				4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */,
+				4A7CCD2A29DBC8C800879D9C /* TodayDataViewController.m in Sources */,
 				4ADDC5BA28E5B95F006F02DE /* EditTaskViewController.m in Sources */,
 				4A406C112906FC00001E83A1 /* ToggleCollectionViewCell.m in Sources */,
 				4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */,
@@ -412,7 +438,7 @@
 				4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */,
 				4A083B8F2904AA97002B91EB /* TimeTrackingView.m in Sources */,
 				015564DE28E1A32E008AB06C /* TimeTrackerDataManager.m in Sources */,
-				4AD17689290B0E24003A8C4A /* TaskDataCollectionViewCell.m in Sources */,
+				4A7CCD2D29DBCAB200879D9C /* TodayDataCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

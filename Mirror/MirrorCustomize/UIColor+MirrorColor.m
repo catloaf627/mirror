@@ -152,7 +152,7 @@
 
 + (UIColor *)mirror_lightPurple
 {
-    return [UIColor colorWithRed:201/255.0 green:192/255.0 blue:211/255.0 alpha:1]; // 莫兰迪紫
+    return [UIColor colorWithRed:216/255.0 green:207/255.0 blue:226/255.0 alpha:1]; // 莫兰迪紫
 }
 
 + (UIColor *)mirror_darkPurple

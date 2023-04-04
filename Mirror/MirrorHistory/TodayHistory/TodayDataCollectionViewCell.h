@@ -1,8 +1,8 @@
 //
-//  TaskDataCollectionViewCell.h
+//  TodayDataCollectionViewCell.h
 //  Mirror
 //
-//  Created by Yuqing Wang on 2022/10/27.
+//  Created by Yuqing Wang on 2023/4/4.
 //
 
 #import <UIKit/UIKit.h>
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TaskDataCollectionViewCell : UICollectionViewCell
+@interface TodayDataCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
 - (void)configCellWithModel:(TimeTrackerTaskModel *)model;
