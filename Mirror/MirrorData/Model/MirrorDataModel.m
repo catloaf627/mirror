@@ -10,11 +10,12 @@
 
 @implementation MirrorDataModel
 
-- (instancetype)initWithTitle:(NSString *)taskName colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived isOngoing:(BOOL)isOngoing isAddTask:(BOOL)isAddTaskModel
+- (instancetype)initWithTitle:(NSString *)taskName createdTime:(long)createTime colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived isOngoing:(BOOL)isOngoing isAddTask:(BOOL)isAddTaskModel
 {
     self = [super init];
     if (self) {
         _taskName = taskName;
+        _createdTime = createTime;
         _color = colorType;
         _isArchived = isArchived;
         _isOngoing = isOngoing;
