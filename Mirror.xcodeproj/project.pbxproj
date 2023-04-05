@@ -152,10 +152,17 @@
 			children = (
 				4A099FA529DCFE3C002683A1 /* MirrorDataManager.h */,
 				4A099FA629DCFE3C002683A1 /* MirrorDataManager.m */,
+			);
+			path = Get;
+			sourceTree = "<group>";
+		};
+		4A099FAB29DD0567002683A1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
 				4A099FA829DCFE54002683A1 /* MirrorDataModel.h */,
 				4A099FA929DCFE54002683A1 /* MirrorDataModel.m */,
 			);
-			path = Get;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		4A379B3928E0340600785CAE /* MirrorSetups */ = {
@@ -235,6 +242,7 @@
 		4A406C1B29073D1D001E83A1 /* MirrorData */ = {
 			isa = PBXGroup;
 			children = (
+				4A099FAB29DD0567002683A1 /* Model */,
 				4A099FA429DCFE17002683A1 /* Get */,
 				4A099FA329DCFE0B002683A1 /* Edit */,
 			);
