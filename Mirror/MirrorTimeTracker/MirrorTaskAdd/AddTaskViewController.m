@@ -66,6 +66,7 @@ static CGFloat const kHeightRatio = 0.8;
     } else {
         [self dismissViewControllerAnimated:YES completion:^{
             self.brandNewTaskModel.taskName = currentText; //taskname退出时更新
+            self.brandNewTaskModel.createdTime = (long)[[NSDate now] timeIntervalSince1970]; //获取当前时间
             [self.delegate addNewTask:self.brandNewTaskModel];
         }];
     }

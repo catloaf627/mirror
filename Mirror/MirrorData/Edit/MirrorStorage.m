@@ -27,7 +27,11 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy] ?: [NSMutableDictionary new];
     // 新增一个task
-    [mirrorDict setValue: @{@"color": [UIColor stringFromColor:task.color], @"is_archived" : @(task.isArchived), @"is_ongoing":@(NO),  @"data":[NSMutableDictionary new]} forKey:task.taskName];
+    [mirrorDict setValue: @{@"created_time" : @(task.createdTime),
+                            @"color": [UIColor stringFromColor:task.color],
+                            @"is_archived" : @(task.isArchived),
+                            @"is_ongoing":@(NO),
+                            @"data":[NSMutableDictionary new]} forKey:task.taskName];
     // 将mirror dict存回本地
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }

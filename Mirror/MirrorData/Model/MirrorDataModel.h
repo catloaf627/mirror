@@ -20,7 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *timeInfo;
 @property (nonatomic, assign) MirrorColorType color;
 @property (nonatomic, assign) BOOL isOngoing;
-@property (nonatomic, assign) NSDate *startTime; //只有isOngoing为YES的时候才会用到startTime（yesterday label会用到这个展示）
+@property (nonatomic, assign) long createdTime; // 创建时间，用于排序
+@property (nonatomic, assign) NSDate *startTime; // 只有isOngoing为YES的时候才会用到startTime（yesterday label会用到这个展示）
 
 - (instancetype)initWithTitle:(NSString *)taskName colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived isOngoing:(BOOL)isOngoing isAddTask:(BOOL)isAddTaskModel;
 - (void)didStartTask;
