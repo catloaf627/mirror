@@ -1,14 +1,14 @@
 //
-//  TimeTrackerTaskModel.m
+//  MirrorDataModel.m
 //  Mirror
 //
-//  Created by wangyuqing on 2022/9/26.
+//  Created by Yuqing Wang on 2023/4/5.
 //
 
-#import "TimeTrackerTaskModel.h"
+#import "MirrorDataModel.h"
 #import "MirrorLanguage.h"
 
-@implementation TimeTrackerTaskModel
+@implementation MirrorDataModel
 
 - (instancetype)initWithTitle:(NSString *)taskName colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived isOngoing:(BOOL)isOngoing isAddTask:(BOOL)isAddTaskModel
 {

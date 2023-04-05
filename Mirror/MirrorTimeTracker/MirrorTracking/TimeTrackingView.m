@@ -6,7 +6,7 @@
 //
 
 #import "TimeTrackingView.h"
-#import "TimeTrackerTaskModel.h"
+#import "MirrorDataModel.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
@@ -26,7 +26,7 @@ static CGFloat const kDashSpacing = 10;
 
 @interface TimeTrackingView ()
 
-@property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
+@property (nonatomic, strong) MirrorDataModel *taskModel;
 
 @property (nonatomic, strong) UILabel *taskNameLabel;
 
@@ -52,7 +52,7 @@ static CGFloat const kDashSpacing = 10;
 
 @implementation TimeTrackingView
 
-- (instancetype)initWithTask:(TimeTrackerTaskModel *)taskModel
+- (instancetype)initWithTask:(MirrorDataModel *)taskModel
 {
     self = [super init];
     if (self) {

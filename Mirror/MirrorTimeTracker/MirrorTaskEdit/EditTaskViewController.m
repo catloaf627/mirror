@@ -18,7 +18,7 @@ static CGFloat const kHeightRatio = 0.8;
 
 @interface EditTaskViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
+@property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UITextField *editTaskNameTextField;
 @property (nonatomic, strong) UILabel *editTaskNameHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -31,7 +31,7 @@ static CGFloat const kHeightRatio = 0.8;
 
 @implementation EditTaskViewController
 
-- (instancetype)initWithTasks:(TimeTrackerTaskModel *)task
+- (instancetype)initWithTasks:(MirrorDataModel *)task
 {
     self = [super init];
     if (self) {

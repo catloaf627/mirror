@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TimeTrackerTaskModel.h"
+#import "MirrorDataModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol TimeTrackingViewProtocol <NSObject>
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TimeTrackingView : UIView
 
 @property (nonatomic, strong) UIViewController<TimeTrackingViewProtocol> *delegate;
-- (instancetype)initWithTask:(TimeTrackerTaskModel *)taskModel;
+- (instancetype)initWithTask:(MirrorDataModel *)taskModel;
 
 @end
 

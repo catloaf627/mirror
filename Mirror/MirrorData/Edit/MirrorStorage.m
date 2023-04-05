@@ -22,7 +22,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     return instance;
 }
 
-- (void)createTask:(TimeTrackerTaskModel *)task
+- (void)createTask:(MirrorDataModel *)task
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy] ?: [NSMutableDictionary new];
@@ -32,7 +32,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
-- (void)deleteTask:(TimeTrackerTaskModel *)task
+- (void)deleteTask:(MirrorDataModel *)task
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
@@ -42,7 +42,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
-- (void)archiveTask:(TimeTrackerTaskModel *)task
+- (void)archiveTask:(MirrorDataModel *)task
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
@@ -54,7 +54,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
-- (void)editTask:(TimeTrackerTaskModel *)task color:(MirrorColorType)newColor name:(NSString *)newName
+- (void)editTask:(MirrorDataModel *)task color:(MirrorColorType)newColor name:(NSString *)newName
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
@@ -67,7 +67,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
-- (void)startTask:(TimeTrackerTaskModel *)task
+- (void)startTask:(MirrorDataModel *)task
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
@@ -79,7 +79,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
-- (void)stopTask:(TimeTrackerTaskModel *)task
+- (void)stopTask:(MirrorDataModel *)task
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
@@ -105,7 +105,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
-- (void)addTask:(TimeTrackerTaskModel *)task onDate:(NSString *)date time:(NSInteger)seconds
+- (void)addTask:(MirrorDataModel *)task onDate:(NSString *)date time:(NSInteger)seconds
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
@@ -132,7 +132,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     return TaskNameExistsTypeValid;
 }
 
-- (NSInteger)getTimeFromTask:(TimeTrackerTaskModel *)task OnDate:(NSString *)date
+- (NSInteger)getTimeFromTask:(MirrorDataModel *)task OnDate:(NSString *)date
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
@@ -140,7 +140,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     return [[mirrorDict[task.taskName][@"data"] valueForKey:date defaultObject:@0] integerValue];
 }
 
-- (NSInteger)getTotalTimeFromTask:(TimeTrackerTaskModel *)task
+- (NSInteger)getTotalTimeFromTask:(MirrorDataModel *)task
 {
     // 在本地取出task的data
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];

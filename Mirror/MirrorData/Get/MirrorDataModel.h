@@ -1,8 +1,8 @@
 //
-//  TimeTrackerTaskModel.h
+//  MirrorDataModel.h
 //  Mirror
 //
-//  Created by wangyuqing on 2022/9/26.
+//  Created by Yuqing Wang on 2023/4/5.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TimeTrackerTaskModel : NSObject
+@interface MirrorDataModel : NSObject
 
 @property (nonatomic, assign) BOOL isAddTaskModel;
 @property (nonatomic, assign) BOOL isArchived;
@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithTitle:(NSString *)taskName colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived isOngoing:(BOOL)isOngoing isAddTask:(BOOL)isAddTaskModel;
 - (void)didStartTask;
 - (void)didStopTask;
+
 
 @end
 

@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TimeTrackerTaskModel.h"
+#import "MirrorDataModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +15,7 @@ static CGFloat const kInterspacing = 16;
 @interface TimeTrackerTaskCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
-- (void)configWithModel:(TimeTrackerTaskModel *)taskModel;
+- (void)configWithModel:(MirrorDataModel *)taskModel;
 
 @end
 

@@ -10,7 +10,7 @@
 #import <Masonry/Masonry.h>
 #import "TimeTrackerTaskCollectionViewCell.h"
 #import "TimeTrackerAddTaskCollectionViewCell.h"
-#import "TimeTrackerDataManager.h"
+#import "MirrorDataManager.h"
 #import "MirrorMacro.h"
 #import "MirrorTabsManager.h"
 #import "EditTaskViewController.h"
@@ -24,7 +24,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 @interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditTaskProtocol, AddTaskProtocol, TimeTrackingViewProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) TimeTrackerDataManager *dataManager;
 @property (nonatomic, assign) BOOL applyImmersiveMode;
 
 @end
@@ -86,14 +85,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (indexPath == nil) {
         return;
     }
-    TimeTrackerTaskModel *task = self.dataManager.tasks[indexPath.item];
+    MirrorDataModel *task = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
     if (task.isAddTaskModel) {
         // 长按[+]均可以像点击一样唤起add task
         AddTaskViewController *addVC = [AddTaskViewController new];
         addVC.delegate = self;
         [self.navigationController presentViewController:addVC animated:YES completion:nil];
     }
-    EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:self.dataManager.tasks[indexPath.item]];
+    EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:[MirrorDataManager activatedTasksWithAddTask][indexPath.item]];
     editVC.delegate = self;
     [self.navigationController presentViewController:editVC animated:YES completion:nil];
 }
@@ -105,20 +104,20 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView reloadData];
 }
 
-- (void)deleteTask:(TimeTrackerTaskModel *)model
+- (void)deleteTask:(MirrorDataModel *)model
 {
     [[MirrorStorage sharedInstance] deleteTask:model];
     [self.collectionView reloadData];
 }
 
-- (void)archiveTask:(TimeTrackerTaskModel *)model
+- (void)archiveTask:(MirrorDataModel *)model
 {
     [[MirrorStorage sharedInstance] archiveTask:model];
     [self.collectionView reloadData];
 }
 # pragma mark - AddTaskProtocol
 
-- (void)addNewTask:(TimeTrackerTaskModel *)newTask
+- (void)addNewTask:(MirrorDataModel *)newTask
 {
     [[MirrorStorage sharedInstance] createTask:newTask];
     [self.collectionView reloadData];
@@ -136,7 +135,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self p_stopAllTasks];
 }
 
-- (void)openTimeTrackingViewWithTask:(TimeTrackerTaskModel *)task
+- (void)openTimeTrackingViewWithTask:(MirrorDataModel *)task
 {
     TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTask:task];
     timeTrackingView.delegate = self;
@@ -159,7 +158,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
-    TimeTrackerTaskModel *selectedModel = self.dataManager.tasks[selectedIndexPath.item];
+    MirrorDataModel *selectedModel = [MirrorDataManager activatedTasksWithAddTask][selectedIndexPath.item];
     // 点击了[+]
     if (selectedModel.isAddTaskModel) {
         AddTaskViewController *addVC = [AddTaskViewController new];
@@ -185,7 +184,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    TimeTrackerTaskModel *taskModel = self.dataManager.tasks[indexPath.item];
+    MirrorDataModel *taskModel = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
     if (taskModel.isAddTaskModel) {
         TimeTrackerAddTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier] forIndexPath:indexPath];
         [cell setupAddTaskCell];
@@ -200,7 +199,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.dataManager.tasks.count;
+    return [MirrorDataManager activatedTasksWithAddTask].count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -239,14 +238,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         
     }
     return _collectionView;
-}
-
-- (TimeTrackerDataManager *)dataManager
-{
-    if (!_dataManager) {
-        _dataManager = [[TimeTrackerDataManager alloc]init];
-    }
-    return _dataManager;
 }
 
 @end

@@ -6,22 +6,22 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TimeTrackerTaskModel.h"
+#import "MirrorDataModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol EditTaskProtocol <NSObject>
 
 - (void)updateTasks;
-- (void)deleteTask:(TimeTrackerTaskModel *)model;
-- (void)archiveTask:(TimeTrackerTaskModel *)model;
+- (void)deleteTask:(MirrorDataModel *)model;
+- (void)archiveTask:(MirrorDataModel *)model;
 
 @end
 
 @interface EditTaskViewController : UIViewController
 
 @property (nonatomic, strong) UIViewController<EditTaskProtocol> *delegate;
-- (instancetype)initWithTasks:(TimeTrackerTaskModel *)task;
+- (instancetype)initWithTasks:(MirrorDataModel *)task;
 
 @end
 

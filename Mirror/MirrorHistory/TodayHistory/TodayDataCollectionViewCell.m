@@ -24,7 +24,7 @@
     return NSStringFromClass(self.class);
 }
 
-- (void)configCellWithModel:(TimeTrackerTaskModel *)model
+- (void)configCellWithModel:(MirrorDataModel *)model
 {
     self.backgroundColor = [UIColor mirrorColorNamed:model.color];
     self.layer.cornerRadius = 14;

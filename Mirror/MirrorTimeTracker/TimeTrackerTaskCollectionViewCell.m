@@ -13,7 +13,7 @@ static CGFloat const kShadowWidth = 5;
 
 @interface TimeTrackerTaskCollectionViewCell ()
 
-@property (nonatomic, strong) TimeTrackerTaskModel *taskModel;
+@property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *timeInfoLabel;
 
@@ -26,7 +26,7 @@ static CGFloat const kShadowWidth = 5;
     return NSStringFromClass(self.class);
 }
 
-- (void)configWithModel:(TimeTrackerTaskModel *)taskModel
+- (void)configWithModel:(MirrorDataModel *)taskModel
 {
     self.taskModel = taskModel;
     self.taskNameLabel.text = taskModel.taskName;

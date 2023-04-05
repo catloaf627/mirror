@@ -8,7 +8,7 @@
 #import "TodayDataViewController.h"
 #import "UIColor+MirrorColor.h"
 #import "MirrorTabsManager.h"
-#import "TimeTrackerDataManager.h"
+#import "MirrorDataManager.h"
 #import "TodayDataCollectionViewCell.h"
 #import "MirrorMacro.h"
 #import <Masonry/Masonry.h>
@@ -23,7 +23,6 @@ typedef NS_ENUM(NSInteger, DataSectionType) {
 @interface TodayDataViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) TimeTrackerDataManager *dataManager;
 
 @end
 
@@ -63,9 +62,9 @@ typedef NS_ENUM(NSInteger, DataSectionType) {
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (section == DataSectionTypeActivated) { // non-archived tasks
-        return self.dataManager.activatedTasks.count;
+        return [MirrorDataManager activatedTasks].count;
     } else if (section == DataSectionTypeArchived) { // archived tasks
-        return self.dataManager.archivedTasks.count;
+        return [MirrorDataManager archivedTasks].count;
     } else {
         return 0;
     }
@@ -75,9 +74,9 @@ typedef NS_ENUM(NSInteger, DataSectionType) {
 {
     TodayDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TodayDataCollectionViewCell identifier] forIndexPath:indexPath];
     if (indexPath.section == DataSectionTypeActivated) {
-        [cell configCellWithModel:self.dataManager.activatedTasks[indexPath.item]];
+        [cell configCellWithModel:[MirrorDataManager activatedTasks][indexPath.item]];
     } else if (indexPath.section ==  DataSectionTypeArchived) {
-        [cell configCellWithModel:self.dataManager.archivedTasks[indexPath.item]];
+        [cell configCellWithModel:[MirrorDataManager archivedTasks][indexPath.item]];
     }
     return cell;
 }
@@ -103,14 +102,6 @@ typedef NS_ENUM(NSInteger, DataSectionType) {
 
 
 #pragma mark - Getters
-
-- (TimeTrackerDataManager *)dataManager
-{
-    if (!_dataManager) {
-        _dataManager = [TimeTrackerDataManager new];
-    }
-    return _dataManager;
-}
 
 - (UICollectionView *)collectionView
 {

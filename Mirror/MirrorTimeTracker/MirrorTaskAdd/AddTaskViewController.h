@@ -6,13 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TimeTrackerTaskModel.h"
+#import "MirrorDataModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol AddTaskProtocol <NSObject>
 
-- (void)addNewTask:(TimeTrackerTaskModel *)newTask;
+- (void)addNewTask:(MirrorDataModel *)newTask;
 
 @end
 
