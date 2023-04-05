@@ -48,7 +48,7 @@
 
 #pragma mark - Private methods
 
-+ (NSMutableArray<MirrorDataModel *> *)allTasks
++ (NSMutableArray<MirrorDataModel *> *)allTasks // Dictionaries by definition are unordered. So I used an array to do the trick
 {
     NSMutableArray<MirrorDataModel *> *allTasks = [NSMutableArray new];
     NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"mirror_dict"];
