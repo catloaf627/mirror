@@ -8,7 +8,7 @@
 #import "MirrorStorage.h"
 #import "NSMutableDictionary+MirrorDictionary.h"
 
-static NSString *const kMirrorDict = @"MirrorDict";
+static NSString *const kMirrorDict = @"mirror_dict";
 
 @implementation MirrorStorage
 
@@ -27,7 +27,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy] ?: [NSMutableDictionary new];
     // 新增一个task
-    [mirrorDict setValue: @{@"color": [UIColor stringFromColor:task.color], @"isArchived" : @(task.isArchived), @"isOngoing":@(NO),  @"data":[NSMutableDictionary new]} forKey:task.taskName];
+    [mirrorDict setValue: @{@"color": [UIColor stringFromColor:task.color], @"is_archived" : @(task.isArchived), @"is_ongoing":@(NO),  @"data":[NSMutableDictionary new]} forKey:task.taskName];
     // 将mirror dict存回本地
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
@@ -48,7 +48,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
     // 更新task的archive状态
     NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
-    [taskDict setValue:@(YES) forKey:@"isArchived"];
+    [taskDict setValue:@(YES) forKey:@"is_archived"];
     [mirrorDict setValue:taskDict forKey:task.taskName];
     // 将mirror dict存回本地
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
@@ -73,7 +73,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
     // 更新task的ongoing状态
     NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
-    [taskDict setValue:@(YES) forKey:@"isOngoing"];
+    [taskDict setValue:@(YES) forKey:@"is_ongoing"];
     [mirrorDict setValue:taskDict forKey:task.taskName];
     // 将mirror dict存回本地
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
@@ -85,7 +85,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
     // 更新task的ongoing状态
     NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
-    [taskDict setValue:@(NO) forKey:@"isOngoing"];
+    [taskDict setValue:@(NO) forKey:@"is_ongoing"];
     [mirrorDict setValue:taskDict forKey:task.taskName];
     // 将mirror dict存回本地
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
@@ -98,7 +98,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     // 更新tasks的ongoing状态
     for (id key in mirrorDict.allKeys) {
         NSMutableDictionary *taskDict = [mirrorDict[key] mutableCopy];
-        [taskDict setValue:@(NO) forKey:@"isOngoing"];
+        [taskDict setValue:@(NO) forKey:@"is_ongoing"];
         [mirrorDict setValue:taskDict forKey:key];
     }
     // 将mirror dict存回本地
@@ -122,7 +122,7 @@ static NSString *const kMirrorDict = @"MirrorDict";
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
     for (id key in mirrorDict.allKeys) {
         if ([key isEqualToString:newTaskName]) {
-            if ([mirrorDict[key][@"isArchived"] boolValue]) {
+            if ([mirrorDict[key][@"is_archived"] boolValue]) {
                 return TaskNameExistsTypeExistsInArchivedTasks;
             } else {
                 return TaskNameExistsTypeExistsInCurrentTasks;

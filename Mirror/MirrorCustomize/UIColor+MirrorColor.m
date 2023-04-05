@@ -172,27 +172,27 @@
 
 + (NSString *)stringFromColor:(MirrorColorType)color
 {
-    NSDictionary *dict = @{ @(MirrorColorTypeCellPink) : @"MirrorColorTypeCellPink",
-                            @(MirrorColorTypeCellOrange): @"MirrorColorTypeCellOrange",
-                            @(MirrorColorTypeCellYellow): @"MirrorColorTypeCellYellow",
-                            @(MirrorColorTypeCellGreen): @"MirrorColorTypeCellGreen",
-                            @(MirrorColorTypeCellTeal): @"MirrorColorTypeCellTeal",
-                            @(MirrorColorTypeCellBlue): @"MirrorColorTypeCellBlue",
-                            @(MirrorColorTypeCellPurple): @"MirrorColorTypeCellPurple",
-                            @(MirrorColorTypeCellGray): @"MirrorColorTypeCellGray"};
+    NSDictionary *dict = @{ @(MirrorColorTypeCellPink) : @"pink",
+                            @(MirrorColorTypeCellOrange): @"orange",
+                            @(MirrorColorTypeCellYellow): @"yellow",
+                            @(MirrorColorTypeCellGreen): @"green",
+                            @(MirrorColorTypeCellTeal): @"teal",
+                            @(MirrorColorTypeCellBlue): @"blue",
+                            @(MirrorColorTypeCellPurple): @"purple",
+                            @(MirrorColorTypeCellGray): @"gray"};
     return dict[@(color)];
 }
 
 + (MirrorColorType)colorFromString:(NSString *)string
 {
-    NSDictionary *dict = @{ @"MirrorColorTypeCellPink" : @(MirrorColorTypeCellPink),
-                            @"MirrorColorTypeCellOrange": @(MirrorColorTypeCellOrange),
-                            @"MirrorColorTypeCellYellow": @(MirrorColorTypeCellYellow),
-                            @"MirrorColorTypeCellGreen": @(MirrorColorTypeCellGreen),
-                            @"MirrorColorTypeCellTeal": @(MirrorColorTypeCellTeal),
-                            @"MirrorColorTypeCellBlue": @(MirrorColorTypeCellBlue),
-                            @"MirrorColorTypeCellPurple": @(MirrorColorTypeCellPurple),
-                            @"MirrorColorTypeCellGray": @(MirrorColorTypeCellGray)};
+    NSDictionary *dict = @{ @"pink" : @(MirrorColorTypeCellPink),
+                            @"orange": @(MirrorColorTypeCellOrange),
+                            @"yellow": @(MirrorColorTypeCellYellow),
+                            @"green": @(MirrorColorTypeCellGreen),
+                            @"teal": @(MirrorColorTypeCellTeal),
+                            @"blue": @(MirrorColorTypeCellBlue),
+                            @"purple": @(MirrorColorTypeCellPurple),
+                            @"gray": @(MirrorColorTypeCellGray)};
     return [[dict valueForKey:string] integerValue];
 }
 

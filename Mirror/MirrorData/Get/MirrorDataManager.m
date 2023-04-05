@@ -13,11 +13,11 @@
 + (NSMutableArray<MirrorDataModel *> *)activatedTasksWithAddTask
 {
     NSMutableArray<MirrorDataModel *> *activatedTasksWithAddTask = [NSMutableArray new];
-    NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"MirrorDict"];
+    NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"mirror_dict"];
     for (id taskName in dict.allKeys) {
         MirrorColorType color = [UIColor colorFromString:dict[taskName][@"color"]];
-        BOOL isArchived = [dict[taskName][@"isArchived"] boolValue];
-        BOOL isOngoing = [dict[taskName][@"isOngoing"] boolValue];
+        BOOL isArchived = [dict[taskName][@"is_archived"] boolValue];
+        BOOL isOngoing = [dict[taskName][@"is_ongoing"] boolValue];
         if (!isArchived) {
             MirrorDataModel *model = [[MirrorDataModel alloc]initWithTitle:taskName colorType:color isArchived:isArchived isOngoing:isOngoing isAddTask:NO];
             [activatedTasksWithAddTask addObject:model];
@@ -33,11 +33,11 @@
 + (NSMutableArray<MirrorDataModel *> *)activatedTasks
 {
     NSMutableArray<MirrorDataModel *> *activatedTasks = [NSMutableArray new];
-    NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"MirrorDict"];
+    NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"mirror_dict"];
     for (id taskName in dict.allKeys) {
         MirrorColorType color = [UIColor colorFromString:dict[taskName][@"color"]];
-        BOOL isArchived = [dict[taskName][@"isArchived"] boolValue];
-        BOOL isOngoing = [dict[taskName][@"isOngoing"] boolValue];
+        BOOL isArchived = [dict[taskName][@"is_archived"] boolValue];
+        BOOL isOngoing = [dict[taskName][@"is_ongoing"] boolValue];
         if (!isArchived) {
             MirrorDataModel *model = [[MirrorDataModel alloc]initWithTitle:taskName colorType:color isArchived:isArchived isOngoing:isOngoing isAddTask:NO];
             [activatedTasks addObject:model];
@@ -49,11 +49,11 @@
 + (NSMutableArray<MirrorDataModel *> *)archivedTasks
 {
     NSMutableArray<MirrorDataModel *> *archivedTasks = [NSMutableArray new];
-    NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"MirrorDict"];
+    NSMutableDictionary *dict = [[NSUserDefaults standardUserDefaults] valueForKey:@"mirror_dict"];
     for (id taskName in dict.allKeys) {
         MirrorColorType color = [UIColor colorFromString:dict[taskName][@"color"]];
-        BOOL isArchived = [dict[taskName][@"isArchived"] boolValue];
-        BOOL isOngoing = [dict[taskName][@"isOngoing"] boolValue];
+        BOOL isArchived = [dict[taskName][@"is_archived"] boolValue];
+        BOOL isOngoing = [dict[taskName][@"is_ongoing"] boolValue];
         if (isArchived) {
             MirrorDataModel *model = [[MirrorDataModel alloc]initWithTitle:taskName colorType:color isArchived:isArchived isOngoing:isOngoing isAddTask:NO];
             [archivedTasks addObject:model];
