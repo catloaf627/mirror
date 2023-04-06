@@ -38,6 +38,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 - (void)deleteTask:(MirrorDataModel *)task
 {
+    [self stopTask:task];
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
     // 通过taskname删除task
@@ -48,6 +49,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 - (void)archiveTask:(MirrorDataModel *)task
 {
+    [self stopTask:task];
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
     // 取出这个task以便作修改
@@ -127,10 +129,28 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
-    // 更新tasks的ongoing状态
+    // 大循环
     for (id key in mirrorDict.allKeys) {
+        // 取出这个task以便作修改
         NSMutableDictionary *taskDict = [mirrorDict[key] mutableCopy];
+        // 更新task的ongoing状态
         [taskDict setValue:@(NO) forKey:@"is_ongoing"];
+        // 将最后一个period取出来，给它一个结束时间（now）
+        NSMutableArray *allPeriods =  [[NSMutableArray alloc] initWithArray:taskDict[@"periods"]];
+        if (allPeriods.count > 0) {
+            NSMutableArray *lastPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[allPeriods.count-1]];
+            long end = [[NSDate now] timeIntervalSince1970];
+            long start = [lastPeriod[0] longValue];
+            long length = end - start;
+            if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
+                [lastPeriod addObject:@((long)[[NSDate now] timeIntervalSince1970])];
+                allPeriods[allPeriods.count-1] = lastPeriod;
+            } else { // 错误格式或者10秒以下，丢弃这个task
+                [allPeriods removeLastObject];
+            }
+            [taskDict setValue:allPeriods forKey:@"periods"];
+        }
+        // 保存更新好的task到本地
         [mirrorDict setValue:taskDict forKey:key];
     }
     // 将mirror dict存回本地
