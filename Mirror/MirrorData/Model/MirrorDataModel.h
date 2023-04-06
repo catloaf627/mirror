@@ -11,21 +11,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MirrorDataModel : NSObject
+@interface MirrorDataModel : NSObject <NSCoding, NSSecureCoding>
 
-// 展示作用
-@property (nonatomic, assign) BOOL isAddTaskModel;
-@property (nonatomic, assign) BOOL isArchived;
+// 存在本地
 @property (nonatomic, strong) NSString *taskName;
-@property (nonatomic, strong) NSString *timeInfo;
+@property (nonatomic, assign) BOOL isArchived;
 @property (nonatomic, assign) MirrorColorType color;
-@property (nonatomic, assign) BOOL isOngoing;
+@property (nonatomic, strong) NSMutableArray<NSMutableArray *> *periods;
 @property (nonatomic, assign) long createdTime; // 创建时间，用于排序
-@property (nonatomic, assign) NSDate *startTime; // 只有isOngoing为YES的时候才会用到startTime（yesterday label会用到这个展示）
+// 通过本地计算
+@property (nonatomic, strong) NSString *timeInfo;
+@property (nonatomic, assign) BOOL isOngoing;
+// 外部赋值
+@property (nonatomic, assign) BOOL isAddTaskModel;
 
-- (instancetype)initWithTitle:(NSString *)taskName createdTime:(long)createTime colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived isOngoing:(BOOL)isOngoing isAddTask:(BOOL)isAddTaskModel;
-- (void)didStartTask;
-- (void)didStopTask;
+- (instancetype)initWithTitle:(NSString *)taskName createdTime:(long)createTime colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived periods:(NSMutableArray<NSMutableArray *> *)periods isAddTask:(BOOL)isAddTaskModel;
 
 
 @end

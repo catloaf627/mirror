@@ -24,19 +24,21 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 - (void)createTask:(MirrorDataModel *)task;
 
-- (void)deleteTask:(MirrorDataModel *)task;
+- (void)deleteTask:(NSString *)taskName;
 
-- (void)archiveTask:(MirrorDataModel *)task;
+- (void)archiveTask:(NSString *)taskName;
 
-- (void)editTask:(MirrorDataModel *)task color:(MirrorColorType)newColor name:(NSString *)newName;
+- (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName;
 
-- (void)startTask:(MirrorDataModel *)task;
+- (void)startTask:(NSString *)taskName;
 
-- (void)stopTask:(MirrorDataModel *)task;
+- (void)stopTask:(NSString *)taskName;
 
-- (void)stopAllTasks;
+- (void)stopAllTasksExcept:(NSString *)taskName;
 
 - (TaskNameExistsType)taskNameExists:(NSString *)newTaskName;
+
+- (NSMutableDictionary *)retriveMirrorData;
 
 @end
 

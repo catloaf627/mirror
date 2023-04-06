@@ -62,7 +62,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [super viewDidLoad];
     self.applyImmersiveMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredImmersiveMode"];
     [self  p_setupUI];
-    [MirrorDataManager test];
 }
 
 - (void)p_setupUI
@@ -108,13 +107,13 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)deleteTask:(MirrorDataModel *)model
 {
-    [[MirrorStorage sharedInstance] deleteTask:model];
+    [[MirrorStorage sharedInstance] deleteTask:model.taskName];
     [self.collectionView reloadData];
 }
 
 - (void)archiveTask:(MirrorDataModel *)model
 {
-    [[MirrorStorage sharedInstance] archiveTask:model];
+    [[MirrorStorage sharedInstance] archiveTask:model.taskName];
     [self.collectionView reloadData];
 }
 # pragma mark - AddTaskProtocol
@@ -127,14 +126,15 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 #pragma mark - TimeTrackingViewProtocol
 
-- (void)closeTimeTrackingView
+- (void)closeTimeTrackingViewWithTask:(MirrorDataModel *)task
 {
     for (UIView *view in self.view.subviews) {
         if ([view isKindOfClass:TimeTrackingView.class]) {
             [view removeFromSuperview];
         }
     }
-    [self p_stopAllTasks];
+    [[MirrorStorage sharedInstance] stopTask:task.taskName];
+    [self.collectionView reloadData];
 }
 
 - (void)openTimeTrackingViewWithTask:(MirrorDataModel *)task
@@ -149,9 +149,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 #pragma mark - Private methods
 
-- (void)p_stopAllTasks
+- (void)p_stopAllTasksExcept:(NSString *)taskName
 {
-    [[MirrorStorage sharedInstance] stopAllTasks];
+    [[MirrorStorage sharedInstance] stopAllTasksExcept:taskName];
     [self.collectionView reloadData];
 }
 
@@ -170,13 +170,10 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
-        [[MirrorStorage sharedInstance] stopTask:selectedModel];
-        if (self.applyImmersiveMode) {
-            [self closeTimeTrackingView];
-        }
+        [[MirrorStorage sharedInstance] stopTask:selectedModel.taskName];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
-        [self p_stopAllTasks];
-        [[MirrorStorage sharedInstance] startTask:selectedModel];
+        [self p_stopAllTasksExcept:selectedModel.taskName];
+        [[MirrorStorage sharedInstance] startTask:selectedModel.taskName];
         if (self.applyImmersiveMode) {
             [self openTimeTrackingViewWithTask:selectedModel];
         }

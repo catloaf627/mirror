@@ -171,8 +171,7 @@ static CGFloat const kDashSpacing = 10;
     dayFormatter.dateFormat = @"yyyy-MM-dd";
     
     // udpate start time
-    self.taskModel.startTime = [NSDate dateWithTimeIntervalSince1970:1666561000]; //gizmo
-    NSDate *startTime = self.taskModel.startTime;
+    NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:1666561000]; //gizmo
     self.startTimeLabelHH.text = [hourFormatter stringFromDate:startTime];
     self.startTimeLabelmm.text = [minFormatter stringFromDate:startTime];
     self.startTimeLabelss.text = [secFormatter stringFromDate:startTime];
@@ -198,7 +197,7 @@ static CGFloat const kDashSpacing = 10;
 
 - (void)stopButtonClicked
 {
-    [self.delegate closeTimeTrackingView];
+    [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
 }
 
 #pragma mark - Getters

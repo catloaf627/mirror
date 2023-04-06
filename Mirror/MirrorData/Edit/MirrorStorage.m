@@ -7,6 +7,7 @@
 
 #import "MirrorStorage.h"
 #import "NSMutableDictionary+MirrorDictionary.h"
+#import "UIColor+MirrorColor.h"
 
 static NSString *const kMirrorDict = @"mirror_dict";
 
@@ -25,118 +26,116 @@ static NSString *const kMirrorDict = @"mirror_dict";
 - (void)createTask:(MirrorDataModel *)task
 {
     // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy] ?: [NSMutableDictionary new];
+    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 新增一个task
-    [mirrorDict setValue: @{@"created_time" : @(task.createdTime),
-                            @"color": [UIColor stringFromColor:task.color],
-                            @"is_archived" : @(task.isArchived),
-                            @"is_ongoing":@(NO),
-                            @"periods":[NSMutableArray new]} forKey:task.taskName]; //即使这里存的时候用的是mutable array，真正存进去以后会还是__NSCFArray（non-mutable）
+    [mirrorDict setValue:task forKey:task.taskName];
     // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+    [self saveMirrorData:mirrorDict];
 }
 
-- (void)deleteTask:(MirrorDataModel *)task
+- (void)deleteTask:(NSString *)taskName
 {
-    [self stopTask:task];
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    // 在本地取出词典
+    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 通过taskname删除task
-    [mirrorDict removeObjectForKey:task.taskName];
+    [mirrorDict removeObjectForKey:taskName];
     // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+    [self saveMirrorData:mirrorDict];
 }
 
-- (void)archiveTask:(MirrorDataModel *)task
+- (void)archiveTask:(NSString *)taskName
 {
-    [self stopTask:task];
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    [self stopTask:taskName];
+    // 在本地取出task
+    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 取出这个task以便作修改
-    NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
+    MirrorDataModel *task = mirrorDict[taskName];
+    // stop task first
     // 更新task的archive状态
-    [taskDict setValue:@(YES) forKey:@"is_archived"];
+    task.isArchived = YES;
     // 保存更新好的task到本地
-    [mirrorDict setValue:taskDict forKey:task.taskName];
+    [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+    [self saveMirrorData:mirrorDict];
 }
 
-- (void)editTask:(MirrorDataModel *)task color:(MirrorColorType)newColor name:(NSString *)newName
+- (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName
 {
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    // 在本地取出task
+    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 取出这个task以便作修改
-    NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
+    MirrorDataModel *task = mirrorDict[oldName];
     // 更新task的color和taskname
-    [mirrorDict removeObjectForKey:task.taskName];
-    [taskDict setValue:[UIColor stringFromColor:newColor] forKey:@"color"];
+    [mirrorDict removeObjectForKey:oldName];
+    task.color = newColor;
     // 保存更新好的task到本地
-    [mirrorDict setValue:taskDict forKey:newName];
+    [mirrorDict setValue:task forKey:newName];
     // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+    [self saveMirrorData:mirrorDict];
 }
 
-- (void)startTask:(MirrorDataModel *)task
+- (void)startTask:(NSString *)taskName
 {
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    // 在本地取出task
+    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 取出这个task以便作修改
-    NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
-    // 更新task的ongoing状态
-    [taskDict setValue:@(YES) forKey:@"is_ongoing"];
+    MirrorDataModel *task = mirrorDict[taskName];
     // 给task创建一个新的period，并给出这个period的起始时间（now）
-    NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:taskDict[@"periods"]];
-    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@((long)[[NSDate now] timeIntervalSince1970])]];
+    NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
+    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@([[NSDate now] timeIntervalSince1970])]];
     [allPeriods addObject:newPeriod];
-    [taskDict setValue:allPeriods forKey:@"periods"];
+    task.periods = allPeriods;
     // 保存更新好的task到本地
-    [mirrorDict setValue:taskDict forKey:task.taskName];
+    [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+    [self saveMirrorData:mirrorDict];
 }
 
-- (void)stopTask:(MirrorDataModel *)task
+- (void)stopTask:(NSString *)taskName
 {
     // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 取出这个task以便作修改
-    NSMutableDictionary *taskDict = [mirrorDict[task.taskName] mutableCopy];
-    // 更新task的ongoing状态
-    [taskDict setValue:@(NO) forKey:@"is_ongoing"];
+    MirrorDataModel *task = mirrorDict[taskName];
     // 将最后一个period取出来，给它一个结束时间（now）
-    NSMutableArray *allPeriods =  [[NSMutableArray alloc] initWithArray:taskDict[@"periods"]];
+    NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
     if (allPeriods.count > 0) {
         NSMutableArray *lastPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[allPeriods.count-1]];
-        long end = [[NSDate now] timeIntervalSince1970];
         long start = [lastPeriod[0] longValue];
+        long end = [[NSDate now] timeIntervalSince1970];
         long length = end - start;
+        NSLog(@"start %ld, end %ld, length %ld", start, end, length);
         if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
-            [lastPeriod addObject:@((long)[[NSDate now] timeIntervalSince1970])];
+            [lastPeriod addObject:@([[NSDate now] timeIntervalSince1970])];
             allPeriods[allPeriods.count-1] = lastPeriod;
         } else { // 错误格式或者10秒以下，丢弃这个task
             [allPeriods removeLastObject];
         }
-        [taskDict setValue:allPeriods forKey:@"periods"];
+        task.periods = allPeriods;
     }
     // 保存更新好的task到本地
-    [mirrorDict setValue:taskDict forKey:task.taskName];
+    [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+    [self saveMirrorData:mirrorDict];
 }
 
-- (void)stopAllTasks
+- (void)stopAllTasksExcept:(NSString *)taskName
 {
     // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
+    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 大循环
-    for (id key in mirrorDict.allKeys) {
+    for (id taskName in mirrorDict.allKeys) {
         // 取出这个task以便作修改
-        NSMutableDictionary *taskDict = [mirrorDict[key] mutableCopy];
-        // 更新task的ongoing状态
-        [taskDict setValue:@(NO) forKey:@"is_ongoing"];
+        MirrorDataModel *task = mirrorDict[taskName];
+        if ([task.taskName isEqualToString:taskName]) { // 被点击的task不要动
+            continue;
+        }
+        if (!task.isOngoing) { // 不在计时中的task不要动
+            continue;
+        }
+        
         // 将最后一个period取出来，给它一个结束时间（now）
-        NSMutableArray *allPeriods =  [[NSMutableArray alloc] initWithArray:taskDict[@"periods"]];
+        NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
         if (allPeriods.count > 0) {
             NSMutableArray *lastPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[allPeriods.count-1]];
             long end = [[NSDate now] timeIntervalSince1970];
@@ -148,21 +147,22 @@ static NSString *const kMirrorDict = @"mirror_dict";
             } else { // 错误格式或者10秒以下，丢弃这个task
                 [allPeriods removeLastObject];
             }
-            [taskDict setValue:allPeriods forKey:@"periods"];
+            task.periods = allPeriods;
         }
         // 保存更新好的task到本地
-        [mirrorDict setValue:taskDict forKey:key];
+        [mirrorDict setValue:task forKey:taskName];
     }
     // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
+    [self saveMirrorData:mirrorDict];
 }
 
 - (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
 {
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
-    for (id key in mirrorDict.allKeys) {
-        if ([key isEqualToString:newTaskName]) {
-            if ([mirrorDict[key][@"is_archived"] boolValue]) {
+    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    for (id taskName in mirrorDict.allKeys) {
+        if ([taskName isEqualToString:newTaskName]) {
+            MirrorDataModel *task = mirrorDict[taskName];
+            if (task.isArchived) {
                 return TaskNameExistsTypeExistsInArchivedTasks;
             } else {
                 return TaskNameExistsTypeExistsInCurrentTasks;
@@ -170,6 +170,58 @@ static NSString *const kMirrorDict = @"mirror_dict";
         }
     }
     return TaskNameExistsTypeValid;
+}
+
+- (void)saveMirrorData:(NSMutableDictionary *)mirrorDict // 归档
+{
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];
+    [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorDict];
+    // Log
+    [self printData:mirrorDict info:@"------saving user data------"];
+}
+
+- (NSMutableDictionary *)retriveMirrorData // 解档
+{
+    NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
+    NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
+    // Log
+//    [self printData:mirrorDict info:@"------retriving user data------"];
+    return mirrorDict ?: [NSMutableDictionary new];
+}
+
+- (void)printData:(NSMutableDictionary *)mirrorDict info:(NSString *)info
+{
+    NSLog(@"%@", info ?: @"");
+    for (id taskName in mirrorDict.allKeys) {
+        MirrorDataModel *task = mirrorDict[taskName];
+        NSString *tag = @"";
+        tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
+        if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellPink]]) {
+            tag = [tag stringByAppendingString:@"🌸"];
+        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellOrange]]) {
+            tag = [tag stringByAppendingString:@"🍊"];
+        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellYellow]]) {
+            tag = [tag stringByAppendingString:@"🍋"];
+        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellGreen]]) {
+            tag = [tag stringByAppendingString:@"🪀"];
+        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellTeal]]) {
+            tag = [tag stringByAppendingString:@"🧼"];
+        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellBlue]]) {
+            tag = [tag stringByAppendingString:@"🐟"];
+        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellBlue]]) {
+            tag = [tag stringByAppendingString:@"👾"];
+        }
+        tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
+        NSLog(@"%@: %@, created at %ld",tag, task.taskName, task.createdTime);
+        for (int i=0; i<task.periods.count; i++) {
+            if (task.periods[i].count == 1) {
+                NSLog(@"[%ld, ...], ", [task.periods[i][0] longValue]);
+            }
+            if (task.periods[i].count == 2) {
+                NSLog(@"[%ld, %ld], ", [task.periods[i][0] longValue], [task.periods[i][1] longValue]);
+            }
+        }
+    }
 }
 
 @end

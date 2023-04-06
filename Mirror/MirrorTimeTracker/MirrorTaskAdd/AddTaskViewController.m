@@ -184,7 +184,7 @@ static CGFloat const kHeightRatio = 0.8;
     if (!_brandNewTaskModel) {
         NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
         MirrorColorType type = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
-        _brandNewTaskModel = [[MirrorDataModel alloc] initWithTitle:[MirrorLanguage mirror_stringWithKey:@"untitled"] createdTime:nil colorType:type isArchived:NO isOngoing:NO isAddTask:NO];
+        _brandNewTaskModel = [[MirrorDataModel alloc] initWithTitle:[MirrorLanguage mirror_stringWithKey:@"untitled"] createdTime:nil colorType:type isArchived:NO periods:[NSMutableArray new] isAddTask:NO];
     }
     return _brandNewTaskModel;
 }

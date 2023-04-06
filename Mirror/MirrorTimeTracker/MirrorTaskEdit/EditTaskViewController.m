@@ -108,7 +108,7 @@ static CGFloat const kHeightRatio = 0.8;
     BOOL textIsEmpty = !currentText || [currentText isEqualToString:@""];
     TaskNameExistsType existType = [[MirrorStorage sharedInstance] taskNameExists:currentText];
     if (textIsTheSame) { // taskname和之前一样，允许修改并退出
-        [[MirrorStorage sharedInstance] editTask:self.taskModel color:self.selectedColor name:currentText];
+        [[MirrorStorage sharedInstance] editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
         [self.delegate dismissViewControllerAnimated:YES completion:^{
             [self.delegate updateTasks];
         }];
