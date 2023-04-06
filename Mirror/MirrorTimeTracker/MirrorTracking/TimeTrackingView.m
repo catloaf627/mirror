@@ -171,7 +171,8 @@ static CGFloat const kDashSpacing = 10;
     dayFormatter.dateFormat = @"yyyy-MM-dd";
     
     // udpate start time
-    NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:1666561000]; //gizmo
+    long startTimastamp = self.taskModel.periods.count ? (self.taskModel.periods[self.taskModel.periods.count-1].count ? [self.taskModel.periods[self.taskModel.periods.count-1][0] longValue] : 0) : 0;
+    NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimastamp]; //gizmo
     self.startTimeLabelHH.text = [hourFormatter stringFromDate:startTime];
     self.startTimeLabelmm.text = [minFormatter stringFromDate:startTime];
     self.startTimeLabelss.text = [secFormatter stringFromDate:startTime];

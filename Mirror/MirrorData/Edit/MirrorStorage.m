@@ -82,7 +82,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     MirrorDataModel *task = mirrorDict[taskName];
     // 给task创建一个新的period，并给出这个period的起始时间（now）
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
-    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@([[NSDate now] timeIntervalSince1970])]];
+    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@(round([[NSDate now] timeIntervalSince1970]))]];
     [allPeriods addObject:newPeriod];
     task.periods = allPeriods;
     // 保存更新好的task到本地
@@ -106,7 +106,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         long length = end - start;
         NSLog(@"start %ld, end %ld, length %ld", start, end, length);
         if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
-            [lastPeriod addObject:@([[NSDate now] timeIntervalSince1970])];
+            [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
         } else { // 错误格式或者10秒以下，丢弃这个task
             [allPeriods removeLastObject];
@@ -142,7 +142,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
             long start = [lastPeriod[0] longValue];
             long length = end - start;
             if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
-                [lastPeriod addObject:@((long)[[NSDate now] timeIntervalSince1970])];
+                [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
                 allPeriods[allPeriods.count-1] = lastPeriod;
             } else { // 错误格式或者10秒以下，丢弃这个task
                 [allPeriods removeLastObject];
@@ -185,7 +185,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
     NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
     // Log
-//    [self printData:mirrorDict info:@"------retriving user data------"];
+    [self printData:mirrorDict info:@"------retriving user data------"];
     return mirrorDict ?: [NSMutableDictionary new];
 }
 
