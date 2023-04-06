@@ -137,18 +137,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
 }
 
-- (void)addTask:(MirrorDataModel *)task onDate:(NSString *)date time:(NSInteger)seconds
-{
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
-    // 更新task时间
-    NSInteger oldTime = [mirrorDict[task.taskName][@"periods"][date] integerValue];
-    NSInteger newTime = oldTime + seconds;
-    [mirrorDict[task.taskName][@"periods"] setValue:@(newTime) forKey:date];
-    // 将mirror dict存回本地
-    [[NSUserDefaults standardUserDefaults] setValue:mirrorDict forKey:kMirrorDict];
-}
-
 - (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
 {
     NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
@@ -162,33 +150,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
         }
     }
     return TaskNameExistsTypeValid;
-}
-
-- (long)getTimeFromTask:(MirrorDataModel *)task OnDate:(NSString *)date
-{
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
-    // 通过task和date拿到时间
-    return [[mirrorDict[task.taskName][@"periods"] valueForKey:date defaultObject:@0] integerValue];
-}
-
-- (long)getTotalTimeFromTask:(MirrorDataModel *)task
-{
-    // 在本地取出task的data
-    NSMutableDictionary *mirrorDict = [[[NSUserDefaults standardUserDefaults] valueForKey:kMirrorDict] mutableCopy];
-    NSMutableDictionary *taskData = [NSMutableDictionary new];
-    for (id key in mirrorDict.allKeys) {
-        if ([[key stringValue] isEqualToString:task.taskName]) {
-            taskData = mirrorDict[task.taskName][@"periods"];
-            break;
-        }
-    }
-    
-    NSInteger time = 0;
-    for (id key in taskData.allKeys) {
-        time += [taskData[key] integerValue];
-    }
-    return time;
 }
 
 @end

@@ -36,11 +36,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 - (void)stopAllTasks;
 
-- (void)addTask:(MirrorDataModel *)task onDate:(NSString *)date time:(NSInteger)seconds;
-
 - (TaskNameExistsType)taskNameExists:(NSString *)newTaskName;
-
-- (void)fakeData;
 
 @end
 
