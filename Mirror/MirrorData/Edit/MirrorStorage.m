@@ -113,7 +113,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
             [lastPeriod addObject:@((long)[[NSDate now] timeIntervalSince1970])];
             allPeriods[allPeriods.count-1] = lastPeriod;
         } else { // 错误格式或者10秒以下，丢弃这个task
-            [allPeriods removeObject:lastPeriod];
+            [allPeriods removeLastObject];
         }
         [taskDict setValue:allPeriods forKey:@"periods"];
     }

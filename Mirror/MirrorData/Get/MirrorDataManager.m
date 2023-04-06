@@ -10,6 +10,8 @@
 
 @implementation MirrorDataManager
 
+#pragma mark - Get tasks
+
 + (NSMutableArray<MirrorDataModel *> *)activatedTasksWithAddTask
 {
     NSMutableArray<MirrorDataModel *> *activatedTasksWithAddTask = [MirrorDataManager activatedTasks];
@@ -45,6 +47,18 @@
     }
     return archivedTasks;
 }
+
+#pragma mark - Get tasks within a day/month/year
+// ❗️从缓存中拿出来的long必须用longValue处理一下，不然会出现溢出
+
+//+ (NSMutableArray<MirrorDataModel *> *)todayTasks
+//{
+//    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+//    for (int i=0; i<allTasks.count; i++) {
+//        MirrorDataModel *task = allTasks[i];
+//        
+//    }
+//}
 
 #pragma mark - Private methods
 

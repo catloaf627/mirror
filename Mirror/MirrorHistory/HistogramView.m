@@ -46,7 +46,7 @@
 - (MirrorHistogram *)barChart
 {
     if (!_barChart) {
-        _barChart = [MirrorHistogram new];
+        _barChart = [[MirrorHistogram alloc] initWithType:0]; // 默认展示today
     }
     return _barChart;
 }
