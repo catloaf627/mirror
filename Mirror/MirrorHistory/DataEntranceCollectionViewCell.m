@@ -32,13 +32,13 @@
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"today"];
             break;
         case 1:
-            self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_month"];
+            self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_week"];
             break;
         case 2:
-            self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_year"];
+            self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_month"];
             break;
         case 3:
-            self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"all_data"];
+            self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_year"];
             break;
         default:
             break;
