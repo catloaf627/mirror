@@ -91,9 +91,9 @@
 + (long)startedTimeToday // 今天起始点的时间戳
 {
     // setup
-    NSDate *today = [NSDate date];
+    NSDate *today = [NSDate now];
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
     components.timeZone = [NSTimeZone systemTimeZone];
     // details
     components.hour = 0;
@@ -101,35 +101,41 @@
     components.second = 0;
     // get date
     NSDate *combinedDate = [gregorian dateFromComponents:components];
-    [MirrorDataManager _printTime:combinedDate info:@"今天起始点的时间戳"];
-    return [combinedDate timeIntervalSince1970];
+    long timeStamp = [combinedDate timeIntervalSince1970];
+    [MirrorDataManager _printTime:timeStamp info:@"今天起始点的时间戳"];
+    return timeStamp;
 }
 
 + (long)startedTimeThisWeek // 本周起始点的时间戳
 {
     // setup
-    NSDate *today = [NSDate date];
+    NSDate *today = [NSDate now];
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
     components.timeZone = [NSTimeZone systemTimeZone];
     // details
-// ❗️weekday比较特殊，把weekday设置为1是不能直接跳到本周的第一天的，因为真实的本周第一天的year、month都有可能发生变化。这里使用往前减数的方法手动计算本周起始点的时间戳
+// ❗️错误操作：weekday比较特殊，把weekday设置为1是不能直接跳到本周的第一天的，因为真实的本周第一天的year、month都有可能发生变化。这里使用往前减数的方法手动计算本周起始点的时间戳
 //  components.weekday = 1;
+//  components.hour = 0;
+//  components.minute = 0;
+//  components.second = 0;
+// ❗️正确操作：先拿到今天0点的时间，然后看今天比周日(一周的第一天)多了几天，再计算这周的起始时间
     components.hour = 0;
     components.minute = 0;
     components.second = 0;
+    long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+    long thisWeekZero = todayZero - (components.weekday - 1) * 86400;
     // get date
-    NSDate *combinedDate = [gregorian dateFromComponents:components];
-    [MirrorDataManager _printTime:combinedDate info:@"本周起始点的时间戳"];
-    return [combinedDate timeIntervalSince1970];
+    [MirrorDataManager _printTime:thisWeekZero info:@"今天起始点的时间戳"];
+    return thisWeekZero;
 }
 
 + (long)startedTimeThisMonth // 本月起始点的时间戳
 {
     // setup
-    NSDate *today = [NSDate date];
+    NSDate *today = [NSDate now];
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
     components.timeZone = [NSTimeZone systemTimeZone];
     // details
     components.day = 1;
@@ -138,16 +144,17 @@
     components.second = 0;
     // get date
     NSDate *combinedDate = [gregorian dateFromComponents:components];
-    [MirrorDataManager _printTime:combinedDate info:@"本月起始点的时间戳"];
-    return [combinedDate timeIntervalSince1970];
+    long timeStamp = [combinedDate timeIntervalSince1970];
+    [MirrorDataManager _printTime:timeStamp info:@"本月起始点的时间戳"];
+    return timeStamp;
 }
 
 + (long)startedTimeThisYear // 今年起始点的时间戳
 {
     // setup
-    NSDate *today = [NSDate date];
+    NSDate *today = [NSDate now];
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
     components.timeZone = [NSTimeZone systemTimeZone];
     // details
     components.month = 1;
@@ -157,12 +164,14 @@
     components.second = 0;
     // get date
     NSDate *combinedDate = [gregorian dateFromComponents:components];
-    [MirrorDataManager _printTime:combinedDate info:@"今年起始点的时间戳"];
-    return [combinedDate timeIntervalSince1970];
+    long timeStamp = [combinedDate timeIntervalSince1970];
+    [MirrorDataManager _printTime:timeStamp info:@"今年起始点的时间戳"];
+    return timeStamp;
 }
 
-+ (void)_printTime:(NSDate *)date info:(NSString *)info
++ (void)_printTime:(long)timeStamp info:(NSString *)info
 {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeStamp];
     // setup
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
