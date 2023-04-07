@@ -19,10 +19,38 @@
         _color = colorType;
         _isArchived = isArchived;
         _periods = periods;
-        _timeInfo = [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
         _isAddTaskModel = isAddTaskModel;
     }
     return self;
+}
+
+#pragma mark - Getters
+
+- (NSString *)timeInfo
+{
+    if (self.isOngoing) {
+        _timeInfo = @"00:00:00";
+        // set up formatters
+        NSDateFormatter *hourFormatter = [[NSDateFormatter alloc]init];
+        hourFormatter.dateFormat = @"HH";
+        NSDateFormatter *minFormatter = [[NSDateFormatter alloc]init];
+        minFormatter.dateFormat = @"mm";
+        NSDateFormatter *secFormatter = [[NSDateFormatter alloc]init];
+        secFormatter.dateFormat = @"ss";
+        NSDateFormatter *dayFormatter = [[NSDateFormatter alloc]init];
+        dayFormatter.dateFormat = @"yyyy-MM-dd";
+        // udpate start time
+        long startTimastamp = self.periods.count ? (self.periods[self.periods.count-1].count ? [self.periods[self.periods.count-1][0] longValue] : 0) : 0;
+        NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimastamp]; //gizmo
+        // update now time
+        NSDate *nowTime = [NSDate date]; // 当前时间
+        // update time interval
+        NSTimeInterval timeInterval = [nowTime timeIntervalSinceDate:startTime];
+        _timeInfo = [[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval];
+    } else {
+        _timeInfo = [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
+    }
+    return _timeInfo;
 }
 
 - (BOOL)isOngoing // isOngoing并不由外界赋值，仅通过periods获得
@@ -32,6 +60,8 @@
     }
     return NO;
 }
+
+#pragma mark - Encode Decode
 
 + (BOOL)supportsSecureCoding
 {

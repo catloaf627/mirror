@@ -18,6 +18,7 @@
 #import "TimeTrackingView.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
+#import "MUXToast.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -145,6 +146,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [timeTrackingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.offset(0);
     }];
+    [timeTrackingView updateLabels];
 }
 
 #pragma mark - Private methods

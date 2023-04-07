@@ -12,6 +12,10 @@
 + (NSString *)mirror_stringWithKey:(NSString *)key
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
+    // general
+    [mirrorDict setValue:@[@"Something went wrong", @"出错了"] forKey:@"something_went_wrong"];
+    [mirrorDict setValue:@[@"Saved", @"已经保存"] forKey:@"saved"];
+    
     // tabs
     [mirrorDict setValue:@[@"Me", @"我的"] forKey:@"me"];
     [mirrorDict setValue:@[@"Start", @"冲鸭"] forKey:@"start"];
@@ -58,6 +62,18 @@
     
     NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
+}
+
+
++ (NSString *)mirror_stringWithKey:(NSString *)key with1Placeholder:(NSString *)placeholder
+{
+    NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
+    // MUXToast messages
+    [mirrorDict setValue:@[@"[%@] has been lasted more than 24 hours. It was stopped and saved automatically.", @"[%@]时长超过24小时，已自动停止并保存"] forKey:@"reached_limited_time"];
+    
+    
+    NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
+    return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder];;
 }
 
 

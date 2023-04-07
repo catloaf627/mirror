@@ -11,8 +11,8 @@
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
 #import "MirrorLanguage.h"
-
 #import "MirrorStorage.h"
+#import "MUXToast.h"
 
 static CGFloat const kPadding = 20;
 
@@ -26,8 +26,7 @@ static CGFloat const kDashSpacing = 10;
 
 @interface TimeTrackingView ()
 
-@property (nonatomic, strong) MirrorDataModel *taskModel;
-
+// UI
 @property (nonatomic, strong) UILabel *taskNameLabel;
 
 @property (nonatomic, strong) UILabel *timeIntervalLabel;
@@ -48,6 +47,20 @@ static CGFloat const kDashSpacing = 10;
 
 @property (nonatomic, strong) UILabel *yesterdayLabel;
 
+// Data
+
+@property (nonatomic, strong) MirrorDataModel *taskModel;
+@property (nonatomic, strong) NSDate *nowTime;
+@property (nonatomic, strong) NSDate *startTime;
+@property (nonatomic, assign) NSTimeInterval timeInterval;
+
+
+@end
+
+@interface TimeTrackingView ()
+
+@property (nonatomic, strong) NSTimer *timer;
+
 @end
 
 @implementation TimeTrackingView
@@ -57,14 +70,20 @@ static CGFloat const kDashSpacing = 10;
     self = [super init];
     if (self) {
         self.taskModel = taskModel;
-        self.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
         [self p_setupUI];
     }
     return self;
 }
 
+- (void)dealloc
+{
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
 - (void)p_setupUI
 {
+    self.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color];
     [self addSubview:self.taskNameLabel];
     [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
@@ -150,10 +169,11 @@ static CGFloat const kDashSpacing = 10;
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(stopButtonClicked)];
     [self addGestureRecognizer:tapRecognizer];
     
-    // 每秒实时更新展示时间
-    [self updateLabels];
-    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateLabels) userInfo:nil repeats:YES];
-    
+    __weak typeof(self) weakSelf = self;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)1.0f repeats:YES block:^(NSTimer * _Nonnull timer) {
+        // 在iOS 10以后系统，苹果针对NSTimer进行了优化，使用Block回调方式，解决了循环引用问题。
+        [weakSelf updateLabels];
+    }];
 }
 
 #pragma mark - Actions
@@ -171,34 +191,65 @@ static CGFloat const kDashSpacing = 10;
     dayFormatter.dateFormat = @"yyyy-MM-dd";
     
     // udpate start time
-    long startTimastamp = self.taskModel.periods.count ? (self.taskModel.periods[self.taskModel.periods.count-1].count ? [self.taskModel.periods[self.taskModel.periods.count-1][0] longValue] : 0) : 0;
-    NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimastamp]; //gizmo
-    self.startTimeLabelHH.text = [hourFormatter stringFromDate:startTime];
-    self.startTimeLabelmm.text = [minFormatter stringFromDate:startTime];
-    self.startTimeLabelss.text = [secFormatter stringFromDate:startTime];
+    self.startTimeLabelHH.text = [hourFormatter stringFromDate:self.startTime];
+    self.startTimeLabelmm.text = [minFormatter stringFromDate:self.startTime];
+    self.startTimeLabelss.text = [secFormatter stringFromDate:self.startTime];
     
     // update now time
-    NSDate *nowTime = [NSDate date]; // 当前时间
-    self.nowTimeLabelHH.text = [hourFormatter stringFromDate:nowTime];
-    self.nowTimeLabelmm.text = [minFormatter stringFromDate:nowTime];
-    self.nowTimeLabelss.text = [secFormatter stringFromDate:nowTime];
+    self.nowTimeLabelHH.text = [hourFormatter stringFromDate:self.nowTime];
+    self.nowTimeLabelmm.text = [minFormatter stringFromDate:self.nowTime];
+    self.nowTimeLabelss.text = [secFormatter stringFromDate:self.nowTime];
     
     // update time interval
-    NSTimeInterval timeInterval = [nowTime timeIntervalSinceDate:startTime];
-    self.timeIntervalLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval];
-//    if (timeInterval >= 86400 || timeInterval < 0) { // 超过一天或者interval为负数立即停止计时
-//        [self.delegate closeTimeTrackingView];
-//    }
-    if (![[dayFormatter stringFromDate:nowTime] isEqualToString:[dayFormatter stringFromDate:startTime]]) { // 如果两个时间不在同一天（跨越了0点），给startTime一个[昨天]的标记
+    
+    self.timeIntervalLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:self.timeInterval];
+    
+    NSLog(@"全屏计时中: %@(now) - %@(start) = %f",self.nowTime, self.startTime, self.timeInterval);
+    
+    if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时
+        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"reached_limited_time" with1Placeholder:self.taskModel.taskName] onVC:self.delegate];
+        [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+    }
+    if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
+        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"something_went_wrong"] onVC:self.delegate];
+        [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+        
+    }
+    if (![[dayFormatter stringFromDate:self.nowTime] isEqualToString:[dayFormatter stringFromDate:self.startTime]]) { // 如果两个时间不在同一天（跨越了0点），给startTime一个[昨天]的标记
         self.yesterdayLabel.hidden = NO;
     }
-    
-//    NSLog(@"当前时间 %d", (int)[NSDate date].timeIntervalSince1970);
 }
 
 - (void)stopButtonClicked
 {
+    long startTimestamp = self.taskModel.periods.count ? (self.taskModel.periods[self.taskModel.periods.count-1].count ? [self.taskModel.periods[self.taskModel.periods.count-1][0] longValue] : 0) : 0;
+    NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimestamp];
+    NSDate *nowTime = [NSDate date]; // 当前时间
+    NSTimeInterval timeInterval = [nowTime timeIntervalSinceDate:startTime];
+    if (round(timeInterval) > 10) {
+        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"saved"] onVC:self.delegate];
+    }
     [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+}
+
+#pragma mark - Data
+
+- (NSDate *)nowTime
+{
+    return [NSDate date]; // 当前时间
+}
+
+- (NSDate *)startTime
+{
+    long startTimestamp = self.taskModel.periods.count ? (self.taskModel.periods[self.taskModel.periods.count-1].count ? [self.taskModel.periods[self.taskModel.periods.count-1][0] longValue] : 0) : 0;
+    // 使用 po round(([NSDate now]timeIntervalSince1970] - (86400-20))) 的结果替换下面的startTimestamp可以在20秒内看到20小时自动保存的效果
+    NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimestamp];
+    return startTime;
+}
+
+- (NSTimeInterval)timeInterval
+{
+    return [self.nowTime timeIntervalSinceDate:self.startTime];
 }
 
 #pragma mark - Getters
