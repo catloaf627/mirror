@@ -224,13 +224,13 @@ static NSString *const kMirrorDict = @"mirror_dict";
             tag = [tag stringByAppendingString:@"👾"];
         }
         tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
-        NSLog(@"%@: %@, created at %ld",tag, task.taskName, task.createdTime);
+        NSLog(@"%@: %@, 创建于 %ld",tag, task.taskName, task.createdTime);
         for (int i=0; i<task.periods.count; i++) {
             if (task.periods[i].count == 1) {
-                NSLog(@"[%ld, ...], ", [task.periods[i][0] longValue]);
+                NSLog(@"[%ld, ..........] 计时中..., ", [task.periods[i][0] longValue]);
             }
             if (task.periods[i].count == 2) {
-                NSLog(@"[%ld, %ld], ", [task.periods[i][0] longValue], [task.periods[i][1] longValue]);
+                NSLog(@"[%ld, %ld] 持续时间%@, ", [task.periods[i][0] longValue], [task.periods[i][1] longValue], [[NSDateComponentsFormatter new] stringFromTimeInterval:[task.periods[i][1] longValue]-[task.periods[i][0] longValue]]);
             }
         }
     }
