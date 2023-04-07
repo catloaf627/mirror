@@ -153,9 +153,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 #pragma mark - Private methods
 
-- (void)p_stopAllTasksExcept:(NSString *)taskName
+- (void)p_stopAllTasksExcept:(NSString *)exceptTaskName
 {
-    [[MirrorStorage sharedInstance] stopAllTasksExcept:taskName];
+    [[MirrorStorage sharedInstance] stopAllTasksExcept:exceptTaskName completion:^(NSString * _Nonnull hint) {
+        [MUXToast show:hint onVC:self];
+    }];
     [self.collectionView reloadData];
 }
 

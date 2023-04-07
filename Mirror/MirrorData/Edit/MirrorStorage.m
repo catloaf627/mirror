@@ -94,7 +94,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 - (void)stopTask:(NSString *)taskName completion:(void (^)(NSString *hint))completion
 {
-    NSTimeInterval timeInterval = 0;
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 取出这个task以便作修改
@@ -110,7 +109,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
             [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
-            timeInterval = length;
+            [self p_callCompletion:completion taskName:taskName withTimeInterval:length]; // 需要走回调弹toast
         } else { // 错误格式或者10秒以下，丢弃这个task
             [allPeriods removeLastObject];
         }
@@ -120,15 +119,10 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [self saveMirrorData:mirrorDict];
-    
-    // block
-    NSString *hintInfo = timeInterval ? [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:task.taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval]] : @"";
-    if (completion) {
-        completion(hintInfo);
-    }
+
 }
 
-- (void)stopAllTasksExcept:(NSString *)taskName
+- (void)stopAllTasksExcept:(NSString *)exceptTaskName completion:(void (^)(NSString *hint))completion
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [self retriveMirrorData];
@@ -136,7 +130,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     for (id taskName in mirrorDict.allKeys) {
         // 取出这个task以便作修改
         MirrorDataModel *task = mirrorDict[taskName];
-        if ([task.taskName isEqualToString:taskName]) { // 被点击的task不要动
+        if ([task.taskName isEqualToString:exceptTaskName]) { // 被点击的task不要动
             continue;
         }
         if (!task.isOngoing) { // 不在计时中的task不要动
@@ -153,6 +147,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
             if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
                 [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
                 allPeriods[allPeriods.count-1] = lastPeriod;
+                [self p_callCompletion:completion taskName:taskName withTimeInterval:length]; // 需要走回调弹toast，注意这里结束的是task.taskName，而不是except传进来的taskName
             } else { // 错误格式或者10秒以下，丢弃这个task
                 [allPeriods removeLastObject];
             }
@@ -163,6 +158,14 @@ static NSString *const kMirrorDict = @"mirror_dict";
     }
     // 将mirror dict存回本地
     [self saveMirrorData:mirrorDict];
+}
+
+- (void)p_callCompletion:(void (^)(NSString *hint))completion taskName:(NSString *)taskName withTimeInterval:(NSTimeInterval)timeInterval
+{
+    NSString *hintInfo = [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval]];
+    if (completion) {
+        completion(hintInfo);
+    }
 }
 
 - (TaskNameExistsType)taskNameExists:(NSString *)newTaskName

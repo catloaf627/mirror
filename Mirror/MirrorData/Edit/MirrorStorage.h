@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 - (void)stopTask:(NSString *)taskName completion:(void (^)(NSString *hint))completion;
 
-- (void)stopAllTasksExcept:(NSString *)taskName;
+- (void)stopAllTasksExcept:(NSString *)exceptTaskName completion:(void (^)(NSString *hint))completion;
 
 - (TaskNameExistsType)taskNameExists:(NSString *)newTaskName;
 
