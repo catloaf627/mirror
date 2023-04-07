@@ -201,7 +201,6 @@ static CGFloat const kDashSpacing = 10;
     self.nowTimeLabelss.text = [secFormatter stringFromDate:self.nowTime];
     
     // update time interval
-    
     self.timeIntervalLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:self.timeInterval];
     
     NSLog(@"全屏计时中: %@(now) - %@(start) = %f",self.nowTime, self.startTime, self.timeInterval);
@@ -265,7 +264,7 @@ static CGFloat const kDashSpacing = 10;
         _timeIntervalLabel = [UILabel new];
         _timeIntervalLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _timeIntervalLabel.font = [UIFont fontWithName:kHintFont size:kIntervalSize];
-        _timeIntervalLabel.text = @"00:00:00";
+        _timeIntervalLabel.text = [MirrorLanguage mirror_stringWithKey:@"begin"];
         _timeIntervalLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _timeIntervalLabel;

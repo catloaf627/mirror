@@ -55,10 +55,9 @@
     [mirrorDict setValue:@[@"This month", @"本月数据"] forKey:@"this_month"];
     [mirrorDict setValue:@[@"This year", @"今年数据"] forKey:@"this_year"];
     
-    
-    
-    // label
+    // 全屏
     [mirrorDict setValue:@[@"yesterday", @"昨天"] forKey:@"yesterday"];
+    [mirrorDict setValue:@[@"Go!", @"开始!"] forKey:@"begin"];
     
     NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
