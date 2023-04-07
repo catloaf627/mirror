@@ -227,7 +227,7 @@ static CGFloat const kDashSpacing = 10;
     NSDate *nowTime = [NSDate date]; // 当前时间
     NSTimeInterval timeInterval = [nowTime timeIntervalSinceDate:startTime];
     if (round(timeInterval) > 10) {
-        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"saved"] onVC:self.delegate];
+        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:self.taskModel.taskName with2Placeholder:self.timeIntervalLabel.text] onVC:self.delegate];
     }
     [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
 }

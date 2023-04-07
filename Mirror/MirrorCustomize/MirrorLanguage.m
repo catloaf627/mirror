@@ -14,7 +14,6 @@
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
     // general
     [mirrorDict setValue:@[@"Something went wrong", @"出错了"] forKey:@"something_went_wrong"];
-    [mirrorDict setValue:@[@"Saved", @"已经保存"] forKey:@"saved"];
     
     // tabs
     [mirrorDict setValue:@[@"Me", @"我的"] forKey:@"me"];
@@ -65,7 +64,8 @@
 }
 
 
-+ (NSString *)mirror_stringWithKey:(NSString *)key with1Placeholder:(NSString *)placeholder
++ (NSString *)mirror_stringWithKey:(NSString *)key
+                  with1Placeholder:(NSString *)placeholder
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
     // MUXToast messages
@@ -73,7 +73,20 @@
     
     
     NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
-    return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder];;
+    return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder];
+}
+
++ (NSString *)mirror_stringWithKey:(NSString *)key
+                  with1Placeholder:(NSString *)placeholder1
+                  with2Placeholder:(NSString *)placeholder2
+{
+    NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
+    // MUXToast messages
+    [mirrorDict setValue:@[@"[%@] has been done!\nlasted: %@", @"[%@]已完成！\n持续时间：%@"] forKey:@"task_has_been_done"];
+    
+    
+    NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
+    return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder1, placeholder2];
 }
 
 
