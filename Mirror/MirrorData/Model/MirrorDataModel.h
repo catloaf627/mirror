@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray<NSMutableArray *> *periods;
 @property (nonatomic, assign) long createdTime; // 创建时间，用于排序
 // 通过本地计算
-@property (nonatomic, strong) NSString *timeInfo;
 @property (nonatomic, assign) BOOL isOngoing;
 // 外部赋值
 @property (nonatomic, assign) BOOL isAddTaskModel;

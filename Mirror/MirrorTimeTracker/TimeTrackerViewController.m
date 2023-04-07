@@ -146,7 +146,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [timeTrackingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.offset(0);
     }];
-    [timeTrackingView updateLabels];
+    [timeTrackingView updateLabels]; //GIZMO GIZMO GIZMO?????
 }
 
 #pragma mark - Private methods

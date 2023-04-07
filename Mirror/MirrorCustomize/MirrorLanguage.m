@@ -21,6 +21,7 @@
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
     // time tracker cell
     [mirrorDict setValue:@[@"Tap to start", @"轻点开始计时"] forKey:@"tap_to_start"];
+    [mirrorDict setValue:@[@"Tap to stop", @"轻点结束计时"] forKey:@"tap_to_stop"];
     // nickname
     [mirrorDict setValue:@[@"nickname", @"我的昵称"] forKey:@"nickname"];
     // Profile cell - theme

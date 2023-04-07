@@ -8,6 +8,7 @@
 #import "TimeTrackerTaskCollectionViewCell.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
+#import "MirrorLanguage.h"
 
 static CGFloat const kShadowWidth = 5;
 
@@ -30,6 +31,7 @@ static CGFloat const kShadowWidth = 5;
 {
     self.taskModel = taskModel;
     self.taskNameLabel.text = taskModel.taskName;
+    self.timeInfoLabel.text = taskModel.isOngoing ? [MirrorLanguage mirror_stringWithKey:@"tap_to_stop"] : [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
     self.contentView.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
     [self p_setupUI];
     if (!taskModel.isOngoing) { // stop animation
@@ -106,7 +108,7 @@ static CGFloat const kShadowWidth = 5;
 {
     if (!_timeInfoLabel) {
         _timeInfoLabel = [[UILabel alloc] init];
-        _timeInfoLabel.text = self.taskModel.timeInfo;
+        _timeInfoLabel.text = self.taskModel.isOngoing ? [MirrorLanguage mirror_stringWithKey:@"tap_to_stop"] : [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
         _timeInfoLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _timeInfoLabel.numberOfLines = 1;
         _timeInfoLabel.textAlignment = NSTextAlignmentCenter;
