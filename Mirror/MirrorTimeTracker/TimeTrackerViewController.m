@@ -134,7 +134,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [view removeFromSuperview];
         }
     }
-    [[MirrorStorage sharedInstance] stopTask:task.taskName];
+    [[MirrorStorage sharedInstance] stopTask:task.taskName completion:^(NSString * _Nonnull hint) {
+        [MUXToast show:hint onVC:self];
+    }];
     [self.collectionView reloadData];
 }
 
@@ -172,7 +174,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
-        [[MirrorStorage sharedInstance] stopTask:selectedModel.taskName];
+        [[MirrorStorage sharedInstance] stopTask:selectedModel.taskName completion:^(NSString * _Nonnull hint) {
+            [MUXToast show:hint onVC:self];
+        }];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [self p_stopAllTasksExcept:selectedModel.taskName];
         [[MirrorStorage sharedInstance] startTask:selectedModel.taskName];

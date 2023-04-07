@@ -11,6 +11,9 @@
 
 + (void)show:(NSString *)message onVC:(UIViewController *)vc
 {
+    if ([message isEqualToString:@""]) {
+        return;
+    }
     UIAlertController * alert=[UIAlertController alertControllerWithTitle:nil
                                                                   message:@""
                                                            preferredStyle:UIAlertControllerStyleAlert];

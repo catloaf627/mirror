@@ -8,6 +8,7 @@
 #import "MirrorStorage.h"
 #import "NSMutableDictionary+MirrorDictionary.h"
 #import "UIColor+MirrorColor.h"
+#import "MirrorLanguage.h"
 
 static NSString *const kMirrorDict = @"mirror_dict";
 
@@ -45,7 +46,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 - (void)archiveTask:(NSString *)taskName
 {
-    [self stopTask:taskName];
+    [self stopTask:taskName completion:nil]; // archive导致的停止计时，不展示完成的toast
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 取出这个task以便作修改
@@ -91,8 +92,9 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [self saveMirrorData:mirrorDict];
 }
 
-- (void)stopTask:(NSString *)taskName
+- (void)stopTask:(NSString *)taskName completion:(void (^)(NSString *hint))completion
 {
+    NSTimeInterval timeInterval = 0;
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 取出这个task以便作修改
@@ -108,6 +110,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
             [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
+            timeInterval = length;
         } else { // 错误格式或者10秒以下，丢弃这个task
             [allPeriods removeLastObject];
         }
@@ -117,6 +120,12 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [self saveMirrorData:mirrorDict];
+    
+    // block
+    NSString *hintInfo = timeInterval ? [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:task.taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval]] : @"";
+    if (completion) {
+        completion(hintInfo);
+    }
 }
 
 - (void)stopAllTasksExcept:(NSString *)taskName
