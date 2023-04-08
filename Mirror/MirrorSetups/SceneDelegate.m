@@ -21,7 +21,7 @@
     UIWindowScene *windowScene = (UIWindowScene *)scene;
     _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    //@protovol <UITabBarControllerDelegate>
+    // UITabBarControllerDelegate
     UITabBarController *tabbarController = [[MirrorTabsManager sharedInstance] mirrorTabController];
     tabbarController.delegate = self;
     

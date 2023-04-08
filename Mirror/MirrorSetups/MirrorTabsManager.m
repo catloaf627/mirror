@@ -58,37 +58,37 @@
 
 - (void)updateMeTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self tabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"me"] imageName:@"person" selectedImageName:@"person.fill"];
+    [self updateTabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"me"] imageName:@"person" selectedImageName:@"person.fill"];
 }
 
 - (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self tabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"clock" selectedImageName:@"clock.fill"];
+    [self updateTabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"clock" selectedImageName:@"clock.fill"];
 }
 
 - (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self tabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
+    [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
 }
 
-- (UITabBarItem *)tabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName
+- (void)updateTabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName
 {
+    // 取出baritem
     UITabBarItem *item = [tabbar.items objectAtIndex:index];
-    [item setTitle:title];
     // 默认图片
     UIImage *image = [[UIImage systemImageNamed:imageName] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeTabbarIconText]];
+    UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]; //这一行的作用是让image使用image本身的颜色，而不是系统颜色
     // 选中图片
     UIImage *selectedImage = [[UIImage systemImageNamed:selectedImageName] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeTabbarIconTextHightlight]];
+    UIImage *selectedImageWithRightColor = [selectedImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];//这一行的作用是让image使用image本身的颜色，而不是系统颜色
     // 设置图片
-    [item setFinishedSelectedImage:selectedImage withFinishedUnselectedImage:image];
-    
+    item = [item initWithTitle:title image:imageWithRightColor selectedImage:selectedImageWithRightColor];
     // 默认文字
     [item setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor mirrorColorNamed:MirrorColorTypeTabbarIconText]} forState:UIControlStateNormal];
     // 选中文字
     [item setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor mirrorColorNamed:MirrorColorTypeTabbarIconTextHightlight]} forState:UIControlStateSelected];
 
     [item imageInsets];
-    return item;
 }
 
 @end
