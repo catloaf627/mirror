@@ -142,7 +142,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [view removeFromSuperview];
         }
     }
-    [MirrorStorage stopTask:task.taskName];
     [self.collectionView reloadData];
 }
 

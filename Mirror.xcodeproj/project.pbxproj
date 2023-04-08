@@ -14,6 +14,7 @@
 		4A099FAA29DCFE54002683A1 /* MirrorDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FA929DCFE54002683A1 /* MirrorDataModel.m */; };
 		4A099FAE29DD57AE002683A1 /* MirrorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FAD29DD57AE002683A1 /* MirrorTool.m */; };
 		4A099FB129DD85C5002683A1 /* MirrorHistogram.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FB029DD85C5002683A1 /* MirrorHistogram.m */; };
+		4A37368E29E166BF00187280 /* TimeTrackingLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A37368D29E166BF00187280 /* TimeTrackingLabel.m */; };
 		4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */; };
 		4A379B4428E03D0B00785CAE /* MirrorTabsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4328E03D0B00785CAE /* MirrorTabsManager.m */; };
 		4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4628E2F33B00785CAE /* MirrorLanguage.m */; };
@@ -58,6 +59,8 @@
 		4A099FAD29DD57AE002683A1 /* MirrorTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorTool.m; sourceTree = "<group>"; };
 		4A099FAF29DD85C5002683A1 /* MirrorHistogram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorHistogram.h; sourceTree = "<group>"; };
 		4A099FB029DD85C5002683A1 /* MirrorHistogram.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorHistogram.m; sourceTree = "<group>"; };
+		4A37368C29E166BF00187280 /* TimeTrackingLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackingLabel.h; sourceTree = "<group>"; };
+		4A37368D29E166BF00187280 /* TimeTrackingLabel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackingLabel.m; sourceTree = "<group>"; };
 		4A379B3F28E0381A00785CAE /* UIColor+MirrorColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+MirrorColor.h"; sourceTree = "<group>"; };
 		4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MirrorColor.m"; sourceTree = "<group>"; };
 		4A379B4228E03D0B00785CAE /* MirrorTabsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorTabsManager.h; sourceTree = "<group>"; };
@@ -150,6 +153,8 @@
 			children = (
 				4A083B8D2904AA97002B91EB /* TimeTrackingView.h */,
 				4A083B8E2904AA97002B91EB /* TimeTrackingView.m */,
+				4A37368C29E166BF00187280 /* TimeTrackingLabel.h */,
+				4A37368D29E166BF00187280 /* TimeTrackingLabel.m */,
 			);
 			path = MirrorTracking;
 			sourceTree = "<group>";
@@ -485,6 +490,7 @@
 				4A7CCD2A29DBC8C800879D9C /* TodayDataViewController.m in Sources */,
 				4ADDC5BA28E5B95F006F02DE /* EditTaskViewController.m in Sources */,
 				4A406C112906FC00001E83A1 /* ToggleCollectionViewCell.m in Sources */,
+				4A37368E29E166BF00187280 /* TimeTrackingLabel.m in Sources */,
 				4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */,
 				4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */,
 				4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */,

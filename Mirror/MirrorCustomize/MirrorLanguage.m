@@ -21,7 +21,6 @@
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
     // time tracker cell
     [mirrorDict setValue:@[@"Tap to start", @"轻点开始计时"] forKey:@"tap_to_start"];
-    [mirrorDict setValue:@[@"Tap to stop", @"轻点结束计时"] forKey:@"tap_to_stop"];
     // nickname
     [mirrorDict setValue:@[@"nickname", @"我的昵称"] forKey:@"nickname"];
     // Profile cell - theme
@@ -57,7 +56,10 @@
     
     // 全屏
     [mirrorDict setValue:@[@"yesterday", @"昨天"] forKey:@"yesterday"];
-    [mirrorDict setValue:@[@"Go!", @"开始!"] forKey:@"begin"];
+    [mirrorDict setValue:@[@"Go!", @"开始!"] forKey:@"go"];
+    
+    // 闪烁
+    [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
     
     NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];

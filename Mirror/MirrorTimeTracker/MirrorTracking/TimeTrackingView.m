@@ -12,8 +12,8 @@
 #import "MirrorMacro.h"
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
-#import "MUXToast.h"
 #import "MirrorTool.h"
+#import "MirrorMacro.h"
 
 static CGFloat const kPadding = 20;
 
@@ -208,12 +208,14 @@ static CGFloat const kDashSpacing = 10;
     NSLog(@"全屏计时中: %@(now) - %@(start) = %f",[MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
     if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时
-        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"reached_limited_time" with1Placeholder:self.taskModel.taskName] onVC:self.delegate color:self.taskModel.color];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskTimeLimitNotification object:self.taskModel];
         [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+        [MirrorStorage stopTask:self.taskModel.taskName];
     }
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
-        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"something_went_wrong"] onVC:self.delegate color:self.taskModel.color];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskErrorNotification object:self.taskModel];
         [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+        [MirrorStorage stopTask:self.taskModel.taskName];
         
     }
     if (![[dayFormatter stringFromDate:self.nowTime] isEqualToString:[dayFormatter stringFromDate:self.startTime]]) { // 如果两个时间不在同一天（跨越了0点），给startTime一个[昨天]的标记
@@ -224,6 +226,7 @@ static CGFloat const kDashSpacing = 10;
 - (void)stopButtonClicked
 {
     [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+    [MirrorStorage stopTask:self.taskModel.taskName];
 }
 
 #pragma mark - Data
@@ -273,7 +276,7 @@ static CGFloat const kDashSpacing = 10;
         _timeIntervalLabel = [UILabel new];
         _timeIntervalLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _timeIntervalLabel.font = [UIFont fontWithName:kHintFont size:kIntervalSize];
-        _timeIntervalLabel.text = [MirrorLanguage mirror_stringWithKey:@"begin"];
+        _timeIntervalLabel.text = [MirrorLanguage mirror_stringWithKey:@"go"];
         _timeIntervalLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _timeIntervalLabel;

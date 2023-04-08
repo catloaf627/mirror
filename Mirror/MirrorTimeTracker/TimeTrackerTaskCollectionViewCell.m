@@ -9,10 +9,12 @@
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
+#import "TimeTrackingLabel.h"
+#import "MirrorStorage.h"
 
 static CGFloat const kShadowWidth = 5;
 
-@interface TimeTrackerTaskCollectionViewCell ()
+@interface TimeTrackerTaskCollectionViewCell () <TimeTrackingLabelProtocol>
 
 @property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
@@ -31,14 +33,16 @@ static CGFloat const kShadowWidth = 5;
 {
     self.taskModel = taskModel;
     self.taskNameLabel.text = taskModel.taskName;
-    self.hintLabel.text = taskModel.isOngoing ? [MirrorLanguage mirror_stringWithKey:@"tap_to_stop"] : [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
+    self.hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
     self.contentView.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
     [self p_setupUI];
     if (!taskModel.isOngoing) { // stop animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color]; // 瞬间变回原色
+        [self destroyTimeTrackingLabelWithTask:taskModel];
     } else { // start animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:self.taskModel.color]]; // 瞬间变成pulse色
         [self p_convertToColor:self.taskModel.color]; // 开始闪烁
+        [self createTimeTrackingLabelWithTask:taskModel];
     }
 }
 
@@ -86,6 +90,41 @@ static CGFloat const kShadowWidth = 5;
             [self p_convertToColor:self.taskModel.color];
         }
     }];
+}
+
+#pragma mark - TimeTrackingLabelProtocol
+
+- (void)destroyTimeTrackingLabelWithTask:(MirrorDataModel *)task
+{
+    if (task.isOngoing) return;
+    for (UIView *view in self.contentView.subviews) {
+        if ([view isKindOfClass:TimeTrackingLabel.class]) {
+            [view removeFromSuperview];
+        }
+    }
+    self.hintLabel.hidden = NO;
+}
+
+- (void)createTimeTrackingLabelWithTask:(MirrorDataModel *)task
+{
+    if (!task.isOngoing) return;
+    TimeTrackingLabel *timeTrackingLabel = [[TimeTrackingLabel alloc] initWithTask:self.taskModel.taskName];
+    timeTrackingLabel.delegate = self;
+    // 避免复用导致的重复添加
+    for (UIView *view in self.contentView.subviews) {
+        if ([view isKindOfClass:TimeTrackingLabel.class]) {
+            [view removeFromSuperview];
+        }
+    }
+    // 和hintLabel布局一致
+    [self.contentView addSubview:timeTrackingLabel];
+    [timeTrackingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.taskNameLabel.mas_bottom).offset(8);
+        make.centerX.mas_equalTo(self);
+        make.left.offset(8);
+        make.right.offset(-8);
+    }];
+    self.hintLabel.hidden = YES;
 }
 
 
