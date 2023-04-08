@@ -20,7 +20,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)createTask:(MirrorDataModel *)task
 {
     // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 新增一个task
     [mirrorDict setValue:task forKey:task.taskName];
     // 将mirror dict存回本地
@@ -30,7 +30,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)deleteTask:(NSString *)taskName
 {
     // 在本地取出词典
-    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 通过taskname删除task
     [mirrorDict removeObjectForKey:taskName];
     // 将mirror dict存回本地
@@ -39,7 +39,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)archiveTask:(NSString *)taskName
 {
-    [self stopTask:taskName completion:nil]; // archive导致的停止计时，不展示完成的toast
+    [MirrorStorage stopTask:taskName completion:nil]; // archive导致的停止计时，不展示完成的toast
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
@@ -179,7 +179,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (MirrorDataModel *)getTaskFromDB:(NSString *)taskName
 {
-    NSMutableDictionary *tasks = [self retriveMirrorData];
+    NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
     MirrorDataModel *task = tasks[taskName];
     [MirrorStorage printTask:task info:@"-------Getting one task-------"];
     return task;
@@ -211,7 +211,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     if (info) NSLog(@"%@", info);
     for (id taskName in mirrorDict.allKeys) {
         MirrorDataModel *task = mirrorDict[taskName];
-        [self printTask:task info:nil];
+        [MirrorStorage printTask:task info:nil];
     }
 }
 

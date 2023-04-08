@@ -154,7 +154,7 @@
 			path = MirrorTracking;
 			sourceTree = "<group>";
 		};
-		4A099FA329DCFE0B002683A1 /* Edit */ = {
+		4A099FA329DCFE0B002683A1 /* Task */ = {
 			isa = PBXGroup;
 			children = (
 				4A406C1829071939001E83A1 /* MirrorStorage.h */,
@@ -162,16 +162,16 @@
 				4A406C1F29073E36001E83A1 /* NSMutableDictionary+MirrorDictionary.h */,
 				4A406C2029073E36001E83A1 /* NSMutableDictionary+MirrorDictionary.m */,
 			);
-			path = Edit;
+			path = Task;
 			sourceTree = "<group>";
 		};
-		4A099FA429DCFE17002683A1 /* Get */ = {
+		4A099FA429DCFE17002683A1 /* TaskList */ = {
 			isa = PBXGroup;
 			children = (
 				4A099FA529DCFE3C002683A1 /* MirrorDataManager.h */,
 				4A099FA629DCFE3C002683A1 /* MirrorDataManager.m */,
 			);
-			path = Get;
+			path = TaskList;
 			sourceTree = "<group>";
 		};
 		4A099FAB29DD0567002683A1 /* Model */ = {
@@ -274,8 +274,8 @@
 			isa = PBXGroup;
 			children = (
 				4A099FAB29DD0567002683A1 /* Model */,
-				4A099FA429DCFE17002683A1 /* Get */,
-				4A099FA329DCFE0B002683A1 /* Edit */,
+				4A099FA429DCFE17002683A1 /* TaskList */,
+				4A099FA329DCFE0B002683A1 /* Task */,
 			);
 			path = MirrorData;
 			sourceTree = "<group>";

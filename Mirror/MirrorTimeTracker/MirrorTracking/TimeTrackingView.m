@@ -171,7 +171,7 @@ static CGFloat const kDashSpacing = 10;
     [self addGestureRecognizer:tapRecognizer];
     
     __weak typeof(self) weakSelf = self;
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)1.0f repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)1.0f repeats:NO block:^(NSTimer * _Nonnull timer) {
         // 在iOS 10以后系统，苹果针对NSTimer进行了优化，使用Block回调方式，解决了循环引用问题。
         [weakSelf updateLabels];
     }];
