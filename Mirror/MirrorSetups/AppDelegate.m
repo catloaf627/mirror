@@ -17,7 +17,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // 由于删除了storyboard，所以需要自己手动创建UIWindow
     _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-    UITabBarController *tabbarController = [MirrorTabsManager mirrorTabVC];
+    UITabBarController *tabbarController = [[MirrorTabsManager sharedInstance] mirrorTabController];
     //@protovol <UITabBarControllerDelegate>
     tabbarController.delegate = self;
     

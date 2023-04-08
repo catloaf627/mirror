@@ -14,47 +14,64 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 
+@interface MirrorTabsManager ()
+
+@property (nonatomic, strong) UITabBarController *mirrorTabVC;
+
+@end
+
 @implementation MirrorTabsManager
 
-+ (UITabBarController *)mirrorTabVC
++ (instancetype)sharedInstance
 {
-    TimeTrackerViewController *timeTrackerVC = [[TimeTrackerViewController alloc]init];
-    DataViewController *dataVC = [[DataViewController alloc]init];
-    ProfileViewController *profileVC = [[ProfileViewController alloc]init];
-    
-    //create a tabbar controller
-    UITabBarController *tabbarController  = [[UITabBarController alloc] init];
-    
-    //add 4 view controllers to tabbar controller
-    [tabbarController setViewControllers:@[profileVC, timeTrackerVC, dataVC]];
-    tabbarController.selectedIndex = 1;
-    tabbarController.tabBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-    tabbarController.tabBar.backgroundImage = [UIImage new];
-    tabbarController.tabBar.shadowImage = [UIImage new];
-    
-    [MirrorTabsManager updateMeTabItemWithTabController:tabbarController];
-    [MirrorTabsManager updateTimeTabItemWithTabController:tabbarController];
-    [MirrorTabsManager updateHistoryTabItemWithTabController:tabbarController];
-    
-    return tabbarController;
+    static dispatch_once_t onceToken;
+    static MirrorTabsManager *instance = nil;
+    dispatch_once(&onceToken, ^{
+        instance = [[MirrorTabsManager alloc]init];
+    });
+    return instance;
 }
 
-+ (void)updateMeTabItemWithTabController:(UITabBarController *)tabbarController
+- (UITabBarController *)mirrorTabController
 {
-    [MirrorTabsManager tabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"me"] imageName:@"person" selectedImageName:@"person.fill"];
+    if (!_mirrorTabVC) {
+        TimeTrackerViewController *timeTrackerVC = [[TimeTrackerViewController alloc]init];
+        DataViewController *dataVC = [[DataViewController alloc]init];
+        ProfileViewController *profileVC = [[ProfileViewController alloc]init];
+        
+        //create a tabbar controller
+        _mirrorTabVC  = [[UITabBarController alloc] init];
+        
+        //add 4 view controllers to tabbar controller
+        [_mirrorTabVC setViewControllers:@[profileVC, timeTrackerVC, dataVC]];
+        _mirrorTabVC.selectedIndex = 1;
+        _mirrorTabVC.tabBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+        _mirrorTabVC.tabBar.backgroundImage = [UIImage new];
+        _mirrorTabVC.tabBar.shadowImage = [UIImage new];
+        
+        [self updateMeTabItemWithTabController:_mirrorTabVC];
+        [self updateTimeTabItemWithTabController:_mirrorTabVC];
+        [self updateHistoryTabItemWithTabController:_mirrorTabVC];
+    }
+    return _mirrorTabVC;
 }
 
-+ (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController
+- (void)updateMeTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [MirrorTabsManager tabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"clock" selectedImageName:@"clock.fill"];
+    [self tabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"me"] imageName:@"person" selectedImageName:@"person.fill"];
 }
 
-+ (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
+- (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [MirrorTabsManager tabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
+    [self tabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"clock" selectedImageName:@"clock.fill"];
 }
 
-+ (UITabBarItem *)tabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName
+- (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
+{
+    [self tabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
+}
+
+- (UITabBarItem *)tabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName
 {
     UITabBarItem *item = [tabbar.items objectAtIndex:index];
     [item setTitle:title];

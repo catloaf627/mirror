@@ -45,7 +45,7 @@ static CGFloat const kCellSpacing = 20;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tab item
-    [MirrorTabsManager updateHistoryTabItemWithTabController:self.tabBarController];
+    [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
 

@@ -58,7 +58,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tab item
-    [MirrorTabsManager updateMeTabItemWithTabController:self.tabBarController];
+    [[MirrorTabsManager sharedInstance] updateMeTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
 

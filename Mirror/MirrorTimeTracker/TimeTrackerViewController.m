@@ -55,7 +55,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tab item
-    [MirrorTabsManager updateTimeTabItemWithTabController:self.tabBarController];
+    [[MirrorTabsManager sharedInstance] updateTimeTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
 
@@ -75,6 +75,12 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
             make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
+    if (self.applyImmersiveMode) {
+        MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
+        if (ongoingTask) {
+            [self openTimeTrackingViewWithTask:ongoingTask];
+        }
+    }
 }
 
 #pragma mark - Actions
@@ -198,7 +204,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     } else {
         TimeTrackerTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configWithModel:taskModel];
-        if (taskModel.isOngoing && self.applyImmersiveMode) [self openTimeTrackingViewWithTask:taskModel];
         return cell;
     }
 }

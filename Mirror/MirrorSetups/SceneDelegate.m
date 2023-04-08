@@ -22,7 +22,7 @@
     _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     
     //@protovol <UITabBarControllerDelegate>
-    UITabBarController *tabbarController = [MirrorTabsManager mirrorTabVC];
+    UITabBarController *tabbarController = [[MirrorTabsManager sharedInstance] mirrorTabController];
     tabbarController.delegate = self;
     
     //init navigation controller with tabbar controller (nc needs a root view)

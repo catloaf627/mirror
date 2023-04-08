@@ -22,6 +22,8 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 + (MirrorDataModel *)getTaskFromDB:(NSString *)taskName; //取出某个task
 
++ (MirrorDataModel *)getOngoingTaskFromDB; // 取出正在进行中的task
+
 + (void)createTask:(MirrorDataModel *)task;
 
 + (void)deleteTask:(NSString *)taskName;

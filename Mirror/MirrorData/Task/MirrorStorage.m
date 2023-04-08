@@ -181,8 +181,21 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
     MirrorDataModel *task = tasks[taskName];
-    [MirrorStorage printTask:task info:@"-------Getting one task-------"];
+//    [MirrorStorage printTask:task info:@"-------Getting one task-------"];
     return task;
+}
+
++ (MirrorDataModel *)getOngoingTaskFromDB
+{
+    NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
+    for (id taskName in tasks.allKeys) {
+        MirrorDataModel *task = tasks[taskName];
+        if (task.isOngoing) {
+            [MirrorStorage printTask:task info:@"-------Getting ongoing task-------"];
+            return task;
+        }
+    }
+    return nil;
 }
 
 #pragma mark - Local database
@@ -192,7 +205,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];
     [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorDict];
     // Log
-    [MirrorStorage printDict:mirrorDict info:@"------saving user data------"];
+//    [MirrorStorage printDict:mirrorDict info:@"------saving user data------"];
 }
 
 + (NSMutableDictionary *)retriveMirrorData // 解档
