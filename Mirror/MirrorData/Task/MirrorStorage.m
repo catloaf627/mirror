@@ -39,7 +39,9 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)archiveTask:(NSString *)taskName
 {
-    [MirrorStorage stopTask:taskName completion:nil]; // archive导致的停止计时，不展示完成的toast
+    [MirrorStorage stopTask:taskName completion:^(NSString * _Nonnull hint) {
+        // archive导致的停止计时，不展示完成的toast
+    }];
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
@@ -181,7 +183,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
     MirrorDataModel *task = tasks[taskName];
-//    [MirrorStorage printTask:task info:@"-------Getting one task-------"];
+    [MirrorStorage printTaskByName:task.taskName info:@"-------Getting one task-------"];
     return task;
 }
 
@@ -191,7 +193,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     for (id taskName in tasks.allKeys) {
         MirrorDataModel *task = tasks[taskName];
         if (task.isOngoing) {
-            [MirrorStorage printTask:task info:@"-------Getting ongoing task-------"];
+            [MirrorStorage printTaskByName:task.taskName info:@"-------Getting ongoing task-------"];
             return task;
         }
     }
@@ -205,7 +207,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];
     [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorDict];
     // Log
-//    [MirrorStorage printDict:mirrorDict info:@"------saving user data------"];
+//    [MirrorStorage printDict:@"------saving user data------"];
 }
 
 + (NSMutableDictionary *)retriveMirrorData // 解档
@@ -213,24 +215,26 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
     NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
     // Log
-//    [MirrorStorage printDict:mirrorDict info:@"------retriving user data------"];
+//    [MirrorStorage printDict:@"------retriving user data------"];
     return mirrorDict ?: [NSMutableDictionary new];
 }
 
 #pragma mark - Log & Mocked data
 
-+ (void)printDict:(NSMutableDictionary *)mirrorDict info:(NSString *)info
++ (void)printDict:(NSString *)info
 {
     if (info) NSLog(@"%@", info);
-    for (id taskName in mirrorDict.allKeys) {
-        MirrorDataModel *task = mirrorDict[taskName];
-        [MirrorStorage printTask:task info:nil];
+    for (id taskName in [MirrorStorage retriveMirrorData].allKeys) {
+        [MirrorStorage printTaskByName:taskName info:nil];
     }
 }
 
-+ (void)printTask:(MirrorDataModel *)task info:(NSString *)info
++ (void)printTaskByName:(NSString *)taskName info:(NSString *)info
 {
     if (info) NSLog(@"%@", info);
+    MirrorDataModel *task = [MirrorStorage retriveMirrorData][taskName];
+    if (!task) NSLog(@"❗️❗️❗️❗️❗️❗️❗️❗️ACTION FAILED❗️❗️❗️❗️❗️❗️❗️❗️");
+
     BOOL printTimestamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
     NSString *tag = @"";
     tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];

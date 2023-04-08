@@ -124,7 +124,7 @@ static CGFloat const kHeightRatio = 0.8;
         [newNameIsDuplicateAlert addAction:understandAction];
         [self presentViewController:newNameIsDuplicateAlert animated:YES completion:nil];
     } else { // taskname valid，允许修改并退出
-        [MirrorStorage editTask:self.taskModel color:self.selectedColor name:currentText];
+        [MirrorStorage editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
         [self.delegate dismissViewControllerAnimated:YES completion:^{
             [self.delegate updateTasks];
         }];
