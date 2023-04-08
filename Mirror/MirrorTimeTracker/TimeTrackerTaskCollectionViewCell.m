@@ -74,7 +74,7 @@ static CGFloat const kShadowWidth = 5;
 
 - (void)p_convertToColor:(MirrorColorType)color
 {
-    [UIView animateKeyframesWithDuration:2.0  delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
+    [UIView animateKeyframesWithDuration:2.0  delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:color];
     } completion:^(BOOL finished) {
         if (!finished) {

@@ -45,7 +45,7 @@
     //Encode properties, other class variables, etc
     [encoder encodeObject:self.taskName forKey:@"task_name"];
     [encoder encodeBool:self.isArchived forKey:@"is_archived"];
-    [encoder encodeInt:self.color forKey:@"color"];
+    [encoder encodeInt:[@(self.color) intValue] forKey:@"color"];
     [encoder encodeObject:self.periods forKey:@"periods"];
     [encoder encodeInt64:self.createdTime forKey:@"created_time"];
 }
