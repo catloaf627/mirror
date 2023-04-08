@@ -68,7 +68,6 @@
                   with1Placeholder:(NSString *)placeholder
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
-    // MUXToast messages
     [mirrorDict setValue:@[@"[%@] has been lasted more than 24 hours. It was stopped and saved automatically.", @"[%@]时长超过24小时，已自动停止并保存"] forKey:@"reached_limited_time"];
     
     
@@ -81,7 +80,6 @@
                   with2Placeholder:(NSString *)placeholder2
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
-    // MUXToast messages
     [mirrorDict setValue:@[@"[%@] has been done!\nlasted: %@", @"[%@]已完成！\n持续时间：%@"] forKey:@"task_has_been_done"];
     
     

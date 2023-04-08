@@ -10,7 +10,6 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "MirrorTool.h"
-#import "MUXToast.h"
 
 static NSString *const kMirrorDict = @"mirror_dict";
 

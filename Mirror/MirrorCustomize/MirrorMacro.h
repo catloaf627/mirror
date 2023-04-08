@@ -36,10 +36,17 @@ NS_ASSUME_NONNULL_BEGIN
 // Max number of tasks
 #define kMaxTaskNum (8)
 
-// Notifications
+// Settings Notifications
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"
 #define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"
 #define MirrorSwitchImmersiveModeNotification @"MirrorSwitchImmersiveModeNotification"
+
+// Data Notifications
+#define MirrorTaskCreateNotification @"MirrorTaskCreateNotification" // 没用
+#define MirrorTaskDeleteNotification @"MirrorTaskDeleteNotification" // 未来可能有用（比如在其他页面删除了一个正在计时的task，这时候主页面是要更新的）
+#define MirrorTaskArchiveNotification @"MirrorTaskArchiveNotification" // 弹"已归档"弹窗
+#define MirrorTaskStartNotification @"MirrorTaskStartNotification" // 没用
+#define MirrorTaskStopNotification @"MirrorTaskStopNotification" // 弹"已保存"弹窗
 
 @interface MirrorMacro : NSObject
 

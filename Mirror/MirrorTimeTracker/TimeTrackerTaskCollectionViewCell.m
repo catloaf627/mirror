@@ -16,7 +16,7 @@ static CGFloat const kShadowWidth = 5;
 
 @property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
-@property (nonatomic, strong) UILabel *timeInfoLabel;
+@property (nonatomic, strong) UILabel *hintLabel;
 
 @end
 
@@ -31,7 +31,7 @@ static CGFloat const kShadowWidth = 5;
 {
     self.taskModel = taskModel;
     self.taskNameLabel.text = taskModel.taskName;
-    self.timeInfoLabel.text = taskModel.isOngoing ? [MirrorLanguage mirror_stringWithKey:@"tap_to_stop"] : [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
+    self.hintLabel.text = taskModel.isOngoing ? [MirrorLanguage mirror_stringWithKey:@"tap_to_stop"] : [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
     self.contentView.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
     [self p_setupUI];
     if (!taskModel.isOngoing) { // stop animation
@@ -57,14 +57,14 @@ static CGFloat const kShadowWidth = 5;
     self.contentView.layer.shadowOpacity = 1;
     
     [self.contentView addSubview:self.taskNameLabel];
-    [self.contentView addSubview:self.timeInfoLabel];
+    [self.contentView addSubview:self.hintLabel];
     [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.centerY.mas_equalTo(self).offset(-8);
         make.left.offset(8);
         make.right.offset(-8);
     }];
-    [self.timeInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.hintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.taskNameLabel.mas_bottom).offset(8);
         make.centerX.mas_equalTo(self);
         make.left.offset(8);
@@ -104,17 +104,17 @@ static CGFloat const kShadowWidth = 5;
     return _taskNameLabel;
 }
 
-- (UILabel *)timeInfoLabel
+- (UILabel *)hintLabel
 {
-    if (!_timeInfoLabel) {
-        _timeInfoLabel = [[UILabel alloc] init];
-        _timeInfoLabel.text = self.taskModel.isOngoing ? [MirrorLanguage mirror_stringWithKey:@"tap_to_stop"] : [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
-        _timeInfoLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        _timeInfoLabel.numberOfLines = 1;
-        _timeInfoLabel.textAlignment = NSTextAlignmentCenter;
-        _timeInfoLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
+    if (!_hintLabel) {
+        _hintLabel = [[UILabel alloc] init];
+        _hintLabel.text = self.taskModel.isOngoing ? [MirrorLanguage mirror_stringWithKey:@"tap_to_stop"] : [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
+        _hintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        _hintLabel.numberOfLines = 1;
+        _hintLabel.textAlignment = NSTextAlignmentCenter;
+        _hintLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
     }
-    return _timeInfoLabel;
+    return _hintLabel;
 }
 
 @end
