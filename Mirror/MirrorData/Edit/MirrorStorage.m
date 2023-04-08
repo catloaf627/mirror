@@ -9,6 +9,7 @@
 #import "NSMutableDictionary+MirrorDictionary.h"
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
+#import "MirrorTool.h"
 
 static NSString *const kMirrorDict = @"mirror_dict";
 
@@ -23,6 +24,8 @@ static NSString *const kMirrorDict = @"mirror_dict";
     });
     return instance;
 }
+
+#pragma mark - Public
 
 - (void)createTask:(MirrorDataModel *)task
 {
@@ -184,6 +187,8 @@ static NSString *const kMirrorDict = @"mirror_dict";
     return TaskNameExistsTypeValid;
 }
 
+#pragma mark - Local database
+
 - (void)saveMirrorData:(NSMutableDictionary *)mirrorDict // 归档
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];
@@ -201,8 +206,11 @@ static NSString *const kMirrorDict = @"mirror_dict";
     return mirrorDict ?: [NSMutableDictionary new];
 }
 
+#pragma mark - Log & Mocked data
+
 - (void)printData:(NSMutableDictionary *)mirrorDict info:(NSString *)info
 {
+    BOOL printTimestamp = NO;
     NSLog(@"%@", info ?: @"");
     for (id taskName in mirrorDict.allKeys) {
         MirrorDataModel *task = mirrorDict[taskName];
@@ -224,13 +232,16 @@ static NSString *const kMirrorDict = @"mirror_dict";
             tag = [tag stringByAppendingString:@"👾"];
         }
         tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
-        NSLog(@"%@: %@, 创建于 %ld",tag, task.taskName, task.createdTime);
+        NSLog(@"%@: %@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
         for (int i=0; i<task.periods.count; i++) {
             if (task.periods[i].count == 1) {
-                NSLog(@"[%ld, ..........] 计时中..., ", [task.periods[i][0] longValue]);
+                NSLog(@"[%@, ..........] 计时中..., ", [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp]);
             }
             if (task.periods[i].count == 2) {
-                NSLog(@"[%ld, %ld] 持续时间%@, ", [task.periods[i][0] longValue], [task.periods[i][1] longValue], [[NSDateComponentsFormatter new] stringFromTimeInterval:[task.periods[i][1] longValue]-[task.periods[i][0] longValue]]);
+                NSLog(@"[%@, %@] Lasted:%@, ",
+                      [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp],
+                      [MirrorTool timeFromTimestamp:[task.periods[i][1] longValue] printTimeStamp:printTimestamp],
+                      [[NSDateComponentsFormatter new] stringFromTimeInterval:[task.periods[i][1] longValue]-[task.periods[i][0] longValue]]);
             }
         }
     }

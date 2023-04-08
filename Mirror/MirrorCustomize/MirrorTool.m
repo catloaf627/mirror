@@ -9,7 +9,7 @@
 
 @implementation MirrorTool
 
-+ (void)printTime:(NSDate *)date info:(NSString *)info
++ (NSString *)timeFromDate:(NSDate *)date printTimeStamp:(BOOL)printTimeStamp
 {
     // setup
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -24,24 +24,50 @@
     long minute = (long)components.minute;
     long second = (long)components.second;
     // print
-    NSLog(@"gizmo %@: %ld年%ld月%ld日，一周的第%ld天，%ld:%ld:%ld，时间戳为%ld",info, year, month, day, week, hour, minute, second, (long)[date timeIntervalSince1970]);
+    NSString *weekday = @"unknow";
+    if (week == 1) weekday = @"Sun";
+    if (week == 2) weekday = @"Mon";
+    if (week == 3) weekday = @"Tue";
+    if (week == 4) weekday = @"Wed";
+    if (week == 5) weekday = @"Thu";
+    if (week == 6) weekday = @"Fri";
+    if (week == 7) weekday = @"Sat";
+    if (printTimeStamp) {
+        return [NSString stringWithFormat: @"%ld.%ld.%ld,%@,%ld:%ld:%ld，(%ld)", year, month, day, weekday, hour, minute, second, (long)[date timeIntervalSince1970]];
+    } else {
+        return [NSString stringWithFormat: @"%ld.%ld.%ld,%@,%ld:%ld:%ld", year, month, day, weekday, hour, minute, second];
+    }
 }
 
-+ (void)printTodayStartedTime
++ (NSString *)timeFromTimestamp:(long)timestamp printTimeStamp:(BOOL)printTimeStamp
 {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
     // setup
-    NSDate *today = [NSDate date];
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
     components.timeZone = [NSTimeZone systemTimeZone];
     // details
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    
-    NSDate *combinedDate = [gregorian dateFromComponents:components];
-    [MirrorTool printTime:[NSDate now] info:@"现在的时间"];
-    [MirrorTool printTime:combinedDate info:@"今天0:0:0的时间"];
+    long year = (long)components.year;
+    long month = (long)components.month;
+    long week = (long)components.weekday;
+    long day = (long)components.day;
+    long hour = (long)components.hour;
+    long minute = (long)components.minute;
+    long second = (long)components.second;
+    // print
+    NSString *weekday = @"unknow";
+    if (week == 1) weekday = @"Sun";
+    if (week == 2) weekday = @"Mon";
+    if (week == 3) weekday = @"Tue";
+    if (week == 4) weekday = @"Wed";
+    if (week == 5) weekday = @"Thu";
+    if (week == 6) weekday = @"Fri";
+    if (week == 7) weekday = @"Sat";
+    if (printTimeStamp) {
+        return [NSString stringWithFormat: @"%ld.%ld.%ld,%@,%ld:%ld:%ld，(%ld)", year, month, day, weekday, hour, minute, second, (long)[date timeIntervalSince1970]];
+    } else {
+        return [NSString stringWithFormat: @"%ld.%ld.%ld,%@,%ld:%ld:%ld", year, month, day, weekday, hour, minute, second];
+    }
 }
 
 @end

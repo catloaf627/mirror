@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MirrorTool : NSObject
 
++ (NSString *)timeFromDate:(NSDate *)date printTimeStamp:(BOOL)printTimeStamp;
++ (NSString *)timeFromTimestamp:(long)timestamp printTimeStamp:(BOOL)printTimeStamp;
+
 @end
 
 NS_ASSUME_NONNULL_END
