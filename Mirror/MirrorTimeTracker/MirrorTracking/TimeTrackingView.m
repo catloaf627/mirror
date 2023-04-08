@@ -13,6 +13,7 @@
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
 #import "MUXToast.h"
+#import "MirrorTool.h"
 
 static CGFloat const kPadding = 20;
 
@@ -49,7 +50,7 @@ static CGFloat const kDashSpacing = 10;
 
 // Data
 
-@property (nonatomic, strong) MirrorDataModel *taskModel;
+@property (nonatomic, strong) MirrorDataModel *taskModel; //通过taskname在本地db取值
 @property (nonatomic, strong) NSDate *nowTime;
 @property (nonatomic, strong) NSDate *startTime;
 @property (nonatomic, assign) NSTimeInterval timeInterval;
@@ -65,11 +66,11 @@ static CGFloat const kDashSpacing = 10;
 
 @implementation TimeTrackingView
 
-- (instancetype)initWithTask:(MirrorDataModel *)taskModel
+- (instancetype)initWithTaskName:(NSString *)taskName
 {
     self = [super init];
     if (self) {
-        self.taskModel = taskModel;
+        self.taskModel = [[MirrorStorage sharedInstance]getTaskFromDB:taskName];
         [self p_setupUI];
     }
     return self;
@@ -203,7 +204,8 @@ static CGFloat const kDashSpacing = 10;
     // update time interval
     self.timeIntervalLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:self.timeInterval];
     
-    NSLog(@"全屏计时中: %@(now) - %@(start) = %f",self.nowTime, self.startTime, self.timeInterval);
+    BOOL printTimeStamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
+    NSLog(@"全屏计时中: %@(now) - %@(start) = %f",[MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
     if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时
         [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"reached_limited_time" with1Placeholder:self.taskModel.taskName] onVC:self.delegate];
@@ -228,12 +230,19 @@ static CGFloat const kDashSpacing = 10;
 
 - (NSDate *)nowTime
 {
-    return [NSDate date]; // 当前时间
+    return [NSDate now]; // 当前时间
 }
 
 - (NSDate *)startTime
 {
-    long startTimestamp = self.taskModel.periods.count ? (self.taskModel.periods[self.taskModel.periods.count-1].count ? [self.taskModel.periods[self.taskModel.periods.count-1][0] longValue] : 0) : 0;
+    long startTimestamp = 0;
+    NSArray *periods = self.taskModel.periods;
+    if (periods.count > 0) {
+        NSArray *lastPeriod = periods[periods.count-1];
+        if (lastPeriod.count == 1) { // the last period is ongoing
+            startTimestamp = [lastPeriod[0] longValue];
+        }
+    }
     // 使用 po round(([NSDate now]timeIntervalSince1970] - (86400-20))) 的结果替换下面的startTimestamp可以在20秒内看到20小时自动保存的效果
     NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimestamp];
     return startTime;

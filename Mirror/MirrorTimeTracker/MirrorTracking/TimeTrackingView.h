@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIViewController<TimeTrackingViewProtocol> *delegate;
 
-- (instancetype)initWithTask:(MirrorDataModel *)taskModel;
+- (instancetype)initWithTaskName:(NSString *)taskName;
 - (void)updateLabels;
 
 @end

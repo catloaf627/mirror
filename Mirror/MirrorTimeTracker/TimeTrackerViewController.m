@@ -142,7 +142,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)openTimeTrackingViewWithTask:(MirrorDataModel *)task
 {
-    TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTask:task];
+    TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTaskName:task.taskName];
     timeTrackingView.delegate = self;
     [self.view addSubview:timeTrackingView];
     [timeTrackingView mas_makeConstraints:^(MASConstraintMaker *make) {

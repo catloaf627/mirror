@@ -187,6 +187,14 @@ static NSString *const kMirrorDict = @"mirror_dict";
     return TaskNameExistsTypeValid;
 }
 
+- (MirrorDataModel *)getTaskFromDB:(NSString *)taskName
+{
+    NSMutableDictionary *tasks = [self retriveMirrorData];
+    MirrorDataModel *task = tasks[taskName];
+    [self printTask:task info:@"-------Getting one task-------"];
+    return task;
+}
+
 #pragma mark - Local database
 
 - (void)saveMirrorData:(NSMutableDictionary *)mirrorDict // 归档
@@ -194,7 +202,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];
     [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorDict];
     // Log
-    [self printData:mirrorDict info:@"------saving user data------"];
+    [self printDict:mirrorDict info:@"------saving user data------"];
 }
 
 - (NSMutableDictionary *)retriveMirrorData // 解档
@@ -202,49 +210,56 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
     NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
     // Log
-//    [self printData:mirrorDict info:@"------retriving user data------"];
+//    [self printDict:mirrorDict info:@"------retriving user data------"];
     return mirrorDict ?: [NSMutableDictionary new];
 }
 
 #pragma mark - Log & Mocked data
 
-- (void)printData:(NSMutableDictionary *)mirrorDict info:(NSString *)info
+- (void)printDict:(NSMutableDictionary *)mirrorDict info:(NSString *)info
 {
-    BOOL printTimestamp = NO;
-    NSLog(@"%@", info ?: @"");
+    if (info) NSLog(@"%@", info);
     for (id taskName in mirrorDict.allKeys) {
         MirrorDataModel *task = mirrorDict[taskName];
-        NSString *tag = @"";
-        tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
-        if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellPink]]) {
-            tag = [tag stringByAppendingString:@"🌸"];
-        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellOrange]]) {
-            tag = [tag stringByAppendingString:@"🍊"];
-        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellYellow]]) {
-            tag = [tag stringByAppendingString:@"🍋"];
-        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellGreen]]) {
-            tag = [tag stringByAppendingString:@"🪀"];
-        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellTeal]]) {
-            tag = [tag stringByAppendingString:@"🧼"];
-        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellBlue]]) {
-            tag = [tag stringByAppendingString:@"🐟"];
-        } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellBlue]]) {
-            tag = [tag stringByAppendingString:@"👾"];
+        [self printTask:task info:nil];
+    }
+}
+
+- (void)printTask:(MirrorDataModel *)task info:(NSString *)info
+{
+    if (info) NSLog(@"%@", info);
+    BOOL printTimestamp = YES; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
+    NSString *tag = @"";
+    tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
+    if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellPink]]) {
+        tag = [tag stringByAppendingString:@"🌸"];
+    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellOrange]]) {
+        tag = [tag stringByAppendingString:@"🍊"];
+    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellYellow]]) {
+        tag = [tag stringByAppendingString:@"🍋"];
+    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellGreen]]) {
+        tag = [tag stringByAppendingString:@"🪀"];
+    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellTeal]]) {
+        tag = [tag stringByAppendingString:@"🧼"];
+    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellBlue]]) {
+        tag = [tag stringByAppendingString:@"🐟"];
+    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellBlue]]) {
+        tag = [tag stringByAppendingString:@"👾"];
+    }
+    tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
+    NSLog(@"%@: %@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
+    for (int i=0; i<task.periods.count; i++) {
+        if (task.periods[i].count == 1) {
+            NSLog(@"[%@, ..........] 计时中..., ", [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp]);
         }
-        tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
-        NSLog(@"%@: %@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
-        for (int i=0; i<task.periods.count; i++) {
-            if (task.periods[i].count == 1) {
-                NSLog(@"[%@, ..........] 计时中..., ", [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp]);
-            }
-            if (task.periods[i].count == 2) {
-                NSLog(@"[%@, %@] Lasted:%@, ",
-                      [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp],
-                      [MirrorTool timeFromTimestamp:[task.periods[i][1] longValue] printTimeStamp:printTimestamp],
-                      [[NSDateComponentsFormatter new] stringFromTimeInterval:[task.periods[i][1] longValue]-[task.periods[i][0] longValue]]);
-            }
+        if (task.periods[i].count == 2) {
+            NSLog(@"[%@, %@] Lasted:%@, ",
+                  [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp],
+                  [MirrorTool timeFromTimestamp:[task.periods[i][1] longValue] printTimeStamp:printTimestamp],
+                  [[NSDateComponentsFormatter new] stringFromTimeInterval:[task.periods[i][1] longValue]-[task.periods[i][0] longValue]]);
         }
     }
+    
 }
 
 @end
