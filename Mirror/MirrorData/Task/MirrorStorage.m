@@ -25,6 +25,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:task.taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTaskByName:task.taskName info:@"---------task created--------"];
 }
 
 + (void)deleteTask:(NSString *)taskName
@@ -34,6 +35,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 通过taskname删除task
     [mirrorDict removeObjectForKey:taskName];
     // 将mirror dict存回本地
+    [MirrorStorage printTaskByName:taskName info:@"---------task deleted--------"];
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
@@ -51,6 +53,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTaskByName:taskName info:@"---------task archived--------"];
 }
 
 + (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName
@@ -66,6 +69,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:newName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTaskByName:newName info:@"---------task updated--------"];
 }
 
 + (void)startTask:(NSString *)taskName
@@ -83,6 +87,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTaskByName:taskName info:@"---------task started--------"];
 }
 
 + (void)stopTask:(NSString *)taskName
@@ -112,6 +117,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTaskByName:taskName info:@"---------task stopped--------"];
 }
 
 + (void)stopAllTasksExcept:(NSString *)exceptTaskName
@@ -128,28 +134,8 @@ static NSString *const kMirrorDict = @"mirror_dict";
         if (!task.isOngoing) { // 不在计时中的task不要动
             continue;
         }
-        
-        // 将最后一个period取出来，给它一个结束时间（now）
-        NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
-        if (allPeriods.count > 0) {
-            NSMutableArray *lastPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[allPeriods.count-1]];
-            long end = [[NSDate now] timeIntervalSince1970];
-            long start = [lastPeriod[0] longValue];
-            long length = end - start;
-            if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
-                [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
-                allPeriods[allPeriods.count-1] = lastPeriod;
-                [MirrorStorage toastSavedWithTaskName:taskName withTimeInterval:length];
-            } else { // 错误格式或者10秒以下，丢弃这个task
-                [allPeriods removeLastObject];
-            }
-            task.periods = allPeriods;
-        }
-        // 保存更新好的task到本地
-        [mirrorDict setValue:task forKey:taskName];
+        [MirrorStorage stopTask:taskName];
     }
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
 + (void)toastSavedWithTaskName:(NSString *)taskName withTimeInterval:(NSTimeInterval)timeInterval
@@ -177,7 +163,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
     MirrorDataModel *task = tasks[taskName];
-    [MirrorStorage printTaskByName:task.taskName info:@"-------Getting one task-------"];
+//    [MirrorStorage printTaskByName:task.taskName info:@"-------Getting one task-------"];
     return task;
 }
 
@@ -187,7 +173,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     for (id taskName in tasks.allKeys) {
         MirrorDataModel *task = tasks[taskName];
         if (task.isOngoing) {
-            [MirrorStorage printTaskByName:task.taskName info:@"-------Getting ongoing task-------"];
+//            [MirrorStorage printTaskByName:task.taskName info:@"-------Getting ongoing task-------"];
             return task;
         }
     }

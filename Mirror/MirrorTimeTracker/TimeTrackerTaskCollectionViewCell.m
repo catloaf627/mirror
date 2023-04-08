@@ -19,7 +19,7 @@ static CGFloat const kShadowWidth = 5;
 @property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *hintLabel;
-
+@property (nonatomic, assign) BOOL applyImmersiveMode;
 @end
 
 @implementation TimeTrackerTaskCollectionViewCell
@@ -35,6 +35,8 @@ static CGFloat const kShadowWidth = 5;
     self.taskNameLabel.text = taskModel.taskName;
     self.hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
     self.contentView.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
+    self.applyImmersiveMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredImmersiveMode"];
+
     [self p_setupUI];
     if (!taskModel.isOngoing) { // stop animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color]; // 瞬间变回原色
@@ -108,6 +110,7 @@ static CGFloat const kShadowWidth = 5;
 - (void)createTimeTrackingLabelWithTask:(MirrorDataModel *)task
 {
     if (!task.isOngoing) return;
+    if (self.applyImmersiveMode) return;
     TimeTrackingLabel *timeTrackingLabel = [[TimeTrackingLabel alloc] initWithTask:self.taskModel.taskName];
     timeTrackingLabel.delegate = self;
     // 避免复用导致的重复添加
