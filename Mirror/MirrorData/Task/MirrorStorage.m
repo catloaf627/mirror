@@ -234,7 +234,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         tag = [tag stringByAppendingString:@"👾"];
     }
     tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
-    NSLog(@"%@: %@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
+    NSLog(@"%@%@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
     for (int i=0; i<task.periods.count; i++) {
         if (task.periods[i].count == 1) {
             NSLog(@"[%@, ..........] 计时中..., ", [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp]);

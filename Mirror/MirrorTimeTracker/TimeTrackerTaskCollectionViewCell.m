@@ -40,11 +40,21 @@ static CGFloat const kShadowWidth = 5;
     [self p_setupUI];
     if (!taskModel.isOngoing) { // stop animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color]; // 瞬间变回原色
-        [self destroyTimeTrackingLabelWithTask:taskModel];
     } else { // start animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:self.taskModel.color]]; // 瞬间变成pulse色
         [self p_convertToColor:self.taskModel.color]; // 开始闪烁
         [self createTimeTrackingLabelWithTask:taskModel];
+    }
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    if (!newSuperview) { // cell被销毁
+        for (UIView *view in self.contentView.subviews) {
+            if ([view isKindOfClass:TimeTrackingLabel.class]) {
+                [view removeFromSuperview];
+            }
+        }
     }
 }
 
@@ -98,7 +108,6 @@ static CGFloat const kShadowWidth = 5;
 
 - (void)destroyTimeTrackingLabelWithTask:(MirrorDataModel *)task
 {
-    if (task.isOngoing) return;
     for (UIView *view in self.contentView.subviews) {
         if ([view isKindOfClass:TimeTrackingLabel.class]) {
             [view removeFromSuperview];

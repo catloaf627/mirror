@@ -175,6 +175,7 @@ static CGFloat const kDashSpacing = 10;
         // 在iOS 10以后系统，苹果针对NSTimer进行了优化，使用Block回调方式，解决了循环引用问题。
         [weakSelf updateLabels];
     }];
+    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 
 #pragma mark - Actions
