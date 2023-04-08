@@ -51,7 +51,7 @@ static CGFloat const kHeightRatio = 0.8;
 {
     NSString *currentText = self.editTaskNameTextField.text;
     BOOL textIsEmpty = !currentText || [currentText isEqualToString:@""];
-    TaskNameExistsType existType = [[MirrorStorage sharedInstance] taskNameExists:currentText];
+    TaskNameExistsType existType = [MirrorStorage taskNameExists:currentText];
     if (textIsEmpty) {
         UIAlertController* newNameIsEmptyAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"name_field_cannot_be_empty"] message:nil preferredStyle:UIAlertControllerStyleAlert];
 

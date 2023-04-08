@@ -70,7 +70,7 @@ static CGFloat const kDashSpacing = 10;
 {
     self = [super init];
     if (self) {
-        self.taskModel = [[MirrorStorage sharedInstance]getTaskFromDB:taskName];
+        self.taskModel = [MirrorStorage getTaskFromDB:taskName];
         [self p_setupUI];
     }
     return self;

@@ -15,43 +15,33 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 @implementation MirrorStorage
 
-+ (instancetype)sharedInstance
-{
-    static dispatch_once_t onceToken;
-    static MirrorStorage *instance = nil;
-    dispatch_once(&onceToken, ^{
-        instance = [[MirrorStorage alloc]init];
-    });
-    return instance;
-}
-
 #pragma mark - Public
 
-- (void)createTask:(MirrorDataModel *)task
++ (void)createTask:(MirrorDataModel *)task
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 新增一个task
     [mirrorDict setValue:task forKey:task.taskName];
     // 将mirror dict存回本地
-    [self saveMirrorData:mirrorDict];
+    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-- (void)deleteTask:(NSString *)taskName
++ (void)deleteTask:(NSString *)taskName
 {
     // 在本地取出词典
     NSMutableDictionary *mirrorDict = [self retriveMirrorData];
     // 通过taskname删除task
     [mirrorDict removeObjectForKey:taskName];
     // 将mirror dict存回本地
-    [self saveMirrorData:mirrorDict];
+    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-- (void)archiveTask:(NSString *)taskName
++ (void)archiveTask:(NSString *)taskName
 {
     [self stopTask:taskName completion:nil]; // archive导致的停止计时，不展示完成的toast
     // 在本地取出task
-    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
     MirrorDataModel *task = mirrorDict[taskName];
     // stop task first
@@ -60,13 +50,13 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
-    [self saveMirrorData:mirrorDict];
+    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-- (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName
++ (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName
 {
     // 在本地取出task
-    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
     MirrorDataModel *task = mirrorDict[oldName];
     // 更新task的color和taskname
@@ -75,13 +65,13 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:newName];
     // 将mirror dict存回本地
-    [self saveMirrorData:mirrorDict];
+    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-- (void)startTask:(NSString *)taskName
++ (void)startTask:(NSString *)taskName
 {
     // 在本地取出task
-    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
     MirrorDataModel *task = mirrorDict[taskName];
     // 给task创建一个新的period，并给出这个period的起始时间（now）
@@ -92,13 +82,13 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
-    [self saveMirrorData:mirrorDict];
+    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-- (void)stopTask:(NSString *)taskName completion:(void (^)(NSString *hint))completion
++ (void)stopTask:(NSString *)taskName completion:(void (^)(NSString *hint))completion
 {
     // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
     MirrorDataModel *task = mirrorDict[taskName];
     // 将最后一个period取出来，给它一个结束时间（now）
@@ -112,7 +102,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
             [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
-            [self p_callCompletion:completion taskName:taskName withTimeInterval:length]; // 需要走回调弹toast
+            [MirrorStorage p_callCompletion:completion taskName:taskName withTimeInterval:length]; // 需要走回调弹toast
         } else { // 错误格式或者10秒以下，丢弃这个task
             [allPeriods removeLastObject];
         }
@@ -121,14 +111,14 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
-    [self saveMirrorData:mirrorDict];
+    [MirrorStorage saveMirrorData:mirrorDict];
 
 }
 
-- (void)stopAllTasksExcept:(NSString *)exceptTaskName completion:(void (^)(NSString *hint))completion
++ (void)stopAllTasksExcept:(NSString *)exceptTaskName completion:(void (^)(NSString *hint))completion
 {
     // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 大循环
     for (id taskName in mirrorDict.allKeys) {
         // 取出这个task以便作修改
@@ -150,7 +140,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
             if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
                 [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
                 allPeriods[allPeriods.count-1] = lastPeriod;
-                [self p_callCompletion:completion taskName:taskName withTimeInterval:length]; // 需要走回调弹toast，注意这里结束的是task.taskName，而不是except传进来的taskName
+                [MirrorStorage p_callCompletion:completion taskName:taskName withTimeInterval:length]; // 需要走回调弹toast，注意这里结束的是task.taskName，而不是except传进来的taskName
             } else { // 错误格式或者10秒以下，丢弃这个task
                 [allPeriods removeLastObject];
             }
@@ -160,10 +150,10 @@ static NSString *const kMirrorDict = @"mirror_dict";
         [mirrorDict setValue:task forKey:taskName];
     }
     // 将mirror dict存回本地
-    [self saveMirrorData:mirrorDict];
+    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-- (void)p_callCompletion:(void (^)(NSString *hint))completion taskName:(NSString *)taskName withTimeInterval:(NSTimeInterval)timeInterval
++ (void)p_callCompletion:(void (^)(NSString *hint))completion taskName:(NSString *)taskName withTimeInterval:(NSTimeInterval)timeInterval
 {
     NSString *hintInfo = [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval]];
     if (completion) {
@@ -171,9 +161,9 @@ static NSString *const kMirrorDict = @"mirror_dict";
     }
 }
 
-- (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
++ (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
 {
-    NSMutableDictionary *mirrorDict = [self retriveMirrorData];
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     for (id taskName in mirrorDict.allKeys) {
         if ([taskName isEqualToString:newTaskName]) {
             MirrorDataModel *task = mirrorDict[taskName];
@@ -187,36 +177,36 @@ static NSString *const kMirrorDict = @"mirror_dict";
     return TaskNameExistsTypeValid;
 }
 
-- (MirrorDataModel *)getTaskFromDB:(NSString *)taskName
++ (MirrorDataModel *)getTaskFromDB:(NSString *)taskName
 {
     NSMutableDictionary *tasks = [self retriveMirrorData];
     MirrorDataModel *task = tasks[taskName];
-    [self printTask:task info:@"-------Getting one task-------"];
+    [MirrorStorage printTask:task info:@"-------Getting one task-------"];
     return task;
 }
 
 #pragma mark - Local database
 
-- (void)saveMirrorData:(NSMutableDictionary *)mirrorDict // 归档
++ (void)saveMirrorData:(NSMutableDictionary *)mirrorDict // 归档
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];
     [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorDict];
     // Log
-    [self printDict:mirrorDict info:@"------saving user data------"];
+    [MirrorStorage printDict:mirrorDict info:@"------saving user data------"];
 }
 
-- (NSMutableDictionary *)retriveMirrorData // 解档
++ (NSMutableDictionary *)retriveMirrorData // 解档
 {
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
     NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
     // Log
-//    [self printDict:mirrorDict info:@"------retriving user data------"];
+//    [MirrorStorage printDict:mirrorDict info:@"------retriving user data------"];
     return mirrorDict ?: [NSMutableDictionary new];
 }
 
 #pragma mark - Log & Mocked data
 
-- (void)printDict:(NSMutableDictionary *)mirrorDict info:(NSString *)info
++ (void)printDict:(NSMutableDictionary *)mirrorDict info:(NSString *)info
 {
     if (info) NSLog(@"%@", info);
     for (id taskName in mirrorDict.allKeys) {
@@ -225,10 +215,10 @@ static NSString *const kMirrorDict = @"mirror_dict";
     }
 }
 
-- (void)printTask:(MirrorDataModel *)task info:(NSString *)info
++ (void)printTask:(MirrorDataModel *)task info:(NSString *)info
 {
     if (info) NSLog(@"%@", info);
-    BOOL printTimestamp = YES; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
+    BOOL printTimestamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
     NSString *tag = @"";
     tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
     if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellPink]]) {

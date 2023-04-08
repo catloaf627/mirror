@@ -108,20 +108,20 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)deleteTask:(MirrorDataModel *)model
 {
-    [[MirrorStorage sharedInstance] deleteTask:model.taskName];
+    [MirrorStorage deleteTask:model.taskName];
     [self.collectionView reloadData];
 }
 
 - (void)archiveTask:(MirrorDataModel *)model
 {
-    [[MirrorStorage sharedInstance] archiveTask:model.taskName];
+    [MirrorStorage archiveTask:model.taskName];
     [self.collectionView reloadData];
 }
 # pragma mark - AddTaskProtocol
 
 - (void)addNewTask:(MirrorDataModel *)newTask
 {
-    [[MirrorStorage sharedInstance] createTask:newTask];
+    [MirrorStorage createTask:newTask];
     [self.collectionView reloadData];
 }
 
@@ -134,7 +134,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [view removeFromSuperview];
         }
     }
-    [[MirrorStorage sharedInstance] stopTask:task.taskName completion:^(NSString * _Nonnull hint) {
+    [MirrorStorage stopTask:task.taskName completion:^(NSString * _Nonnull hint) {
         [MUXToast show:hint onVC:self];
     }];
     [self.collectionView reloadData];
@@ -154,7 +154,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)p_stopAllTasksExcept:(NSString *)exceptTaskName
 {
-    [[MirrorStorage sharedInstance] stopAllTasksExcept:exceptTaskName completion:^(NSString * _Nonnull hint) {
+    [MirrorStorage stopAllTasksExcept:exceptTaskName completion:^(NSString * _Nonnull hint) {
         [MUXToast show:hint onVC:self];
     }];
     [self.collectionView reloadData];
@@ -175,12 +175,12 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
-        [[MirrorStorage sharedInstance] stopTask:selectedModel.taskName completion:^(NSString * _Nonnull hint) {
+        [MirrorStorage stopTask:selectedModel.taskName completion:^(NSString * _Nonnull hint) {
             [MUXToast show:hint onVC:self];
         }];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [self p_stopAllTasksExcept:selectedModel.taskName];
-        [[MirrorStorage sharedInstance] startTask:selectedModel.taskName];
+        [MirrorStorage startTask:selectedModel.taskName];
         if (self.applyImmersiveMode) {
             [self openTimeTrackingViewWithTask:selectedModel];
         }

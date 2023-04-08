@@ -68,7 +68,7 @@
 {
     // 把所有task加到一个array里
     NSMutableArray<MirrorDataModel *> *allTasks = [NSMutableArray new];
-    NSMutableDictionary *dict = [[MirrorStorage sharedInstance] retriveMirrorData];
+    NSMutableDictionary *dict = [MirrorStorage retriveMirrorData];
     for (id taskName in dict.allKeys) {
         MirrorDataModel *task = dict[taskName];
         [allTasks addObject:task];

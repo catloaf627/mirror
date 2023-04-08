@@ -106,9 +106,9 @@ static CGFloat const kHeightRatio = 0.8;
     NSString *currentText = self.editTaskNameTextField.text;
     BOOL textIsTheSame = [currentText isEqualToString:self.taskModel.taskName];
     BOOL textIsEmpty = !currentText || [currentText isEqualToString:@""];
-    TaskNameExistsType existType = [[MirrorStorage sharedInstance] taskNameExists:currentText];
+    TaskNameExistsType existType = [MirrorStorage taskNameExists:currentText];
     if (textIsTheSame) { // taskname和之前一样，允许修改并退出
-        [[MirrorStorage sharedInstance] editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
+        [MirrorStorage editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
         [self.delegate dismissViewControllerAnimated:YES completion:^{
             [self.delegate updateTasks];
         }];
@@ -124,7 +124,7 @@ static CGFloat const kHeightRatio = 0.8;
         [newNameIsDuplicateAlert addAction:understandAction];
         [self presentViewController:newNameIsDuplicateAlert animated:YES completion:nil];
     } else { // taskname valid，允许修改并退出
-        [[MirrorStorage sharedInstance] editTask:self.taskModel color:self.selectedColor name:currentText];
+        [MirrorStorage editTask:self.taskModel color:self.selectedColor name:currentText];
         [self.delegate dismissViewControllerAnimated:YES completion:^{
             [self.delegate updateTasks];
         }];
