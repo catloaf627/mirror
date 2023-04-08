@@ -36,6 +36,11 @@ NS_ASSUME_NONNULL_BEGIN
 // Max number of tasks
 #define kMaxTaskNum (8)
 
+// Notifications
+#define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"
+#define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"
+#define MirrorSwitchImmersiveModeNotification @"MirrorSwitchImmersiveModeNotification"
+
 @interface MirrorMacro : NSObject
 
 @end

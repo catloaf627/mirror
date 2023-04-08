@@ -6,6 +6,7 @@
 //
 
 #import "ImmersiveCollectionViewCell.h"
+#import "MirrorMacro.h"
 
 static MirrorColorType const immersiveColorType = MirrorColorTypeCellYellow;
 static NSString *const kPreferredImmersive = @"MirrorUserPreferredImmersiveMode";
@@ -34,7 +35,7 @@ static NSString *const kPreferredImmersive = @"MirrorUserPreferredImmersiveMode"
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kPreferredImmersive];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchImmersiveModeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchImmersiveModeNotification object:nil];
 }
 
 

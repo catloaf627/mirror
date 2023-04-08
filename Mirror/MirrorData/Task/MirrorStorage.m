@@ -10,6 +10,7 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "MirrorTool.h"
+#import "MUXToast.h"
 
 static NSString *const kMirrorDict = @"mirror_dict";
 
@@ -39,9 +40,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)archiveTask:(NSString *)taskName
 {
-    [MirrorStorage stopTask:taskName completion:^(NSString * _Nonnull hint) {
-        // archive导致的停止计时，不展示完成的toast
-    }];
+    [MirrorStorage stopTask:taskName];
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
@@ -87,7 +86,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-+ (void)stopTask:(NSString *)taskName completion:(void (^)(NSString *hint))completion
++ (void)stopTask:(NSString *)taskName
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
@@ -104,7 +103,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
             [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
-            [MirrorStorage p_callCompletion:completion taskName:taskName withTimeInterval:length]; // 需要走回调弹toast
+            [MirrorStorage toastSavedWithTaskName:taskName withTimeInterval:length];
         } else { // 错误格式或者10秒以下，丢弃这个task
             [allPeriods removeLastObject];
         }
@@ -114,10 +113,9 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-
 }
 
-+ (void)stopAllTasksExcept:(NSString *)exceptTaskName completion:(void (^)(NSString *hint))completion
++ (void)stopAllTasksExcept:(NSString *)exceptTaskName
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
@@ -142,7 +140,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
             if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
                 [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
                 allPeriods[allPeriods.count-1] = lastPeriod;
-                [MirrorStorage p_callCompletion:completion taskName:taskName withTimeInterval:length]; // 需要走回调弹toast，注意这里结束的是task.taskName，而不是except传进来的taskName
+                [MirrorStorage toastSavedWithTaskName:taskName withTimeInterval:length];
             } else { // 错误格式或者10秒以下，丢弃这个task
                 [allPeriods removeLastObject];
             }
@@ -155,12 +153,9 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-+ (void)p_callCompletion:(void (^)(NSString *hint))completion taskName:(NSString *)taskName withTimeInterval:(NSTimeInterval)timeInterval
++ (void)toastSavedWithTaskName:(NSString *)taskName withTimeInterval:(NSTimeInterval)timeInterval
 {
     NSString *hintInfo = [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval]];
-    if (completion) {
-        completion(hintInfo);
-    }
 }
 
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName

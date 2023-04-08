@@ -208,11 +208,11 @@ static CGFloat const kDashSpacing = 10;
     NSLog(@"全屏计时中: %@(now) - %@(start) = %f",[MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
     if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时
-        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"reached_limited_time" with1Placeholder:self.taskModel.taskName] onVC:self.delegate];
+        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"reached_limited_time" with1Placeholder:self.taskModel.taskName] onVC:self.delegate color:self.taskModel.color];
         [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
     }
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
-        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"something_went_wrong"] onVC:self.delegate];
+        [MUXToast show:[MirrorLanguage mirror_stringWithKey:@"something_went_wrong"] onVC:self.delegate color:self.taskModel.color];
         [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
         
     }

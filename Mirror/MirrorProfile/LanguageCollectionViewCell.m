@@ -7,7 +7,7 @@
 
 #import "LanguageCollectionViewCell.h"
 #import "UIColor+MirrorColor.h"
-
+#import "MirrorMacro.h"
 #import "MirrorLanguage.h"
 
 static MirrorColorType const languageColorType = MirrorColorTypeCellOrange;
@@ -38,7 +38,7 @@ static NSString *const kPreferredChinese = @"MirrorUserPreferredChinese";
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kPreferredChinese];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchLanguageNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchLanguageNotification object:nil];
 }
 
 @end

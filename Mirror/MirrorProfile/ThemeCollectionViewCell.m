@@ -8,6 +8,7 @@
 #import "ThemeCollectionViewCell.h"
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
+#import "MirrorMacro.h"
 
 static MirrorColorType const themeColorType = MirrorColorTypeCellPink;
 static NSString *const kPreferredDark = @"MirrorUserPreferredDarkMode";
@@ -36,7 +37,7 @@ static NSString *const kPreferredDark = @"MirrorUserPreferredDarkMode";
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kPreferredDark];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"MirrorSwitchThemeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchThemeNotification object:nil];
 }
     
 

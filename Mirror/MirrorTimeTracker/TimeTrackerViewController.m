@@ -36,9 +36,12 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 {
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchThemeNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchLanguageNotification" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:@"MirrorSwitchImmersiveModeNotification" object:nil]; // 比其他vc多监听一个通知
+        // 设置通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchThemeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchLanguageNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchImmersiveModeNotification object:nil]; // 比其他vc多监听一个通知
+        // 数据通知
+        
     }
     return self;
 }
@@ -140,9 +143,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [view removeFromSuperview];
         }
     }
-    [MirrorStorage stopTask:task.taskName completion:^(NSString * _Nonnull hint) {
-        [MUXToast show:hint onVC:self];
-    }];
+    [MirrorStorage stopTask:task.taskName];
     [self.collectionView reloadData];
 }
 
@@ -160,9 +161,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)p_stopAllTasksExcept:(NSString *)exceptTaskName
 {
-    [MirrorStorage stopAllTasksExcept:exceptTaskName completion:^(NSString * _Nonnull hint) {
-        [MUXToast show:hint onVC:self];
-    }];
+    [MirrorStorage stopAllTasksExcept:exceptTaskName];
     [self.collectionView reloadData];
 }
 
@@ -181,9 +180,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
-        [MirrorStorage stopTask:selectedModel.taskName completion:^(NSString * _Nonnull hint) {
-            [MUXToast show:hint onVC:self];
-        }];
+        [MirrorStorage stopTask:selectedModel.taskName];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [self p_stopAllTasksExcept:selectedModel.taskName];
         [MirrorStorage startTask:selectedModel.taskName];

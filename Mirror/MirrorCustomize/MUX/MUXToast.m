@@ -9,7 +9,7 @@
 
 @implementation MUXToast
 
-+ (void)show:(NSString *)message onVC:(UIViewController *)vc
++ (void)show:(NSString *)message onVC:(UIViewController *)vc color:(MirrorColorType)color
 {
     if ([message isEqualToString:@""]) {
         return;
@@ -20,7 +20,8 @@
     UIView *firstSubview = alert.view.subviews.firstObject;
     UIView *alertContentView = firstSubview.subviews.firstObject;
     for (UIView *subSubView in alertContentView.subviews) {
-        subSubView.backgroundColor = [UIColor colorWithRed:0/255.0f green:0/255.0f blue:0/255.0f alpha:0.5f];
+        const CGFloat *components = CGColorGetComponents([UIColor mirrorColorNamed:color].CGColor);
+        subSubView.backgroundColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:0.5f];
     }
     NSMutableAttributedString *AS = [[NSMutableAttributedString alloc] initWithString:message];
     [AS addAttribute: NSForegroundColorAttributeName value: [UIColor whiteColor] range: NSMakeRange(0,AS.length)];

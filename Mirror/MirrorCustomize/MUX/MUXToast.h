@@ -7,12 +7,14 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "UIColor+MirrorColor.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MUXToast : NSObject
 
-+ (void)show:(NSString *)message onVC:(UIViewController *)vc;
++ (void)show:(NSString *)message onVC:(UIViewController *)vc color:(MirrorColorType)color;
+
 
 @end
 
