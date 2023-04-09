@@ -40,7 +40,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchImmersiveModeNotification object:nil]; // 比其他vc多监听一个通知
-        // 数据通知
+        // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopNotification:) name:MirrorTaskStopNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startNotification:) name:MirrorTaskStartNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editNotification:) name:MirrorTaskEditNotification object:nil];
@@ -121,7 +121,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [view removeFromSuperview];
         }
     }
-    [self.collectionView reloadData];
 }
 
 - (void)openTimeTrackingViewWithTask:(MirrorDataModel *)task
