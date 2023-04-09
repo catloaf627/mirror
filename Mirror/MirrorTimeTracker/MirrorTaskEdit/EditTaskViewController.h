@@ -10,17 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol EditTaskProtocol <NSObject>
-
-- (void)updateTasks;
-- (void)deleteTask:(MirrorDataModel *)model;
-- (void)archiveTask:(MirrorDataModel *)model;
+@protocol DismissEditSheetProtocol <NSObject>
 
 @end
 
 @interface EditTaskViewController : UIViewController
 
-@property (nonatomic, strong) UIViewController<EditTaskProtocol> *delegate;
+@property (nonatomic, strong) UIViewController<DismissEditSheetProtocol> *delegate;
 - (instancetype)initWithTasks:(MirrorDataModel *)task;
 
 @end

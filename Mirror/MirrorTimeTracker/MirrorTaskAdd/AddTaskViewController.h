@@ -12,13 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol AddTaskProtocol <NSObject>
 
-- (void)addNewTask:(MirrorDataModel *)newTask;
-
 @end
 
 @interface AddTaskViewController : UIViewController
-
-@property (nonatomic, strong) UIViewController<AddTaskProtocol> *delegate;
 
 @end
 

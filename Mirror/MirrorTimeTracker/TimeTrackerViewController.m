@@ -23,7 +23,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditTaskProtocol, AddTaskProtocol, TimeTrackingViewProtocol>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, DismissEditSheetProtocol, TimeTrackingViewProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, assign) BOOL applyImmersiveMode;
@@ -37,11 +37,16 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     self = [super init];
     if (self) {
         // 设置通知
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchThemeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchLanguageNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchImmersiveModeNotification object:nil]; // 比其他vc多监听一个通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchImmersiveModeNotification object:nil]; // 比其他vc多监听一个通知
         // 数据通知
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSavedToast:) name:MirrorTaskStopNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopNotification:) name:MirrorTaskStopNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startNotification:) name:MirrorTaskStartNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editNotification:) name:MirrorTaskEditNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteNotification:) name:MirrorTaskDeleteNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(archiveNotification:) name:MirrorTaskArchiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createNotification:) name:MirrorTaskCreateNotification object:nil];
     }
     return self;
 }
@@ -51,7 +56,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)reloadVC
+- (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
@@ -100,38 +105,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (task.isAddTaskModel) {
         // 长按[+]均可以像点击一样唤起add task
         AddTaskViewController *addVC = [AddTaskViewController new];
-        addVC.delegate = self;
         [self.navigationController presentViewController:addVC animated:YES completion:nil];
     }
     EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:[MirrorDataManager activatedTasksWithAddTask][indexPath.item]];
     editVC.delegate = self;
     [self.navigationController presentViewController:editVC animated:YES completion:nil];
-}
-
-# pragma mark - EditTaskProtocol
-
-- (void)updateTasks
-{
-    [self.collectionView reloadData];
-}
-
-- (void)deleteTask:(MirrorDataModel *)model
-{
-    [MirrorStorage deleteTask:model.taskName];
-    [self.collectionView reloadData];
-}
-
-- (void)archiveTask:(MirrorDataModel *)model
-{
-    [MirrorStorage archiveTask:model.taskName];
-    [self.collectionView reloadData];
-}
-# pragma mark - AddTaskProtocol
-
-- (void)addNewTask:(MirrorDataModel *)newTask
-{
-    [MirrorStorage createTask:newTask];
-    [self.collectionView reloadData];
 }
 
 #pragma mark - TimeTrackingViewProtocol
@@ -164,7 +142,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // 点击了[+]
     if (selectedModel.isAddTaskModel) {
         AddTaskViewController *addVC = [AddTaskViewController new];
-        addVC.delegate = self;
         [self.navigationController presentViewController:addVC animated:YES completion:nil];
         return;
     }
@@ -178,7 +155,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [self openTimeTrackingViewWithTask:selectedModel];
         }
     }
-    [self.collectionView reloadData];
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -215,13 +191,39 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return kCellSpacing;
 }
 
-#pragma mark - Toast
+#pragma mark - Notifications (都需要reload data)
 
-- (void)showSavedToast:(NSNotification *)noti
+- (void)createNotification:(NSNotification *)noti
+{
+    [self.collectionView reloadData];
+}
+
+- (void)archiveNotification:(NSNotification *)noti
+{
+    [self.collectionView reloadData];
+}
+
+- (void)deleteNotification:(NSNotification *)noti
+{
+    [self.collectionView reloadData];
+}
+
+- (void)editNotification:(NSNotification *)noti
+{
+    [self.collectionView reloadData];
+}
+
+- (void)startNotification:(NSNotification *)noti
+{
+    [self.collectionView reloadData];
+}
+
+- (void)stopNotification:(NSNotification *)noti
 {
     NSString *taskName = noti.userInfo[@"taskName"];
     TaskSavedType savedType = [noti.userInfo[@"TaskSavedType"] integerValue];
     [MUXToast taskSaved:taskName onVC:self type:savedType];
+    [self.collectionView reloadData];
 }
 
 #pragma mark - Getters

@@ -27,6 +27,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTaskByName:task.taskName info:@"---------task created--------"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskCreateNotification object:nil userInfo:nil];
 }
 
 + (void)deleteTask:(NSString *)taskName
@@ -38,6 +39,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将mirror dict存回本地
     [MirrorStorage printTaskByName:taskName info:@"---------task deleted--------"];
     [MirrorStorage saveMirrorData:mirrorDict];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskDeleteNotification object:nil userInfo:nil];
 }
 
 + (void)archiveTask:(NSString *)taskName
@@ -55,6 +57,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTaskByName:taskName info:@"---------task archived--------"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
 }
 
 + (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName
@@ -66,11 +69,13 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 更新task的color和taskname
     [mirrorDict removeObjectForKey:oldName];
     task.color = newColor;
+    task.taskName = newName;
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:newName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTaskByName:newName info:@"---------task updated--------"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
 }
 
 + (void)startTask:(NSString *)taskName
@@ -89,6 +94,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTaskByName:taskName info:@"---------task started--------"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStartNotification object:nil userInfo:nil];
 }
 
 + (void)stopTask:(NSString *)taskName
@@ -185,28 +191,16 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];
     [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorDict];
-    // Log
-//    [MirrorStorage printDict:@"------saving user data------"];
 }
 
 + (NSMutableDictionary *)retriveMirrorData // 解档
 {
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
     NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
-    // Log
-//    [MirrorStorage printDict:@"------retriving user data------"];
     return mirrorDict ?: [NSMutableDictionary new];
 }
 
 #pragma mark - Log & Mocked data
-
-+ (void)printDict:(NSString *)info
-{
-    if (info) NSLog(@"%@", info);
-    for (id taskName in [MirrorStorage retriveMirrorData].allKeys) {
-        [MirrorStorage printTaskByName:taskName info:nil];
-    }
-}
 
 + (void)printTaskByName:(NSString *)taskName info:(NSString *)info
 {

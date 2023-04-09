@@ -40,8 +40,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchThemeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchLanguageNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
     }
     return self;
 }
@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)reloadVC
+- (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;

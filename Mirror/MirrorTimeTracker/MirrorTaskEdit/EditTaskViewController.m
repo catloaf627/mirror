@@ -110,7 +110,7 @@ static CGFloat const kHeightRatio = 0.8;
     if (textIsTheSame) { // taskname和之前一样，允许修改并退出
         [MirrorStorage editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
         [self.delegate dismissViewControllerAnimated:YES completion:^{
-            [self.delegate updateTasks];
+            
         }];
     } else if (textIsEmpty) { // taskname为空，不允许修改
         UIAlertController* newNameIsEmptyAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"name_field_cannot_be_empty"] message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -126,7 +126,7 @@ static CGFloat const kHeightRatio = 0.8;
     } else { // taskname valid，允许修改并退出
         [MirrorStorage editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
         [self.delegate dismissViewControllerAnimated:YES completion:^{
-            [self.delegate updateTasks];
+
         }];
     }
 }
@@ -137,13 +137,13 @@ static CGFloat const kHeightRatio = 0.8;
 
     UIAlertAction* deleteAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
         [self dismissViewControllerAnimated:YES completion:^{
-            [self.delegate deleteTask:self.taskModel];
+            [MirrorStorage deleteTask:self.taskModel.taskName];
         }];
     }];
     
     UIAlertAction* archiveAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"archive"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
         [self dismissViewControllerAnimated:YES completion:^{
-            [self.delegate archiveTask:self.taskModel];
+            [MirrorStorage archiveTask:self.taskModel.taskName];
         }];
     }];
     
