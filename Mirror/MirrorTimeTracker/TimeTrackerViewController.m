@@ -16,6 +16,7 @@
 #import "EditTaskViewController.h"
 #import "AddTaskViewController.h"
 #import "TimeTrackingView.h"
+#import "TimeTrackingLabel.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
 #import "MUXToast.h"
@@ -42,11 +43,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchImmersiveModeNotification object:nil]; // 比其他vc多监听一个通知
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopNotification:) name:MirrorTaskStopNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startNotification:) name:MirrorTaskStartNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(editNotification:) name:MirrorTaskEditNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteNotification:) name:MirrorTaskDeleteNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(archiveNotification:) name:MirrorTaskArchiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createNotification:) name:MirrorTaskCreateNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskEditNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskDeleteNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskArchiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskCreateNotification object:nil];
     }
     return self;
 }
@@ -192,28 +193,25 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 #pragma mark - Notifications (都需要reload data)
 
-- (void)createNotification:(NSNotification *)noti
+- (void)reloadData
 {
-    [self.collectionView reloadData];
-}
-
-- (void)archiveNotification:(NSNotification *)noti
-{
-    [self.collectionView reloadData];
-}
-
-- (void)deleteNotification:(NSNotification *)noti
-{
-    [self.collectionView reloadData];
-}
-
-- (void)editNotification:(NSNotification *)noti
-{
-    [self.collectionView reloadData];
-}
-
-- (void)startNotification:(NSNotification *)noti
-{
+    // 如果有闪烁计时，销毁！
+    for (UIView *viewi in self.collectionView.subviews) {
+        if ([viewi isKindOfClass:TimeTrackerTaskCollectionViewCell.class]) {
+            TimeTrackerTaskCollectionViewCell *cell =  (TimeTrackerTaskCollectionViewCell *)viewi;
+            for (UIView *viewj in cell.contentView.subviews) {
+                if ([viewj isKindOfClass:TimeTrackingLabel.class]) {
+                    [viewj removeFromSuperview];
+                }
+            }
+        }
+    }
+    // 如果有全屏计时，销毁！
+    for (UIView *view in self.view.subviews) {
+        if ([view isKindOfClass:TimeTrackingView.class]) {
+            [view removeFromSuperview];
+        }
+    }
     [self.collectionView reloadData];
 }
 
@@ -222,7 +220,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     NSString *taskName = noti.userInfo[@"taskName"];
     TaskSavedType savedType = [noti.userInfo[@"TaskSavedType"] integerValue];
     [MUXToast taskSaved:taskName onVC:self type:savedType];
-    [self.collectionView reloadData];
+    [self reloadData];
 }
 
 #pragma mark - Getters

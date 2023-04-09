@@ -50,6 +50,7 @@ static CGFloat const kShadowWidth = 5;
 
 - (void)willMoveToSuperview:(UIView *)newSuperview // cell被游离，销毁timer
 {
+    [super willMoveToSuperview:newSuperview];
     if (!newSuperview) {
         for (UIView *view in self.contentView.subviews) {
             if ([view isKindOfClass:TimeTrackingLabel.class]) {
