@@ -33,7 +33,6 @@
     self = [super init];
     if (self) {
         self.taskModel = [MirrorStorage getTaskFromDB:taskName];
-        self.identifier = taskName;
         self.text = [MirrorLanguage mirror_stringWithKey:@"counting"];
         self.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         self.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];

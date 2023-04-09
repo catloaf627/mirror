@@ -17,11 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSMutableArray<MirrorDataModel *> *)activatedTasks; // 所有没被archived的tasks
 + (NSMutableArray<MirrorDataModel *> *)archivedTasks; // 所有被archived了的tasks
 
-+ (NSMutableArray<MirrorDataModel *> *)todayTasks;
-+ (NSMutableArray<MirrorDataModel *> *)weekTasks;
-+ (NSMutableArray<MirrorDataModel *> *)monthTasks;
-+ (NSMutableArray<MirrorDataModel *> *)yearTasks;
-
 + (NSMutableArray<MirrorDataModel *> *)allTasks;
 
 @end

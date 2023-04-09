@@ -17,7 +17,6 @@
 @interface DataEntranceCollectionViewCell ()
 
 @property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *tasks;
 @property (nonatomic, assign) DataEntranceType type;
 @property (nonatomic, strong) MirrorPiechart *pieChart;
 
@@ -36,19 +35,15 @@
     switch (type) {
         case DataEntranceTypeToday:
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"today"];
-            self.tasks = [MirrorDataManager todayTasks];
             break;
         case DataEntranceTypeThisWeek:
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_week"];
-            self.tasks = [MirrorDataManager weekTasks];
             break;
         case DataEntranceTypeThisMonth:
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_month"];
-            self.tasks = [MirrorDataManager monthTasks];
             break;
         case DataEntranceTypeThisYear:
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_year"];
-            self.tasks = [MirrorDataManager yearTasks];
             break;
         default:
             break;
