@@ -112,7 +112,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         long end = [[NSDate now] timeIntervalSince1970];
         long length = end - start;
         NSLog(@"start %ld, end %ld, length %ld", start, end, length);
-        if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
+        if (lastPeriod.count == 1 &&  length >= 10) { // 长度为10秒以上开始记录
             [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
             savedType = length >= 86400 ? TaskSavedTypeSaved24H : TaskSavedTypeSaved;
