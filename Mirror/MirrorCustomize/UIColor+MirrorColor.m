@@ -9,6 +9,38 @@
 
 @implementation UIColor (MirrorColor)
 
++ (NSString *)getEmoji:(MirrorColorType)color
+{
+    NSString *tag = @"";
+    if (color == MirrorColorTypeCellPink) {
+        tag = [tag stringByAppendingString:@"🌸"];
+    } else if (color == MirrorColorTypeCellOrange) {
+        tag = [tag stringByAppendingString:@"🍊"];
+    } else if (color == MirrorColorTypeCellYellow) {
+        tag = [tag stringByAppendingString:@"🍋"];
+    } else if (color == MirrorColorTypeCellGreen) {
+        tag = [tag stringByAppendingString:@"🪀"];
+    } else if (color == MirrorColorTypeCellTeal) {
+        tag = [tag stringByAppendingString:@"🧼"];
+    } else if (color == MirrorColorTypeCellBlue) {
+        tag = [tag stringByAppendingString:@"🐟"];
+    } else if (color == MirrorColorTypeCellPurple) {
+        tag = [tag stringByAppendingString:@"👾"];
+    } else if (color == MirrorColorTypeCellGray) {
+        tag = [tag stringByAppendingString:@"🦈"];
+    }
+    return tag;
+}
+
++ (NSString *)getLongEmoji:(MirrorColorType)color
+{
+    NSString *tag = @"";
+    for (int i=0; i<10; i++) {
+        tag = [tag stringByAppendingString:[UIColor getEmoji:color]];
+    }
+    return tag;
+}
+
 + (UIColor *)mirrorColorNamed:(MirrorColorType)colorType
 {
     BOOL isLight = ![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredDarkMode"];

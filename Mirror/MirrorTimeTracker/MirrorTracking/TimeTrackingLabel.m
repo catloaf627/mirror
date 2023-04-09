@@ -66,7 +66,7 @@
 - (void)updateText
 {
     BOOL printTimeStamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
-    NSLog(@"闪烁计时中: %@(now) - %@(start) = %f",[MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
+    NSLog(@"%@闪烁计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:self.taskModel.color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     self.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:self.timeInterval];
     
     if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时

@@ -26,7 +26,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:task.taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:task.taskName info:@"---------task created--------"];
+    [MirrorStorage printTaskByName:task.taskName info:@"Create"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskCreateNotification object:nil userInfo:nil];
 }
 
@@ -37,7 +37,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 通过taskname删除task
     [mirrorDict removeObjectForKey:taskName];
     // 将mirror dict存回本地
-    [MirrorStorage printTaskByName:taskName info:@"---------task deleted--------"];
+    [MirrorStorage printTaskByName:taskName info:@"Delete"];
     [MirrorStorage saveMirrorData:mirrorDict];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskDeleteNotification object:nil userInfo:nil];
 }
@@ -56,7 +56,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:taskName info:@"---------task archived--------"];
+    [MirrorStorage printTaskByName:taskName info:@"Archive"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
 }
 
@@ -74,7 +74,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:newName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:newName info:@"---------task updated--------"];
+    [MirrorStorage printTaskByName:newName info:@"Edit"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
 }
 
@@ -93,7 +93,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:taskName info:@"---------task started--------"];
+    [MirrorStorage printTaskByName:taskName info:@"Start"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStartNotification object:nil userInfo:nil];
 }
 
@@ -111,7 +111,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         long start = [lastPeriod[0] longValue];
         long end = [[NSDate now] timeIntervalSince1970];
         long length = end - start;
-        NSLog(@"start %ld, end %ld, length %ld", start, end, length);
+        NSLog(@"%@计时结束 %ld",[UIColor getEmoji:task.color], length);
         if (lastPeriod.count == 1 &&  length >= 10) { // 长度为10秒以上开始记录
             [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
@@ -126,7 +126,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:taskName info:@"---------task stopped--------"];
+    [MirrorStorage printTaskByName:taskName info:@"Stop"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:@{@"taskName":taskName, @"TaskSavedType" : @(savedType)}];
 }
 
@@ -204,30 +204,14 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)printTaskByName:(NSString *)taskName info:(NSString *)info
 {
-    if (info) NSLog(@"%@", info);
     MirrorDataModel *task = [MirrorStorage retriveMirrorData][taskName];
     if (!task) NSLog(@"❗️❗️❗️❗️❗️❗️❗️❗️ACTION FAILED❗️❗️❗️❗️❗️❗️❗️❗️");
-
+    if (info) NSLog(@"%@%@", info, [UIColor getLongEmoji:task.color]);
+    
     BOOL printTimestamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
     NSString *tag = @"";
     tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
-    if (task.color == MirrorColorTypeCellPink) {
-        tag = [tag stringByAppendingString:@"🌸"];
-    } else if (task.color == MirrorColorTypeCellOrange) {
-        tag = [tag stringByAppendingString:@"🍊"];
-    } else if (task.color == MirrorColorTypeCellYellow) {
-        tag = [tag stringByAppendingString:@"🍋"];
-    } else if (task.color == MirrorColorTypeCellGreen) {
-        tag = [tag stringByAppendingString:@"🪀"];
-    } else if (task.color == MirrorColorTypeCellTeal) {
-        tag = [tag stringByAppendingString:@"🧼"];
-    } else if (task.color == MirrorColorTypeCellBlue) {
-        tag = [tag stringByAppendingString:@"🐟"];
-    } else if (task.color == MirrorColorTypeCellPurple) {
-        tag = [tag stringByAppendingString:@"👾"];
-    } else if (task.color == MirrorColorTypeCellGray) {
-        tag = [tag stringByAppendingString:@"🦈"];
-    }
+    tag = [tag stringByAppendingString:[UIColor getEmoji:task.color]];
     tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
     NSLog(@"%@%@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
     for (int i=0; i<task.periods.count; i++) {
