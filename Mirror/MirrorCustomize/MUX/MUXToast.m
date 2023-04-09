@@ -8,20 +8,28 @@
 #import "MUXToast.h"
 #import "MirrorLanguage.h"
 #import "MirrorDataModel.h"
-#import "MirrorStorage.h"
 
 @implementation MUXToast
 
 #pragma mark - Public
 
-+ (void)taskSaved:(NSString *)taskName onVC:(UIViewController *)vc
++ (void)taskSaved:(NSString *)taskName onVC:(UIViewController *)vc type:(TaskSavedType)savedType
 {
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:taskName];
-    if (task.periods.count <= 0 || task.periods[task.periods.count -1].count != 2) return;
-    double latestPeriodInterval = [task.periods[task.periods.count -1][1] doubleValue] - [task.periods[task.periods.count -1][0] doubleValue];
-    NSString *hintInfo = [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:latestPeriodInterval]];
-    if (round(latestPeriodInterval) >= 86400) { // 超过24小时立即停止计时
+    NSString *hintInfo = @"";
+    if (savedType == TaskSavedTypeSaved) {
+        if (task.periods.count <= 0 || task.periods[task.periods.count -1].count != 2) return;
+        double latestPeriodInterval = [task.periods[task.periods.count -1][1] doubleValue] - [task.periods[task.periods.count -1][0] doubleValue];
+        hintInfo = [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:latestPeriodInterval]];
+    }
+    if (savedType == TaskSavedTypeSaved24H) {
         hintInfo = [MirrorLanguage mirror_stringWithKey:@"reached_limited_time" with1Placeholder:taskName];
+    }
+    if (savedType == TaskSavedTypeTooShort) {
+        hintInfo = [MirrorLanguage mirror_stringWithKey:@"too_short_to_save" with1Placeholder:taskName];
+    }
+    if (savedType == TaskSavedTypeError) {
+        hintInfo = [MirrorLanguage mirror_stringWithKey:@"something_went_wrong"];
     }
     [MUXToast show:hintInfo onVC:vc color:task.color];
 }

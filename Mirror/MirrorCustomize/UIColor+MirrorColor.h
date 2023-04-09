@@ -45,8 +45,6 @@ typedef NS_ENUM(NSInteger, MirrorColorType) {
 
 + (UIColor *)mirrorColorNamed:(MirrorColorType)colorType;
 + (MirrorColorType)mirror_getPulseColorType:(MirrorColorType)color;
-+ (NSString *)stringFromColor:(MirrorColorType)color;
-+ (MirrorColorType)colorFromString:(NSString *)string;
 
 @end
 

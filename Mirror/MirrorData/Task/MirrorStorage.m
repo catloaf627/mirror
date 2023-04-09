@@ -93,6 +93,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)stopTask:(NSString *)taskName
 {
+    TaskSavedType savedType = TaskSavedTypeNone;
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
@@ -108,8 +109,10 @@ static NSString *const kMirrorDict = @"mirror_dict";
         if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
             [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
+            savedType = length >= 86400 ? TaskSavedTypeSaved24H : TaskSavedTypeSaved;
         } else { // 错误格式或者10秒以下，丢弃这个task
             [allPeriods removeLastObject];
+            savedType = (length < 10 && length >= 0) ? TaskSavedTypeTooShort : TaskSavedTypeError;
         }
         task.periods = allPeriods;
     }
@@ -118,7 +121,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTaskByName:taskName info:@"---------task stopped--------"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:@{@"taskName":taskName}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:@{@"taskName":taskName, @"TaskSavedType" : @(savedType)}];
 }
 
 + (void)stopAllTasksExcept:(NSString *)exceptTaskName

@@ -220,7 +220,8 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (void)showSavedToast:(NSNotification *)noti
 {
     NSString *taskName = noti.userInfo[@"taskName"];
-    [MUXToast taskSaved:taskName onVC:self];
+    TaskSavedType savedType = [noti.userInfo[@"TaskSavedType"] integerValue];
+    [MUXToast taskSaved:taskName onVC:self type:savedType];
 }
 
 #pragma mark - Getters

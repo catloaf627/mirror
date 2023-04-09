@@ -170,31 +170,4 @@
     return [UIColor colorWithRed:147/255.0 green:147/255.0 blue:145/255.0 alpha:1]; // 莫兰迪深灰
 }
 
-+ (NSString *)stringFromColor:(MirrorColorType)color
-{
-    NSDictionary *dict = @{ @(MirrorColorTypeCellPink) : @"pink",
-                            @(MirrorColorTypeCellOrange): @"orange",
-                            @(MirrorColorTypeCellYellow): @"yellow",
-                            @(MirrorColorTypeCellGreen): @"green",
-                            @(MirrorColorTypeCellTeal): @"teal",
-                            @(MirrorColorTypeCellBlue): @"blue",
-                            @(MirrorColorTypeCellPurple): @"purple",
-                            @(MirrorColorTypeCellGray): @"gray"};
-    return dict[@(color)];
-}
-
-+ (MirrorColorType)colorFromString:(NSString *)string
-{
-    NSDictionary *dict = @{ @"pink" : @(MirrorColorTypeCellPink),
-                            @"orange": @(MirrorColorTypeCellOrange),
-                            @"yellow": @(MirrorColorTypeCellYellow),
-                            @"green": @(MirrorColorTypeCellGreen),
-                            @"teal": @(MirrorColorTypeCellTeal),
-                            @"blue": @(MirrorColorTypeCellBlue),
-                            @"purple": @(MirrorColorTypeCellPurple),
-                            @"gray": @(MirrorColorTypeCellGray)};
-    return [[dict valueForKey:string] integerValue];
-}
-
-
 @end

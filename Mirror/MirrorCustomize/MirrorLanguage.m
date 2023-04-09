@@ -70,7 +70,8 @@
                   with1Placeholder:(NSString *)placeholder
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
-    [mirrorDict setValue:@[@"[%@] has been lasted more than 24 hours. It was stopped and saved automatically.", @"[%@]时长超过24小时，已自动停止并保存"] forKey:@"reached_limited_time"];
+    [mirrorDict setValue:@[@"[%@] has been lasted more than 24 hours. It was stopped and saved automatically.", @"【%@】时长超过24小时，已自动停止并保存"] forKey:@"reached_limited_time"];
+    [mirrorDict setValue:@[@"[%@] not saved", @"【%@】未保存"] forKey:@"too_short_to_save"];
     
     
     NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
@@ -82,7 +83,7 @@
                   with2Placeholder:(NSString *)placeholder2
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
-    [mirrorDict setValue:@[@"[%@] has been done!\nlasted: %@", @"[%@]已完成！\n持续时间：%@"] forKey:@"task_has_been_done"];
+    [mirrorDict setValue:@[@"[%@] has been done!\nlasted: %@", @"【%@】已完成！\n持续时间：%@"] forKey:@"task_has_been_done"];
     
     
     NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
