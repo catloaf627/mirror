@@ -144,7 +144,7 @@
 
 + (UIColor *)mirror_lightYellow
 {
-    return [UIColor colorWithRed:253/255.0 green:249/255.0 blue:238/255.0 alpha:1]; // 莫兰迪黄
+    return [UIColor colorWithRed:243/255.0 green:239/255.0 blue:228/255.0 alpha:1]; // 莫兰迪黄
 }
 
 + (UIColor *)mirror_darkYellow

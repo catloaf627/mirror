@@ -9,12 +9,13 @@
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
-#import "PNChart.h"
-
+#import "MirrorDataManager.h"
+#import "MirrorTool.h"
 @interface DataEntranceCollectionViewCell ()
 
 @property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) PNPieChart *pieChart;
+@property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *tasks;
+@property (nonatomic, assign) DataEntranceType type;
 
 @end
 
@@ -25,20 +26,25 @@
     return NSStringFromClass(self.class);
 }
 
-- (void)configCellWithIndex:(NSInteger)index
+- (void)configCellWithType:(DataEntranceType)type
 {
-    switch (index) {
-        case 0:
+    _type = type;
+    switch (type) {
+        case DataEntranceTypeToday:
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"today"];
+            self.tasks = [MirrorDataManager todayTasks];
             break;
-        case 1:
+        case DataEntranceTypeThisWeek:
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_week"];
+            self.tasks = [MirrorDataManager weekTasks];
             break;
-        case 2:
+        case DataEntranceTypeThisMonth:
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_month"];
+            self.tasks = [MirrorDataManager monthTasks];
             break;
-        case 3:
+        case DataEntranceTypeThisYear:
             self.titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"this_year"];
+            self.tasks = [MirrorDataManager yearTasks];
             break;
         default:
             break;
@@ -61,12 +67,6 @@
         make.centerY.offset(0);
         make.left.offset(0);
     }];
-    [self.contentView addSubview:self.pieChart];
-    [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.offset(0);
-        make.right.offset(0);
-        make.width.height.mas_equalTo(self.frame.size.height - 28);
-    }];
 }
 
 #pragma mark - Getters
@@ -79,25 +79,6 @@
         _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
     }
     return _titleLabel;
-}
-
-- (PNPieChart *)pieChart
-{
-    if (!_pieChart) {
-        NSArray *items = @[[PNPieChartDataItem dataItemWithValue:10 color:[UIColor mirrorColorNamed:MirrorColorTypeCellOrange] description:@"english"],
-                            [PNPieChartDataItem dataItemWithValue:20 color:[UIColor mirrorColorNamed:MirrorColorTypeCellPink] description:@"coding"],
-                            [PNPieChartDataItem dataItemWithValue:40 color:[UIColor mirrorColorNamed:MirrorColorTypeCellBlue] description:@"reading"],];
-
-
-
-        _pieChart = [[PNPieChart alloc] initWithFrame:CGRectMake(40.0, 155.0, 240.0, 240.0) items:items];
-        _pieChart.descriptionTextColor = [UIColor clearColor]; // 小图不显示文案
-//        _pieChart.descriptionTextFont  = [UIFont fontWithName:@"Avenir-Medium" size:14.0];
-        [_pieChart strokeChart];
-        _pieChart.userInteractionEnabled = NO; // 小图禁止点击
-        
-    }
-    return _pieChart;
 }
 
 @end

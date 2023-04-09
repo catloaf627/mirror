@@ -96,4 +96,16 @@
     }
 }
 
++ (long)getTotalTimeOfPeriods:(NSMutableArray<NSMutableArray *> *)periods
+{
+    long seconds = 0;
+    for (int i=0; i<periods.count; i++) {
+        NSMutableArray *period = periods[i];
+        if (period.count == 2) {
+            seconds = seconds + ([period[1] longValue] - [period[1] longValue]);
+        }
+    }
+    return seconds;
+}
+
 @end

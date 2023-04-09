@@ -211,6 +211,8 @@ static NSString *const kMirrorDict = @"mirror_dict";
     long year = [MirrorStorage startedTimeThisYear];
     MirrorDataModel *englishData = [[MirrorDataModel alloc] initWithTitle:@"English" createdTime:0 colorType:MirrorColorTypeCellPink isArchived:NO periods:[@[@[@(year+10), @(year+20)], @[@(month+10), @(month+20)], @[@(week+10), @(week+20)], @[@(today+10), @(today+20)]] mutableCopy] isAddTask:NO];
     [fakeData setValue:englishData forKey:@"English"];
+    MirrorDataModel *readingData = [[MirrorDataModel alloc] initWithTitle:@"Reading" createdTime:0 colorType:MirrorColorTypeCellYellow isArchived:NO periods:[@[ @[@(today+10), @(today+20)]] mutableCopy] isAddTask:NO];
+    [fakeData setValue:readingData forKey:@"Reading"];
     return fakeData;
 }
 

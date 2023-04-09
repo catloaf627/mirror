@@ -60,11 +60,6 @@ static CGFloat const kCellSpacing = 20;
     [self p_setupUI];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [self.collectionView reloadData];
-}
-
 - (void)p_setupUI
 {
     /*
@@ -103,7 +98,12 @@ static CGFloat const kCellSpacing = 20;
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     DataEntranceCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[DataEntranceCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configCellWithIndex:indexPath.item];
+    DataEntranceType type = DataEntranceTypeToday;
+    if (indexPath.item == 0) type = DataEntranceTypeToday;
+    if (indexPath.item == 1) type = DataEntranceTypeThisWeek;
+    if (indexPath.item == 2) type = DataEntranceTypeThisMonth;
+    if (indexPath.item == 3) type = DataEntranceTypeThisYear;
+    [cell configCellWithType:type];
     return cell;
 }
 

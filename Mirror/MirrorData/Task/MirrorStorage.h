@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
     TaskNameExistsTypeExistsInArchivedTasks,
 };
 typedef NS_ENUM(NSInteger, TaskSavedType) {
-    TaskSavedTypeNone, // 库里没有这个taskname，taskname合格
+    TaskSavedTypeNone,
     TaskSavedTypeSaved,
     TaskSavedTypeSaved24H,
     TaskSavedTypeTooShort,
