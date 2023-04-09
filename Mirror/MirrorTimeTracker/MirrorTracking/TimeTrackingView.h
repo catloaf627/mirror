@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TimeTrackingViewProtocol <NSObject>
 
-- (void)closeTimeTrackingViewWithTask:(MirrorDataModel *)task;
+- (void)destroyTimeTrackingView;
 
 @end
 
@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIViewController<TimeTrackingViewProtocol> *delegate;
 
+- (void)timeTrackingViewWillDisappear;
 - (instancetype)initWithTaskName:(NSString *)taskName;
 - (void)updateLabels;
 

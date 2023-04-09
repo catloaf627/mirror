@@ -40,7 +40,7 @@ static CGFloat const kShadowWidth = 5;
     [self p_setupUI];
     if (!taskModel.isOngoing) { // stop animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color]; // 瞬间变回原色
-        [self destroyTimeTrackingLabelWithTask:taskModel];
+        [self destroyTimeTrackingLabel];
     } else { // start animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:self.taskModel.color]]; // 瞬间变成pulse色
         [self p_convertToColor:self.taskModel.color]; // 开始闪烁
@@ -48,9 +48,9 @@ static CGFloat const kShadowWidth = 5;
     }
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview
+- (void)willMoveToSuperview:(UIView *)newSuperview // cell被游离，销毁timer
 {
-    if (!newSuperview) { // cell被销毁
+    if (!newSuperview) {
         for (UIView *view in self.contentView.subviews) {
             if ([view isKindOfClass:TimeTrackingLabel.class]) {
                 [view removeFromSuperview];
@@ -107,7 +107,7 @@ static CGFloat const kShadowWidth = 5;
 
 #pragma mark - TimeTrackingLabelProtocol
 
-- (void)destroyTimeTrackingLabelWithTask:(MirrorDataModel *)task
+- (void)destroyTimeTrackingLabel
 {
     for (UIView *view in self.contentView.subviews) {
         if ([view isKindOfClass:TimeTrackingLabel.class]) {

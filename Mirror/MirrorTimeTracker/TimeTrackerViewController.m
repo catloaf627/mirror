@@ -114,7 +114,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 #pragma mark - TimeTrackingViewProtocol
 
-- (void)closeTimeTrackingViewWithTask:(MirrorDataModel *)task
+- (void)destroyTimeTrackingView
 {
     for (UIView *view in self.view.subviews) {
         if ([view isKindOfClass:TimeTrackingView.class]) {

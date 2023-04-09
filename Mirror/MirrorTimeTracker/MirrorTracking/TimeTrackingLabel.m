@@ -48,10 +48,19 @@
     return self;
 }
 
-- (void)dealloc
+- (void)dealloc // 页面被销毁，销毁timer
 {
     [self.timer invalidate];
     self.timer = nil;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview // 页面被游离，销毁timer
+{
+    [super willMoveToSuperview:newSuperview];
+    if (!newSuperview && self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 
 - (void)updateText
@@ -61,11 +70,11 @@
     self.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:self.timeInterval];
     
     if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时
-        [self.delegate destroyTimeTrackingLabelWithTask:self.taskModel];
+        [self.delegate destroyTimeTrackingLabel];
         [MirrorStorage stopTask:self.taskModel.taskName];
     }
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
-        [self.delegate destroyTimeTrackingLabelWithTask:self.taskModel];
+        [self.delegate destroyTimeTrackingLabel];
         [MirrorStorage stopTask:self.taskModel.taskName];
     }
 }

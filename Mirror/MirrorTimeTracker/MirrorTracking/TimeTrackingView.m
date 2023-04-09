@@ -75,10 +75,19 @@ static CGFloat const kDashSpacing = 10;
     return self;
 }
 
-- (void)dealloc
+- (void)dealloc // 页面被销毁，销毁timer
 {
     [self.timer invalidate];
     self.timer = nil;
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview // 页面被游离，销毁timer
+{
+    [super willMoveToSuperview:newSuperview];
+    if (!newSuperview && self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 
 - (void)p_setupUI
@@ -208,11 +217,11 @@ static CGFloat const kDashSpacing = 10;
     NSLog(@"全屏计时中: %@(now) - %@(start) = %f",[MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
     if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时
-        [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+        [self.delegate destroyTimeTrackingView];
         [MirrorStorage stopTask:self.taskModel.taskName];
     }
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
-        [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+        [self.delegate destroyTimeTrackingView];
         [MirrorStorage stopTask:self.taskModel.taskName];
         
     }
@@ -223,7 +232,7 @@ static CGFloat const kDashSpacing = 10;
 
 - (void)stopButtonClicked
 {
-    [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
+    [self.delegate destroyTimeTrackingView];
     [MirrorStorage stopTask:self.taskModel.taskName];
 }
 

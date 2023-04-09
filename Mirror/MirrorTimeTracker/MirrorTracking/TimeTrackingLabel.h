@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol TimeTrackingLabelProtocol <NSObject>
 
-- (void)destroyTimeTrackingLabelWithTask:(MirrorDataModel *)task;
+- (void)destroyTimeTrackingLabel;
 
 @end
 
