@@ -71,6 +71,10 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [super viewDidLoad];
     self.applyImmersiveMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredImmersiveMode"];
     [self  p_setupUI];
+    [MirrorDataManager todayTasks];
+    [MirrorDataManager weekTasks];
+    [MirrorDataManager monthTasks];
+    [MirrorDataManager yearTasks];
 }
 
 - (void)p_setupUI

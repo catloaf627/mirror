@@ -16,7 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSMutableArray<MirrorDataModel *> *)activatedTasksWithAddTask; // 所有没被archived的tasks，如果数量不足要加一个add task假model（TimeTrackerViewController专用）
 + (NSMutableArray<MirrorDataModel *> *)activatedTasks; // 所有没被archived的tasks
 + (NSMutableArray<MirrorDataModel *> *)archivedTasks; // 所有被archived了的tasks
-+ (void)test;
+
++ (NSMutableArray<MirrorDataModel *> *)todayTasks;
++ (NSMutableArray<MirrorDataModel *> *)weekTasks;
++ (NSMutableArray<MirrorDataModel *> *)monthTasks;
++ (NSMutableArray<MirrorDataModel *> *)yearTasks;
+
 @end
 
 NS_ASSUME_NONNULL_END

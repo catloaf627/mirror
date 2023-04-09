@@ -26,7 +26,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:task.taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:task.taskName info:@"Create"];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"Create"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskCreateNotification object:nil userInfo:nil];
 }
 
@@ -37,7 +37,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 通过taskname删除task
     [mirrorDict removeObjectForKey:taskName];
     // 将mirror dict存回本地
-    [MirrorStorage printTaskByName:taskName info:@"Delete"];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Delete"];
     [MirrorStorage saveMirrorData:mirrorDict];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskDeleteNotification object:nil userInfo:nil];
 }
@@ -56,7 +56,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:taskName info:@"Archive"];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
 }
 
@@ -74,7 +74,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:newName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:newName info:@"Edit"];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][newName] info:@"Edit"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
 }
 
@@ -93,7 +93,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:taskName info:@"Start"];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Start"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStartNotification object:nil userInfo:nil];
 }
 
@@ -126,7 +126,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTaskByName:taskName info:@"Stop"];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Stop"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:@{@"taskName":taskName, @"TaskSavedType" : @(savedType)}];
 }
 
@@ -168,7 +168,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
     MirrorDataModel *task = tasks[taskName];
-//    [MirrorStorage printTaskByName:task.taskName info:@"-------Getting one task-------"];
+//    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"-------Getting one task-------"];
     return task;
 }
 
@@ -178,7 +178,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     for (id taskName in tasks.allKeys) {
         MirrorDataModel *task = tasks[taskName];
         if (task.isOngoing) {
-//            [MirrorStorage printTaskByName:task.taskName info:@"-------Getting ongoing task-------"];
+//            [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"-------Getting ongoing task-------"];
             return task;
         }
     }
@@ -197,14 +197,125 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
     NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
-    return mirrorDict ?: [NSMutableDictionary new];
+//    return mirrorDict ?: [NSMutableDictionary new];
+    return [MirrorStorage fakeData];
 }
 
-#pragma mark - Log & Mocked data
-
-+ (void)printTaskByName:(NSString *)taskName info:(NSString *)info
++ (NSMutableDictionary *)fakeData
 {
-    MirrorDataModel *task = [MirrorStorage retriveMirrorData][taskName];
+    NSMutableDictionary *fakeData = [NSMutableDictionary new];
+    // Created time仅用于排序，随便写
+    long today = [MirrorStorage startedTimeToday];
+    long week = [MirrorStorage startedTimeThisWeek];
+    long month = [MirrorStorage startedTimeThisMonth];
+    long year = [MirrorStorage startedTimeThisYear];
+    MirrorDataModel *englishData = [[MirrorDataModel alloc] initWithTitle:@"English" createdTime:0 colorType:MirrorColorTypeCellPink isArchived:NO periods:[@[@[@(year+10), @(year+20)], @[@(month+10), @(month+20)], @[@(week+10), @(week+20)], @[@(today+10), @(today+20)]] mutableCopy] isAddTask:NO];
+    [fakeData setValue:englishData forKey:@"English"];
+    return fakeData;
+}
+
+#pragma mark - Get certain timestamp
+
++ (long)startedTimeToday // 今天起始点的时间戳
+{
+    // setup
+    NSDate *today = [NSDate now];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    // get date
+    NSDate *combinedDate = [gregorian dateFromComponents:components];
+    long timeStamp = [combinedDate timeIntervalSince1970];
+//    [MirrorStorage _printTime:timeStamp info:@"今天起始点的时间戳"];
+    return timeStamp;
+}
+
++ (long)startedTimeThisWeek // 本周起始点的时间戳
+{
+    // setup
+    NSDate *today = [NSDate now];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+// ❗️错误操作：weekday比较特殊，把weekday设置为1是不能直接跳到本周的第一天的，因为真实的本周第一天的year、month都有可能发生变化。这里使用往前减数的方法手动计算本周起始点的时间戳
+// ❗️正确操作：先拿到今天0点的时间，然后看今天比周日(一周的第一天)多了几天，再计算这周的起始时间
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+    long thisWeekZero = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;
+    // get date
+//    [MirrorStorage _printTime:thisWeekZero info:@"这周起始点的时间戳"];
+    return thisWeekZero;
+}
+
++ (long)startedTimeThisMonth // 本月起始点的时间戳
+{
+    // setup
+    NSDate *today = [NSDate now];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    components.day = 1;
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    // get date
+    NSDate *combinedDate = [gregorian dateFromComponents:components];
+    long timeStamp = [combinedDate timeIntervalSince1970];
+//    [MirrorStorage _printTime:timeStamp info:@"本月起始点的时间戳"];
+    return timeStamp;
+}
+
++ (long)startedTimeThisYear // 今年起始点的时间戳
+{
+    // setup
+    NSDate *today = [NSDate now];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    components.month = 1;
+    components.day = 1;
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    // get date
+    NSDate *combinedDate = [gregorian dateFromComponents:components];
+    long timeStamp = [combinedDate timeIntervalSince1970];
+//    [MirrorStorage _printTime:timeStamp info:@"今年起始点的时间戳"];
+    return timeStamp;
+}
+
++ (void)_printTime:(long)timeStamp info:(NSString *)info
+{
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeStamp];
+    // setup
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    long year = (long)components.year;
+    long month = (long)components.month;
+    long week = (long)components.weekday;
+    long day = (long)components.day;
+    long hour = (long)components.hour;
+    long minute = (long)components.minute;
+    long second = (long)components.second;
+    // print
+    NSLog(@"gizmo %@: %ld年%ld月%ld日，一周的第%ld天，%ld:%ld:%ld，时间戳为%ld，与此时此刻的时间差为%ld",info, year, month, day, week, hour, minute, second, (long)[date timeIntervalSince1970], (long)[[NSDate now] timeIntervalSince1970] - (long)[date timeIntervalSince1970]);
+}
+
+#pragma mark - Log
+
++ (void)printTask:(MirrorDataModel *)task info:(NSString *)info
+{
     if (!task) NSLog(@"❗️❗️❗️❗️❗️❗️❗️❗️ACTION FAILED❗️❗️❗️❗️❗️❗️❗️❗️");
     if (info) NSLog(@"%@%@", info, [UIColor getLongEmoji:task.color]);
     

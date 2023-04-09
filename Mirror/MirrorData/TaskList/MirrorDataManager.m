@@ -53,14 +53,134 @@
 #pragma mark - Get tasks within a day/month/year
 // ❗️从缓存中拿出来的long必须用longValue处理一下，不然会出现溢出
 
-//+ (NSMutableArray<MirrorDataModel *> *)todayTasks
-//{
-//    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
-//    for (int i=0; i<allTasks.count; i++) {
-//        MirrorDataModel *task = allTasks[i];
-//
-//    }
-//}
++ (NSMutableArray<MirrorDataModel *> *)todayTasks
+{
+    NSMutableArray<MirrorDataModel *> *todayTasks = [NSMutableArray<MirrorDataModel *> new];
+    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+    long today = [MirrorStorage startedTimeToday];
+    for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
+        MirrorDataModel *task = allTasks[taskIndex];
+        MirrorDataModel *todayTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
+        BOOL todayTaskIsEmpty = YES;
+        for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
+            NSMutableArray *period = task.periods[periodIndex];
+            if (period.count != 2) {
+                // 正在计时中，不管
+            } if ([period[1] longValue] < today) {
+                // 完整地发生在今天之前，不管
+            } else if ([period[0] longValue] < today && [period[1] longValue] > today) {
+                todayTaskIsEmpty = NO;// 跨越了今天0点，取后半段
+                [todayTask.periods addObject:[@[@(today), period[1]] mutableCopy]];
+            } else if ([period[0] longValue] > today) {
+                todayTaskIsEmpty = NO;// 完整地发生在今天
+                [todayTask.periods addObject:[@[period[0], period[1]] mutableCopy]];
+            }
+            // 因为now最多取到当前，所以不存在“发生在明天”的period
+        }
+        if (!todayTaskIsEmpty) {
+            [todayTasks addObject:todayTask];
+            [MirrorStorage printTask:todayTask info:@"today task"];
+        }
+    }
+    return todayTasks;
+}
+
++ (NSMutableArray<MirrorDataModel *> *)weekTasks
+{
+    NSMutableArray<MirrorDataModel *> *weekTasks = [NSMutableArray<MirrorDataModel *> new];
+    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+    long week = [MirrorStorage startedTimeThisWeek];
+    for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
+        MirrorDataModel *task = allTasks[taskIndex];
+        MirrorDataModel *weekTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
+        BOOL weekTaskIsEmpty = YES;
+        for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
+            NSMutableArray *period = task.periods[periodIndex];
+            if (period.count != 2) {
+                // 正在计时中，不管
+            } if ([period[1] longValue] < week) {
+                // 完整地发生在本周之前，不管
+            } else if ([period[0] longValue] < week && [period[1] longValue] > week) {
+                weekTaskIsEmpty = NO;// 跨越了本周0点，取后半段
+                [weekTask.periods addObject:[@[@(week), period[1]] mutableCopy]];
+            } else if ([period[0] longValue] > week) {
+                weekTaskIsEmpty = NO;// 完整地发生在这周
+                [weekTask.periods addObject:[@[period[0], period[1]] mutableCopy]];
+            }
+            // 因为now最多取到当前，所以不存在“发生在下周”的period
+        }
+        if (!weekTaskIsEmpty) {
+            [weekTasks addObject:weekTask];
+            [MirrorStorage printTask:weekTask info:@"week task"];
+        }
+    }
+    return weekTasks;
+}
+
++ (NSMutableArray<MirrorDataModel *> *)monthTasks
+{
+    NSMutableArray<MirrorDataModel *> *monthTasks = [NSMutableArray<MirrorDataModel *> new];
+    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+    long month = [MirrorStorage startedTimeThisMonth];
+    for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
+        MirrorDataModel *task = allTasks[taskIndex];
+        MirrorDataModel *monthTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
+        BOOL monthTaskIsEmpty = YES;
+        for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
+            NSMutableArray *period = task.periods[periodIndex];
+            if (period.count != 2) {
+                // 正在计时中，不管
+            } if ([period[1] longValue] < month) {
+                // 完整地发生在本月之前，不管
+            } else if ([period[0] longValue] < month && [period[1] longValue] > month) {
+                monthTaskIsEmpty = NO;// 跨越了本月0点，取后半段
+                [monthTask.periods addObject:[@[@(month), period[1]] mutableCopy]];
+            } else if ([period[0] longValue] > month) {
+                monthTaskIsEmpty = NO;// 完整地发生在本月
+                [monthTask.periods addObject:[@[period[0], period[1]] mutableCopy]];
+            }
+            // 因为now最多取到当前，所以不存在“发生在下月”的period
+        }
+        if (!monthTaskIsEmpty) {
+            [monthTasks addObject:monthTask];
+            [MirrorStorage printTask:monthTask info:@"month task"];
+        }
+    }
+    return monthTasks;
+}
+
++ (NSMutableArray<MirrorDataModel *> *)yearTasks
+{
+    NSMutableArray<MirrorDataModel *> *yearTasks = [NSMutableArray<MirrorDataModel *> new];
+    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+    long year = [MirrorStorage startedTimeThisYear];
+    for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
+        MirrorDataModel *task = allTasks[taskIndex];
+        MirrorDataModel *yearTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
+        BOOL yearTaskIsEmpty = YES;
+        for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
+            NSMutableArray *period = task.periods[periodIndex];
+            if (period.count != 2) {
+                // 正在计时中，不管
+            } if ([period[1] longValue] < year) {
+                // 完整地发生在今年之前，不管
+            } else if ([period[0] longValue] < year && [period[1] longValue] > year) {
+                yearTaskIsEmpty = NO;// 跨越了今年0点，取后半段
+                [yearTask.periods addObject:[@[@(year), period[1]] mutableCopy]];
+            } else if ([period[0] longValue] > year) {
+                yearTaskIsEmpty = NO;// 完整地发生在今年
+                [yearTask.periods addObject:[@[period[0], period[1]] mutableCopy]];
+            }
+            // 因为now最多取到当前，所以不存在“发生在明年”的period
+        }
+        if (!yearTaskIsEmpty) {
+            [yearTasks addObject:yearTask];
+            [MirrorStorage printTask:yearTask info:@"year task"];
+        }
+    }
+    return yearTasks;
+}
+
 
 #pragma mark - Private methods
 
@@ -77,114 +197,6 @@
     NSSortDescriptor *sdSortDate = [NSSortDescriptor sortDescriptorWithKey:@"createdTime" ascending:YES];
     allTasks = [NSMutableArray arrayWithArray:[allTasks sortedArrayUsingDescriptors:@[sdSortDate]]];
     return allTasks;
-}
-
-+ (void)test
-{
-    [MirrorDataManager startedTimeToday];
-    [MirrorDataManager startedTimeThisWeek];
-    [MirrorDataManager startedTimeThisMonth];
-    [MirrorDataManager startedTimeThisYear];;
-}
-
-+ (long)startedTimeToday // 今天起始点的时间戳
-{
-    // setup
-    NSDate *today = [NSDate now];
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    // get date
-    NSDate *combinedDate = [gregorian dateFromComponents:components];
-    long timeStamp = [combinedDate timeIntervalSince1970];
-    [MirrorDataManager _printTime:timeStamp info:@"今天起始点的时间戳"];
-    return timeStamp;
-}
-
-+ (long)startedTimeThisWeek // 本周起始点的时间戳
-{
-    // setup
-    NSDate *today = [NSDate now];
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-// ❗️错误操作：weekday比较特殊，把weekday设置为1是不能直接跳到本周的第一天的，因为真实的本周第一天的year、month都有可能发生变化。这里使用往前减数的方法手动计算本周起始点的时间戳
-//  components.weekday = 1;
-//  components.hour = 0;
-//  components.minute = 0;
-//  components.second = 0;
-// ❗️正确操作：先拿到今天0点的时间，然后看今天比周日(一周的第一天)多了几天，再计算这周的起始时间
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    long thisWeekZero = todayZero - (components.weekday - 1) * 86400;
-    // get date
-    [MirrorDataManager _printTime:thisWeekZero info:@"今天起始点的时间戳"];
-    return thisWeekZero;
-}
-
-+ (long)startedTimeThisMonth // 本月起始点的时间戳
-{
-    // setup
-    NSDate *today = [NSDate now];
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    components.day = 1;
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    // get date
-    NSDate *combinedDate = [gregorian dateFromComponents:components];
-    long timeStamp = [combinedDate timeIntervalSince1970];
-    [MirrorDataManager _printTime:timeStamp info:@"本月起始点的时间戳"];
-    return timeStamp;
-}
-
-+ (long)startedTimeThisYear // 今年起始点的时间戳
-{
-    // setup
-    NSDate *today = [NSDate now];
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:today];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    components.month = 1;
-    components.day = 1;
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    // get date
-    NSDate *combinedDate = [gregorian dateFromComponents:components];
-    long timeStamp = [combinedDate timeIntervalSince1970];
-    [MirrorDataManager _printTime:timeStamp info:@"今年起始点的时间戳"];
-    return timeStamp;
-}
-
-+ (void)_printTime:(long)timeStamp info:(NSString *)info
-{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeStamp];
-    // setup
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    long year = (long)components.year;
-    long month = (long)components.month;
-    long week = (long)components.weekday;
-    long day = (long)components.day;
-    long hour = (long)components.hour;
-    long minute = (long)components.minute;
-    long second = (long)components.second;
-    // print
-    NSLog(@"gizmo %@: %ld年%ld月%ld日，一周的第%ld天，%ld:%ld:%ld，时间戳为%ld，与此时此刻的时间差为%ld",info, year, month, day, week, hour, minute, second, (long)[date timeIntervalSince1970], (long)[[NSDate now] timeIntervalSince1970] - (long)[date timeIntervalSince1970]);
 }
 
 @end

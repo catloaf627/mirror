@@ -70,4 +70,30 @@
     }
 }
 
++ (long)getDayGapFromTheFirstDayThisWeek
+{
+    BOOL weekStartsOnMonday = YES;
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    switch (components.weekday) {
+        case 1:
+            return weekStartsOnMonday ? 6:0;
+        case 2:
+            return weekStartsOnMonday ? 0:1;
+        case 3:
+            return weekStartsOnMonday ? 1:2;
+        case 4:
+            return weekStartsOnMonday ? 2:3;
+        case 5:
+            return weekStartsOnMonday ? 3:4;
+        case 6:
+            return weekStartsOnMonday ? 4:5;
+        case 7:
+            return weekStartsOnMonday ? 5:6;
+        default:
+            return components.weekday - 1; // 出错
+    }
+}
+
 @end
