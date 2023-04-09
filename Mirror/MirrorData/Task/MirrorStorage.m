@@ -6,7 +6,6 @@
 //
 
 #import "MirrorStorage.h"
-#import "NSMutableDictionary+MirrorDictionary.h"
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "MirrorTool.h"
