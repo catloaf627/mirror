@@ -10,12 +10,16 @@
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 #import "MirrorDataManager.h"
-#import "MirrorTool.h"
+#import "MirrorPiechart.h"
+#import "MirrorStorage.h"
+
+
 @interface DataEntranceCollectionViewCell ()
 
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *tasks;
 @property (nonatomic, assign) DataEntranceType type;
+@property (nonatomic, strong) MirrorPiechart *pieChart;
 
 @end
 
@@ -67,6 +71,12 @@
         make.centerY.offset(0);
         make.left.offset(0);
     }];
+    [self.contentView addSubview:self.pieChart];
+    [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.offset(0);
+        make.right.offset(0);
+        make.width.height.mas_equalTo(self.frame.size.height - 28);
+    }];
 }
 
 #pragma mark - Getters
@@ -79,6 +89,24 @@
         _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
     }
     return _titleLabel;
+}
+
+- (MirrorPiechart *)pieChart{
+    if (!_pieChart) {
+        if (_type == DataEntranceTypeToday) {
+            _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeToday]];
+        }
+        if (_type == DataEntranceTypeThisWeek) {
+            _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeThisWeek]];
+        }
+        if (_type == DataEntranceTypeThisMonth) {
+            _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeThisMonth]];
+        }
+        if (_type == DataEntranceTypeThisYear) {
+            _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeThisYear]];
+        }
+    }
+    return _pieChart;
 }
 
 @end

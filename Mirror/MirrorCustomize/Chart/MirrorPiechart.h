@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MirrorPiechart : UIView
 
+- (instancetype)initWithWidth:(CGFloat)width startedTime:(long)startedTime;
+
 @end
 
 NS_ASSUME_NONNULL_END

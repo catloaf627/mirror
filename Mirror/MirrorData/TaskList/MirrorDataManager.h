@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSMutableArray<MirrorDataModel *> *)monthTasks;
 + (NSMutableArray<MirrorDataModel *> *)yearTasks;
 
++ (NSMutableArray<MirrorDataModel *> *)allTasks;
+
 @end
 
 NS_ASSUME_NONNULL_END

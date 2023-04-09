@@ -1,0 +1,27 @@
+//
+//  SliceLayer.h
+//  Mirror
+//
+//  Created by Yuqing Wang on 2023/4/9.
+//
+
+#import <QuartzCore/QuartzCore.h>
+#import <UIKit/UIKit.h>
+ 
+NS_ASSUME_NONNULL_BEGIN
+
+@interface SliceLayer : CAShapeLayer
+
+@property (nonatomic, assign) CGFloat startAngle;
+@property (nonatomic, assign) CGFloat endAngle;
+@property (nonatomic, assign) CGPoint centerPoint;
+@property (nonatomic, assign) CGFloat radius;
+@property (nonatomic, assign) BOOL selected;
+@property (nonatomic, strong) NSString *text;
+@property (nonatomic, assign) NSInteger tag;
+ 
+- (void)create;
+ 
+@end
+
+NS_ASSUME_NONNULL_END

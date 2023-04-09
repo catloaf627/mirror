@@ -181,9 +181,6 @@
     return yearTasks;
 }
 
-
-#pragma mark - Private methods
-
 + (NSMutableArray<MirrorDataModel *> *)allTasks // Dictionaries by definition are unordered. So I used an array to do the trick
 {
     // 把所有task加到一个array里
