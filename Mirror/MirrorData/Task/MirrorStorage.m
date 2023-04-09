@@ -10,6 +10,7 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "MirrorTool.h"
+#import "MirrorMacro.h"
 
 static NSString *const kMirrorDict = @"mirror_dict";
 
@@ -107,7 +108,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
         if (lastPeriod.count == 1 &&  length > 10) { // 长度为10秒以上开始记录
             [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[allPeriods.count-1] = lastPeriod;
-            [MirrorStorage toastSavedWithTaskName:taskName withTimeInterval:length];
         } else { // 错误格式或者10秒以下，丢弃这个task
             [allPeriods removeLastObject];
         }
@@ -118,6 +118,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTaskByName:taskName info:@"---------task stopped--------"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:@{@"taskName":taskName}];
 }
 
 + (void)stopAllTasksExcept:(NSString *)exceptTaskName
@@ -136,11 +137,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
         }
         [MirrorStorage stopTask:taskName];
     }
-}
-
-+ (void)toastSavedWithTaskName:(NSString *)taskName withTimeInterval:(NSTimeInterval)timeInterval
-{
-    NSString *hintInfo = [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:timeInterval]];
 }
 
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName

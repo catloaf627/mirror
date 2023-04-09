@@ -13,7 +13,6 @@
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
-#import "MirrorMacro.h"
 
 static CGFloat const kPadding = 20;
 
@@ -209,12 +208,10 @@ static CGFloat const kDashSpacing = 10;
     NSLog(@"全屏计时中: %@(now) - %@(start) = %f",[MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
     if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时
-        [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskTimeLimitNotification object:self.taskModel];
         [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
         [MirrorStorage stopTask:self.taskModel.taskName];
     }
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
-        [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskErrorNotification object:self.taskModel];
         [self.delegate closeTimeTrackingViewWithTask:self.taskModel];
         [MirrorStorage stopTask:self.taskModel.taskName];
         

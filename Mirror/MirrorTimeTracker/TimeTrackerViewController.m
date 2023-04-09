@@ -18,6 +18,7 @@
 #import "TimeTrackingView.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
+#import "MUXToast.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -40,7 +41,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchLanguageNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadVC) name:MirrorSwitchImmersiveModeNotification object:nil]; // 比其他vc多监听一个通知
         // 数据通知
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSavedToast:) name:MirrorTaskStopNotification object:nil];
     }
     return self;
 }
@@ -221,6 +222,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return kCellSpacing;
+}
+
+#pragma mark - Toast
+
+- (void)showSavedToast:(NSNotification *)noti
+{
+    NSString *taskName = noti.userInfo[@"taskName"];
+    [MUXToast taskSaved:taskName onVC:self];
 }
 
 #pragma mark - Getters

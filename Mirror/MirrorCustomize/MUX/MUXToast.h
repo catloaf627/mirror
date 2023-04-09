@@ -13,9 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MUXToast : NSObject
 
-+ (void)show:(NSString *)message onVC:(UIViewController *)vc color:(MirrorColorType)color;
-
-
++ (void)taskSaved:(NSString *)taskName onVC:(UIViewController *)vc;
 @end
 
 NS_ASSUME_NONNULL_END
