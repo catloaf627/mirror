@@ -214,20 +214,22 @@ static NSString *const kMirrorDict = @"mirror_dict";
     BOOL printTimestamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
     NSString *tag = @"";
     tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
-    if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellPink]]) {
+    if (task.color == MirrorColorTypeCellPink) {
         tag = [tag stringByAppendingString:@"🌸"];
-    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellOrange]]) {
+    } else if (task.color == MirrorColorTypeCellOrange) {
         tag = [tag stringByAppendingString:@"🍊"];
-    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellYellow]]) {
+    } else if (task.color == MirrorColorTypeCellYellow) {
         tag = [tag stringByAppendingString:@"🍋"];
-    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellGreen]]) {
+    } else if (task.color == MirrorColorTypeCellGreen) {
         tag = [tag stringByAppendingString:@"🪀"];
-    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellTeal]]) {
+    } else if (task.color == MirrorColorTypeCellTeal) {
         tag = [tag stringByAppendingString:@"🧼"];
-    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellBlue]]) {
+    } else if (task.color == MirrorColorTypeCellBlue) {
         tag = [tag stringByAppendingString:@"🐟"];
-    } else if ([[UIColor stringFromColor:task.color] isEqualToString:[UIColor stringFromColor:MirrorColorTypeCellBlue]]) {
+    } else if (task.color == MirrorColorTypeCellPurple) {
         tag = [tag stringByAppendingString:@"👾"];
+    } else if (task.color == MirrorColorTypeCellGray) {
+        tag = [tag stringByAppendingString:@"🦈"];
     }
     tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
     NSLog(@"%@%@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
