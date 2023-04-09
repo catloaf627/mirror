@@ -50,12 +50,14 @@
     NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
     for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
         MirrorDataModel *task = allTasks[taskIndex];
+        [MirrorTool timeFromTimestamp:startTime printTimeStamp:YES];
+        [MirrorTool timeFromTimestamp:endTime printTimeStamp:YES];
         MirrorDataModel *targetTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
         BOOL targetTaskIsEmpty = YES;
         for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
             NSMutableArray *period = task.periods[periodIndex];
             if (period.count != 2) {
-                // 正在计时中，不管
+                continue; // 正在计时中，不管
             } if ([period[1] longValue] < startTime) {
                 // 完整地发生在start time之前，不管
             } else if ([period[0] longValue] < startTime &&  startTime < [period[1] longValue]) {
@@ -77,7 +79,6 @@
         }
         if (!targetTaskIsEmpty) {
             [targetTasks addObject:targetTask];
-            [MirrorStorage printTask:targetTask info:@"get task with start time"];
         }
     }
     return targetTasks;

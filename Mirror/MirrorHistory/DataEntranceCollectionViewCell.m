@@ -66,6 +66,7 @@
         make.centerY.offset(0);
         make.left.offset(0);
     }];
+    self.pieChart = nil; // 每次update都重新init piechart以保证实时更新
     [self.contentView addSubview:self.pieChart];
     [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.offset(0);
@@ -86,7 +87,8 @@
     return _titleLabel;
 }
 
-- (MirrorPiechart *)pieChart{
+- (MirrorPiechart *)pieChart
+{
     if (!_pieChart) {
         if (_type == DataEntranceTypeToday) {
             _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeToday]];

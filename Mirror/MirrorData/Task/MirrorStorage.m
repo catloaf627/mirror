@@ -196,8 +196,8 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
     NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
-//    return mirrorDict ?: [NSMutableDictionary new];
-    return [MirrorStorage fakeData];
+    return mirrorDict ?: [NSMutableDictionary new];
+//    return [MirrorStorage fakeData];
 }
 
 + (NSMutableDictionary *)fakeData
