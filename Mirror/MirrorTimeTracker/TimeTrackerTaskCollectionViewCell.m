@@ -40,6 +40,7 @@ static CGFloat const kShadowWidth = 5;
     [self p_setupUI];
     if (!taskModel.isOngoing) { // stop animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color]; // 瞬间变回原色
+        [self destroyTimeTrackingLabelWithTask:taskModel];
     } else { // start animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:self.taskModel.color]]; // 瞬间变成pulse色
         [self p_convertToColor:self.taskModel.color]; // 开始闪烁

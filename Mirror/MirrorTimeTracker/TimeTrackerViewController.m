@@ -156,15 +156,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }];
 }
 
-#pragma mark - Private methods
-
-- (void)p_stopAllTasksExcept:(NSString *)exceptTaskName
-{
-    [MirrorStorage stopAllTasksExcept:exceptTaskName];
-    [self.collectionView reloadData];
-}
-
-
 # pragma mark - Collection view delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
@@ -181,7 +172,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
         [MirrorStorage stopTask:selectedModel.taskName];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
-        [self p_stopAllTasksExcept:selectedModel.taskName];
+        [MirrorStorage stopAllTasksExcept:selectedModel.taskName];
         [MirrorStorage startTask:selectedModel.taskName];
         if (self.applyImmersiveMode) {
             [self openTimeTrackingViewWithTask:selectedModel];
