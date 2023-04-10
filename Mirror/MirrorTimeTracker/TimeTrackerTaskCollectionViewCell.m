@@ -11,6 +11,7 @@
 #import "MirrorLanguage.h"
 #import "TimeTrackingLabel.h"
 #import "MirrorStorage.h"
+#import "MirrorSettings.h"
 
 static CGFloat const kShadowWidth = 5;
 
@@ -19,7 +20,7 @@ static CGFloat const kShadowWidth = 5;
 @property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *hintLabel;
-@property (nonatomic, assign) BOOL applyImmersiveMode;
+
 @end
 
 @implementation TimeTrackerTaskCollectionViewCell
@@ -35,10 +36,9 @@ static CGFloat const kShadowWidth = 5;
     self.taskNameLabel.text = taskModel.taskName;
     self.hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
     self.contentView.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
-    self.applyImmersiveMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredImmersiveMode"];
 
     [self p_setupUI];
-    if (!taskModel.isOngoing) { // stop animation
+    if (!taskModel.isOngoing || [MirrorSettings appliedImmersiveMode]) { // stop animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color]; // 瞬间变回原色
         [self destroyTimeTrackingLabel];
     } else { // start animation
@@ -95,7 +95,7 @@ static CGFloat const kShadowWidth = 5;
     [UIView animateKeyframesWithDuration:2.0  delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:color];
     } completion:^(BOOL finished) {
-        if (!finished) {
+        if (!self.taskModel.isOngoing || [MirrorSettings appliedImmersiveMode]) { // stop animation的条件对齐，不会因为view disappear就停止动画。
             return;
         }
         if (CGColorEqualToColor(self.contentView.backgroundColor.CGColor, [UIColor mirrorColorNamed:self.taskModel.color].CGColor)) {
@@ -121,7 +121,7 @@ static CGFloat const kShadowWidth = 5;
 - (void)createTimeTrackingLabelWithTask:(MirrorDataModel *)task
 {
     if (!task.isOngoing) return;
-    if (self.applyImmersiveMode) return;
+    if ([MirrorSettings appliedImmersiveMode]) return;
     TimeTrackingLabel *timeTrackingLabel = [[TimeTrackingLabel alloc] initWithTask:self.taskModel.taskName];
     timeTrackingLabel.delegate = self;
     // 避免复用导致的重复添加

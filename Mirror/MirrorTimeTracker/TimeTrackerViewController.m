@@ -20,6 +20,7 @@
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
 #import "MUXToast.h"
+#import "MirrorSettings.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -27,7 +28,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 @interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, DismissEditSheetProtocol, TimeTrackingViewProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, assign) BOOL applyImmersiveMode;
 
 @end
 
@@ -70,7 +70,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.applyImmersiveMode = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredImmersiveMode"];
     [self  p_setupUI];
 }
 
@@ -84,7 +83,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
             make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
-    if (self.applyImmersiveMode) {
+    if ([MirrorSettings appliedImmersiveMode]) {
         MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
         if (ongoingTask) {
             [self openTimeTrackingViewWithTask:ongoingTask];
@@ -151,7 +150,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [MirrorStorage stopAllTasksExcept:selectedModel.taskName];
         [MirrorStorage startTask:selectedModel.taskName];
-        if (self.applyImmersiveMode) {
+        if ([MirrorSettings appliedImmersiveMode]) {
             [self openTimeTrackingViewWithTask:selectedModel];
         }
     }
