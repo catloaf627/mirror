@@ -6,6 +6,7 @@
 //
 
 #import "MirrorTool.h"
+#import "MirrorSettings.h"
 
 @implementation MirrorTool
 
@@ -72,7 +73,7 @@
 
 + (long)getDayGapFromTheFirstDayThisWeek
 {
-    BOOL weekStartsOnMonday = YES;
+    BOOL weekStartsOnMonday = [MirrorSettings appliedWeekStarsOnMonday];
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
     components.timeZone = [NSTimeZone systemTimeZone];

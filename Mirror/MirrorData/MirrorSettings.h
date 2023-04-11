@@ -11,7 +11,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MirrorSettings : NSObject
 
+// Theme
++ (BOOL)appliedDarkMode;
++ (void)switchTheme;
+
+// Language
++ (BOOL)appliedChinese;
++ (void)switchLanguage;
+
+// Timer mode
 + (BOOL)appliedImmersiveMode;
++ (void)switchTimerMode;
+
+// Week starts on
++ (BOOL)appliedWeekStarsOnMonday;
++ (void)switchWeekStartsOn;
 
 @end
 

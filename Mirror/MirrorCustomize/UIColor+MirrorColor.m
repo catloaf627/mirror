@@ -6,6 +6,7 @@
 //
 
 #import "UIColor+MirrorColor.h"
+#import "MirrorSettings.h"
 
 @implementation UIColor (MirrorColor)
 
@@ -43,7 +44,7 @@
 
 + (UIColor *)mirrorColorNamed:(MirrorColorType)colorType
 {
-    BOOL isLight = ![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredDarkMode"];
+    BOOL isLight = ![MirrorSettings appliedDarkMode];
     switch (colorType) {
         case MirrorColorTypeBackground:
             return isLight ? [UIColor whiteColor] : [UIColor blackColor];

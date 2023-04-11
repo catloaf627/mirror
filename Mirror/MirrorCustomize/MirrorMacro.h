@@ -39,7 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Settings Notifications
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"
 #define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"
-#define MirrorSwitchImmersiveModeNotification @"MirrorSwitchImmersiveModeNotification"
+#define MirrorSwitchTimerModeNotification @"MirrorSwitchTimerModeNotification"
+#define MirrorSwitchWeekStartsOnNotification @"MirrorSwitchWeekStartsOnNotification"
 
 // Data Notifications (MirrorStorage统一来发)
 #define MirrorTaskCreateNotification @"MirrorTaskCreateNotification"

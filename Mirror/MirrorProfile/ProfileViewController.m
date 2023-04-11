@@ -14,6 +14,7 @@
 #import "ThemeCollectionViewCell.h"
 #import "LanguageCollectionViewCell.h"
 #import "ImmersiveCollectionViewCell.h"
+#import "WeekStartsOnCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
 
@@ -25,6 +26,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeTheme,
     MirrorSettingTypeLanguage,
     MirrorSettingTypeImmersive,
+    MirrorSettingTypeWeekStartsOn,
 };
 
 @interface ProfileViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -95,6 +97,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         // Do nothing (use toggle to switch language)
     } else if (indexPath.item == MirrorSettingTypeImmersive) {
         // Do nothing (use toggle to switch language)
+    } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
+        // Do nothing (use toggle to switch weekStartsOn)
     }
 }
 
@@ -118,6 +122,10 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         ImmersiveCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ImmersiveCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
+    } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
+        WeekStartsOnCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
     }
     
     return [UICollectionViewCell new];
@@ -134,6 +142,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         case MirrorSettingTypeLanguage:
             return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
         case MirrorSettingTypeImmersive:
+            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
+        case MirrorSettingTypeWeekStartsOn:
             return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
         default:
             break;
@@ -169,6 +179,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[ThemeCollectionViewCell class] forCellWithReuseIdentifier:[ThemeCollectionViewCell identifier]];
         [_collectionView registerClass:[LanguageCollectionViewCell class] forCellWithReuseIdentifier:[LanguageCollectionViewCell identifier]];
         [_collectionView registerClass:[ImmersiveCollectionViewCell class] forCellWithReuseIdentifier:[ImmersiveCollectionViewCell identifier]];
+        [_collectionView registerClass:[WeekStartsOnCollectionViewCell class] forCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier]];
         
     }
     return _collectionView;
@@ -177,7 +188,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeImmersive)];
+        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeImmersive), @(MirrorSettingTypeWeekStartsOn)];
     }
     return _dataSource;
 }

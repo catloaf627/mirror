@@ -6,10 +6,9 @@
 //
 
 #import "ImmersiveCollectionViewCell.h"
-#import "MirrorMacro.h"
+#import "MirrorSettings.h"
 
 static MirrorColorType const immersiveColorType = MirrorColorTypeCellYellow;
-static NSString *const kPreferredImmersive = @"MirrorUserPreferredImmersiveMode";
 
 @implementation ImmersiveCollectionViewCell
 
@@ -22,7 +21,7 @@ static NSString *const kPreferredImmersive = @"MirrorUserPreferredImmersiveMode"
 {
     [super configCellWithTitle:@"apply_immersive_mode" color:immersiveColorType];
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kPreferredImmersive]) {
+    if ([MirrorSettings appliedImmersiveMode]) {
         [self.toggle setOn:YES animated:YES];
     } else {
         [self.toggle setOn:NO animated:YES];
@@ -30,12 +29,7 @@ static NSString *const kPreferredImmersive = @"MirrorUserPreferredImmersiveMode"
 }
 
 - (void)switchChanged:(UISwitch *)sender {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:kPreferredImmersive]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kPreferredImmersive];
-    } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kPreferredImmersive];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchImmersiveModeNotification object:nil];
+    [MirrorSettings switchTimerMode];
 }
 
 

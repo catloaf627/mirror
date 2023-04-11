@@ -6,6 +6,7 @@
 //
 
 #import "MirrorLanguage.h"
+#import "MirrorSettings.h"
 
 @implementation MirrorLanguage
 
@@ -29,6 +30,8 @@
     [mirrorDict setValue:@[@"Apply Chinese", @"使用中文"] forKey:@"apply_chinese"];
     // Profile cell - immersive mode
     [mirrorDict setValue:@[@"Apply immersive mode", @"启用沉浸模式"] forKey:@"apply_immersive_mode"];
+    // Profile cell - week starts on Monday
+    [mirrorDict setValue:@[@"Week starts on Monday", @"将周一作为一周的第一天"] forKey:@"week_starts_on_Monday"];
     // Profile edit cell - hint
     [mirrorDict setValue:@[@"Click task name to edit (Your data won't be affected)", @"点击任务名称进行编辑（任务数据并不会受到影响）"] forKey:@"edit_taskname_hint"];
     // Profile edit cell
@@ -61,7 +64,7 @@
     // 闪烁
     [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
     
-    NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
+    NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }
 
@@ -74,7 +77,7 @@
     [mirrorDict setValue:@[@"[%@] not saved", @"【%@】未保存"] forKey:@"too_short_to_save"];
     
     
-    NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
+    NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder];
 }
 
@@ -86,7 +89,7 @@
     [mirrorDict setValue:@[@"[%@] has been done!\nlasted: %@", @"【%@】已完成！\n持续时间：%@"] forKey:@"task_has_been_done"];
     
     
-    NSInteger index = [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredChinese"] ? 1 : 0;
+    NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder1, placeholder2];
 }
 

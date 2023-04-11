@@ -39,6 +39,7 @@
 		4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5C728E73935006F02DE /* AddTaskViewController.m */; };
 		4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */; };
 		4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* ProfileViewController.m */; };
+		4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */; };
 		4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A128DF4A380064CBCA /* AppDelegate.m */; };
 		4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A428DF4A380064CBCA /* SceneDelegate.m */; };
 		4AFB77AD28DF4A3B0064CBCA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AFB77AC28DF4A3B0064CBCA /* Assets.xcassets */; };
@@ -111,6 +112,8 @@
 		4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerViewController.m; sourceTree = "<group>"; };
 		4AE4171D28DF6155008A6A18 /* ProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		4AE4171E28DF6155008A6A18 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		4AFA3B7529E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeekStartsOnCollectionViewCell.h; sourceTree = "<group>"; };
+		4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeekStartsOnCollectionViewCell.m; sourceTree = "<group>"; };
 		4AFB779D28DF4A380064CBCA /* Mirror.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mirror.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AFB77A028DF4A380064CBCA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4AFB77A128DF4A380064CBCA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -256,12 +259,7 @@
 				4A406C102906FC00001E83A1 /* ToggleCollectionViewCell.m */,
 				4ADDC5AF28E4704B006F02DE /* AvatarCollectionViewCell.h */,
 				4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */,
-				4ADDC5B228E4762E006F02DE /* ThemeCollectionViewCell.h */,
-				4ADDC5B328E4762E006F02DE /* ThemeCollectionViewCell.m */,
-				4ADDC5B528E476A8006F02DE /* LanguageCollectionViewCell.h */,
-				4ADDC5B628E476A8006F02DE /* LanguageCollectionViewCell.m */,
-				4A406C1529070FC1001E83A1 /* ImmersiveCollectionViewCell.h */,
-				4A406C1629070FC1001E83A1 /* ImmersiveCollectionViewCell.m */,
+				4AFA3B7429E4EE0F004D5BE4 /* SettingsCells */,
 			);
 			path = MirrorProfile;
 			sourceTree = "<group>";
@@ -326,6 +324,21 @@
 				4ADDC5C728E73935006F02DE /* AddTaskViewController.m */,
 			);
 			path = MirrorTaskAdd;
+			sourceTree = "<group>";
+		};
+		4AFA3B7429E4EE0F004D5BE4 /* SettingsCells */ = {
+			isa = PBXGroup;
+			children = (
+				4ADDC5B228E4762E006F02DE /* ThemeCollectionViewCell.h */,
+				4ADDC5B328E4762E006F02DE /* ThemeCollectionViewCell.m */,
+				4ADDC5B528E476A8006F02DE /* LanguageCollectionViewCell.h */,
+				4ADDC5B628E476A8006F02DE /* LanguageCollectionViewCell.m */,
+				4A406C1529070FC1001E83A1 /* ImmersiveCollectionViewCell.h */,
+				4A406C1629070FC1001E83A1 /* ImmersiveCollectionViewCell.m */,
+				4AFA3B7529E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.h */,
+				4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */,
+			);
+			path = SettingsCells;
 			sourceTree = "<group>";
 		};
 		4AFB779428DF4A380064CBCA = {
@@ -480,6 +493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */,
 				4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */,
