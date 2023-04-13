@@ -66,7 +66,9 @@
         make.centerY.offset(0);
         make.left.offset(0);
     }];
-    self.pieChart = nil; // 每次update都重新init piechart以保证实时更新
+    // 每次update都重新init piechart以保证实时更新，先removeFromSuperview再设置为nil才是正确的顺序！
+    [self.pieChart removeFromSuperview];
+    self.pieChart = nil;
     [self.contentView addSubview:self.pieChart];
     [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.offset(0);
