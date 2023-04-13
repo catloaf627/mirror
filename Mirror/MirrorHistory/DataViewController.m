@@ -11,7 +11,7 @@
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
 #import "DataEntranceCollectionViewCell.h"
-#import "HistogramView.h"
+#import "MirrorHistogram.h"
 // 跳转
 #import "TodayDataViewController.h"
 
@@ -21,7 +21,7 @@ static CGFloat const kCellSpacing = 20;
 @interface DataViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) HistogramView *histogramView;
+@property (nonatomic, strong) MirrorHistogram *histogramView;
 
 @end
 
@@ -178,10 +178,10 @@ static CGFloat const kCellSpacing = 20;
     return _collectionView;
 }
 
-- (HistogramView *)histogramView
+- (MirrorHistogram *)histogramView
 {
     if (!_histogramView) {
-        _histogramView = [HistogramView new]; //本地读取
+        _histogramView = [MirrorHistogram new]; //本地读取
     }
     return _histogramView;
 }
