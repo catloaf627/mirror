@@ -57,8 +57,15 @@ static CGFloat const kCellSpacing = 20;
     [self viewDidLoad];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.collectionView reloadData];
+}
+
 - (void)reloadData
 {
+    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
     [self.collectionView reloadData];
 }
 
