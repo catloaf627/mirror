@@ -9,8 +9,11 @@
 #import "MirrorTool.h"
 #import <Masonry/Masonry.h>
 
+static const CGFloat kLabelHeight = 20;
+
 @interface HistogramCollectionViewCell ()
 
+@property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) UIView *coloredView;
 
 @end
@@ -28,11 +31,21 @@
     // 每次update都重新init coloredView以保证实时更新，先removeFromSuperview再设置为nil才是正确的顺序！
     [self.coloredView removeFromSuperview];
     self.coloredView = nil;
+
     [self addSubview:self.coloredView];
     self.coloredView.backgroundColor = [UIColor mirrorColorNamed:data[index].color];
     [self.coloredView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.offset(0);
-        make.height.mas_equalTo(self.frame.size.height * percentage);
+        make.height.mas_equalTo((self.frame.size.height - kLabelHeight) * percentage);
+    }];
+    
+    [self addSubview:self.timeLabel];
+    self.timeLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:[MirrorTool getTotalTimeOfPeriods:data[index].periods]];
+    self.timeLabel.textColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:data[index].color]];
+    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.bottom.mas_equalTo(self.coloredView.mas_top);
+        make.height.mas_equalTo(kLabelHeight);
     }];
 }
 
@@ -58,6 +71,15 @@
         _coloredView.layer.mask = maskLayer;
     }
     return _coloredView;
+}
+
+- (UILabel *)timeLabel
+{
+    if (!_timeLabel) {
+        _timeLabel = [UILabel new];
+        _timeLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _timeLabel;
 }
 
 @end

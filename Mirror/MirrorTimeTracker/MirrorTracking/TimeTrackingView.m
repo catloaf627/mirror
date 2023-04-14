@@ -45,7 +45,7 @@ static CGFloat const kDashSpacing = 10;
 @property (nonatomic, strong) UILabel *nowTimeColonLabelB;
 @property (nonatomic, strong) UILabel *nowTimeLabelss;
 
-@property (nonatomic, strong) UILabel *yesterdayLabel;
+@property (nonatomic, strong) UILabel *yesterdayLabel; // 虽然一次task时间不能超过24h，但task仍可以跨越0点，yesterdaylabel当跨越0点的时候会展示。
 
 // Data
 

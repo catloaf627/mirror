@@ -183,7 +183,7 @@ static CGFloat const kCellSpacing = 20;
 - (MirrorHistogram *)histogramView
 {
     if (!_histogramView) {
-        _histogramView = [[MirrorHistogram alloc] initWithType:0]; // 本地读取
+        _histogramView = [[MirrorHistogram alloc] initWithType:1]; // 本地读取
     }
     return _histogramView;
 }

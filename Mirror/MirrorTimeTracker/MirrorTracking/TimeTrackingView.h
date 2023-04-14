@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIViewController<TimeTrackingViewProtocol> *delegate;
 
-- (void)timeTrackingViewWillDisappear;
 - (instancetype)initWithTaskName:(NSString *)taskName;
 - (void)updateLabels;
 
