@@ -12,25 +12,24 @@
 #import "MirrorMacro.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
+#import "MirrorSettings.h"
 
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 @interface MirrorHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, assign) NSInteger type;
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 
 @end
 @implementation MirrorHistogram
 
-- (instancetype)initWithType:(MirrorHistogramType)type
+- (instancetype)init
 {
     self = [super init];
     if (self) {
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         self.layer.cornerRadius = 14;
         self.collectionView.layer.cornerRadius = 14;
-        self.type = type;
         [self addSubview:self.collectionView];
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.left.right.offset(0);
@@ -48,7 +47,7 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    switch (self.type) {
+    switch ([MirrorSettings userPreferredHistogramType]) {
         case MirrorHistogramTypeToday:
             self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
             break;

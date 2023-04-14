@@ -9,6 +9,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+typedef NS_ENUM(NSInteger, UserPreferredHistogramType) {
+    UserPreferredHistogramTypeToday, // 库里没有这个taskname，taskname合格
+    UserPreferredHistogramTypeThisWeek,
+    UserPreferredHistogramTypeThisMonth,
+    UserPreferredHistogramTypeThisYear,
+};
+
 @interface MirrorSettings : NSObject
 
 // Theme
@@ -26,6 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 // Week starts on
 + (BOOL)appliedWeekStarsOnMonday;
 + (void)switchWeekStartsOn;
+
+// Show which histogram
++ (UserPreferredHistogramType)userPreferredHistogramType;
++ (void)userSetPreferredHistogramType:(UserPreferredHistogramType)type;
 
 @end
 

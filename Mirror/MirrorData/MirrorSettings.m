@@ -70,6 +70,15 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchWeekStartsOnNotification object:nil];
 }
 
++ (UserPreferredHistogramType)userPreferredHistogramType
+{
+    return [[NSUserDefaults standardUserDefaults] integerForKey:@"MirrorUserPreferredHistogramType"];
+}
++ (void)userSetPreferredHistogramType:(UserPreferredHistogramType)type
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:type forKey:@"MirrorUserPreferredHistogramType"];
+}
+
 
 
 

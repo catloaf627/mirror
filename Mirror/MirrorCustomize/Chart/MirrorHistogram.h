@@ -19,7 +19,6 @@ typedef NS_ENUM(NSInteger, MirrorHistogramType) {
 @interface MirrorHistogram : UIView
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-- (instancetype)initWithType:(MirrorHistogramType)type;
 
 @end
 

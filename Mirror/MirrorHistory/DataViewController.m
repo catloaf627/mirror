@@ -12,8 +12,7 @@
 #import "MirrorMacro.h"
 #import "DataEntranceCollectionViewCell.h"
 #import "MirrorHistogram.h"
-// 跳转
-#import "TodayDataViewController.h"
+#import "MirrorSettings.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20;
@@ -142,19 +141,23 @@ static CGFloat const kCellSpacing = 20;
 {
     switch (indexPath.item) {
         case 0:
-            [self.navigationController pushViewController:[TodayDataViewController new] animated:YES];
+            [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeToday];
+            [self.histogramView.collectionView reloadData];
             break;
             
         case 1:
-            
+            [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisWeek];
+            [self.histogramView.collectionView reloadData];
             break;
             
         case 2:
-            
+            [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisMonth];
+            [self.histogramView.collectionView reloadData];
             break;
             
         case 3:
-            
+            [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisYear];
+            [self.histogramView.collectionView reloadData];
             break;
             
         default:
@@ -183,7 +186,7 @@ static CGFloat const kCellSpacing = 20;
 - (MirrorHistogram *)histogramView
 {
     if (!_histogramView) {
-        _histogramView = [[MirrorHistogram alloc] initWithType:1]; // 本地读取
+        _histogramView = [MirrorHistogram new];
     }
     return _histogramView;
 }
