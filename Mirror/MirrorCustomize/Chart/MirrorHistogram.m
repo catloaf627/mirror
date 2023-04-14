@@ -13,12 +13,14 @@
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorSettings.h"
+#import "MirrorLanguage.h"
 
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 @interface MirrorHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
+@property (nonatomic, strong) UILabel *emptyHintLabel;
 
 @end
 @implementation MirrorHistogram
@@ -29,6 +31,15 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     if (self) {
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         self.layer.cornerRadius = 14;
+        
+        // empty hint
+        [self updateHint];
+        [self addSubview:self.emptyHintLabel];
+        [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.left.right.offset(0);
+        }];
+        
+        // histogram
         self.collectionView.layer.cornerRadius = 14;
         [self addSubview:self.collectionView];
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -61,6 +72,7 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
             self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisYear] end:[[NSDate now] timeIntervalSince1970]];
             break;
     }
+    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     return self.data.count;
 }
 
@@ -142,13 +154,42 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
         _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
-        _collectionView.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+        _collectionView.backgroundColor = [UIColor clearColor]; // 设置为透明色，可以将后面的emptyhint露出来
         [_collectionView registerClass:[HistogramCollectionViewCell class] forCellWithReuseIdentifier:[HistogramCollectionViewCell identifier]];
 
         [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
         [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
     }
     return _collectionView;
+}
+
+- (UILabel *)emptyHintLabel
+{
+    if (!_emptyHintLabel) {
+        _emptyHintLabel = [UILabel new];
+        _emptyHintLabel.textAlignment = NSTextAlignmentCenter;
+        _emptyHintLabel.text = @"";
+        _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
+    }
+    return _emptyHintLabel;
+}
+
+- (void)updateHint
+{
+    self.emptyHintLabel.hidden = self.data.count > 0;
+    if ([MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeToday) {
+        self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_today"];
+    }
+    if ([MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisWeek) {
+        self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_this_week"];
+    }
+    if ([MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisMonth) {
+        self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_this_month"];
+    }
+    if ([MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisYear) {
+        self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_this_year"];
+    }
 }
 
 @end

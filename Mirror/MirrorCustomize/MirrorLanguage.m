@@ -64,6 +64,12 @@
     // 闪烁
     [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
     
+    // Histogram
+    [mirrorDict setValue:@[@"No tasks today", @"今天还没有任务"] forKey:@"no_tasks_today"];
+    [mirrorDict setValue:@[@"No tasks this week", @"本周还没有任务"] forKey:@"no_tasks_this_week"];
+    [mirrorDict setValue:@[@"No tasks this month", @"本月还没有任务"] forKey:@"no_tasks_this_month"];
+    [mirrorDict setValue:@[@"No tasks this year", @"今年还没有任务"] forKey:@"no_tasks_this_year"];
+    
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }
