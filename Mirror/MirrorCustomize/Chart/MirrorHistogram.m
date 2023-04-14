@@ -75,14 +75,52 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger count = self.data.count;
-    if (count > 0) {
-        CGFloat width = (self.bounds.size.width - (count - 1)*kCellSpacing) / count;
-        return CGSizeMake(width, self.bounds.size.height);
-    } else {
-        return CGSizeMake(self.bounds.size.width, self.bounds.size.height);
+    if (self.data.count == 0) return CGSizeZero;
+    if (self.data.count >= 4) { // 4,5,6...
+        CGFloat cellWidth = (self.bounds.size.width - (self.data.count - 1)*kCellSpacing) / self.data.count;
+        return CGSizeMake(cellWidth, self.bounds.size.height);
+    } else { // 1,2,3
+        CGFloat cellWidth = (self.bounds.size.width - (4 - 1)*kCellSpacing) / 4;
+        return CGSizeMake(cellWidth, self.bounds.size.height);
     }
+}
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *view = nil;
+    if ([kind isEqualToString:@"UICollectionElementKindSectionHeader"]) {
+        UICollectionViewCell *headerView = [collectionView   dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
+        return headerView;
+    }
+    if ([kind isEqualToString:@"UICollectionElementKindSectionFooter"]) {
+        UICollectionViewCell *footerView = [collectionView   dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer" forIndexPath:indexPath];
+        return footerView;
+    }
+    return view;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    if (self.data.count == 0) return CGSizeZero;
+    if (self.data.count >= 4) { // 4,5,6...
+        return CGSizeMake(0, 0);
+    } else {  // 1,2,3
+        CGFloat cellWidth = (self.bounds.size.width - (4 - 1 )*kCellSpacing) / 4;
+        CGFloat width = cellWidth * self.data.count + kCellSpacing * (self.data.count-1);
+        return CGSizeMake((self.bounds.size.width - width)/2, self.bounds.size.height);
+    }
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
+{
+    if (self.data.count == 0) return CGSizeZero;
+    if (self.data.count >= 4 ) { // 4,5,6...
+        return CGSizeMake(0, 0);
+    } else {  // 1,2,3
+        CGFloat cellWidth = (self.bounds.size.width - (4 - 1)*kCellSpacing) / 4;
+        CGFloat width = cellWidth * self.data.count + kCellSpacing * (self.data.count-1);
+        return CGSizeMake((self.bounds.size.width - width)/2, self.bounds.size.height);
+    }
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -106,6 +144,9 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         [_collectionView registerClass:[HistogramCollectionViewCell class] forCellWithReuseIdentifier:[HistogramCollectionViewCell identifier]];
+
+        [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+        [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
     }
     return _collectionView;
 }
