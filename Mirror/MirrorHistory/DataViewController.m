@@ -61,12 +61,14 @@ static CGFloat const kCellSpacing = 20;
 {
     [super viewWillAppear:animated];
     [self.collectionView reloadData];
+    [self.histogramView.collectionView reloadData];
 }
 
 - (void)reloadData
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
     [self.collectionView reloadData];
+    [self.histogramView.collectionView reloadData];
 }
 
 - (void)dealloc
@@ -181,7 +183,7 @@ static CGFloat const kCellSpacing = 20;
 - (MirrorHistogram *)histogramView
 {
     if (!_histogramView) {
-        _histogramView = [MirrorHistogram new]; //本地读取
+        _histogramView = [[MirrorHistogram alloc] initWithType:0]; // 本地读取
     }
     return _histogramView;
 }

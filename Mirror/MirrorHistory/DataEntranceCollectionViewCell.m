@@ -24,7 +24,7 @@
 
 @implementation DataEntranceCollectionViewCell
 
-+ (NSString *)identifier;
++ (NSString *)identifier
 {
     return NSStringFromClass(self.class);
 }

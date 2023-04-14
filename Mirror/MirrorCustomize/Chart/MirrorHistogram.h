@@ -10,14 +10,15 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, MirrorHistogramType) {
-    MirrorHistogramTypeToday, // 库里没有这个taskname，taskname合格
+    MirrorHistogramTypeToday,
+    MirrorHistogramTypeThisWeek,
     MirrorHistogramTypeThisMonth,
     MirrorHistogramTypeThisYear,
-    MirrorHistogramTypeAll,
 };
 
 @interface MirrorHistogram : UIView
 
+@property (nonatomic, strong) UICollectionView *collectionView;
 - (instancetype)initWithType:(MirrorHistogramType)type;
 
 @end
