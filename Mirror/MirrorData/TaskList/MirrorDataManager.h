@@ -19,6 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSMutableArray<MirrorDataModel *> *)allTasks;
 
+
+
++ (NSMutableArray<MirrorDataModel *> *)getDataWithStart:(long)startTime end:(long)endTime; // 通用方法
+
 @end
 
 NS_ASSUME_NONNULL_END

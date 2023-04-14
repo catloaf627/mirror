@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 typedef NS_ENUM(NSInteger, DataEntranceType) {
-    DataEntranceTypeToday, // 库里没有这个taskname，taskname合格
+    DataEntranceTypeToday,
     DataEntranceTypeThisWeek,
     DataEntranceTypeThisMonth,
     DataEntranceTypeThisYear,
