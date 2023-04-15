@@ -73,9 +73,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if ([MirrorStorage getTaskFromDB:self.taskName].periods.count == 0) return 0;
-    BOOL theLastPeriodIsFinished = [MirrorStorage getTaskFromDB:self.taskName].periods[0].count == 2;
-    return [MirrorStorage getTaskFromDB:self.taskName].periods.count - (theLastPeriodIsFinished ? 0:1);
+    return [MirrorStorage getTaskFromDB:self.taskName].periods.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath

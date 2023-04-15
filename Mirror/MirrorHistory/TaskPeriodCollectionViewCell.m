@@ -18,6 +18,7 @@ static const CGFloat kVerticalPadding = 10;
 
 @property (nonatomic, strong) MirrorDataModel *task;
 @property (nonatomic, assign) NSInteger periodIndex;
+
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UILabel *mainLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
@@ -36,11 +37,14 @@ static const CGFloat kVerticalPadding = 10;
     self.task = task;
     self.periodIndex = index;
     
-    long start = [task.periods[index][0] longValue];
-    long end = [task.periods[index][1] longValue];
-    self.mainLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
-    self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@" - "]stringByAppendingString:[self timeFromTimestamp:end]];
-    
+    if ([self periodsIsFinished]) {
+        long start = [task.periods[index][0] longValue];
+        long end = [task.periods[index][1] longValue];
+        self.mainLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@" - "]stringByAppendingString:[self timeFromTimestamp:end]];
+    } else if (task.periods[index].count == 1) {
+        self.mainLabel.text = [MirrorLanguage mirror_stringWithKey:@"counting"];
+    }
     self.backgroundColor = [UIColor mirrorColorNamed:task.color];
     self.layer.cornerRadius = 14;
     [self p_setupUI];
@@ -62,19 +66,24 @@ static const CGFloat kVerticalPadding = 10;
         make.width.mas_equalTo(self.bounds.size.width - 3*kHorizontalPadding - 20);
         make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
     }];
-    [self addSubview:self.deleteButton];
-    [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.offset(0);
-        make.right.offset(-kHorizontalPadding);
-        make.height.width.mas_equalTo(20);
-    }];
-
+    if ([self periodsIsFinished]) {
+        [self addSubview:self.deleteButton];
+        [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.offset(0);
+            make.right.offset(-kHorizontalPadding);
+            make.height.width.mas_equalTo(20);
+        }];
+    }
 }
 
 - (void)delete
 {
-    NSLog(@"delete %@ 的第%d个period", self.task.taskName, self.periodIndex);
     [MirrorStorage deletePeriodWithTaskname:self.task.taskName periodIndex:self.periodIndex];
+}
+
+- (BOOL)periodsIsFinished
+{
+    return self.task.periods[self.periodIndex].count == 2;
 }
 
 #pragma mark - Getters

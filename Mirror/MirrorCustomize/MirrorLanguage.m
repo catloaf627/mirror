@@ -61,7 +61,7 @@
     [mirrorDict setValue:@[@"yesterday", @"昨天"] forKey:@"yesterday"];
     [mirrorDict setValue:@[@"Go!", @"开始!"] forKey:@"go"];
     
-    // 闪烁
+    // 闪烁 & Task record
     [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
     
     // Histogram
