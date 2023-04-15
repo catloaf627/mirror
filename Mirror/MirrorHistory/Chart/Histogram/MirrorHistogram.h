@@ -16,9 +16,14 @@ typedef NS_ENUM(NSInteger, MirrorHistogramType) {
     MirrorHistogramTypeThisYear,
 };
 
+@protocol MirrorHistogramDelegate <NSObject>  // push viewcontroller用
+
+@end
+
 @interface MirrorHistogram : UIView
 
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, weak) UIViewController<MirrorHistogramDelegate> *delegate;
 
 @end
 

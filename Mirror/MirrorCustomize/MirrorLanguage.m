@@ -70,6 +70,9 @@
     [mirrorDict setValue:@[@"No tasks this month", @"本月还没有任务"] forKey:@"no_tasks_this_month"];
     [mirrorDict setValue:@[@"No tasks this year", @"今年还没有任务"] forKey:@"no_tasks_this_year"];
     
+    // Task record
+    [mirrorDict setValue:@[@"Total: ", @"共计："] forKey:@"total"];
+    
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }

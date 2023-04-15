@@ -28,6 +28,8 @@
 		4A406C1A29071939001E83A1 /* MirrorStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C1929071939001E83A1 /* MirrorStorage.m */; };
 		4A410A2529EA4EE10007003B /* MirrorLegend.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A2429EA4EE10007003B /* MirrorLegend.m */; };
 		4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A2729EA51750007003B /* LegendCollectionViewCell.m */; };
+		4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3029EA68870007003B /* TaskRecordViewController.m */; };
+		4A410A3429EA6BB60007003B /* TaskPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */; };
 		4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* DataViewController.m */; };
 		4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
@@ -90,6 +92,10 @@
 		4A410A2429EA4EE10007003B /* MirrorLegend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorLegend.m; sourceTree = "<group>"; };
 		4A410A2629EA51750007003B /* LegendCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegendCollectionViewCell.h; sourceTree = "<group>"; };
 		4A410A2729EA51750007003B /* LegendCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LegendCollectionViewCell.m; sourceTree = "<group>"; };
+		4A410A2F29EA68870007003B /* TaskRecordViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskRecordViewController.h; sourceTree = "<group>"; };
+		4A410A3029EA68870007003B /* TaskRecordViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskRecordViewController.m; sourceTree = "<group>"; };
+		4A410A3229EA6BB60007003B /* TaskPeriodCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskPeriodCollectionViewCell.h; sourceTree = "<group>"; };
+		4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskPeriodCollectionViewCell.m; sourceTree = "<group>"; };
 		4A7CCD2429DBC7CF00879D9C /* DataViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataViewController.h; sourceTree = "<group>"; };
 		4A7CCD2529DBC7CF00879D9C /* DataViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataViewController.m; sourceTree = "<group>"; };
 		4A7CCD2E29DBCEB200879D9C /* DataEntranceCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataEntranceCollectionViewCell.h; sourceTree = "<group>"; };
@@ -241,6 +247,10 @@
 				4A7CCD2529DBC7CF00879D9C /* DataViewController.m */,
 				4A7CCD2E29DBCEB200879D9C /* DataEntranceCollectionViewCell.h */,
 				4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */,
+				4A410A2F29EA68870007003B /* TaskRecordViewController.h */,
+				4A410A3029EA68870007003B /* TaskRecordViewController.m */,
+				4A410A3229EA6BB60007003B /* TaskPeriodCollectionViewCell.h */,
+				4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */,
 			);
 			path = MirrorHistory;
 			sourceTree = "<group>";
@@ -512,6 +522,7 @@
 				4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */,
 				4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */,
 				4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */,
+				4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,
@@ -540,6 +551,7 @@
 				4A406C1729070FC1001E83A1 /* ImmersiveCollectionViewCell.m in Sources */,
 				4A379B4428E03D0B00785CAE /* MirrorTabsManager.m in Sources */,
 				015564E428E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m in Sources */,
+				4A410A3429EA6BB60007003B /* TaskPeriodCollectionViewCell.m in Sources */,
 				4A099FAE29DD57AE002683A1 /* MirrorTool.m in Sources */,
 				4A099FAA29DCFE54002683A1 /* MirrorDataModel.m in Sources */,
 				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,

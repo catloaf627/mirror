@@ -18,7 +18,7 @@
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20;
 
-@interface DataViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface DataViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, MirrorLegendDelegate, MirrorHistogramDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) MirrorLegend *legendView;
@@ -200,6 +200,7 @@ static CGFloat const kCellSpacing = 20;
 {
     if (!_histogramView) {
         _histogramView = [MirrorHistogram new];
+        _histogramView.delegate = self;
     }
     return _histogramView;
 }
@@ -208,6 +209,7 @@ static CGFloat const kCellSpacing = 20;
 {
     if (!_legendView) {
         _legendView = [MirrorLegend new];
+        _legendView.delegate = self;
     }
     return _legendView;
 }

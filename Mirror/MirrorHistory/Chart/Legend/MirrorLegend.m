@@ -11,6 +11,7 @@
 #import "MirrorSettings.h"
 #import "MirrorStorage.h"
 #import "LegendCollectionViewCell.h"
+#import "TaskRecordViewController.h"
 
 static CGFloat const kCellHeight = 30; // 一个legend的高度
 static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
@@ -103,7 +104,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    [self.delegate.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.data[indexPath.item].taskName] animated:YES];
 }
 
 
