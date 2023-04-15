@@ -28,11 +28,13 @@ static const CGFloat kVerticalPadding = 10;
     return NSStringFromClass(self.class);
 }
 
-- (void)configWithStart:(long)start end:(long)end color:(UIColor *)color
+- (void)configWithTask:(MirrorDataModel *)task index:(NSInteger)index
 {
+    long start = [task.periods[index][0] longValue];
+    long end = [task.periods[index][1] longValue];
     self.mainLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
-    self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@"-"]stringByAppendingString:[self timeFromTimestamp:end]];
-    self.backgroundColor = color;
+    self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@" - "]stringByAppendingString:[self timeFromTimestamp:end]];
+    self.backgroundColor = [UIColor mirrorColorNamed:task.color];
     self.layer.cornerRadius = 14;
     [self p_setupUI];
 }
@@ -44,14 +46,14 @@ static const CGFloat kVerticalPadding = 10;
         make.top.offset(kVerticalPadding);
         make.left.offset(kHorizontalPadding);
         make.width.mas_equalTo(self.bounds.size.width - 3*kHorizontalPadding - 20);
-        make.height.mas_equalTo((self.bounds.size.height - 3*kVerticalPadding)/2);
+        make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
     }];
     [self addSubview:self.detailLabel];
     [self.detailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.offset(-kVerticalPadding);
         make.left.offset(kHorizontalPadding);
         make.width.mas_equalTo(self.bounds.size.width - 3*kHorizontalPadding - 20);
-        make.height.mas_equalTo((self.bounds.size.height - 3*kVerticalPadding)/2);
+        make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
     }];
     [self addSubview:self.icon];
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {

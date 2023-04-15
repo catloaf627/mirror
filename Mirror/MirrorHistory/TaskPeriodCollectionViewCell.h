@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MirrorDataModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)identifier;
 
-- (void)configWithStart:(long)start end:(long)end color:(UIColor *)color;
+- (void)configWithTask:(MirrorDataModel *)task index:(NSInteger)index;
 
 
 @end

@@ -7,7 +7,6 @@
 
 #import "TaskRecordViewController.h"
 #import <Masonry/Masonry.h>
-//#import "MirrorTabsManager.h"
 #import "UIColor+MirrorColor.h"
 #import "MirrorDataManager.h"
 #import "MirrorMacro.h"
@@ -73,10 +72,15 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return self.task.periods.count - (theLastPeriodIsFinished ? 0:1);
 }
 
+/*
+ 注意这里的task顺序和数据库里的数据是反的
+ 数据库中最新的task在最后，这里展示的时候最新的task在最前
+ */
+
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithStart:[self.task.periods[indexPath.item][0] longValue] end:[self.task.periods[indexPath.item][1] longValue] color:[UIColor mirrorColorNamed:self.task.color]];
+    [cell configWithTask:self.task index:indexPath.item];
     return cell;
 }
 
