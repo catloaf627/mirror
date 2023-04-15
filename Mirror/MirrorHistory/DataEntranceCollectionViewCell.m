@@ -14,6 +14,8 @@
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
 
+static const CGFloat kVerticalPadding = 14;
+static const CGFloat kHorizontalPadding = 20;
 
 @interface DataEntranceCollectionViewCell ()
 
@@ -56,25 +58,20 @@
 {
     self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
     self.layer.cornerRadius = 14;
-    [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.centerY.offset(0);
-        make.left.lessThanOrEqualTo(self).offset(20);
-        make.right.lessThanOrEqualTo(self).offset(-20);
-        make.height.mas_equalTo(self);
-    }];
-    [self.contentView addSubview:self.titleLabel];
+    [self addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.offset(0);
-        make.left.offset(0);
+        make.left.offset(kHorizontalPadding);
+        make.width.mas_equalTo(self.frame.size.width  - (self.frame.size.height -  2*kVerticalPadding) - 2*kHorizontalPadding);
     }];
     // 每次update都重新init piechart以保证实时更新，先removeFromSuperview再设置为nil才是正确的顺序！
     [self.pieChart removeFromSuperview];
     self.pieChart = nil;
-    [self.contentView addSubview:self.pieChart];
+    [self addSubview:self.pieChart];
     [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.offset(0);
-        make.right.offset(0);
-        make.width.height.mas_equalTo(self.frame.size.height - 28);
+        make.right.offset(-kHorizontalPadding);
+        make.width.height.mas_equalTo(self.frame.size.height -  2*kVerticalPadding);
     }];
     // update border
     BOOL cellIsSelected = (self.type == DataEntranceTypeToday && [MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeToday) || (self.type == DataEntranceTypeThisWeek && [MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisWeek) || (self.type == DataEntranceTypeThisMonth && [MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisMonth) || (self.type == DataEntranceTypeThisYear && [MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisYear);
@@ -93,7 +90,7 @@
 {
     if (!_titleLabel) {
         _titleLabel = [UILabel new];
-        _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:12];
+        _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
         _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
     }
     return _titleLabel;

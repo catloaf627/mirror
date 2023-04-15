@@ -52,10 +52,10 @@
     [mirrorDict setValue:@[@"This task exists in current task list", @"这个任务已经存在于当前任务列表中"] forKey:@"this_task_exists_in_current_task_list"];
     [mirrorDict setValue:@[@"This task exists in the archived task list. You can activate it in [Data]", @"这个任务已经存在于归档任务列表中。你可以在【数据】中重新激活此任务。"] forKey:@"this_task_exists_in_the_archived_task_list"];
     // Data entrance cell
-    [mirrorDict setValue:@[@"Today", @"今日数据"] forKey:@"today"];
-    [mirrorDict setValue:@[@"This week", @"本周数据"] forKey:@"this_week"];
-    [mirrorDict setValue:@[@"This month", @"本月数据"] forKey:@"this_month"];
-    [mirrorDict setValue:@[@"This year", @"今年数据"] forKey:@"this_year"];
+    [mirrorDict setValue:@[@"Today", @"今日"] forKey:@"today"];
+    [mirrorDict setValue:@[@"Week", @"本周"] forKey:@"this_week"];
+    [mirrorDict setValue:@[@"Month", @"本月"] forKey:@"this_month"];
+    [mirrorDict setValue:@[@"Year", @"今年"] forKey:@"this_year"];
     
     // 全屏
     [mirrorDict setValue:@[@"yesterday", @"昨天"] forKey:@"yesterday"];
