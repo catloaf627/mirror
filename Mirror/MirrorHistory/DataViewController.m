@@ -142,21 +142,25 @@ static CGFloat const kCellSpacing = 20;
     switch (indexPath.item) {
         case 0:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeToday];
+            [self.collectionView reloadData]; // update all entrance borders
             [self.histogramView.collectionView reloadData];
             break;
             
         case 1:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisWeek];
+            [self.collectionView reloadData]; // update all entrance borders
             [self.histogramView.collectionView reloadData];
             break;
             
         case 2:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisMonth];
+            [self.collectionView reloadData]; // update all entrance borders
             [self.histogramView.collectionView reloadData];
             break;
             
         case 3:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisYear];
+            [self.collectionView reloadData]; // update all entrance borders
             [self.histogramView.collectionView reloadData];
             break;
             
