@@ -17,7 +17,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 @interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) MirrorDataModel *task;
+@property (nonatomic, strong) NSString *taskName;
 
 @end
 
@@ -27,9 +27,15 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     self = [super init];
     if (self) {
-        self.task = [MirrorStorage getTaskFromDB:taskName];
+        self.taskName = taskName;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
     }
     return self;
+}
+
+- (void)reloadData
+{
+    [self.collectionView reloadData];
 }
 
 - (void)viewDidLoad {
@@ -42,7 +48,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     // navibar
     self.navigationController.navigationBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground]; // navibar颜色为背景色
     self.navigationController.navigationBar.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 返回箭头颜色为文案颜色
-    [self.navigationItem setTitle:self.task.taskName]; // title为taskname
+    [self.navigationItem setTitle:[MirrorStorage getTaskFromDB:self.taskName].taskName]; // title为taskname
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:NSForegroundColorAttributeName]; // title为文案颜色
 
     self.navigationController.navigationBar.shadowImage = [UIImage new]; // navibar底部1pt下划线隐藏
@@ -67,15 +73,15 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (self.task.periods.count == 0) return 0;
-    BOOL theLastPeriodIsFinished = self.task.periods[0].count == 2;
-    return self.task.periods.count - (theLastPeriodIsFinished ? 0:1);
+    if ([MirrorStorage getTaskFromDB:self.taskName].periods.count == 0) return 0;
+    BOOL theLastPeriodIsFinished = [MirrorStorage getTaskFromDB:self.taskName].periods[0].count == 2;
+    return [MirrorStorage getTaskFromDB:self.taskName].periods.count - (theLastPeriodIsFinished ? 0:1);
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithTask:self.task index:indexPath.item];
+    [cell configWithTask:[MirrorStorage getTaskFromDB:self.taskName] periodIndex:indexPath.item];
     return cell;
 }
 

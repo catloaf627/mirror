@@ -9,13 +9,16 @@
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
+#import "MirrorStorage.h"
 
 static const CGFloat kHorizontalPadding = 20;
 static const CGFloat kVerticalPadding = 10;
 
 @interface TaskPeriodCollectionViewCell ()
 
-@property (nonatomic, strong) UIImageView *icon;
+@property (nonatomic, strong) MirrorDataModel *task;
+@property (nonatomic, assign) NSInteger periodIndex;
+@property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UILabel *mainLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
 
@@ -28,12 +31,16 @@ static const CGFloat kVerticalPadding = 10;
     return NSStringFromClass(self.class);
 }
 
-- (void)configWithTask:(MirrorDataModel *)task index:(NSInteger)index
+- (void)configWithTask:(MirrorDataModel *)task periodIndex:(NSInteger)index
 {
+    self.task = task;
+    self.periodIndex = index;
+    
     long start = [task.periods[index][0] longValue];
     long end = [task.periods[index][1] longValue];
     self.mainLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
     self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@" - "]stringByAppendingString:[self timeFromTimestamp:end]];
+    
     self.backgroundColor = [UIColor mirrorColorNamed:task.color];
     self.layer.cornerRadius = 14;
     [self p_setupUI];
@@ -55,12 +62,19 @@ static const CGFloat kVerticalPadding = 10;
         make.width.mas_equalTo(self.bounds.size.width - 3*kHorizontalPadding - 20);
         make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
     }];
-    [self addSubview:self.icon];
-    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self addSubview:self.deleteButton];
+    [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.offset(0);
         make.right.offset(-kHorizontalPadding);
         make.height.width.mas_equalTo(20);
     }];
+
+}
+
+- (void)delete
+{
+    NSLog(@"delete %@ 的第%d个period", self.task.taskName, self.periodIndex);
+    [MirrorStorage deletePeriodWithTaskname:self.task.taskName periodIndex:self.periodIndex];
 }
 
 #pragma mark - Getters
@@ -85,15 +99,16 @@ static const CGFloat kVerticalPadding = 10;
     return _detailLabel;
 }
 
-- (UIImageView *)icon
+- (UIButton *)deleteButton
 {
-    if (!_icon) {
-        _icon = [UIImageView new];
-        UIImage *iconImage = [UIImage systemImageNamed:@"delete.left"];
-        _icon.image = [iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        _icon.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    if (!_deleteButton) {
+        _deleteButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"delete.left"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_deleteButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _deleteButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_deleteButton addTarget:self action:@selector(delete) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _icon;
+    return _deleteButton;
 }
 
 #pragma mark - Privates

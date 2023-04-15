@@ -129,6 +129,21 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:@{@"taskName":taskName, @"TaskSavedType" : @(savedType)}];
 }
 
++ (void)deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
+{
+    // 在本地取出mirror dict
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    // 取出这个task以便作修改
+    MirrorDataModel *task = mirrorDict[taskName];
+    [task.periods removeObjectAtIndex:index];
+    // 保存更新好的task到本地
+    [mirrorDict setValue:task forKey:taskName];
+    // 将mirror dict存回本地
+    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period deleted"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodDeleteNotification object:nil userInfo:nil];
+}
+
 + (void)stopAllTasksExcept:(NSString *)exceptTaskName
 {
     // 在本地取出mirror dict
