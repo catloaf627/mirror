@@ -12,6 +12,7 @@
 #import "MirrorMacro.h"
 #import "DataEntranceCollectionViewCell.h"
 #import "MirrorHistogram.h"
+#import "MirrorLegend.h"
 #import "MirrorSettings.h"
 
 static CGFloat const kLeftRightSpacing = 20;
@@ -20,6 +21,7 @@ static CGFloat const kCellSpacing = 20;
 @interface DataViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) MirrorLegend *legendView;
 @property (nonatomic, strong) MirrorHistogram *histogramView;
 
 @end
@@ -48,6 +50,7 @@ static CGFloat const kCellSpacing = 20;
 {
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
+    self.legendView = nil;
     self.histogramView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -59,8 +62,7 @@ static CGFloat const kCellSpacing = 20;
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.collectionView reloadData];
-    [self.histogramView.collectionView reloadData];
+    [self reloadData];
 }
 
 - (void)reloadData
@@ -68,6 +70,10 @@ static CGFloat const kCellSpacing = 20;
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
     [self.collectionView reloadData];
     [self.histogramView.collectionView reloadData];
+    [self.legendView.collectionView reloadData];
+    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([self.legendView legendViewHeight]);
+    }];
 }
 
 - (void)dealloc
@@ -95,11 +101,18 @@ static CGFloat const kCellSpacing = 20;
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.height.mas_equalTo(80 * 2 + 20); // 两行cell加上他们的行间距
     }];
+    [self.view addSubview:self.legendView];
+    [self.legendView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
+        make.height.mas_equalTo([self.legendView legendViewHeight]);
+    }];
     [self.view addSubview:self.histogramView];
     [self.histogramView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.legendView.mas_bottom).offset(20);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
 }
@@ -142,26 +155,22 @@ static CGFloat const kCellSpacing = 20;
     switch (indexPath.item) {
         case 0:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeToday];
-            [self.collectionView reloadData]; // update all entrance borders
-            [self.histogramView.collectionView reloadData];
+            [self reloadData];
             break;
             
         case 1:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisWeek];
-            [self.collectionView reloadData]; // update all entrance borders
-            [self.histogramView.collectionView reloadData];
+            [self reloadData];
             break;
             
         case 2:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisMonth];
-            [self.collectionView reloadData]; // update all entrance borders
-            [self.histogramView.collectionView reloadData];
+            [self reloadData];
             break;
             
         case 3:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisYear];
-            [self.collectionView reloadData]; // update all entrance borders
-            [self.histogramView.collectionView reloadData];
+            [self reloadData];
             break;
             
         default:
@@ -193,6 +202,14 @@ static CGFloat const kCellSpacing = 20;
         _histogramView = [MirrorHistogram new];
     }
     return _histogramView;
+}
+
+- (MirrorLegend *)legendView
+{
+    if (!_legendView) {
+        _legendView = [MirrorLegend new];
+    }
+    return _legendView;
 }
 
 

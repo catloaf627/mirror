@@ -59,16 +59,16 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     switch ([MirrorSettings userPreferredHistogramType]) {
-        case MirrorHistogramTypeToday:
+        case UserPreferredHistogramTypeToday:
             self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
             break;
-        case MirrorHistogramTypeThisWeek:
+        case UserPreferredHistogramTypeThisWeek:
             self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisWeek] end:[[NSDate now] timeIntervalSince1970]];
             break;
-        case MirrorHistogramTypeThisMonth:
+        case UserPreferredHistogramTypeThisMonth:
             self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisMonth] end:[[NSDate now] timeIntervalSince1970]];
             break;
-        case MirrorHistogramTypeThisYear:
+        case UserPreferredHistogramTypeThisYear:
             self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisYear] end:[[NSDate now] timeIntervalSince1970]];
             break;
     }

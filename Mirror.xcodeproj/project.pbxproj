@@ -26,6 +26,8 @@
 		4A406C112906FC00001E83A1 /* ToggleCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C102906FC00001E83A1 /* ToggleCollectionViewCell.m */; };
 		4A406C1729070FC1001E83A1 /* ImmersiveCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C1629070FC1001E83A1 /* ImmersiveCollectionViewCell.m */; };
 		4A406C1A29071939001E83A1 /* MirrorStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C1929071939001E83A1 /* MirrorStorage.m */; };
+		4A410A2529EA4EE10007003B /* MirrorLegend.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A2429EA4EE10007003B /* MirrorLegend.m */; };
+		4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A2729EA51750007003B /* LegendCollectionViewCell.m */; };
 		4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* DataViewController.m */; };
 		4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
@@ -84,6 +86,10 @@
 		4A406C1629070FC1001E83A1 /* ImmersiveCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImmersiveCollectionViewCell.m; sourceTree = "<group>"; };
 		4A406C1829071939001E83A1 /* MirrorStorage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorStorage.h; sourceTree = "<group>"; };
 		4A406C1929071939001E83A1 /* MirrorStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorStorage.m; sourceTree = "<group>"; };
+		4A410A2329EA4EE10007003B /* MirrorLegend.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorLegend.h; sourceTree = "<group>"; };
+		4A410A2429EA4EE10007003B /* MirrorLegend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorLegend.m; sourceTree = "<group>"; };
+		4A410A2629EA51750007003B /* LegendCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegendCollectionViewCell.h; sourceTree = "<group>"; };
+		4A410A2729EA51750007003B /* LegendCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LegendCollectionViewCell.m; sourceTree = "<group>"; };
 		4A7CCD2429DBC7CF00879D9C /* DataViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataViewController.h; sourceTree = "<group>"; };
 		4A7CCD2529DBC7CF00879D9C /* DataViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataViewController.m; sourceTree = "<group>"; };
 		4A7CCD2E29DBCEB200879D9C /* DataEntranceCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataEntranceCollectionViewCell.h; sourceTree = "<group>"; };
@@ -192,6 +198,10 @@
 		4A099FB229DD85CA002683A1 /* Chart */ = {
 			isa = PBXGroup;
 			children = (
+				4A410A2329EA4EE10007003B /* MirrorLegend.h */,
+				4A410A2429EA4EE10007003B /* MirrorLegend.m */,
+				4A410A2629EA51750007003B /* LegendCollectionViewCell.h */,
+				4A410A2729EA51750007003B /* LegendCollectionViewCell.m */,
 				4A099FAF29DD85C5002683A1 /* MirrorHistogram.h */,
 				4A099FB029DD85C5002683A1 /* MirrorHistogram.m */,
 				4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */,
@@ -482,7 +492,9 @@
 				4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,
 				4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */,
+				4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */,
 				4A379B5728E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.m in Sources */,
+				4A410A2529EA4EE10007003B /* MirrorLegend.m in Sources */,
 				4A099FA729DCFE3C002683A1 /* MirrorDataManager.m in Sources */,
 				4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */,
 				4A01AAC929DF821200E2B5A8 /* MUXToast.m in Sources */,
