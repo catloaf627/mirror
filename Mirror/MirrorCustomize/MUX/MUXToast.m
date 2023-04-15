@@ -18,8 +18,8 @@
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:taskName];
     NSString *hintInfo = @"";
     if (savedType == TaskSavedTypeSaved) {
-        if (task.periods.count <= 0 || task.periods[task.periods.count -1].count != 2) return;
-        double latestPeriodInterval = [task.periods[task.periods.count -1][1] doubleValue] - [task.periods[task.periods.count -1][0] doubleValue];
+        if (task.periods.count <= 0 || task.periods[0].count != 2) return;
+        double latestPeriodInterval = [task.periods[0][1] doubleValue] - [task.periods[0][0] doubleValue];
         hintInfo = [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:latestPeriodInterval]];
     }
     if (savedType == TaskSavedTypeSaved24H) {

@@ -86,7 +86,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 给task创建一个新的period，并给出这个period的起始时间（now）
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
     NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@(round([[NSDate now] timeIntervalSince1970]))]];
-    [allPeriods addObject:newPeriod];
+    [allPeriods insertObject:newPeriod atIndex:0];
     task.periods = allPeriods;
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:taskName];
@@ -106,17 +106,17 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将最后一个period取出来，给它一个结束时间（now）
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
     if (allPeriods.count > 0) {
-        NSMutableArray *lastPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[allPeriods.count-1]];
-        long start = [lastPeriod[0] longValue];
+        NSMutableArray *latestPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[0]];
+        long start = [latestPeriod[0] longValue];
         long end = [[NSDate now] timeIntervalSince1970];
         long length = end - start;
         NSLog(@"%@计时结束 %ld",[UIColor getEmoji:task.color], length);
-        if (lastPeriod.count == 1 &&  length >= 10) { // 长度为10秒以上开始记录
-            [lastPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
-            allPeriods[allPeriods.count-1] = lastPeriod;
+        if (latestPeriod.count == 1 &&  length >= 10) { // 长度为10秒以上开始记录
+            [latestPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
+            allPeriods[0] = latestPeriod;
             savedType = length >= 86400 ? TaskSavedTypeSaved24H : TaskSavedTypeSaved;
         } else { // 错误格式或者10秒以下，丢弃这个task
-            [allPeriods removeLastObject];
+            [allPeriods removeObjectAtIndex:0];
             savedType = (length < 10 && length >= 0) ? TaskSavedTypeTooShort : TaskSavedTypeError;
         }
         task.periods = allPeriods;

@@ -68,14 +68,9 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (self.task.periods.count == 0) return 0;
-    BOOL theLastPeriodIsFinished = self.task.periods[self.task.periods.count-1].count == 2;
+    BOOL theLastPeriodIsFinished = self.task.periods[0].count == 2;
     return self.task.periods.count - (theLastPeriodIsFinished ? 0:1);
 }
-
-/*
- 注意这里的task顺序和数据库里的数据是反的
- 数据库中最新的task在最后，这里展示的时候最新的task在最前
- */
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {

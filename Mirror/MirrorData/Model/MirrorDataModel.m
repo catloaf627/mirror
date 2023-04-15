@@ -28,7 +28,7 @@
 
 - (BOOL)isOngoing // isOngoing并不由外界赋值，仅通过periods获得
 {
-    if (_periods.count > 0 && _periods[_periods.count-1].count == 1) {
+    if (_periods.count > 0 && _periods[0].count == 1) {
         return YES;
     }
     return NO;

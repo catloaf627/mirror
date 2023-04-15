@@ -88,9 +88,9 @@
     long startTimestamp = 0;
     NSArray *periods = self.taskModel.periods;
     if (periods.count > 0) {
-        NSArray *lastPeriod = periods[periods.count-1];
-        if (lastPeriod.count == 1) { // the last period is ongoing
-            startTimestamp = [lastPeriod[0] longValue];
+        NSArray *latestPeriod = periods[0];
+        if (latestPeriod.count == 1) { // the last period is ongoing
+            startTimestamp = [latestPeriod[0] longValue];
         }
     }
     // 使用 po round(([NSDate now]timeIntervalSince1970] - (86400-20))) 的结果替换下面的startTimestamp可以在20秒内看到20小时自动保存的效果
