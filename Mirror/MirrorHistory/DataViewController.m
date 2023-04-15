@@ -69,11 +69,11 @@ static CGFloat const kCellSpacing = 20;
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
     [self.collectionView reloadData];
-    [self.histogramView.collectionView reloadData];
     [self.legendView.collectionView reloadData];
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
+    [self.histogramView.collectionView reloadData];
 }
 
 - (void)dealloc

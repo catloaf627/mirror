@@ -20,6 +20,7 @@ static CGFloat const kShadowWidth = 5;
 @property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *hintLabel;
+@property (nonatomic, assign) BOOL cellIsTwinkling;
 
 @end
 
@@ -43,7 +44,7 @@ static CGFloat const kShadowWidth = 5;
         [self destroyTimeTrackingLabel];
     } else { // start animation
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:self.taskModel.color]]; // 瞬间变成pulse色
-        [self p_convertToColor:self.taskModel.color]; // 开始闪烁
+        if (!_cellIsTwinkling)[self p_convertToColor:self.taskModel.color]; // 开始闪烁
         [self createTimeTrackingLabelWithTask:taskModel];
     }
 }
@@ -92,10 +93,12 @@ static CGFloat const kShadowWidth = 5;
 
 - (void)p_convertToColor:(MirrorColorType)color
 {
+    _cellIsTwinkling = YES;
     [UIView animateKeyframesWithDuration:2.0  delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
         self.contentView.backgroundColor = [UIColor mirrorColorNamed:color];
     } completion:^(BOOL finished) {
         if (!self.taskModel.isOngoing || [MirrorSettings appliedImmersiveMode]) { // stop animation的条件对齐，不会因为view disappear就停止动画。
+            _cellIsTwinkling = NO;
             return;
         }
         if (CGColorEqualToColor(self.contentView.backgroundColor.CGColor, [UIColor mirrorColorNamed:self.taskModel.color].CGColor)) {
