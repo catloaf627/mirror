@@ -78,6 +78,7 @@ static const CGFloat kLabelHeight = 20;
     if (!_timeLabel) {
         _timeLabel = [UILabel new];
         _timeLabel.textAlignment = NSTextAlignmentCenter;
+        _timeLabel.adjustsFontSizeToFitWidth = YES;
     }
     return _timeLabel;
 }
