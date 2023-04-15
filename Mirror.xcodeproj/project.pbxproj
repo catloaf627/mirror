@@ -236,6 +236,7 @@
 		4A379B3C28E0371700785CAE /* MirrorHistory */ = {
 			isa = PBXGroup;
 			children = (
+				4A099FB229DD85CA002683A1 /* Chart */,
 				4A7CCD2429DBC7CF00879D9C /* DataViewController.h */,
 				4A7CCD2529DBC7CF00879D9C /* DataViewController.m */,
 				4A7CCD2E29DBCEB200879D9C /* DataEntranceCollectionViewCell.h */,
@@ -262,7 +263,6 @@
 			isa = PBXGroup;
 			children = (
 				4A01AAC329DF810700E2B5A8 /* MUX */,
-				4A099FB229DD85CA002683A1 /* Chart */,
 				4A099FAC29DD57AE002683A1 /* MirrorTool.h */,
 				4A099FAD29DD57AE002683A1 /* MirrorTool.m */,
 				4A379B3F28E0381A00785CAE /* UIColor+MirrorColor.h */,
