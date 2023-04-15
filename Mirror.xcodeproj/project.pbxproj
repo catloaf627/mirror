@@ -198,18 +198,9 @@
 		4A099FB229DD85CA002683A1 /* Chart */ = {
 			isa = PBXGroup;
 			children = (
-				4A410A2329EA4EE10007003B /* MirrorLegend.h */,
-				4A410A2429EA4EE10007003B /* MirrorLegend.m */,
-				4A410A2629EA51750007003B /* LegendCollectionViewCell.h */,
-				4A410A2729EA51750007003B /* LegendCollectionViewCell.m */,
-				4A099FAF29DD85C5002683A1 /* MirrorHistogram.h */,
-				4A099FB029DD85C5002683A1 /* MirrorHistogram.m */,
-				4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */,
-				4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */,
-				4A37369229E2AEE900187280 /* MirrorPiechart.h */,
-				4A37369329E2AEE900187280 /* MirrorPiechart.m */,
-				4A37369529E2BD3C00187280 /* SliceLayer.h */,
-				4A37369629E2BD3C00187280 /* SliceLayer.m */,
+				4A410A2929EA5D650007003B /* PieChart */,
+				4A410A2A29EA5D750007003B /* Legend */,
+				4A410A2B29EA5D800007003B /* Histogram */,
 			);
 			path = Chart;
 			sourceTree = "<group>";
@@ -294,6 +285,39 @@
 				4A099FA329DCFE0B002683A1 /* Task */,
 			);
 			path = MirrorData;
+			sourceTree = "<group>";
+		};
+		4A410A2929EA5D650007003B /* PieChart */ = {
+			isa = PBXGroup;
+			children = (
+				4A37369229E2AEE900187280 /* MirrorPiechart.h */,
+				4A37369329E2AEE900187280 /* MirrorPiechart.m */,
+				4A37369529E2BD3C00187280 /* SliceLayer.h */,
+				4A37369629E2BD3C00187280 /* SliceLayer.m */,
+			);
+			path = PieChart;
+			sourceTree = "<group>";
+		};
+		4A410A2A29EA5D750007003B /* Legend */ = {
+			isa = PBXGroup;
+			children = (
+				4A410A2329EA4EE10007003B /* MirrorLegend.h */,
+				4A410A2429EA4EE10007003B /* MirrorLegend.m */,
+				4A410A2629EA51750007003B /* LegendCollectionViewCell.h */,
+				4A410A2729EA51750007003B /* LegendCollectionViewCell.m */,
+			);
+			path = Legend;
+			sourceTree = "<group>";
+		};
+		4A410A2B29EA5D800007003B /* Histogram */ = {
+			isa = PBXGroup;
+			children = (
+				4A099FAF29DD85C5002683A1 /* MirrorHistogram.h */,
+				4A099FB029DD85C5002683A1 /* MirrorHistogram.m */,
+				4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */,
+				4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */,
+			);
+			path = Histogram;
 			sourceTree = "<group>";
 		};
 		4ADDC5BE28E6FB09006F02DE /* MirrorTaskEdit */ = {
