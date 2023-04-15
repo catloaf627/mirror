@@ -58,6 +58,7 @@ static CGFloat const kHeightRatio = 0.8;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self p_setupUI];
+    [self.editTaskNameTextField becomeFirstResponder];
 }
 
 - (void)p_setupUI
