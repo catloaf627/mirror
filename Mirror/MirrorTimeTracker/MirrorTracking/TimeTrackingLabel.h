@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TimeTrackingLabel : UILabel
 
-@property (nonatomic, strong) UIView<TimeTrackingLabelProtocol> *delegate;
+@property (nonatomic, weak) UIView<TimeTrackingLabelProtocol> *delegate;
 
 - (instancetype)initWithTask:(NSString *)taskName;
 

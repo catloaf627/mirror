@@ -12,6 +12,8 @@
 #import "MirrorMacro.h"
 #import "TaskPeriodCollectionViewCell.h"
 #import "MirrorStorage.h"
+#import "EditPeriodViewController.h"
+
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 @interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
@@ -64,6 +66,18 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     }];
 }
 
+#pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    BOOL periodsIsFinished = task.periods[indexPath.item].count == 2;
+    if (periodsIsFinished) {
+        EditPeriodViewController *editVC = [[EditPeriodViewController alloc] initWithTaskname:self.taskName periodIndex:indexPath.item];
+        [self.navigationController presentViewController:editVC animated:YES completion:nil];
+    }
+}
+
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -79,7 +93,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithTask:[MirrorStorage getTaskFromDB:self.taskName] periodIndex:indexPath.item];
+    [cell configWithTaskname:self.taskName periodIndex:indexPath.item];
     return cell;
 }
 

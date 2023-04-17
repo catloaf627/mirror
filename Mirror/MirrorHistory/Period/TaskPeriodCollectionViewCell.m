@@ -10,13 +10,14 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
+#import "EditPeriodViewController.h"
 
 static const CGFloat kHorizontalPadding = 20;
 static const CGFloat kVerticalPadding = 10;
 
 @interface TaskPeriodCollectionViewCell ()
 
-@property (nonatomic, strong) MirrorDataModel *task;
+@property (nonatomic, strong) NSString *taskName;
 @property (nonatomic, assign) NSInteger periodIndex;
 
 @property (nonatomic, strong) UIButton *editButton;
@@ -32,11 +33,11 @@ static const CGFloat kVerticalPadding = 10;
     return NSStringFromClass(self.class);
 }
 
-- (void)configWithTask:(MirrorDataModel *)task periodIndex:(NSInteger)index
+- (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
 {
-    self.task = task;
+    self.taskName = taskName;
     self.periodIndex = index;
-    
+    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     if ([self periodsIsFinished]) {
         long start = [task.periods[index][0] longValue];
         long end = [task.periods[index][1] longValue];
@@ -76,14 +77,10 @@ static const CGFloat kVerticalPadding = 10;
     }
 }
 
-- (void)edit
-{
-//    [MirrorStorage deletePeriodWithTaskname:self.task.taskName periodIndex:self.periodIndex];
-}
-
 - (BOOL)periodsIsFinished
 {
-    return self.task.periods[self.periodIndex].count == 2;
+    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    return task.periods[self.periodIndex].count == 2;
 }
 
 #pragma mark - Getters
@@ -115,7 +112,7 @@ static const CGFloat kVerticalPadding = 10;
         UIImage *iconImage = [[UIImage systemImageNamed:@"square.and.pencil"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_editButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         _editButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_editButton addTarget:self action:@selector(edit) forControlEvents:UIControlEventTouchUpInside];
+        _editButton.userInteractionEnabled = NO;
     }
     return _editButton;
 }

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)identifier;
 
-- (void)configWithTask:(MirrorDataModel *)task periodIndex:(NSInteger)index;
+- (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
 
 
 @end
