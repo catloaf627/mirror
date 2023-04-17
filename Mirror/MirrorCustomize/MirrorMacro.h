@@ -35,6 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 #define kMaxColorNum (8)
 // Max number of tasks
 #define kMaxTaskNum (8)
+// 最小记录时间
+#define kMinSeconds (10)
+// 最长记录时间
+#define kMaxSeconds (86400)
 
 // Settings Notifications
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"

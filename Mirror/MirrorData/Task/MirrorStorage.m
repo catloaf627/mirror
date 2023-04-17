@@ -111,13 +111,13 @@ static NSString *const kMirrorDict = @"mirror_dict";
         long end = [[NSDate now] timeIntervalSince1970];
         long length = end - start;
         NSLog(@"%@计时结束 %ld",[UIColor getEmoji:task.color], length);
-        if (latestPeriod.count == 1 &&  length >= 10) { // 长度为10秒以上开始记录
+        if (latestPeriod.count == 1 &&  length >= kMinSeconds) { // 长度为n秒以上开始记录
             [latestPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
             allPeriods[0] = latestPeriod;
-            savedType = length >= 86400 ? TaskSavedTypeSaved24H : TaskSavedTypeSaved;
-        } else { // 错误格式或者10秒以下，丢弃这个task
+            savedType = length >= kMaxSeconds ? TaskSavedTypeSaved24H : TaskSavedTypeSaved;
+        } else { // 错误格式或者n秒以下，丢弃这个task
             [allPeriods removeObjectAtIndex:0];
-            savedType = (length < 10 && length >= 0) ? TaskSavedTypeTooShort : TaskSavedTypeError;
+            savedType = (length < kMinSeconds && length >= 0) ? TaskSavedTypeTooShort : TaskSavedTypeError;
         }
         task.periods = allPeriods;
     }

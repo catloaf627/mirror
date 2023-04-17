@@ -216,7 +216,7 @@ static CGFloat const kDashSpacing = 10;
     BOOL printTimeStamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
     NSLog(@"%@全屏计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:self.taskModel.color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
-    if (round(self.timeInterval) >= 86400) { // 超过24小时立即停止计时
+    if (round(self.timeInterval) >= kMaxSeconds) { // 超过24小时立即停止计时
         [self.delegate destroyTimeTrackingView];
         [MirrorStorage stopTask:self.taskModel.taskName];
     }
@@ -253,7 +253,7 @@ static CGFloat const kDashSpacing = 10;
             startTimestamp = [latestPeriod[0] longValue];
         }
     }
-    // 使用 po round(([NSDate now]timeIntervalSince1970] - (86400-20))) 的结果替换下面的startTimestamp可以在20秒内看到20小时自动保存的效果
+    //     使用 po round(([NSDate now]timeIntervalSince1970] - (kMaxSeconds-20))) 的结果替换下面的startTimestamp可以在20秒内看到超时自动保存的效果
     NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimestamp];
     return startTime;
 }
