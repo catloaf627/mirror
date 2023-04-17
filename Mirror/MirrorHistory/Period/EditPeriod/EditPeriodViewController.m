@@ -28,6 +28,9 @@ static CGFloat const kHeightRatio = 0.8;
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UIPickerView *secondPicker;
 
+// seconds
+@property (nonatomic, strong) NSArray *seconds;
+
 @end
 
 @implementation EditPeriodViewController
@@ -96,7 +99,7 @@ static CGFloat const kHeightRatio = 0.8;
 }
 
 - (NSInteger)pickerView:(nonnull UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return 60;
+    return self.seconds.count;
 }
 
 
@@ -107,7 +110,7 @@ static CGFloat const kHeightRatio = 0.8;
     style.firstLineHeadIndent = 10.0f;
     style.headIndent = 5;
     style.tailIndent = 5;
-    NSString *text = [@(row+1) stringValue];
+    NSString *text = [self.seconds[row] stringValue];
     NSAttributedString *attributedStr = [[NSAttributedString alloc]initWithString:text attributes:@{NSParagraphStyleAttributeName:style}];
     return attributedStr;
 }
@@ -130,7 +133,45 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)selectDatePick
 {
-    NSLog(@"gizmo %@", self.datePicker.date); // 在这里更新second picker
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDateComponents *selects = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
+    selects.timeZone = [NSTimeZone systemTimeZone];
+    // maxs
+    NSDateComponents *maxs = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[self maxDate]];
+    maxs.timeZone = [NSTimeZone systemTimeZone];
+    BOOL inTheSameMinutesWithMax = selects.year == maxs.year && selects.month == maxs.month && selects.day == maxs.day && selects.hour == maxs.hour && selects.minute == maxs.minute;
+    // mins
+    NSDateComponents *mins = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[self minDate]];
+    mins.timeZone = [NSTimeZone systemTimeZone];
+    BOOL inTheSameMinutesWithMin = selects.year == mins.year && selects.month == mins.month && selects.day == mins.day && selects.hour == mins.hour && selects.minute == mins.minute;
+    if (inTheSameMinutesWithMax && inTheSameMinutesWithMin) { // 最大时间和最小时间narrow到只有秒数不同
+        NSMutableArray *arr = [NSMutableArray new];
+        for (NSInteger i=mins.second; i<=maxs.second; i++) {
+            [arr addObject:@(i)];
+        }
+        self.seconds = [arr copy];
+    } else if (inTheSameMinutesWithMax) { // 选择的年/月/日/时/分和最大值一样，那么最大值的秒数就是最大秒数
+        NSMutableArray *arr = [NSMutableArray new];
+        for (NSInteger i=0; i<=maxs.second; i++) {
+            [arr addObject:@(i)];
+        }
+        self.seconds = [arr copy];
+    } else if (inTheSameMinutesWithMin) { // 选择的年/月/日/时/分和最小值一样，那么最小值的秒数就是最小秒数
+        NSMutableArray *arr = [NSMutableArray new];
+        for (NSInteger i=mins.second; i<=59; i++) {
+            [arr addObject:@(i)];
+        }
+        self.seconds = [arr copy];
+    } else { // 选择的年/月/日/时/分 和最大、最小时间的年/月/日/时/分都不一样，秒数为完整的0-59
+        NSMutableArray *arr = [NSMutableArray new];
+        for (NSInteger i=0; i<=59; i++) {
+            [arr addObject:@(i)];
+        }
+        self.seconds = [arr copy];
+    }
+    NSLog(@"gizmo %@", self.seconds);
+    [self.secondPicker reloadAllComponents];
 }
 
 #pragma mark - Getters
@@ -235,8 +276,29 @@ static CGFloat const kHeightRatio = 0.8;
         NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
         NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:initDate];
         components.timeZone = [NSTimeZone systemTimeZone];
-        NSInteger rowIndex = components.second-1;
-        [_secondPicker selectRow:rowIndex inComponent:0 animated:YES];
+        if (self.isStartTime) { // 当前second就是最小second
+
+            NSMutableArray *arr = [NSMutableArray new];
+            for (NSInteger i=components.second; i<=59; i++) {
+                [arr addObject:@(i)];
+            }
+            self.seconds = [arr copy];
+            [_secondPicker selectRow:0 inComponent:0 animated:YES];
+        } else { // 当前second就是最大second
+            NSMutableArray *arr = [NSMutableArray new];
+            for (NSInteger i=0; i<=components.second; i++) {
+                [arr addObject:@(i)];
+            }
+            self.seconds = [arr copy];
+            [_secondPicker selectRow:self.seconds.count-1 inComponent:0 animated:YES];
+        }
+
+
+//        NSInteger rowIndex = components.second-1;
+//        [_secondPicker selectRow:rowIndex inComponent:0 animated:YES];
+        if (self.isStartTime) {
+            
+        }
     }
     return _secondPicker;
 }
