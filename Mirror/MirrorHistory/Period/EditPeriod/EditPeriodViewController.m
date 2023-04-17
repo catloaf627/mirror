@@ -162,6 +162,9 @@ static CGFloat const kHeightRatio = 0.8;
         _datePicker.preferredDatePickerStyle = UIDatePickerStyleInline;
         MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
         _datePicker.tintColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:task.color]];
+        long initTime = [task.periods[self.periodIndex][self.isStartTime ? 0:1] longValue];
+        NSDate *initDate = [NSDate dateWithTimeIntervalSince1970:initTime];
+        _datePicker.date = initDate;
     }
     return _datePicker;
 }
@@ -194,6 +197,14 @@ static CGFloat const kHeightRatio = 0.8;
         _secondPicker = [UIPickerView new];
         _secondPicker.delegate = self;
         _secondPicker.dataSource = self;
+        MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+        long initTime = [task.periods[self.periodIndex][self.isStartTime ? 0:1] longValue];
+        NSDate *initDate = [NSDate dateWithTimeIntervalSince1970:initTime];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:initDate];
+        components.timeZone = [NSTimeZone systemTimeZone];
+        NSInteger rowIndex = components.second-1;
+        [_secondPicker selectRow:rowIndex inComponent:0 animated:YES];
     }
     return _secondPicker;
 }
