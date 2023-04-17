@@ -160,6 +160,67 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)reloadSeconds
 {
+    // 先把之前选的second值取出来，不然修改self.seconds后再取就不对了。
+    NSInteger selectedSecond = [self.seconds[[self.secondPicker selectedRowInComponent:0]] integerValue];
+    // 设置都有哪些seconds值
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDateComponents *selects = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
+    selects.timeZone = [NSTimeZone systemTimeZone];
+    // maxs
+    NSDateComponents *maxs = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[self maxDate]];
+    maxs.timeZone = [NSTimeZone systemTimeZone];
+    BOOL inTheSameMinutesWithMax = selects.year == maxs.year && selects.month == maxs.month && selects.day == maxs.day && selects.hour == maxs.hour && selects.minute == maxs.minute;
+    // mins
+    NSDateComponents *mins = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[self minDate]];
+    mins.timeZone = [NSTimeZone systemTimeZone];
+    BOOL inTheSameMinutesWithMin = selects.year == mins.year && selects.month == mins.month && selects.day == mins.day && selects.hour == mins.hour && selects.minute == mins.minute;
+    if (inTheSameMinutesWithMax && inTheSameMinutesWithMin) { // 最大时间和最小时间narrow到只有秒数不同
+        NSMutableArray *arr = [NSMutableArray new];
+        for (NSInteger i=mins.second; i<=maxs.second; i++) {
+            [arr addObject:@(i)];
+        }
+        self.seconds = [arr copy];
+    } else if (inTheSameMinutesWithMax) { // 选择的年/月/日/时/分和最大值一样，那么最大值的秒数就是最大秒数
+        NSMutableArray *arr = [NSMutableArray new];
+        for (NSInteger i=0; i<=maxs.second; i++) {
+            [arr addObject:@(i)];
+        }
+        self.seconds = [arr copy];
+    } else if (inTheSameMinutesWithMin) { // 选择的年/月/日/时/分和最小值一样，那么最小值的秒数就是最小秒数
+        NSMutableArray *arr = [NSMutableArray new];
+        for (NSInteger i=mins.second; i<=59; i++) {
+            [arr addObject:@(i)];
+        }
+        self.seconds = [arr copy];
+    } else { // 选择的年/月/日/时/分 和最大、最小时间的年/月/日/时/分都不一样，秒数为完整的0-59
+        NSMutableArray *arr = [NSMutableArray new];
+        for (NSInteger i=0; i<=59; i++) {
+            [arr addObject:@(i)];
+        }
+        self.seconds = [arr copy];
+    }
+    [self.secondPicker reloadAllComponents];
+    
+    // 设置选择第几个
+    if (selectedSecond< [self.seconds[0] integerValue]) { // 选择的second比最小的还要小
+        [self.secondPicker selectRow:0 inComponent:0 animated:YES];
+        return;
+    }
+    if (selectedSecond > [self.seconds[self.seconds.count-1] integerValue]) { // 选择的second比最大的还要大
+        [self.secondPicker selectRow:self.seconds.count-1 inComponent:0 animated:YES];
+        return;
+    }
+    for (int i=0; i<self.seconds.count; i++) {
+        if ([self.seconds[i] integerValue] == selectedSecond) {
+            [self.secondPicker selectRow:i inComponent:0 animated:YES];
+            return;
+        }
+    }
+}
+
+- (void)initSeconds
+{
     // 设置都有哪些seconds值
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
@@ -346,7 +407,7 @@ static CGFloat const kHeightRatio = 0.8;
         _secondPicker = [UIPickerView new];
         _secondPicker.delegate = self;
         _secondPicker.dataSource = self;
-        [self reloadSeconds];
+        [self initSeconds];
     }
     return _secondPicker;
 }
