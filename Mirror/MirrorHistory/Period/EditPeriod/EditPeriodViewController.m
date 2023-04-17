@@ -23,10 +23,13 @@ static CGFloat const kHeightRatio = 0.8;
 @property (nonatomic, assign) BOOL isStartTime;
 
 // UI
-@property (nonatomic, strong) UILabel *hintLabel;
+@property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIButton *saveButton;
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UIPickerView *secondPicker;
+// 同cell上的展示
+@property (nonatomic, strong) UILabel *totalLabel;
+@property (nonatomic, strong) UILabel *detailLabel;
 
 // seconds
 @property (nonatomic, strong) NSArray *seconds;
@@ -63,8 +66,8 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)p_setupUI
 {
-    [self.view addSubview:self.hintLabel];
-    [self.hintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.titleLabel];
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(kEditPeriodVCPadding);
         make.right.offset(-50 - 2*kEditPeriodVCPadding);
         make.top.offset(kEditPeriodVCPadding);
@@ -73,14 +76,14 @@ static CGFloat const kHeightRatio = 0.8;
     [self.saveButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-kEditPeriodVCPadding);
         make.width.mas_equalTo(50);
-        make.centerY.mas_equalTo(self.hintLabel);
+        make.centerY.mas_equalTo(self.titleLabel);
         make.top.offset(kEditPeriodVCPadding);
     }];
     [self.view addSubview:self.datePicker];
     [self.datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(0);
         make.right.offset(-60);
-        make.top.mas_equalTo(self.hintLabel.mas_bottom).offset(kEditPeriodVCPadding);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(kEditPeriodVCPadding);
     }];
     [self.view addSubview:self.secondPicker];
     [self.secondPicker mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -89,6 +92,19 @@ static CGFloat const kHeightRatio = 0.8;
         make.width.mas_equalTo(60);
         make.height.mas_equalTo(100);
     }];
+    [self.view addSubview:self.totalLabel];
+    [self.totalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.datePicker.mas_bottom).offset(kEditPeriodVCPadding);
+        make.left.offset(kEditPeriodVCPadding);
+        make.height.mas_equalTo(30);
+    }];
+    [self.view addSubview:self.detailLabel];
+    [self.detailLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.totalLabel.mas_bottom).offset(kEditPeriodVCPadding);
+        make.left.offset(kEditPeriodVCPadding);
+        make.width.mas_equalTo(kScreenWidth - 2*kEditPeriodVCPadding);
+    }];
+    [self reloadLabels];
 }
 
 #pragma mark - UIPickerViewDataSource, UIPickerViewDelegate
@@ -115,6 +131,11 @@ static CGFloat const kHeightRatio = 0.8;
     return attributedStr;
 }
 
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    [self reloadLabels];
+}
+
 
 #pragma mark - Actions
 // 给superview添加了点击手势（为了在点击上方不属于self.view的地方可以dismiss掉self）
@@ -131,8 +152,15 @@ static CGFloat const kHeightRatio = 0.8;
     
 }
 
-- (void)selectDatePick
+- (void)reloadSecondsNLabels
 {
+    [self reloadSeconds]; // 调整年/月/日/时/分后，秒的范围会跟着变化
+    [self reloadLabels]; // 调整年/月/日/时/分后，label会跟着变化
+}
+
+- (void)reloadSeconds
+{
+    // 设置都有哪些seconds值
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     
     NSDateComponents *selects = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
@@ -170,29 +198,77 @@ static CGFloat const kHeightRatio = 0.8;
         }
         self.seconds = [arr copy];
     }
-    NSLog(@"gizmo %@", self.seconds);
     [self.secondPicker reloadAllComponents];
+    
+    // 设置选择第几个
+    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    long initTime = [task.periods[self.periodIndex][self.isStartTime ? 0:1] longValue];
+    NSDate *initDate = [NSDate dateWithTimeIntervalSince1970:initTime];
+    NSDateComponents *inits = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:initDate];
+    inits.timeZone = [NSTimeZone systemTimeZone];
+    
+    if (inits.second < [self.seconds[0] integerValue]) { // 初始second比最小的还要小
+        [self.secondPicker selectRow:0 inComponent:0 animated:YES];
+        return;
+    }
+    if (inits.second > [self.seconds[self.seconds.count-1] integerValue]) { // 初始second比最大的还要大
+        [self.secondPicker selectRow:self.seconds.count-1 inComponent:0 animated:YES];
+        return;
+    }
+    for (int i=0; i<self.seconds.count; i++) {
+        if ([self.seconds[i] integerValue] == inits.second) {
+            [self.secondPicker selectRow:i inComponent:0 animated:YES];
+            return;
+        }
+    }
+    
+    
+}
+
+- (void)reloadLabels
+{
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDateComponents *selects = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
+    selects.timeZone = [NSTimeZone systemTimeZone];
+    selects.second = [self.seconds[[self.secondPicker selectedRowInComponent:0]] integerValue];
+    NSDate *combinedDate = [gregorian dateFromComponents:selects];
+    long timeStamp = [combinedDate timeIntervalSince1970];
+    if (self.isStartTime) {
+        MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+        long start = timeStamp;
+        long end = [task.periods[self.periodIndex][1] longValue];
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@" "] stringByAppendingString:[self timeFromTimestamp:end]];
+    } else {
+        MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+        long start = [task.periods[self.periodIndex][0] longValue];
+        long end = timeStamp;
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@" "] stringByAppendingString:[self timeFromTimestamp:end]];
+    }
+
 }
 
 #pragma mark - Getters
 
-- (UILabel *)hintLabel
+- (UILabel *)titleLabel
 {
-    if (!_hintLabel) {
-        _hintLabel = [UILabel new];
-        _hintLabel.adjustsFontSizeToFitWidth = NO;
-        _hintLabel.numberOfLines = 0;
-        _hintLabel.textAlignment = NSTextAlignmentCenter;
+    if (!_titleLabel) {
+        _titleLabel = [UILabel new];
+        _titleLabel.adjustsFontSizeToFitWidth = NO;
+        _titleLabel.numberOfLines = 0;
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
         MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
         NSInteger taskIndex = task.periods.count - self.periodIndex;
         if (self.isStartTime) {
-            _hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"start_time_for_period" with1Placeholder:[@(taskIndex) stringValue]];
+            _titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"start_time_for_period" with1Placeholder:[@(taskIndex) stringValue]];
         } else {
-            _hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"end_time_for_period" with1Placeholder:[@(taskIndex) stringValue]];
+            _titleLabel.text = [MirrorLanguage mirror_stringWithKey:@"end_time_for_period" with1Placeholder:[@(taskIndex) stringValue]];
         }
-        _hintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
     }
-    return _hintLabel;
+    return _titleLabel;
 }
 
 - (UIButton *)saveButton
@@ -217,7 +293,7 @@ static CGFloat const kHeightRatio = 0.8;
         long initTime = [task.periods[self.periodIndex][self.isStartTime ? 0:1] longValue];
         NSDate *initDate = [NSDate dateWithTimeIntervalSince1970:initTime];
         _datePicker.date = initDate;
-        [_datePicker addTarget:self action:@selector(selectDatePick) forControlEvents:UIControlEventValueChanged];
+        [_datePicker addTarget:self action:@selector(reloadSecondsNLabels) forControlEvents:UIControlEventValueChanged];
         _datePicker.maximumDate = [self maxDate];
         _datePicker.minimumDate = [self minDate];
     }
@@ -270,37 +346,58 @@ static CGFloat const kHeightRatio = 0.8;
         _secondPicker = [UIPickerView new];
         _secondPicker.delegate = self;
         _secondPicker.dataSource = self;
-        MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-        long initTime = [task.periods[self.periodIndex][self.isStartTime ? 0:1] longValue];
-        NSDate *initDate = [NSDate dateWithTimeIntervalSince1970:initTime];
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:initDate];
-        components.timeZone = [NSTimeZone systemTimeZone];
-        if (self.isStartTime) { // 当前second就是最小second
-
-            NSMutableArray *arr = [NSMutableArray new];
-            for (NSInteger i=components.second; i<=59; i++) {
-                [arr addObject:@(i)];
-            }
-            self.seconds = [arr copy];
-            [_secondPicker selectRow:0 inComponent:0 animated:YES];
-        } else { // 当前second就是最大second
-            NSMutableArray *arr = [NSMutableArray new];
-            for (NSInteger i=0; i<=components.second; i++) {
-                [arr addObject:@(i)];
-            }
-            self.seconds = [arr copy];
-            [_secondPicker selectRow:self.seconds.count-1 inComponent:0 animated:YES];
-        }
-
-
-//        NSInteger rowIndex = components.second-1;
-//        [_secondPicker selectRow:rowIndex inComponent:0 animated:YES];
-        if (self.isStartTime) {
-            
-        }
+        [self reloadSeconds];
     }
     return _secondPicker;
+}
+
+- (UILabel *)totalLabel
+{
+    if (!_totalLabel) {
+        _totalLabel = [UILabel new];
+        _totalLabel.adjustsFontSizeToFitWidth = YES;
+        _totalLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+    }
+    return _totalLabel;
+}
+
+- (UILabel *)detailLabel
+{
+    if (!_detailLabel) {
+        _detailLabel = [UILabel new];
+        _detailLabel.adjustsFontSizeToFitWidth = YES;
+        _detailLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    }
+    return _detailLabel;
+}
+
+#pragma mark - Privates
+
+- (NSString *)timeFromTimestamp:(long)timestamp
+{
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+    // setup
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    long year = (long)components.year;
+    long month = (long)components.month;
+    long week = (long)components.weekday;
+    long day = (long)components.day;
+    long hour = (long)components.hour;
+    long minute = (long)components.minute;
+    long second = (long)components.second;
+    // print
+    NSString *weekday = @"unknow";
+    if (week == 1) weekday = @"Sun";
+    if (week == 2) weekday = @"Mon";
+    if (week == 3) weekday = @"Tue";
+    if (week == 4) weekday = @"Wed";
+    if (week == 5) weekday = @"Thu";
+    if (week == 6) weekday = @"Fri";
+    if (week == 7) weekday = @"Sat";
+    return [NSString stringWithFormat: @"%ld.%ld.%ld,%@,%ld:%ld:%ld", year, month, day, weekday, hour, minute, second];
 }
 
 

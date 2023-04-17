@@ -21,7 +21,7 @@ static const CGFloat kVerticalPadding = 10;
 @property (nonatomic, assign) NSInteger periodIndex;
 
 @property (nonatomic, strong) UIButton *deleteButton;
-@property (nonatomic, strong) UILabel *mainLabel; // 总时长
+@property (nonatomic, strong) UILabel *totalLabel; // 总时长
 @property (nonatomic, strong) UIButton *startButton;
 @property (nonatomic, strong) UILabel *dashLabel;
 @property (nonatomic, strong) UIButton *endButton;
@@ -43,11 +43,11 @@ static const CGFloat kVerticalPadding = 10;
     if ([self periodsIsFinished]) {
         long start = [task.periods[index][0] longValue];
         long end = [task.periods[index][1] longValue];
-        self.mainLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
         [self.startButton setTitle:[self timeFromTimestamp:start] forState:UIControlStateNormal];
         [self.endButton setTitle:[self timeFromTimestamp:end] forState:UIControlStateNormal];
     } else if (task.periods[index].count == 1) {
-        self.mainLabel.text = [MirrorLanguage mirror_stringWithKey:@"counting"];
+        self.totalLabel.text = [MirrorLanguage mirror_stringWithKey:@"counting"];
     }
     self.backgroundColor = [UIColor mirrorColorNamed:task.color];
     self.layer.cornerRadius = 14;
@@ -56,8 +56,8 @@ static const CGFloat kVerticalPadding = 10;
 
 - (void)p_setupUI
 {
-    [self addSubview:self.mainLabel];
-    [self.mainLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self addSubview:self.totalLabel];
+    [self.totalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.offset(kVerticalPadding);
         make.left.offset(kHorizontalPadding);
         make.width.mas_equalTo(self.bounds.size.width - 3*kHorizontalPadding - 20);
@@ -87,7 +87,7 @@ static const CGFloat kVerticalPadding = 10;
     }];
     [self addSubview:self.deleteButton];
     [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.mainLabel);
+        make.centerY.mas_equalTo(self.totalLabel);
         make.right.offset(-kHorizontalPadding);
         make.height.width.mas_equalTo(20);
     }];
@@ -129,14 +129,14 @@ static const CGFloat kVerticalPadding = 10;
 
 #pragma mark - Getters
 
-- (UILabel *)mainLabel
+- (UILabel *)totalLabel
 {
-    if (!_mainLabel) {
-        _mainLabel = [UILabel new];
-        _mainLabel.adjustsFontSizeToFitWidth = YES;
-        _mainLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+    if (!_totalLabel) {
+        _totalLabel = [UILabel new];
+        _totalLabel.adjustsFontSizeToFitWidth = YES;
+        _totalLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
     }
-    return _mainLabel;
+    return _totalLabel;
 }
 
 - (UIButton *)startButton
