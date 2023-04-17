@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TaskPeriodCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, weak) id<PushEditPeriodSheetProtocol> delegate;
+@property (nonatomic, weak) UIViewController<PushEditPeriodSheetProtocol> *delegate;
 + (NSString *)identifier;
 - (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
 

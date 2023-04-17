@@ -72,6 +72,9 @@
     // Task record
     [mirrorDict setValue:@[@"Total: ", @"共计："] forKey:@"total"];
     
+    // Delete period
+    [mirrorDict setValue:@[@"Delete this time period? ", @"确定删除这个时间段？"] forKey:@"delete_period_?"];
+    
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }

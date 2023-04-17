@@ -114,7 +114,17 @@ static const CGFloat kVerticalPadding = 10;
 
 - (void)deletePeriod
 {
+    UIAlertController* deleteButtonAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete_period_?"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* deleteAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        [MirrorStorage deletePeriodWithTaskname:self.taskName periodIndex:self.periodIndex];
+    }];
     
+    UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:nil];
+
+    [deleteButtonAlert addAction:deleteAction];
+    [deleteButtonAlert addAction:cancelAction];
+    [self.delegate presentViewController:deleteButtonAlert animated:YES completion:nil];
 }
 
 #pragma mark - Getters
