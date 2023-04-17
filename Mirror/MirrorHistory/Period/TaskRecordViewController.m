@@ -12,11 +12,10 @@
 #import "MirrorMacro.h"
 #import "TaskPeriodCollectionViewCell.h"
 #import "MirrorStorage.h"
-#import "EditPeriodViewController.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PushEditPeriodSheetProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSString *taskName;
@@ -66,16 +65,18 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     }];
 }
 
+#pragma mark - PushEditPeriodSheetProtocol
+
+- (void)pushEditPeriodSheet:(UIViewController *)editVC
+{
+    [self.navigationController presentViewController:editVC animated:YES completion:nil];
+}
+
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-    BOOL periodsIsFinished = task.periods[indexPath.item].count == 2;
-    if (periodsIsFinished) {
-        EditPeriodViewController *editVC = [[EditPeriodViewController alloc] initWithTaskname:self.taskName periodIndex:indexPath.item];
-        [self.navigationController presentViewController:editVC animated:YES completion:nil];
-    }
+    
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -94,6 +95,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
     [cell configWithTaskname:self.taskName periodIndex:indexPath.item];
+    cell.delegate = self;
     return cell;
 }
 

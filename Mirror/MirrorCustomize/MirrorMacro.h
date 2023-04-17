@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 最小记录时间
 #define kMinSeconds (1)
 // 最长记录时间
-#define kMaxSeconds (86400)
+#define kMaxSeconds (NSIntegerMax)
 
 // Settings Notifications
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"

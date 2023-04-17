@@ -45,7 +45,7 @@ static CGFloat const kDashSpacing = 10;
 @property (nonatomic, strong) UILabel *nowTimeColonLabelB;
 @property (nonatomic, strong) UILabel *nowTimeLabelss;
 
-@property (nonatomic, strong) UILabel *yesterdayLabel; // 虽然一次task时间不能超过24h，但task仍可以跨越0点，yesterdaylabel当跨越0点的时候会展示。
+@property (nonatomic, strong) UILabel *differentDayLabel;
 
 // Data
 
@@ -167,12 +167,12 @@ static CGFloat const kDashSpacing = 10;
         make.centerY.equalTo(self.nowTimeColonLabelB);
     }];
     
-    [self addSubview:self.yesterdayLabel];
-    [self.yesterdayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self addSubview:self.differentDayLabel];
+    [self.differentDayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.startTimeLabelss.mas_top);
         make.centerX.equalTo(self.startTimeLabelss.mas_right);
     }];
-    self.yesterdayLabel.hidden = YES;
+    self.differentDayLabel.hidden = YES;
     
     // 轻点停止计时
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(stopButtonClicked)];
@@ -225,8 +225,9 @@ static CGFloat const kDashSpacing = 10;
         [MirrorStorage stopTask:self.taskModel.taskName];
         
     }
-    if (![[dayFormatter stringFromDate:self.nowTime] isEqualToString:[dayFormatter stringFromDate:self.startTime]]) { // 如果两个时间不在同一天（跨越了0点），给startTime一个[昨天]的标记
-        self.yesterdayLabel.hidden = NO;
+    if (![[dayFormatter stringFromDate:self.nowTime] isEqualToString:[dayFormatter stringFromDate:self.startTime]]) { // 如果两个时间不在同一天，给startTime一个[日期]的标记
+        self.differentDayLabel.hidden = NO;
+        self.differentDayLabel.text = [dayFormatter stringFromDate:self.startTime];
     }
 }
 
@@ -411,24 +412,27 @@ static CGFloat const kDashSpacing = 10;
     return _nowTimeLabelss;
 }
 
-- (UILabel *)yesterdayLabel
+- (UILabel *)differentDayLabel
 {
-    if (!_yesterdayLabel) {
-        _yesterdayLabel = [UILabel new];
-        _yesterdayLabel.textColor = [UIColor redColor];
-        _yesterdayLabel.font = [UIFont fontWithName:kHintFont size:13];
-        _yesterdayLabel.backgroundColor = [UIColor colorWithRed:255 green:0 blue:0 alpha:0.1];
+    if (!_differentDayLabel) {
+        _differentDayLabel = [UILabel new];
+        _differentDayLabel.textColor = [UIColor redColor];
+        _differentDayLabel.font = [UIFont fontWithName:kHintFont size:13];
+        _differentDayLabel.backgroundColor = [UIColor colorWithRed:255 green:0 blue:0 alpha:0.1];
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.alignment = NSTextAlignmentJustified;
         style.firstLineHeadIndent = 10.0f;
         style.headIndent = 5;
         style.tailIndent = 5;
-        NSAttributedString *attributedStr = [[NSAttributedString alloc]initWithString:[MirrorLanguage mirror_stringWithKey:@"yesterday"] attributes:@{NSParagraphStyleAttributeName:style}];
-        _yesterdayLabel.attributedText = attributedStr;
-        _yesterdayLabel.layer.cornerRadius = 4;
-        _yesterdayLabel.layer.masksToBounds = YES;
+        NSDateFormatter *dayFormatter = [[NSDateFormatter alloc]init];
+        dayFormatter.dateFormat = @"yyyy-MM-dd";
+        NSString *text = [dayFormatter stringFromDate:self.startTime];
+        NSAttributedString *attributedStr = [[NSAttributedString alloc]initWithString:text attributes:@{NSParagraphStyleAttributeName:style}];
+        _differentDayLabel.attributedText = attributedStr;
+        _differentDayLabel.layer.cornerRadius = 4;
+        _differentDayLabel.layer.masksToBounds = YES;
     }
-    return _yesterdayLabel;
+    return _differentDayLabel;
 }
 
 @end

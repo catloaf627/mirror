@@ -11,28 +11,35 @@
 #import "MirrorStorage.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
-
+#import "MirrorLanguage.h"
 
 static CGFloat const kEditPeriodVCPadding = 20;
 static CGFloat const kHeightRatio = 0.8;
 
-@interface EditPeriodViewController ()
+@interface EditPeriodViewController () <UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, strong) NSString *taskName;
 @property (nonatomic, assign) NSInteger periodIndex;
+@property (nonatomic, assign) BOOL isStartTime;
 
 @property (nonatomic, strong) UILabel *hintLabel;
+@property (nonatomic, strong) UIDatePicker *datePicker;
+@property (nonatomic, strong) UIView *secondView;
+@property (nonatomic, strong) UILabel *secondLabel;
+@property (nonatomic, strong) UIPickerView *secondPicker;
 
 @end
 
 @implementation EditPeriodViewController
 
-- (instancetype)initWithTaskname:(NSString *)taskName periodIndex:(NSInteger)periodIndex
+- (instancetype)initWithTaskname:(NSString *)taskName periodIndex:(NSInteger)periodIndex isStartTime:(BOOL)isStartTime
 {
     self = [super init];
     if (self) {
         self.taskName = taskName;
         self.periodIndex = periodIndex;
+        self.isStartTime = isStartTime;
+        
         MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
         self.view.backgroundColor = [UIColor mirrorColorNamed:task.color];
         [self p_setupUI];
@@ -60,7 +67,59 @@ static CGFloat const kHeightRatio = 0.8;
         make.right.offset(-kEditPeriodVCPadding);
         make.top.offset(kEditPeriodVCPadding);
     }];
+    [self.view addSubview:self.datePicker];
+    [self.datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.offset(kEditPeriodVCPadding);
+        make.right.offset(-kEditPeriodVCPadding);
+        make.top.mas_equalTo(self.hintLabel.mas_bottom);
+    }];
+    [self.view addSubview:self.secondView];
+    [self.secondView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.datePicker.mas_bottom);
+        make.centerX.offset(0);
+        make.width.mas_equalTo(70);
+        make.height.mas_equalTo(100);
+    }];
+    
+    [self.secondView addSubview:self.secondPicker];
+    [self.secondPicker mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.offset(0);
+        make.left.offset(0);
+        make.width.mas_equalTo(60);
+        make.height.mas_equalTo(100);
+    }];
+    [self.secondView addSubview:self.secondLabel];
+    [self.secondLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.offset(0);
+        make.right.offset(0);
+        make.width.mas_equalTo(10);
+        make.height.mas_equalTo(100);
+    }];
 }
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(nonnull UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return 60;
+}
+
+
+- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.alignment = NSTextAlignmentJustified;
+    style.firstLineHeadIndent = 10.0f;
+    style.headIndent = 5;
+    style.tailIndent = 5;
+    
+    NSString *text = [@(row+1) stringValue];
+    NSAttributedString *attributedStr = [[NSAttributedString alloc]initWithString:text attributes:@{NSParagraphStyleAttributeName:style}];
+    return attributedStr;
+}
+
 
 #pragma mark - Actions
 // 给superview添加了点击手势（为了在点击上方不属于self.view的地方可以dismiss掉self）
@@ -81,12 +140,63 @@ static CGFloat const kHeightRatio = 0.8;
         _hintLabel.adjustsFontSizeToFitWidth = NO;
         _hintLabel.numberOfLines = 0;
         _hintLabel.textAlignment = NSTextAlignmentCenter;
-        _hintLabel.text = @"你可以编辑任务的结束时间，但结束时间必须晚于开始时间。";
+        MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+        NSInteger taskIndex = task.periods.count - self.periodIndex;
+        if (self.isStartTime) {
+            _hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"start_time_for_period" with1Placeholder:[@(taskIndex) stringValue]];
+        } else {
+            _hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"end_time_for_period" with1Placeholder:[@(taskIndex) stringValue]];
+        }
+
         _hintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
     }
     return _hintLabel;
 }
 
+- (UIDatePicker *)datePicker
+{
+    if (!_datePicker) {
+        _datePicker = [UIDatePicker new];
+        _datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+        _datePicker.timeZone = [NSTimeZone systemTimeZone];
+        _datePicker.preferredDatePickerStyle = UIDatePickerStyleInline;
+        MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+        _datePicker.tintColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:task.color]];
+    }
+    return _datePicker;
+}
+
+- (UIView *)secondView
+{
+    if (!_secondView) {
+        _secondView = [UIView new];
+    }
+    return _secondView;
+}
+
+- (UILabel *)secondLabel
+{
+    if (!_secondLabel) {
+        _secondLabel = [UILabel new];
+        _secondLabel.adjustsFontSizeToFitWidth = NO;
+        _secondLabel.numberOfLines = 1;
+        _secondLabel.textAlignment = NSTextAlignmentCenter;
+        _secondLabel.text = @"s";
+        _secondLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20];
+        _secondLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    }
+    return _secondLabel;
+}
+
+- (UIPickerView *)secondPicker
+{
+    if (!_secondPicker) {
+        _secondPicker = [UIPickerView new];
+        _secondPicker.delegate = self;
+        _secondPicker.dataSource = self;
+    }
+    return _secondPicker;
+}
 
 
 @end

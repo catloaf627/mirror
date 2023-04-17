@@ -10,7 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface EditPeriodViewController : UIViewController
-- (instancetype)initWithTaskname:(NSString *)taskName periodIndex:(NSInteger)periodIndex;
+
+- (instancetype)initWithTaskname:(NSString *)taskName periodIndex:(NSInteger)periodIndex isStartTime:(BOOL)isStartTime;
 
 @end
 
