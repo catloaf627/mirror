@@ -22,7 +22,14 @@ static CGFloat const kHeightRatio = 0.8;
 @property (nonatomic, assign) NSInteger periodIndex;
 @property (nonatomic, assign) BOOL isStartTime;
 
+// 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
+// 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
+@property (nonatomic, assign) long minTime;
+@property (nonatomic, assign) long maxTime;
+
+// UI
 @property (nonatomic, strong) UILabel *hintLabel;
+@property (nonatomic, strong) UIButton *saveButton;
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UIView *secondView;
 @property (nonatomic, strong) UILabel *secondLabel;
@@ -64,14 +71,21 @@ static CGFloat const kHeightRatio = 0.8;
     [self.view addSubview:self.hintLabel];
     [self.hintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(kEditPeriodVCPadding);
+        make.right.offset(-50 - 2*kEditPeriodVCPadding);
+        make.top.offset(kEditPeriodVCPadding);
+    }];
+    [self.view addSubview:self.saveButton];
+    [self.saveButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-kEditPeriodVCPadding);
+        make.width.mas_equalTo(50);
+        make.centerY.mas_equalTo(self.hintLabel);
         make.top.offset(kEditPeriodVCPadding);
     }];
     [self.view addSubview:self.datePicker];
     [self.datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(kEditPeriodVCPadding);
         make.right.offset(-kEditPeriodVCPadding);
-        make.top.mas_equalTo(self.hintLabel.mas_bottom);
+        make.top.mas_equalTo(self.hintLabel.mas_bottom).offset(kEditPeriodVCPadding);
     }];
     [self.view addSubview:self.secondView];
     [self.secondView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -147,10 +161,18 @@ static CGFloat const kHeightRatio = 0.8;
         } else {
             _hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"end_time_for_period" with1Placeholder:[@(taskIndex) stringValue]];
         }
-
         _hintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
     }
     return _hintLabel;
+}
+
+- (UIButton *)saveButton
+{
+    if (!_saveButton) {
+        _saveButton = [UIButton new];
+        [_saveButton setTitle:[MirrorLanguage mirror_stringWithKey:@"save"] forState:UIControlStateNormal];
+    }
+    return _saveButton;
 }
 
 - (UIDatePicker *)datePicker
