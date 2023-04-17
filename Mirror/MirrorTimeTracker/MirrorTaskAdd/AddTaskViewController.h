@@ -10,10 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol AddTaskProtocol <NSObject>
-
-@end
-
 @interface AddTaskViewController : UIViewController
 
 @end

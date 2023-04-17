@@ -25,7 +25,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, DismissEditSheetProtocol, TimeTrackingViewProtocol>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -108,7 +108,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [self.navigationController presentViewController:addVC animated:YES completion:nil];
     }
     EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:[MirrorDataManager activatedTasksWithAddTask][indexPath.item]];
-    editVC.delegate = self;
     [self.navigationController presentViewController:editVC animated:YES completion:nil];
 }
 

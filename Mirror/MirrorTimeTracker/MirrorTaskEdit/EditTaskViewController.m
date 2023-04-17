@@ -109,9 +109,8 @@ static CGFloat const kHeightRatio = 0.8;
     BOOL textIsEmpty = !currentText || [currentText isEqualToString:@""];
     TaskNameExistsType existType = [MirrorStorage taskNameExists:currentText];
     if (textIsTheSame) { // taskname和之前一样，允许修改并退出
-        [MirrorStorage editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
-        [self.delegate dismissViewControllerAnimated:YES completion:^{
-            
+        [self dismissViewControllerAnimated:YES completion:^{
+            [MirrorStorage editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
         }];
     } else if (textIsEmpty) { // taskname为空，不允许修改
         UIAlertController* newNameIsEmptyAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"name_field_cannot_be_empty"] message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -125,9 +124,8 @@ static CGFloat const kHeightRatio = 0.8;
         [newNameIsDuplicateAlert addAction:understandAction];
         [self presentViewController:newNameIsDuplicateAlert animated:YES completion:nil];
     } else { // taskname valid，允许修改并退出
-        [MirrorStorage editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
-        [self.delegate dismissViewControllerAnimated:YES completion:^{
-
+        [self dismissViewControllerAnimated:YES completion:^{
+            [MirrorStorage editTask:self.taskModel.taskName color:self.selectedColor name:currentText];
         }];
     }
 }
