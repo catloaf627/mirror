@@ -19,7 +19,7 @@ static const CGFloat kVerticalPadding = 10;
 @property (nonatomic, strong) MirrorDataModel *task;
 @property (nonatomic, assign) NSInteger periodIndex;
 
-@property (nonatomic, strong) UIButton *deleteButton;
+@property (nonatomic, strong) UIButton *editButton;
 @property (nonatomic, strong) UILabel *mainLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
 
@@ -67,8 +67,8 @@ static const CGFloat kVerticalPadding = 10;
         make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
     }];
     if ([self periodsIsFinished]) {
-        [self addSubview:self.deleteButton];
-        [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self addSubview:self.editButton];
+        [self.editButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.offset(0);
             make.right.offset(-kHorizontalPadding);
             make.height.width.mas_equalTo(20);
@@ -76,9 +76,9 @@ static const CGFloat kVerticalPadding = 10;
     }
 }
 
-- (void)delete
+- (void)edit
 {
-    [MirrorStorage deletePeriodWithTaskname:self.task.taskName periodIndex:self.periodIndex];
+//    [MirrorStorage deletePeriodWithTaskname:self.task.taskName periodIndex:self.periodIndex];
 }
 
 - (BOOL)periodsIsFinished
@@ -108,16 +108,16 @@ static const CGFloat kVerticalPadding = 10;
     return _detailLabel;
 }
 
-- (UIButton *)deleteButton
+- (UIButton *)editButton
 {
-    if (!_deleteButton) {
-        _deleteButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"delete.left"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_deleteButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _deleteButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_deleteButton addTarget:self action:@selector(delete) forControlEvents:UIControlEventTouchUpInside];
+    if (!_editButton) {
+        _editButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"square.and.pencil"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_editButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _editButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_editButton addTarget:self action:@selector(edit) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _deleteButton;
+    return _editButton;
 }
 
 #pragma mark - Privates
