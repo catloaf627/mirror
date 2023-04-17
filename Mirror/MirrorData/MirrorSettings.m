@@ -77,6 +77,7 @@
 + (void)userSetPreferredHistogramType:(UserPreferredHistogramType)type
 {
     [[NSUserDefaults standardUserDefaults] setInteger:type forKey:@"MirrorUserPreferredHistogramType"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchUserPreferredHistogramTypeNotification object:nil];
 }
 
 

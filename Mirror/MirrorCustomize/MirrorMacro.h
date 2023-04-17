@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Max number of tasks
 #define kMaxTaskNum (8)
 // 最小记录时间
-#define kMinSeconds (10)
+#define kMinSeconds (1)
 // 最长记录时间
 #define kMaxSeconds (86400)
 
@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"
 #define MirrorSwitchTimerModeNotification @"MirrorSwitchTimerModeNotification"
 #define MirrorSwitchWeekStartsOnNotification @"MirrorSwitchWeekStartsOnNotification"
-
+#define MirrorSwitchUserPreferredHistogramTypeNotification @"MirrorSwitchUserPreferredHistogramTypeNotification"
 // Data Notifications (MirrorStorage统一来发)
 #define MirrorTaskCreateNotification @"MirrorTaskCreateNotification"
 #define MirrorTaskDeleteNotification @"MirrorTaskDeleteNotification"

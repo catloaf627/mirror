@@ -35,6 +35,9 @@ static CGFloat const kCellSpacing = 20;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchWeekStartsOnNotification object:nil]; // 比其他vc多监听一个week starts on通知
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchUserPreferredHistogramTypeNotification object:nil]; // 监听user preferred histogram通知（这个通知最早的发出地在vc的didselect，最终的update要执行到cellforitem，但是这里自己的delegate方法调自己另一个delegate很容易出问题，所以改为通知统一处理）
+        
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
@@ -156,22 +159,18 @@ static CGFloat const kCellSpacing = 20;
     switch (indexPath.item) {
         case 0:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeToday];
-            [self reloadData];
             break;
             
         case 1:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisWeek];
-            [self reloadData];
             break;
             
         case 2:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisMonth];
-            [self reloadData];
             break;
             
         case 3:
             [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisYear];
-            [self reloadData];
             break;
             
         default:
