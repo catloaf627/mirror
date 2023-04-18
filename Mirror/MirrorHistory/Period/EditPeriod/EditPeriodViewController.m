@@ -149,7 +149,14 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)saveButtonClicked
 {
-    
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *selects = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
+    selects.timeZone = [NSTimeZone systemTimeZone];
+    selects.second = [self.seconds[[self.secondPicker selectedRowInComponent:0]] integerValue];
+    NSDate *combinedDate = [gregorian dateFromComponents:selects];
+    long timeStamp = [combinedDate timeIntervalSince1970];
+    [MirrorStorage editPeriodIsStartTime:self.isStartTime to:timeStamp withTaskname:self.taskName periodIndex:self.periodIndex];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)reloadSecondsNLabels

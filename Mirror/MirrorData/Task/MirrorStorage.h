@@ -45,11 +45,15 @@ typedef NS_ENUM(NSInteger, TaskSavedType) {
 
 + (void)stopTask:(NSString *)taskName;
 
-+ (void)deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
-
 + (void)stopAllTasksExcept:(NSString *)exceptTaskName;
 
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName;
+
+// Period
+
++ (void)deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
+
++ (void)editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp withTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
 
 // MirrorDataManager用
 

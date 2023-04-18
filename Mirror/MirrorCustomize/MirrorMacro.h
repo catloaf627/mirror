@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define MirrorTaskStartNotification @"MirrorTaskStartNotification"
 #define MirrorTaskStopNotification @"MirrorTaskStopNotification"
 #define MirrorPeriodDeleteNotification @"MirrorPeriodDeleteNotification"
-
+#define MirrorPeriodEditNotification @"MirrorPeriodEditNotification"
 
 @interface MirrorMacro : NSObject
 
