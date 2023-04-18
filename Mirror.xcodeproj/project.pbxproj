@@ -261,8 +261,7 @@
 		4A379B3D28E0372700785CAE /* MirrorSettings */ = {
 			isa = PBXGroup;
 			children = (
-				4ACB422C29EEA411005EECC4 /* SettingsAnimation.h */,
-				4ACB422D29EEA411005EECC4 /* SettingsAnimation.m */,
+				4ACB422F29EECBC4005EECC4 /* Animations */,
 				4AE4171D28DF6155008A6A18 /* SettingsViewController.h */,
 				4AE4171E28DF6155008A6A18 /* SettingsViewController.m */,
 				4A406C0F2906FC00001E83A1 /* ToggleCollectionViewCell.h */,
@@ -333,6 +332,15 @@
 				4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */,
 			);
 			path = Histogram;
+			sourceTree = "<group>";
+		};
+		4ACB422F29EECBC4005EECC4 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				4ACB422C29EEA411005EECC4 /* SettingsAnimation.h */,
+				4ACB422D29EEA411005EECC4 /* SettingsAnimation.m */,
+			);
+			path = Animations;
 			sourceTree = "<group>";
 		};
 		4ADDC5BE28E6FB09006F02DE /* MirrorTaskEdit */ = {

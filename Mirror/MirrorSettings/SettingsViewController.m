@@ -34,6 +34,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray *dataSource;
+@property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
 @end
 
@@ -71,15 +72,15 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    // 手势
+    // 手势(点击外部dismiss)
     [super viewDidAppear:animated];
     UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
     tapRecognizer.delegate = self;
     [self.view.superview addGestureRecognizer:tapRecognizer];
-    
+    // 手势(滑动内部dismiss)
     UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
-    panRecognizer.delegate = self;
-    [self.view.superview addGestureRecognizer:panRecognizer];
+    [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
+    [self.view addGestureRecognizer:panRecognizer];
     
     // 动画
     self.transitioningDelegate = self;
@@ -110,15 +111,32 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         }
     }
     if ([gestureRecognizer isKindOfClass:UIPanGestureRecognizer.class]) {
-        CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:gestureRecognizer.view];
-        if (translation.x < 0) {
-            [self dismiss];// 向左滑
-        } else {
-            // 向右滑
-        }
+        return YES;
     }
-    
     return NO;
+}
+
+- (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
+{
+    //产生百分比
+    CGFloat process = -[pan translationInView:self.view].x / ([UIScreen mainScreen].bounds.size.width);
+    
+    process = MIN(1.0,(MAX(0.0, process)));
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+        //触发dismiss转场动画
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }else if (pan.state == UIGestureRecognizerStateChanged){
+        [self.interactiveTransition updateInteractiveTransition:process];
+    }else if (pan.state == UIGestureRecognizerStateEnded
+              || pan.state == UIGestureRecognizerStateCancelled){
+        if (process > 0.5) {
+            [ self.interactiveTransition finishInteractiveTransition];
+        }else{
+            [ self.interactiveTransition cancelInteractiveTransition];
+        }
+        self.interactiveTransition = nil;
+    }
 }
 
 
@@ -244,6 +262,11 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     SettingsAnimation *animation = [SettingsAnimation new];
     animation.isPresent = NO;
     return animation;
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
+{
+    return self.interactiveTransition;
 }
 
 

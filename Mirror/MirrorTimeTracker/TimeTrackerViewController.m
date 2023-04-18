@@ -270,12 +270,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 {
     SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
     settingsVC.transitioningDelegate = self;
-    settingsVC.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
     [self presentViewController:settingsVC animated:YES completion:nil];
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
-
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
