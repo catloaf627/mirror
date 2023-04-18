@@ -119,7 +119,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
 {
     //产生百分比
-    CGFloat process = -[pan translationInView:self.view].x / ([UIScreen mainScreen].bounds.size.width);
+    CGFloat process = -[pan translationInView:self.view].x / (self.view.frame.size.width);
     
     process = MIN(1.0,(MAX(0.0, process)));
     if (pan.state == UIGestureRecognizerStateBegan) {
