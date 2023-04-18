@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 - (UITabBarController *)mirrorTabController;
-- (void)updateMeTabItemWithTabController:(UITabBarController *)tabbarController;
 - (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController;
 - (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController;
 

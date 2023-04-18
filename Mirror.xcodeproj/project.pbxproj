@@ -33,6 +33,7 @@
 		4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* DataViewController.m */; };
 		4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
+		4ACB422E29EEA411005EECC4 /* SettingsAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* SettingsAnimation.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
 		4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B328E4762E006F02DE /* ThemeCollectionViewCell.m */; };
 		4ADDC5B728E476A8006F02DE /* LanguageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B628E476A8006F02DE /* LanguageCollectionViewCell.m */; };
@@ -41,7 +42,7 @@
 		4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5C728E73935006F02DE /* AddTaskViewController.m */; };
 		4AE1153829ECF77A003CBB39 /* EditPeriodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE1153729ECF77A003CBB39 /* EditPeriodViewController.m */; };
 		4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */; };
-		4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* ProfileViewController.m */; };
+		4AE4171F28DF6155008A6A18 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* SettingsViewController.m */; };
 		4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */; };
 		4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A128DF4A380064CBCA /* AppDelegate.m */; };
 		4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A428DF4A380064CBCA /* SceneDelegate.m */; };
@@ -103,6 +104,8 @@
 		4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataEntranceCollectionViewCell.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
+		4ACB422C29EEA411005EECC4 /* SettingsAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsAnimation.h; sourceTree = "<group>"; };
+		4ACB422D29EEA411005EECC4 /* SettingsAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsAnimation.m; sourceTree = "<group>"; };
 		4ADDC5AF28E4704B006F02DE /* AvatarCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvatarCollectionViewCell.h; sourceTree = "<group>"; };
 		4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AvatarCollectionViewCell.m; sourceTree = "<group>"; };
 		4ADDC5B228E4762E006F02DE /* ThemeCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeCollectionViewCell.h; sourceTree = "<group>"; };
@@ -119,8 +122,8 @@
 		4AE1153729ECF77A003CBB39 /* EditPeriodViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditPeriodViewController.m; sourceTree = "<group>"; };
 		4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerViewController.h; sourceTree = "<group>"; };
 		4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerViewController.m; sourceTree = "<group>"; };
-		4AE4171D28DF6155008A6A18 /* ProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
-		4AE4171E28DF6155008A6A18 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		4AE4171D28DF6155008A6A18 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		4AE4171E28DF6155008A6A18 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		4AFA3B7529E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeekStartsOnCollectionViewCell.h; sourceTree = "<group>"; };
 		4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeekStartsOnCollectionViewCell.m; sourceTree = "<group>"; };
 		4AFB779D28DF4A380064CBCA /* Mirror.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mirror.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -255,18 +258,20 @@
 			path = MirrorHistory;
 			sourceTree = "<group>";
 		};
-		4A379B3D28E0372700785CAE /* MirrorProfile */ = {
+		4A379B3D28E0372700785CAE /* MirrorSettings */ = {
 			isa = PBXGroup;
 			children = (
-				4AE4171D28DF6155008A6A18 /* ProfileViewController.h */,
-				4AE4171E28DF6155008A6A18 /* ProfileViewController.m */,
+				4ACB422C29EEA411005EECC4 /* SettingsAnimation.h */,
+				4ACB422D29EEA411005EECC4 /* SettingsAnimation.m */,
+				4AE4171D28DF6155008A6A18 /* SettingsViewController.h */,
+				4AE4171E28DF6155008A6A18 /* SettingsViewController.m */,
 				4A406C0F2906FC00001E83A1 /* ToggleCollectionViewCell.h */,
 				4A406C102906FC00001E83A1 /* ToggleCollectionViewCell.m */,
 				4ADDC5AF28E4704B006F02DE /* AvatarCollectionViewCell.h */,
 				4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */,
 				4AFA3B7429E4EE0F004D5BE4 /* SettingsCells */,
 			);
-			path = MirrorProfile;
+			path = MirrorSettings;
 			sourceTree = "<group>";
 		};
 		4A379B3E28E0379E00785CAE /* MirrorCustomize */ = {
@@ -416,7 +421,7 @@
 				4A379B3928E0340600785CAE /* MirrorSetups */,
 				4A379B3B28E0370400785CAE /* MirrorTimeTracker */,
 				4A379B3C28E0371700785CAE /* MirrorHistory */,
-				4A379B3D28E0372700785CAE /* MirrorProfile */,
+				4A379B3D28E0372700785CAE /* MirrorSettings */,
 			);
 			path = Mirror;
 			sourceTree = "<group>";
@@ -547,6 +552,7 @@
 				4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */,
+				4ACB422E29EEA411005EECC4 /* SettingsAnimation.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,
 				4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */,
 				4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */,
@@ -567,7 +573,7 @@
 				4ADDC5BA28E5B95F006F02DE /* EditTaskViewController.m in Sources */,
 				4A406C112906FC00001E83A1 /* ToggleCollectionViewCell.m in Sources */,
 				4A37368E29E166BF00187280 /* TimeTrackingLabel.m in Sources */,
-				4AE4171F28DF6155008A6A18 /* ProfileViewController.m in Sources */,
+				4AE4171F28DF6155008A6A18 /* SettingsViewController.m in Sources */,
 				4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */,
 				4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */,
 				4A406C1729070FC1001E83A1 /* ImmersiveCollectionViewCell.m in Sources */,

@@ -1,11 +1,11 @@
 //
-//  ProfileViewController.m
+//  SettingsViewController.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2022/9/25.
 //
 
-#import "ProfileViewController.h"
+#import "SettingsViewController.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
@@ -17,6 +17,7 @@
 #import "WeekStartsOnCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
+#import "SettingsAnimation.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -29,14 +30,14 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeWeekStartsOn,
 };
 
-@interface ProfileViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray *dataSource;
 
 @end
 
-@implementation ProfileViewController
+@implementation SettingsViewController
 
 - (instancetype)init
 {
@@ -59,8 +60,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新tab item
-    [[MirrorTabsManager sharedInstance] updateMeTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
 
@@ -68,6 +67,22 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self  p_setupUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    // 手势
+    [super viewDidAppear:animated];
+    UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
+    tapRecognizer.delegate = self;
+    [self.view.superview addGestureRecognizer:tapRecognizer];
+    
+    UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
+    panRecognizer.delegate = self;
+    [self.view.superview addGestureRecognizer:panRecognizer];
+    
+    // 动画
+    self.transitioningDelegate = self;
 }
 
 - (void)p_setupUI
@@ -80,6 +95,30 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([gestureRecognizer isKindOfClass:UITapGestureRecognizer.class]) {
+        CGPoint touchPoint = [touch locationInView:self.view];
+        if (touchPoint.x <= self.view.frame.size.width) {
+            // 点了view里面
+        } else {
+            [self dismiss];// 点了view外面
+        }
+    }
+    if ([gestureRecognizer isKindOfClass:UIPanGestureRecognizer.class]) {
+        CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:gestureRecognizer.view];
+        if (translation.x < 0) {
+            [self dismiss];// 向左滑
+        } else {
+            // 向右滑
+        }
+    }
+    
+    return NO;
 }
 
 
@@ -136,19 +175,19 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     switch (indexPath.item) {
         case MirrorSettingTypeAvatar:
-            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 140);
+            return CGSizeMake(collectionView.frame.size.width, 140*kLeftSheetRatio);
         case MirrorSettingTypeTheme:
-            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
+            return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
         case MirrorSettingTypeLanguage:
-            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
+            return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
         case MirrorSettingTypeImmersive:
-            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
+            return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
         case MirrorSettingTypeWeekStartsOn:
-            return CGSizeMake(kScreenWidth-2*kCollectionViewPadding, 52);
+            return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
         default:
             break;
     }
-    return CGSizeMake(kScreenWidth, 80);
+    return CGSizeMake(collectionView.frame.size.width, 0);
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -193,6 +232,19 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     return _dataSource;
 }
 
+- (void)dismiss
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    SettingsAnimation *animation = [SettingsAnimation new];
+    animation.isPresent = NO;
+    return animation;
+}
 
 
 @end

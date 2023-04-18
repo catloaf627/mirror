@@ -10,7 +10,7 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 
-static CGFloat const kAvatarWidth = 96;
+static CGFloat const kAvatarWidth = 63;
 
 @interface AvatarCollectionViewCell ()
 
@@ -43,7 +43,7 @@ static CGFloat const kAvatarWidth = 96;
     [self.avatar addSubview:self.avatarImage];
     [self.avatarImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.centerY.offset(0);
-        make.width.height.mas_equalTo(60);
+        make.width.height.mas_equalTo(kAvatarWidth * 0.6);
     }];
     [self.contentView addSubview:self.nickname];
     [self.nickname mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -81,7 +81,7 @@ static CGFloat const kAvatarWidth = 96;
         _nickname = [UILabel new];
         _nickname.text = [MirrorLanguage mirror_stringWithKey:@"nickname"];
         _nickname.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
-        _nickname.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
+        _nickname.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
     }
     return _nickname;
 }

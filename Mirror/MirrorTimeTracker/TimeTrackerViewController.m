@@ -21,12 +21,13 @@
 #import "MirrorTool.h"
 #import "MUXToast.h"
 #import "MirrorSettings.h"
-#import "ProfileViewController.h"
+#import "SettingsViewController.h"
+#import "SettingsAnimation.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -266,8 +267,21 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)goToSettings
 {
-    ProfileViewController *settingsVC = [ProfileViewController new];
+    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
+    settingsVC.transitioningDelegate = self;
+    settingsVC.modalPresentationStyle = UIModalPresentationOverFullScreen;
     [self presentViewController:settingsVC animated:YES completion:nil];
 }
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    SettingsAnimation *animation = [SettingsAnimation new];
+    animation.isPresent = YES;
+    return animation;
+}
+
 
 @end

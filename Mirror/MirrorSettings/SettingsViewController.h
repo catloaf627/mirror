@@ -1,5 +1,5 @@
 //
-//  ProfileViewController.h
+//  SettingsViewController.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2022/9/25.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ProfileViewController : UIViewController
+@interface SettingsViewController : UIViewController
 
 @end
 
