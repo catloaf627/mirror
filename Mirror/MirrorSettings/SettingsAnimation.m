@@ -46,9 +46,9 @@
     
     if (_isPresent) { // present
         transView.frame = CGRectMake(-width*kLeftSheetRatio, 0, width/2, height);
-        
+        [transitionContext containerView].backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-            transView.frame = CGRectMake(0, 0, width*kLeftSheetRatio, height);;
+            transView.frame = CGRectMake(0, 0, width*kLeftSheetRatio, height);
         } completion:^(BOOL finished) {
              [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         }];
