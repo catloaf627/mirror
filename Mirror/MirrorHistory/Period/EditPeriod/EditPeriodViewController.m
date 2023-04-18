@@ -345,6 +345,7 @@ static CGFloat const kHeightRatio = 0.8;
         _saveButton = [UIButton new];
         [_saveButton setTitle:[MirrorLanguage mirror_stringWithKey:@"save"] forState:UIControlStateNormal];
         [_saveButton addTarget:self action:@selector(saveButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+        [_saveButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
     }
     return _saveButton;
 }
