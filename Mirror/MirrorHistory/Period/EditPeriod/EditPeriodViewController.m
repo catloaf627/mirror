@@ -359,6 +359,7 @@ static CGFloat const kHeightRatio = 0.8;
         _datePicker.preferredDatePickerStyle = UIDatePickerStyleWheels;
         MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
         _datePicker.tintColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:task.color]];
+        [_datePicker setValue:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:@"textColor"]; // 如果不设置这一行，picker的text color会根据系统mode走，而非app的darkmode
         long initTime = [task.periods[self.periodIndex][self.isStartTime ? 0:1] longValue];
         NSDate *initDate = [NSDate dateWithTimeIntervalSince1970:initTime];
         _datePicker.date = initDate;
@@ -415,6 +416,7 @@ static CGFloat const kHeightRatio = 0.8;
         _secondPicker = [UIPickerView new];
         _secondPicker.delegate = self;
         _secondPicker.dataSource = self;
+        [_secondPicker setValue:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:@"textColor"]; // 如果不设置这一行，picker的text color会根据系统mode走，而非app的darkmode
         [self initSeconds];
     }
     return _secondPicker;
