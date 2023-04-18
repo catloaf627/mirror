@@ -21,12 +21,14 @@
 #import "MirrorTool.h"
 #import "MUXToast.h"
 #import "MirrorSettings.h"
+#import "ProfileViewController.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 @interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol>
 
+@property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
@@ -80,8 +82,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
             make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
-            make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+            make.top.mas_equalTo(self.view).offset(90);
             make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
+    }];
+    [self.view addSubview:self.settingsButton];
+    [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
+        make.bottom.mas_equalTo(self.collectionView.mas_top);
+        make.width.height.mas_equalTo(40);
     }];
     if ([MirrorSettings appliedImmersiveMode]) {
         MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
@@ -242,6 +250,24 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         
     }
     return _collectionView;
+}
+
+- (UIButton *)settingsButton
+{
+    if (!_settingsButton) {
+        _settingsButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"ellipsis"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _settingsButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _settingsButton;
+}
+
+- (void)goToSettings
+{
+    ProfileViewController *settingsVC = [ProfileViewController new];
+    [self presentViewController:settingsVC animated:YES completion:nil];
 }
 
 @end
