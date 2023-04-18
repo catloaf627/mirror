@@ -17,7 +17,6 @@
     [mirrorDict setValue:@[@"Something went wrong", @"出错了"] forKey:@"something_went_wrong"];
     
     // tabs
-    [mirrorDict setValue:@[@"Me", @"我的"] forKey:@"me"];
     [mirrorDict setValue:@[@"Start", @"计时"] forKey:@"start"];
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
     // time tracker cell
