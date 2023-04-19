@@ -84,7 +84,7 @@
     [mirrorDict setValue:@[@"[%@] has been lasted more than 24 hours. It was stopped and saved automatically.", @"【%@】时长超过24小时，已自动停止并保存"] forKey:@"reached_limited_time"];
     [mirrorDict setValue:@[@"[%@] not saved", @"【%@】未保存"] forKey:@"too_short_to_save"];
     [mirrorDict setValue:@[@"The start time of No.%@ task", @"第%@次任务的开始时间"] forKey:@"start_time_for_period"];
-    [mirrorDict setValue:@[@"The end time of No.%@ task", @"第%@次任务的开始时间"] forKey:@"end_time_for_period"];
+    [mirrorDict setValue:@[@"The end time of No.%@ task", @"第%@次任务的结束时间"] forKey:@"end_time_for_period"];
     
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder];
