@@ -124,7 +124,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [self.interactiveTransition updateInteractiveTransition:process];
     }else if (pan.state == UIGestureRecognizerStateEnded
               || pan.state == UIGestureRecognizerStateCancelled){
-        if (process > 0.5) {
+        if (process > 0.3) {
             [ self.interactiveTransition finishInteractiveTransition];
         }else{
             [ self.interactiveTransition cancelInteractiveTransition];
@@ -141,14 +141,15 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (indexPath == nil) {
         return;
     }
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
     MirrorDataModel *task = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
-    if (task.isAddTaskModel) {
-        // 长按[+]均可以像点击一样唤起add task
+    if (task.isAddTaskModel) { // 长按[+]均可以像点击一样唤起add task
         AddTaskViewController *addVC = [AddTaskViewController new];
         [self.navigationController presentViewController:addVC animated:YES completion:nil];
+    } else { // 长按task唤起编辑页面
+        EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:[MirrorDataManager activatedTasksWithAddTask][indexPath.item]];
+        [self.navigationController presentViewController:editVC animated:YES completion:nil];
     }
-    EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTasks:[MirrorDataManager activatedTasksWithAddTask][indexPath.item]];
-    [self.navigationController presentViewController:editVC animated:YES completion:nil];
 }
 
 #pragma mark - TimeTrackingViewProtocol
@@ -277,7 +278,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         
         // 长按手势
         UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(cellGetsLongPressed:)];
-        longPressRecognizer.minimumPressDuration = 0.5;
+        longPressRecognizer.minimumPressDuration = 0.25;
         [_collectionView addGestureRecognizer:longPressRecognizer];
         
     }
@@ -298,6 +299,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)goToSettings
 {
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
     SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
     settingsVC.transitioningDelegate = self;
     settingsVC.modalPresentationStyle = UIModalPresentationCustom;
