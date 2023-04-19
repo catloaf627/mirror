@@ -130,6 +130,7 @@ static CGFloat const kLeftRightSpacing = 20;
         _datePicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
         _datePicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _datePicker.date = [NSDate now];
+        [_datePicker addTarget:self action:@selector(reloadData) forControlEvents:UIControlEventValueChanged];
     }
     return _datePicker;
 }
@@ -138,7 +139,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (MirrorHistogram *)histogramView
 {
     if (!_histogramView) {
-        _histogramView = [MirrorHistogram new];
+        _histogramView = [[MirrorHistogram alloc] initWithDatePicker:self.datePicker];
         _histogramView.delegate = self;
     }
     return _histogramView;
@@ -147,7 +148,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (MirrorLegend *)legendView
 {
     if (!_legendView) {
-        _legendView = [MirrorLegend new];
+        _legendView = [[MirrorLegend alloc] initWithDatePicker:self.datePicker];
         _legendView.delegate = self;
     }
     return _legendView;

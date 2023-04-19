@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, MirrorHistogramType) {
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, weak) UIViewController<MirrorHistogramDelegate> *delegate;
-
+- (instancetype)initWithDatePicker:(UIDatePicker *)datePicker;
 @end
 
 NS_ASSUME_NONNULL_END

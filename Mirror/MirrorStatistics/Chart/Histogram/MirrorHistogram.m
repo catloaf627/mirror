@@ -15,24 +15,24 @@
 #import "MirrorSettings.h"
 #import "MirrorLanguage.h"
 #import "TaskRecordViewController.h"
-
+#import "MirrorTool.h"
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 @interface MirrorHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
+@property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 
 @end
 @implementation MirrorHistogram
 
-- (instancetype)init
+- (instancetype)initWithDatePicker:(UIDatePicker *)datePicker
 {
     self = [super init];
     if (self) {
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-        self.layer.cornerRadius = 14;
-        
+        self.datePicker = datePicker;
         // empty hint
         [self updateHint];
         [self addSubview:self.emptyHintLabel];
@@ -41,13 +41,37 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
         }];
         
         // histogram
-        self.collectionView.layer.cornerRadius = 14;
         [self addSubview:self.collectionView];
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.left.right.offset(0);
         }];
     }
     return self;
+}
+
+- (void)reloadWithDate:(NSDate *)date
+{
+    // 选中的那天的0:0:0
+    long startTime = 0;
+    NSCalendar *startGregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *startComponents = [startGregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
+    startComponents.timeZone = [NSTimeZone systemTimeZone];
+    startComponents.hour = 0;
+    startComponents.minute = 0;
+    startComponents.second = 0;
+    startTime = [[startGregorian dateFromComponents:startComponents] timeIntervalSince1970];
+    // 选中的那天的23:59:59
+    long endTime = 0;
+    NSCalendar *endGregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *endComponents = [endGregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
+    endComponents.timeZone = [NSTimeZone systemTimeZone];
+    endComponents.hour = 23;
+    endComponents.minute = 59;
+    endComponents.second = 59;
+    endTime = [[endGregorian dateFromComponents:endComponents] timeIntervalSince1970];
+
+    self.data = [MirrorDataManager getDataWithStart:startTime end:endTime];
+    [self.collectionView reloadData];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -59,7 +83,6 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
     [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     return self.data.count;
 }
@@ -167,5 +190,31 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 {
     self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_today"];
 }
+
+- (NSMutableArray<MirrorDataModel *> *)data // 根据datePicker时时更新
+{
+    // 选中的那天的0:0:0
+    long startTime = 0;
+    NSCalendar *startGregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *startComponents = [startGregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
+    startComponents.timeZone = [NSTimeZone systemTimeZone];
+    startComponents.hour = 0;
+    startComponents.minute = 0;
+    startComponents.second = 0;
+    startTime = [[startGregorian dateFromComponents:startComponents] timeIntervalSince1970];
+    // 选中的那天的23:59:59
+    long endTime = 0;
+    NSCalendar *endGregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *endComponents = [endGregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
+    endComponents.timeZone = [NSTimeZone systemTimeZone];
+    endComponents.hour = 23;
+    endComponents.minute = 59;
+    endComponents.second = 59;
+    endTime = [[endGregorian dateFromComponents:endComponents] timeIntervalSince1970];
+    _data = [MirrorDataManager getDataWithStart:startTime end:endTime];
+    return _data;
+}
+
+
 
 @end

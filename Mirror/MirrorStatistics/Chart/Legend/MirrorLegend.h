@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, weak) UIViewController<MirrorLegendDelegate> *delegate;
+
+- (instancetype)initWithDatePicker:(UIDatePicker *)datePicker;
 - (CGFloat)legendViewHeight;
 @end
 

@@ -8,6 +8,7 @@
 #import "MirrorDataManager.h"
 #import "MirrorMacro.h"
 #import "MirrorStorage.h"
+#import "MirrorTool.h"
 
 @implementation MirrorDataManager
 
@@ -75,7 +76,7 @@
                          start time             end time
     
     */
-    BOOL printDetailsToDebug = NO; // debug用
+    BOOL printDetailsToDebug = YES; // debug用
     NSMutableArray<MirrorDataModel *> *targetTasks = [NSMutableArray<MirrorDataModel *> new];
     NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
     if (printDetailsToDebug) NSLog(@"数据库里的task个数 %@", @(allTasks.count));
@@ -86,7 +87,7 @@
         for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
             NSMutableArray *period = task.periods[periodIndex];
             if (printDetailsToDebug) {
-                NSLog(@"第%@个task%@的第%@个period，[%@,%@]，选取的时间段[%@,%@]",@(taskIndex), [UIColor getEmoji:task.color], @(periodIndex), period.count>0 ? period[0] : @"?", period.count>1 ? period[1] : @"?", @(startTime), @(endTime));
+                NSLog(@"task%@的第%@个period，[%@,%@]，选取的时间段[%@,%@]",[UIColor getEmoji:task.color], @(periodIndex), period.count>0 ? [MirrorTool timeFromTimestamp:[period[0] longValue] printTimeStamp:NO]: @"?", period.count>1 ? [MirrorTool timeFromTimestamp:[period[1] longValue] printTimeStamp:NO] : @"?", [MirrorTool timeFromTimestamp:startTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:endTime printTimeStamp:NO]);
             }
             if (period.count != 2) {
                 if (printDetailsToDebug) NSLog(@"✖️正在计时中，不管");
