@@ -77,8 +77,6 @@ static CGFloat const kLeftRightSpacing = 20;
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新navibar
-    self.navigationController.navigationBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     // 更新tabbar
     [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];

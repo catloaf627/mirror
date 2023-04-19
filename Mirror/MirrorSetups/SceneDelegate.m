@@ -7,7 +7,7 @@
 
 #import "SceneDelegate.h"
 #import "MirrorTabsManager.h"
-#import "UIColor+MirrorColor.h"
+
 @interface SceneDelegate ()<UITabBarControllerDelegate>
 
 @end
@@ -28,8 +28,7 @@
     //init navigation controller with tabbar controller (nc needs a root view)
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tabbarController];
     
-    // 设置navibar颜色（苹果好像自动会把navibar上比较深，接近纯黑色的颜色变成统一的深灰色）
-    [[UINavigationBar appearance] setBarTintColor:[UIColor mirrorColorNamed:MirrorColorTypeBackground]];
+    [navigationController.navigationBar removeFromSuperview];
     _window.rootViewController = navigationController;
     [_window makeKeyAndVisible];
     _window.windowScene = windowScene;
