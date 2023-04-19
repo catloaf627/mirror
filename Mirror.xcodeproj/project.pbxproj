@@ -217,6 +217,13 @@
 			path = Chart;
 			sourceTree = "<group>";
 		};
+		4A0D40F829EFE1E100F13EAE /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
 		4A379B3928E0340600785CAE /* MirrorSetups */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,7 +252,7 @@
 			path = MirrorTimeTracker;
 			sourceTree = "<group>";
 		};
-		4A379B3C28E0371700785CAE /* MirrorHistory */ = {
+		4A379B3C28E0371700785CAE /* MirrorStatistics */ = {
 			isa = PBXGroup;
 			children = (
 				4A099FB229DD85CA002683A1 /* Chart */,
@@ -255,7 +262,7 @@
 				4A7CCD2E29DBCEB200879D9C /* DataEntranceCollectionViewCell.h */,
 				4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */,
 			);
-			path = MirrorHistory;
+			path = MirrorStatistics;
 			sourceTree = "<group>";
 		};
 		4A379B3D28E0372700785CAE /* MirrorSettings */ = {
@@ -422,13 +429,14 @@
 		4AFB779F28DF4A380064CBCA /* Mirror */ = {
 			isa = PBXGroup;
 			children = (
+				4A0D40F829EFE1E100F13EAE /* New Group */,
 				4AFB77B128DF4A3B0064CBCA /* Info.plist */,
 				4AFB77AC28DF4A3B0064CBCA /* Assets.xcassets */,
 				4A406C1B29073D1D001E83A1 /* MirrorData */,
 				4A379B3E28E0379E00785CAE /* MirrorCustomize */,
 				4A379B3928E0340600785CAE /* MirrorSetups */,
 				4A379B3B28E0370400785CAE /* MirrorTimeTracker */,
-				4A379B3C28E0371700785CAE /* MirrorHistory */,
+				4A379B3C28E0371700785CAE /* MirrorStatistics */,
 				4A379B3D28E0372700785CAE /* MirrorSettings */,
 			);
 			path = Mirror;
