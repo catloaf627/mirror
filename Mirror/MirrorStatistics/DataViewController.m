@@ -94,12 +94,14 @@ static CGFloat const kLeftRightSpacing = 20;
      */
     self.navigationController.navigationBar.topItem.title = @""; //给父vc一个空title，让所有子vc的navibar返回文案都为空
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+    
+    CGFloat heightWeightRatio = self.datePicker.frame.size.height / self.datePicker.frame.size.width;
     [self.view addSubview:self.datePicker];
     [self.datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-        make.height.mas_equalTo((self.view.frame.size.height-self.navigationController.navigationBar.frame.origin.y-self.navigationController.navigationBar.frame.size.height-kTabBarHeight)/2); // 占屏幕一半
+        make.left.offset(kLeftRightSpacing);
+        make.width.mas_equalTo(self.view.frame.size.width - 2*kLeftRightSpacing);
+        make.height.mas_equalTo((self.view.frame.size.width - 2*kLeftRightSpacing) * heightWeightRatio);
     }];
     
     [self.view addSubview:self.legendView];
