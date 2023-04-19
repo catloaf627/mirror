@@ -55,7 +55,9 @@ static CGFloat const kLeftRightSpacing = 20;
     self.histogramView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新tab item
+    // 更新navibar
+    self.navigationController.navigationBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+    // 更新tabbar
     [[MirrorTabsManager sharedInstance] updateDataTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
