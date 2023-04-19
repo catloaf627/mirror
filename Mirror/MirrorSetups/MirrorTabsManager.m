@@ -9,6 +9,7 @@
 
 #import "TimeTrackerViewController.h"
 #import "DataViewController.h"
+#import "HistoryViewController.h"
 
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
@@ -36,18 +37,19 @@
     if (!_mirrorTabVC) {
         TimeTrackerViewController *timeTrackerVC = [[TimeTrackerViewController alloc]init];
         DataViewController *dataVC = [[DataViewController alloc]init];
-        
+        HistoryViewController *historyVC = [[HistoryViewController alloc] init];
         //create a tabbar controller
         _mirrorTabVC  = [[UITabBarController alloc] init];
         
         //add 4 view controllers to tabbar controller
-        [_mirrorTabVC setViewControllers:@[timeTrackerVC, dataVC]];
+        [_mirrorTabVC setViewControllers:@[timeTrackerVC, dataVC, historyVC]];
         _mirrorTabVC.selectedIndex = 0;
         _mirrorTabVC.tabBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         _mirrorTabVC.tabBar.backgroundImage = [UIImage new];
         _mirrorTabVC.tabBar.shadowImage = [UIImage new];
 
         [self updateTimeTabItemWithTabController:_mirrorTabVC];
+        [self updateDataTabItemWithTabController:_mirrorTabVC];
         [self updateHistoryTabItemWithTabController:_mirrorTabVC];
     }
     return _mirrorTabVC;
@@ -58,9 +60,14 @@
     [self updateTabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"clock" selectedImageName:@"clock.fill"];
 }
 
-- (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
+- (void)updateDataTabItemWithTabController:(UITabBarController *)tabbarController
 {
     [self updateTabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
+}
+
+- (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
+{
+    [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"history"] imageName:@"chart.bar.doc.horizontal" selectedImageName:@"chart.bar.doc.horizontal.fill"];
 }
 
 - (void)updateTabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName

@@ -16,11 +16,10 @@
 #import "MirrorSettings.h"
 
 static CGFloat const kLeftRightSpacing = 20;
-static CGFloat const kCellSpacing = 20;
 
-@interface DataViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, MirrorLegendDelegate, MirrorHistogramDelegate>
+@interface DataViewController () <MirrorLegendDelegate, MirrorHistogramDelegate>
 
-@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) MirrorLegend *legendView;
 @property (nonatomic, strong) MirrorHistogram *histogramView;
 
@@ -34,9 +33,6 @@ static CGFloat const kCellSpacing = 20;
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchWeekStartsOnNotification object:nil]; // 比其他vc多监听一个week starts on通知
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchUserPreferredHistogramTypeNotification object:nil]; // 监听user preferred histogram通知（这个通知最早的发出地在vc的didselect，最终的update要执行到cellforitem，但是这里自己的delegate方法调自己另一个delegate很容易出问题，所以改为通知统一处理）
         
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
@@ -54,13 +50,13 @@ static CGFloat const kCellSpacing = 20;
 - (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
-    self.collectionView = nil;
+    self.datePicker = nil;
     self.legendView = nil;
     self.histogramView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tab item
-    [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
+    [[MirrorTabsManager sharedInstance] updateDataTabItemWithTabController:self.tabBarController];
     [self viewDidLoad];
 }
 
@@ -73,7 +69,6 @@ static CGFloat const kCellSpacing = 20;
 - (void)reloadData
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
-    [self.collectionView reloadData];
     [self.legendView.collectionView reloadData];
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.legendView legendViewHeight]);
@@ -99,18 +94,19 @@ static CGFloat const kCellSpacing = 20;
      */
     self.navigationController.navigationBar.topItem.title = @""; //给父vc一个空title，让所有子vc的navibar返回文案都为空
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-    [self.view addSubview:self.collectionView];
-    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.datePicker];
+    [self.datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-        make.height.mas_equalTo(80 * 2 + 20); // 两行cell加上他们的行间距
+        make.height.mas_equalTo((self.view.frame.size.height-self.navigationController.navigationBar.frame.origin.y-self.navigationController.navigationBar.frame.size.height-kTabBarHeight)/2); // 占屏幕一半
     }];
+    
     [self.view addSubview:self.legendView];
     [self.legendView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.datePicker.mas_bottom);
         make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
     [self.view addSubview:self.histogramView];
@@ -122,80 +118,22 @@ static CGFloat const kCellSpacing = 20;
     }];
 }
 
-#pragma mark - UICollectionViewDataSource
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return 4;
-}
-
-- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    DataEntranceCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[DataEntranceCollectionViewCell identifier] forIndexPath:indexPath];
-    DataEntranceType type = DataEntranceTypeToday;
-    if (indexPath.item == 0) type = DataEntranceTypeToday;
-    if (indexPath.item == 1) type = DataEntranceTypeThisWeek;
-    if (indexPath.item == 2) type = DataEntranceTypeThisMonth;
-    if (indexPath.item == 3) type = DataEntranceTypeThisYear;
-    [cell configCellWithType:type];
-    return cell;
-}
-
-#pragma mark - UICollectionViewDelegateFlowLayout
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake((kScreenWidth - 3*kCellSpacing)/2, 80);
-}
-
-#pragma mark - UICollectionViewDelegate
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    switch (indexPath.item) {
-        case 0:
-            [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeToday];
-            break;
-            
-        case 1:
-            [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisWeek];
-            break;
-            
-        case 2:
-            [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisMonth];
-            break;
-            
-        case 3:
-            [MirrorSettings userSetPreferredHistogramType:UserPreferredHistogramTypeThisYear];
-            break;
-            
-        default:
-            break;
-    }
-}
-
 #pragma mark - Getters
 
-- (UICollectionView *)collectionView
+- (UIDatePicker *)datePicker
 {
-    if (!_collectionView) {
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
-        layout.minimumLineSpacing = 20;
-        layout.minimumInteritemSpacing = 20;
-        _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-        _collectionView.delegate = self;
-        _collectionView.dataSource = self;
-        _collectionView.backgroundColor = self.view.backgroundColor;
-        
-        [_collectionView registerClass:[DataEntranceCollectionViewCell class] forCellWithReuseIdentifier:[DataEntranceCollectionViewCell identifier]];
+    if (!_datePicker) {
+        _datePicker = [UIDatePicker new];
+        _datePicker.datePickerMode = UIDatePickerModeDate;
+        _datePicker.timeZone = [NSTimeZone systemTimeZone];
+        _datePicker.preferredDatePickerStyle = UIDatePickerStyleInline;
+        _datePicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        _datePicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
+        _datePicker.date = [NSDate now];
     }
-    return _collectionView;
+    return _datePicker;
 }
+
 
 - (MirrorHistogram *)histogramView
 {

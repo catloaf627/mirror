@@ -74,14 +74,8 @@ static const CGFloat kHorizontalPadding = 20;
         make.width.height.mas_equalTo(self.frame.size.height -  2*kVerticalPadding);
     }];
     // update border
-    BOOL cellIsSelected = (self.type == DataEntranceTypeToday && [MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeToday) || (self.type == DataEntranceTypeThisWeek && [MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisWeek) || (self.type == DataEntranceTypeThisMonth && [MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisMonth) || (self.type == DataEntranceTypeThisYear && [MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisYear);
-    if (cellIsSelected) {
-        self.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellPlus].CGColor;
-        self.layer.borderWidth = 2;
-    } else {
-        self.layer.borderColor = [UIColor clearColor].CGColor;
-        self.layer.borderWidth = 0;
-    }
+    self.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellPlus].CGColor;
+    self.layer.borderWidth = 2;
 }
 
 #pragma mark - Getters

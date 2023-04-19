@@ -115,7 +115,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
     
     process = MIN(1.0,(MAX(0.0, process)));
-    NSLog(@"%f", process);
     if (pan.state == UIGestureRecognizerStateBegan) {
         self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
         // 触发present转场动画

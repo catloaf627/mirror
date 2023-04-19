@@ -19,6 +19,7 @@
     // tabs
     [mirrorDict setValue:@[@"Start", @"计时"] forKey:@"start"];
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
+    [mirrorDict setValue:@[@"History", @"历史"] forKey:@"history"];
     // time tracker cell
     [mirrorDict setValue:@[@"Tap to start", @"轻点开始计时"] forKey:@"tap_to_start"];
     // nickname
@@ -63,10 +64,7 @@
     [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
     
     // Histogram
-    [mirrorDict setValue:@[@"No tasks today", @"今天还没有任务"] forKey:@"no_tasks_today"];
-    [mirrorDict setValue:@[@"No tasks this week", @"本周还没有任务"] forKey:@"no_tasks_this_week"];
-    [mirrorDict setValue:@[@"No tasks this month", @"本月还没有任务"] forKey:@"no_tasks_this_month"];
-    [mirrorDict setValue:@[@"No tasks this year", @"今年还没有任务"] forKey:@"no_tasks_this_year"];
+//    [mirrorDict setValue:@[@"No tasks today", @"今天还没有任务"] forKey:@"no_tasks_today"]; //gizmo
     
     // Task record
     [mirrorDict setValue:@[@"Total: ", @"共计："] forKey:@"total"];

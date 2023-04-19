@@ -42,20 +42,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 - (CGFloat)legendViewHeight
 {
-    switch ([MirrorSettings userPreferredHistogramType]) {
-        case UserPreferredHistogramTypeToday:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisWeek:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisWeek] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisMonth:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisMonth] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisYear:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisYear] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-    }
+    self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
     return (self.data.count/kNumOfCellPerRow + ((self.data.count%kNumOfCellPerRow) ? 1:0)) * kCellHeight;
 }
 
@@ -68,20 +55,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    switch ([MirrorSettings userPreferredHistogramType]) {
-        case UserPreferredHistogramTypeToday:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisWeek:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisWeek] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisMonth:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisMonth] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisYear:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisYear] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-    }
+    self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
     return self.data.count;
 }
 

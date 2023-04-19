@@ -59,20 +59,7 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    switch ([MirrorSettings userPreferredHistogramType]) {
-        case UserPreferredHistogramTypeToday:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisWeek:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisWeek] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisMonth:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisMonth] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-        case UserPreferredHistogramTypeThisYear:
-            self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeThisYear] end:[[NSDate now] timeIntervalSince1970]];
-            break;
-    }
+    self.data = [MirrorDataManager getDataWithStart:[MirrorStorage startedTimeToday] end:[[NSDate now] timeIntervalSince1970]];
     [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     return self.data.count;
 }
@@ -178,19 +165,7 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (void)updateHint
 {
-    self.emptyHintLabel.hidden = self.data.count > 0;
-    if ([MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeToday) {
-        self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_today"];
-    }
-    if ([MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisWeek) {
-        self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_this_week"];
-    }
-    if ([MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisMonth) {
-        self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_this_month"];
-    }
-    if ([MirrorSettings userPreferredHistogramType] == UserPreferredHistogramTypeThisYear) {
-        self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_this_year"];
-    }
+    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_today"];
 }
 
 @end
