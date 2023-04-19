@@ -17,7 +17,7 @@
 #import "WeekStartsOnCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
-#import "SettingsAnimation.h"
+#import "LeftAnimation.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -94,7 +94,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
+        make.bottom.mas_equalTo(self.view);
     }];
 }
 
@@ -259,7 +259,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-    SettingsAnimation *animation = [SettingsAnimation new];
+    LeftAnimation *animation = [LeftAnimation new];
     animation.isPresent = NO;
     return animation;
 }

@@ -22,7 +22,7 @@
 #import "MUXToast.h"
 #import "MirrorSettings.h"
 #import "SettingsViewController.h"
-#import "SettingsAnimation.h"
+#import "LeftAnimation.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -31,6 +31,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
 @end
 
@@ -99,9 +100,38 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [self openTimeTrackingViewWithTask:ongoingTask];
         }
     }
+    // 手势(从左边缘滑动唤起settings)
+    UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
+    [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
+    [self.view addGestureRecognizer:panRecognizer];
 }
 
 #pragma mark - Actions
+
+// 从左边缘滑动唤起settings
+- (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
+{
+    //产生百分比
+    CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
+    
+    process = MIN(1.0,(MAX(0.0, process)));
+    NSLog(@"%f", process);
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+        // 触发present转场动画
+        [self goToSettings];
+    }else if (pan.state == UIGestureRecognizerStateChanged){
+        [self.interactiveTransition updateInteractiveTransition:process];
+    }else if (pan.state == UIGestureRecognizerStateEnded
+              || pan.state == UIGestureRecognizerStateCancelled){
+        if (process > 0.5) {
+            [ self.interactiveTransition finishInteractiveTransition];
+        }else{
+            [ self.interactiveTransition cancelInteractiveTransition];
+        }
+        self.interactiveTransition = nil;
+    }
+}
 
 // 长按唤起task编辑页面
 - (void)cellGetsLongPressed:(UISwipeGestureRecognizer *)swipeRecognizer
@@ -278,9 +308,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-    SettingsAnimation *animation = [SettingsAnimation new];
+    LeftAnimation *animation = [LeftAnimation new];
     animation.isPresent = YES;
     return animation;
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
+{
+    return self.interactiveTransition;
 }
 
 

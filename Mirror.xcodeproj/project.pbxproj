@@ -33,7 +33,7 @@
 		4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* DataViewController.m */; };
 		4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
-		4ACB422E29EEA411005EECC4 /* SettingsAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* SettingsAnimation.m */; };
+		4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* LeftAnimation.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
 		4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B328E4762E006F02DE /* ThemeCollectionViewCell.m */; };
 		4ADDC5B728E476A8006F02DE /* LanguageCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B628E476A8006F02DE /* LanguageCollectionViewCell.m */; };
@@ -104,8 +104,8 @@
 		4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataEntranceCollectionViewCell.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
-		4ACB422C29EEA411005EECC4 /* SettingsAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsAnimation.h; sourceTree = "<group>"; };
-		4ACB422D29EEA411005EECC4 /* SettingsAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsAnimation.m; sourceTree = "<group>"; };
+		4ACB422C29EEA411005EECC4 /* LeftAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftAnimation.h; sourceTree = "<group>"; };
+		4ACB422D29EEA411005EECC4 /* LeftAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LeftAnimation.m; sourceTree = "<group>"; };
 		4ADDC5AF28E4704B006F02DE /* AvatarCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvatarCollectionViewCell.h; sourceTree = "<group>"; };
 		4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AvatarCollectionViewCell.m; sourceTree = "<group>"; };
 		4ADDC5B228E4762E006F02DE /* ThemeCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemeCollectionViewCell.h; sourceTree = "<group>"; };
@@ -337,8 +337,8 @@
 		4ACB422F29EECBC4005EECC4 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
-				4ACB422C29EEA411005EECC4 /* SettingsAnimation.h */,
-				4ACB422D29EEA411005EECC4 /* SettingsAnimation.m */,
+				4ACB422C29EEA411005EECC4 /* LeftAnimation.h */,
+				4ACB422D29EEA411005EECC4 /* LeftAnimation.m */,
 			);
 			path = Animations;
 			sourceTree = "<group>";
@@ -560,7 +560,7 @@
 				4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */,
-				4ACB422E29EEA411005EECC4 /* SettingsAnimation.m in Sources */,
+				4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,
 				4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */,
 				4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */,

@@ -1,14 +1,14 @@
 //
-//  SettingsAnimation.m
+//  LeftAnimation.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/18.
 //
 
-#import "SettingsAnimation.h"
+#import "LeftAnimation.h"
 #import "MirrorMacro.h"
 
-@implementation SettingsAnimation
+@implementation LeftAnimation
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext{
     return .3f;
@@ -46,17 +46,19 @@
     
     if (_isPresent) { // present
         transView.frame = CGRectMake(-width*kLeftSheetRatio, 0, width/2, height);
-        [transitionContext containerView].backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
+        [transitionContext containerView].backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
             transView.frame = CGRectMake(0, 0, width*kLeftSheetRatio, height);
+            [transitionContext containerView].backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
         } completion:^(BOOL finished) {
              [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         }];
     } else { // dismiss
         transView.frame = CGRectMake(0, 0, width*kLeftSheetRatio, height);
-        
+        [transitionContext containerView].backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-            transView.frame = CGRectMake(-width*kLeftSheetRatio, 0, width*kLeftSheetRatio, height);;
+            transView.frame = CGRectMake(-width*kLeftSheetRatio, 0, width*kLeftSheetRatio, height);
+            [transitionContext containerView].backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
         } completion:^(BOOL finished) {
              [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         }];

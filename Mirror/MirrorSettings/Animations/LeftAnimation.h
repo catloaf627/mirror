@@ -1,5 +1,5 @@
 //
-//  SettingsAnimation.h
+//  LeftAnimation.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/18.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SettingsAnimation : NSObject<UIViewControllerAnimatedTransitioning>
+@interface LeftAnimation : NSObject<UIViewControllerAnimatedTransitioning>
 
 @property (nonatomic, assign) BOOL isPresent; // is present or is dismiss
 
