@@ -1,5 +1,5 @@
 //
-//  MirrorLegend.h
+//  OneDayLegend.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/15.
@@ -9,14 +9,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol MirrorLegendDelegate <NSObject> // push viewcontroller用
+@protocol OneDayLegendDelegate <NSObject> // push viewcontroller用
 
 @end
 
-@interface MirrorLegend : UIView
+@interface OneDayLegend : UIView
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, weak) UIViewController<MirrorLegendDelegate> *delegate;
+@property (nonatomic, weak) UIViewController<OneDayLegendDelegate> *delegate;
 
 - (instancetype)initWithDatePicker:(UIDatePicker *)datePicker;
 - (CGFloat)legendViewHeight;

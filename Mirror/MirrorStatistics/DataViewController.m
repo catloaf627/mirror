@@ -11,17 +11,17 @@
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
 #import "DataEntranceCollectionViewCell.h"
-#import "MirrorHistogram.h"
-#import "MirrorLegend.h"
+#import "OneDayHistogram.h"
+#import "OneDayLegend.h"
 #import "MirrorSettings.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 
-@interface DataViewController () <MirrorLegendDelegate, MirrorHistogramDelegate>
+@interface DataViewController () <OneDayLegendDelegate, OneDayHistogramDelegate>
 
 @property (nonatomic, strong) UIDatePicker *datePicker;
-@property (nonatomic, strong) MirrorLegend *legendView;
-@property (nonatomic, strong) MirrorHistogram *histogramView;
+@property (nonatomic, strong) OneDayLegend *legendView;
+@property (nonatomic, strong) OneDayHistogram *histogramView;
 
 @end
 
@@ -136,19 +136,19 @@ static CGFloat const kLeftRightSpacing = 20;
 }
 
 
-- (MirrorHistogram *)histogramView
+- (OneDayHistogram *)histogramView
 {
     if (!_histogramView) {
-        _histogramView = [[MirrorHistogram alloc] initWithDatePicker:self.datePicker];
+        _histogramView = [[OneDayHistogram alloc] initWithDatePicker:self.datePicker];
         _histogramView.delegate = self;
     }
     return _histogramView;
 }
 
-- (MirrorLegend *)legendView
+- (OneDayLegend *)legendView
 {
     if (!_legendView) {
-        _legendView = [[MirrorLegend alloc] initWithDatePicker:self.datePicker];
+        _legendView = [[OneDayLegend alloc] initWithDatePicker:self.datePicker];
         _legendView.delegate = self;
     }
     return _legendView;

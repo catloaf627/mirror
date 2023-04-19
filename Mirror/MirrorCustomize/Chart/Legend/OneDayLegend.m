@@ -1,11 +1,11 @@
 //
-//  MirrorLegend.m
+//  OneDayLegend.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/15.
 //
 
-#import "MirrorLegend.h"
+#import "OneDayLegend.h"
 #import "MirrorDataManager.h"
 #import <Masonry/Masonry.h>
 #import "MirrorSettings.h"
@@ -16,14 +16,14 @@
 static CGFloat const kCellHeight = 30; // 一个legend的高度
 static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
-@interface MirrorLegend () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface OneDayLegend () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 @property (nonatomic, strong) UIDatePicker *datePicker;
 
 @end
 
-@implementation MirrorLegend
+@implementation OneDayLegend
 
 - (instancetype)initWithDatePicker:(UIDatePicker *)datePicker
 {

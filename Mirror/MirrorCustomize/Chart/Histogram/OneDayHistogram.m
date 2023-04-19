@@ -1,11 +1,11 @@
 //
-//  MirrorHistogram.m
+//  OneDayHistogram.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/5.
 //
 
-#import "MirrorHistogram.h"
+#import "OneDayHistogram.h"
 #import "MirrorDataManager.h"
 #import "MirrorStorage.h"
 #import "HistogramCollectionViewCell.h"
@@ -18,14 +18,14 @@
 #import "MirrorTool.h"
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
-@interface MirrorHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface OneDayHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 
 @end
-@implementation MirrorHistogram
+@implementation OneDayHistogram
 
 - (instancetype)initWithDatePicker:(UIDatePicker *)datePicker
 {
