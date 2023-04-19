@@ -384,7 +384,7 @@ static CGFloat const kHeightRatio = 0.8;
             NSArray *latterPeriod = task.periods[self.periodIndex-1];
             maxTime = [latterPeriod[0] longValue] - 1; // 至多也要比下一个task的开始时间小一秒
         } else {
-            maxTime = NSIntegerMax;
+            maxTime = [[NSDate now] timeIntervalSince1970];
         }
     }
     return [NSDate dateWithTimeIntervalSince1970:maxTime];
