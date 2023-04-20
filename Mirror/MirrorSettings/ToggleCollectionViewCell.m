@@ -28,7 +28,7 @@
     [self.contentView addSubview:self.toggle];
     [self.toggle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.offset(0);
-        make.right.offset(-12);
+        make.right.offset(0); // toggle 有re-scale，右边会自动空出间距
     }];
     [self.contentView addSubview:self.label];
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -14,10 +14,15 @@
 #import "OneDayHistogram.h"
 #import "OneDayLegend.h"
 #import "MirrorSettings.h"
+#import "LeftAnimation.h"
+#import "SettingsViewController.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 
-@interface DataViewController () <OneDayLegendDelegate, OneDayHistogramDelegate>
+@interface DataViewController () <OneDayLegendDelegate, OneDayHistogramDelegate, UIViewControllerTransitioningDelegate>
+
+@property (nonatomic, strong) UIButton *settingsButton;
+@property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) OneDayLegend *legendView;
@@ -50,6 +55,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
+    self.settingsButton = nil;
     self.datePicker = nil;
     self.legendView = nil;
     self.histogramView = nil;
@@ -118,6 +124,15 @@ static CGFloat const kLeftRightSpacing = 20;
         make.top.mas_equalTo(self.legendView.mas_bottom).offset(20);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
+    [self.view addSubview:self.settingsButton];
+    [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.bottom.mas_equalTo(self.datePicker.mas_top);
+        make.width.height.mas_equalTo(40);
+    }];
+    UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
+    [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
+    [self.view addGestureRecognizer:panRecognizer];
 }
 
 #pragma mark - Getters
@@ -154,6 +169,68 @@ static CGFloat const kLeftRightSpacing = 20;
         _legendView.delegate = self;
     }
     return _legendView;
+}
+
+- (UIButton *)settingsButton
+{
+    if (!_settingsButton) {
+        _settingsButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"ellipsis"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _settingsButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _settingsButton;
+}
+
+#pragma mark - Settings
+
+- (void)goToSettings
+{
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
+    settingsVC.transitioningDelegate = self;
+    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
+    [self presentViewController:settingsVC animated:YES completion:nil];
+}
+
+// 从左边缘滑动唤起settings
+- (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
+{
+    //产生百分比
+    CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
+    
+    process = MIN(1.0,(MAX(0.0, process)));
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+        // 触发present转场动画
+        [self goToSettings];
+    }else if (pan.state == UIGestureRecognizerStateChanged){
+        [self.interactiveTransition updateInteractiveTransition:process];
+    }else if (pan.state == UIGestureRecognizerStateEnded
+              || pan.state == UIGestureRecognizerStateCancelled){
+        if (process > 0.3) {
+            [ self.interactiveTransition finishInteractiveTransition];
+        }else{
+            [ self.interactiveTransition cancelInteractiveTransition];
+        }
+        self.interactiveTransition = nil;
+    }
+}
+
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    LeftAnimation *animation = [LeftAnimation new];
+    animation.isPresent = YES;
+    return animation;
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
+{
+    return self.interactiveTransition;
 }
 
 

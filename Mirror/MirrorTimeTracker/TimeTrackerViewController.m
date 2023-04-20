@@ -30,8 +30,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 @interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
-@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
+
+@property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
 
@@ -88,49 +89,26 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             make.top.mas_equalTo(self.view).offset(90);
             make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
+    // Settings button
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.bottom.mas_equalTo(self.collectionView.mas_top);
         make.width.height.mas_equalTo(40);
     }];
+    UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
+    [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
+    [self.view addGestureRecognizer:panRecognizer];
+    // 计时状态
     if ([MirrorSettings appliedImmersiveMode]) {
         MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
         if (ongoingTask) {
             [self openTimeTrackingViewWithTask:ongoingTask];
         }
     }
-    // 手势(从左边缘滑动唤起settings)
-    UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
-    [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
-    [self.view addGestureRecognizer:panRecognizer];
 }
 
 #pragma mark - Actions
-
-// 从左边缘滑动唤起settings
-- (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
-{
-    //产生百分比
-    CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
-    
-    process = MIN(1.0,(MAX(0.0, process)));
-    if (pan.state == UIGestureRecognizerStateBegan) {
-        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
-        // 触发present转场动画
-        [self goToSettings];
-    }else if (pan.state == UIGestureRecognizerStateChanged){
-        [self.interactiveTransition updateInteractiveTransition:process];
-    }else if (pan.state == UIGestureRecognizerStateEnded
-              || pan.state == UIGestureRecognizerStateCancelled){
-        if (process > 0.3) {
-            [ self.interactiveTransition finishInteractiveTransition];
-        }else{
-            [ self.interactiveTransition cancelInteractiveTransition];
-        }
-        self.interactiveTransition = nil;
-    }
-}
 
 // 长按唤起task编辑页面
 - (void)cellGetsLongPressed:(UISwipeGestureRecognizer *)swipeRecognizer
@@ -296,6 +274,8 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return _settingsButton;
 }
 
+#pragma mark - Settings
+
 - (void)goToSettings
 {
     [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
@@ -303,6 +283,30 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     settingsVC.transitioningDelegate = self;
     settingsVC.modalPresentationStyle = UIModalPresentationCustom;
     [self presentViewController:settingsVC animated:YES completion:nil];
+}
+
+// 从左边缘滑动唤起settings
+- (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
+{
+    //产生百分比
+    CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
+    
+    process = MIN(1.0,(MAX(0.0, process)));
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+        // 触发present转场动画
+        [self goToSettings];
+    }else if (pan.state == UIGestureRecognizerStateChanged){
+        [self.interactiveTransition updateInteractiveTransition:process];
+    }else if (pan.state == UIGestureRecognizerStateEnded
+              || pan.state == UIGestureRecognizerStateCancelled){
+        if (process > 0.3) {
+            [ self.interactiveTransition finishInteractiveTransition];
+        }else{
+            [ self.interactiveTransition cancelInteractiveTransition];
+        }
+        self.interactiveTransition = nil;
+    }
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate

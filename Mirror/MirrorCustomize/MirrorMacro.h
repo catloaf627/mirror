@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 // https://stackoverflow.com/questions/8090916/fonts-on-ios-device
 
 // 侧边半屏ratio
-#define kLeftSheetRatio (0.8)
+#define kLeftSheetRatio (0.7)
 // Max number of colors
 #define kMaxColorNum (8)
 // Max number of tasks
