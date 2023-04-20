@@ -63,9 +63,6 @@
     // 闪烁 & Task record
     [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
     
-    // Histogram
-//    [mirrorDict setValue:@[@"No tasks today", @"今天还没有任务"] forKey:@"no_tasks_today"]; //gizmo
-    
     // Task record
     [mirrorDict setValue:@[@"Total: ", @"共计："] forKey:@"total"];
     
@@ -81,10 +78,17 @@
                   with1Placeholder:(NSString *)placeholder
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
+    
+    // MUXToast
     [mirrorDict setValue:@[@"[%@] has been lasted more than 24 hours. It was stopped and saved automatically.", @"【%@】时长超过24小时，已自动停止并保存"] forKey:@"reached_limited_time"];
     [mirrorDict setValue:@[@"[%@] not saved", @"【%@】未保存"] forKey:@"too_short_to_save"];
+    
+    // Edit period
     [mirrorDict setValue:@[@"The start time of No.%@ task: No later than the end time of this task, nor earlier than the end time of the previous task", @"第%@次任务的开始时间：不得晚于本次任务的结束时间，不得早于上一个任务的结束时间"] forKey:@"start_time_for_period"];
     [mirrorDict setValue:@[@"The end time of No.%@ task: No earlier than the start time of this task, nor later than the start time of the next task", @"第%@次任务的结束时间：不得早于本次任务的开始时间，不得晚于下一个任务的开始时间"] forKey:@"end_time_for_period"];
+    
+    // Histogram empty hint
+    [mirrorDict setValue:@[@"No records on %@", @"%@ 没有记录"] forKey:@"no_tasks_on_day"]; //gizmo
     
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder];

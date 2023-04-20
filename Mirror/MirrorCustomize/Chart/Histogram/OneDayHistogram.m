@@ -188,7 +188,8 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (void)updateHint
 {
-    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_today"];
+    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_on_day" with1Placeholder:[self dayFromDate:self.datePicker.date]];
+    self.emptyHintLabel.hidden = self.data.count > 0;
 }
 
 - (NSMutableArray<MirrorDataModel *> *)data // 根据datePicker时时更新
@@ -213,6 +214,20 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     endTime = [[endGregorian dateFromComponents:endComponents] timeIntervalSince1970];
     _data = [MirrorDataManager getDataWithStart:startTime end:endTime];
     return _data;
+}
+
+- (NSString *)dayFromDate:(NSDate *)date
+{
+    // setup
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:date];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    long year = (long)components.year;
+    long month = (long)components.month;
+    long day = (long)components.day;
+
+    return [NSString stringWithFormat: @"%ld.%ld.%ld", year, month, day];
 }
 
 
