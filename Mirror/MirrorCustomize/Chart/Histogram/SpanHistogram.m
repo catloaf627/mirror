@@ -198,7 +198,6 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
         }
     } else if (self.spanType == SpanTypeMonth) {
         components.day = 1;
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在月的第一天的0:0:0
         if (self.offset > 0) {
             for (int i=0;i<self.offset;i++) {
                 if (components.month + 1 <= 12) {
@@ -219,13 +218,14 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
                 }
             }
         }
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在月的第一天的0:0:0
     } else if (self.spanType == SpanTypeYear) {
         components.month = 1;
         components.day = 1;
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在年的第一天的0:0:0
         if (self.offset != 0) {
             components.year = components.year + self.offset;
         }
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在月的第一天的0:0:0
     }
     
     

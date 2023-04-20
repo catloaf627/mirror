@@ -122,13 +122,12 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
     components.second = 0;
     if (self.spanType == SpanTypeWeek) {
         long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        startTime = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;// now所在周的第一天的0:0:0
+        startTime = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;
         if (self.offset != 0) {
             startTime = startTime + 7*86400*self.offset;
         }
     } else if (self.spanType == SpanTypeMonth) {
         components.day = 1;
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在月的第一天的0:0:0
         if (self.offset > 0) {
             for (int i=0;i<self.offset;i++) {
                 if (components.month + 1 <= 12) {
@@ -149,13 +148,14 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
                 }
             }
         }
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     } else if (self.spanType == SpanTypeYear) {
         components.month = 1;
         components.day = 1;
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在年的第一天的0:0:0
         if (self.offset != 0) {
             components.year = components.year + self.offset;
         }
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     }
     
     
