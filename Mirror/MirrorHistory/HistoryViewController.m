@@ -16,6 +16,7 @@
 #import "SettingsViewController.h"
 #import "SpanHistogram.h"
 #import "SpanLegend.h"
+#import "MirrorLanguage.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 
@@ -194,7 +195,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (UISegmentedControl *)typeSwitch
 {
     if (!_typeSwitch) {
-        _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[@"Week", @"Month", @"Year"]];
+        _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[[MirrorLanguage mirror_stringWithKey:@"segment_week"], [MirrorLanguage mirror_stringWithKey:@"segment_month"], [MirrorLanguage mirror_stringWithKey:@"segment_year"]]];
         _typeSwitch.selectedSegmentIndex = 0;
         [_typeSwitch addTarget:self action:@selector(spanTypeChanged) forControlEvents:UIControlEventValueChanged];
         _typeSwitch.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;

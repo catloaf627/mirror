@@ -64,6 +64,22 @@
     // Delete period
     [mirrorDict setValue:@[@"Delete this time period? ", @"确定删除这个时间段？"] forKey:@"delete_period_?"];
     
+    // History type switch
+    [mirrorDict setValue:@[@"Week ", @"周"] forKey:@"segment_week"];
+    [mirrorDict setValue:@[@"Month ", @"月"] forKey:@"segment_month"];
+    [mirrorDict setValue:@[@"Year ", @"年"] forKey:@"segment_year"];
+    
+    // 星期
+    [mirrorDict setValue:@[@"Sun ", @"周日"] forKey:@"sunday"];
+    [mirrorDict setValue:@[@"Mon ", @"周一"] forKey:@"monday"];
+    [mirrorDict setValue:@[@"Tue ", @"周二"] forKey:@"tuesday"];
+    [mirrorDict setValue:@[@"Wed", @"周三"] forKey:@"wednesday"];
+    [mirrorDict setValue:@[@"Thu ", @"周四"] forKey:@"thursday"];
+    [mirrorDict setValue:@[@"Fri ", @"周五"] forKey:@"friday"];
+    [mirrorDict setValue:@[@"Sat ", @"周六"] forKey:@"saturday"];
+    
+    
+    
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }

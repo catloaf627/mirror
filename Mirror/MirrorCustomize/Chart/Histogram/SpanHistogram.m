@@ -262,14 +262,14 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     long day = (long)components.day;
     long week = (long)components.weekday;
     
-    NSString *weekday = @"unknow";
-    if (week == 1) weekday = @"Sun";
-    if (week == 2) weekday = @"Mon";
-    if (week == 3) weekday = @"Tue";
-    if (week == 4) weekday = @"Wed";
-    if (week == 5) weekday = @"Thu";
-    if (week == 6) weekday = @"Fri";
-    if (week == 7) weekday = @"Sat";
+    NSString *weekday = @"";
+    if (week == 1) weekday = [MirrorLanguage mirror_stringWithKey:@"sunday"];
+    if (week == 2) weekday = [MirrorLanguage mirror_stringWithKey:@"monday"];
+    if (week == 3) weekday = [MirrorLanguage mirror_stringWithKey:@"tuesday"];
+    if (week == 4) weekday = [MirrorLanguage mirror_stringWithKey:@"wednesday"];
+    if (week == 5) weekday = [MirrorLanguage mirror_stringWithKey:@"thursday"];
+    if (week == 6) weekday = [MirrorLanguage mirror_stringWithKey:@"friday"];
+    if (week == 7) weekday = [MirrorLanguage mirror_stringWithKey:@"saturday"];
     return [NSString stringWithFormat: @"%ld.%ld.%ld, %@", year, month, day, weekday];
 }
 
