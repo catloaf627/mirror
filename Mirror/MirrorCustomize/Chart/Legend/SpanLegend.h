@@ -1,5 +1,5 @@
 //
-//  SpanHistogram.h
+//  SpanLegend.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/20.
@@ -10,20 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SpanHistogramDelegate <NSObject>  // push viewcontroller用
+@protocol SpanLegendDelegate <NSObject> // push viewcontroller用
 
 @end
 
-@interface SpanHistogram : UIView
+@interface SpanLegend : UIView
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, weak) UIViewController<SpanHistogramDelegate> *delegate;
-
-@property (nonatomic, strong) NSString *startDate; // 对外update label用
-@property (nonatomic, strong) NSString *endDate; // 对外update label用
+@property (nonatomic, weak) UIViewController<SpanLegendDelegate> *delegate;
 
 - (instancetype)initWithSpanType:(SpanType)spanType offset:(NSInteger)offset;
 - (void)updateWithSpanType:(SpanType)spanType offset:(NSInteger)offset;
+- (CGFloat)legendViewHeight;
 
 @end
 

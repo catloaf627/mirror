@@ -15,15 +15,17 @@
 #import "LeftAnimation.h"
 #import "SettingsViewController.h"
 #import "SpanHistogram.h"
+#import "SpanLegend.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 
-@interface HistoryViewController () <UIViewControllerTransitioningDelegate>
+@interface HistoryViewController () <SpanLegendDelegate, SpanHistogramDelegate, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
 @property (nonatomic, strong) UISegmentedControl *typeSwitch;
+@property (nonatomic, strong) SpanLegend *spanLegend;
 @property (nonatomic, strong) SpanHistogram *spanHistogram;
 
 /*
@@ -101,11 +103,18 @@ static CGFloat const kLeftRightSpacing = 20;
         make.centerY.mas_equalTo(self.titleLabel);
         make.left.mas_equalTo(self.titleLabel.mas_right).offset(10);
     }];
+    [self.view addSubview:self.spanLegend];
+    [self.spanLegend mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.height.mas_equalTo([self.spanLegend legendViewHeight]);
+    }];
     [self.view addSubview:self.spanHistogram];
     [self.spanHistogram mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.top.mas_equalTo(self.spanLegend.mas_bottom);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
     [self.view addSubview:self.settingsButton];
@@ -150,6 +159,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)clickLeft
 {
     self.offset = self.offset - 1;
+    [self.spanLegend updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
     [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
     self.titleLabel.text = [[self.spanHistogram.startDate stringByAppendingString:@" - "] stringByAppendingString:self.spanHistogram.endDate];
 }
@@ -157,6 +167,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)clickRight
 {
     self.offset = self.offset + 1;
+    [self.spanLegend updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
     [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
     self.titleLabel.text = [[self.spanHistogram.startDate stringByAppendingString:@" - "] stringByAppendingString:self.spanHistogram.endDate];
 }
@@ -219,8 +230,18 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     if (!_spanHistogram) {
         _spanHistogram = [[SpanHistogram alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+        _spanHistogram.delegate = self;
     }
     return _spanHistogram;
+}
+
+- (SpanLegend *)spanLegend
+{
+    if (!_spanLegend) {
+        _spanLegend = [[SpanLegend alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+        _spanLegend.delegate = self;
+    }
+    return _spanLegend;
 }
 
 - (UIButton *)settingsButton

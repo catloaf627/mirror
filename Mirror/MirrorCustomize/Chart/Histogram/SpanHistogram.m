@@ -182,8 +182,9 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     self.emptyHintLabel.hidden = self.data.count > 0;
 }
 
-- (NSMutableArray<MirrorDataModel *> *)data // 根据datePicker时时更新
+- (NSMutableArray<MirrorDataModel *> *)data
 {
+    NSLog(@"gizmo offset %d", self.offset);
     // span开始那天的0:0:0
     long startTime = 0;
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
