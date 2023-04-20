@@ -25,8 +25,8 @@ static CGFloat const kLeftRightSpacing = 20;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
 @property (nonatomic, strong) UISegmentedControl *typeSwitch;
-@property (nonatomic, strong) SpanLegend *spanLegend;
-@property (nonatomic, strong) SpanHistogram *spanHistogram;
+@property (nonatomic, strong) SpanLegend *legendView;
+@property (nonatomic, strong) SpanHistogram *histogramView;
 
 /*
  offset和type一起使用，每次切type的时候置为0。
@@ -103,18 +103,18 @@ static CGFloat const kLeftRightSpacing = 20;
         make.centerY.mas_equalTo(self.titleLabel);
         make.left.mas_equalTo(self.titleLabel.mas_right).offset(10);
     }];
-    [self.view addSubview:self.spanLegend];
-    [self.spanLegend mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.legendView];
+    [self.legendView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.titleLabel.mas_bottom);
-        make.height.mas_equalTo([self.spanLegend legendViewHeight]);
+        make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
-    [self.view addSubview:self.spanHistogram];
-    [self.spanHistogram mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.histogramView];
+    [self.histogramView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.spanLegend.mas_bottom);
+        make.top.mas_equalTo(self.legendView.mas_bottom);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
     [self.view addSubview:self.settingsButton];
@@ -159,21 +159,21 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)clickLeft
 {
     self.offset = self.offset - 1;
-    [self.spanLegend updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-    [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
 }
 
 - (void)clickRight
 {
     self.offset = self.offset + 1;
-    [self.spanLegend updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-    [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
 }
 
 - (void)spanTypeChanged
 {
     self.offset = 0;
-    [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
 }
 
 - (void)updateStartDate:(NSString *)startDate endDate:(NSString *)endDate
@@ -229,22 +229,22 @@ static CGFloat const kLeftRightSpacing = 20;
     return _rightButton;
 }
 
-- (SpanHistogram *)spanHistogram
+- (SpanHistogram *)histogramView
 {
-    if (!_spanHistogram) {
-        _spanHistogram = [[SpanHistogram alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-        _spanHistogram.delegate = self;
+    if (!_histogramView) {
+        _histogramView = [[SpanHistogram alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+        _histogramView.delegate = self;
     }
-    return _spanHistogram;
+    return _histogramView;
 }
 
-- (SpanLegend *)spanLegend
+- (SpanLegend *)legendView
 {
-    if (!_spanLegend) {
-        _spanLegend = [[SpanLegend alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-        _spanLegend.delegate = self;
+    if (!_legendView) {
+        _legendView = [[SpanLegend alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+        _legendView.delegate = self;
     }
-    return _spanLegend;
+    return _legendView;
 }
 
 - (UIButton *)settingsButton
