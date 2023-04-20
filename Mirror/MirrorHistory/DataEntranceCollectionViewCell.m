@@ -25,7 +25,7 @@ static const CGFloat kHorizontalPadding = 20;
 
 @end
 
-@implementation DataEntranceCollectionViewCell
+@implementation DataEntranceCollectionViewCell // gizmo: to be deleted
 
 + (NSString *)identifier
 {

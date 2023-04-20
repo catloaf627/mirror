@@ -15,15 +15,20 @@
 #import "LeftAnimation.h"
 #import "SettingsViewController.h"
 
-static CGFloat const kCellSpacing = 20;
 static CGFloat const kLeftRightSpacing = 20;
 
-@interface HistoryViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
+@interface HistoryViewController () <UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
-@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UISegmentedControl *typeSwitch;
+
+/*
+ 和type一起使用，每次切type的时候置为0。
+ offset = n means往右（往未来）拉n周/月/年；offset = -n means往左（往过去）拉n周/月/年；
+ */
+@property (nonatomic, assign) NSInteger offset;
 
 @end
 
@@ -65,17 +70,17 @@ static CGFloat const kLeftRightSpacing = 20;
      */
     self.navigationController.navigationBar.topItem.title = @""; //给父vc一个空title，让所有子vc的navibar返回文案都为空
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-    [self.view addSubview:self.collectionView];
-    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+
+    [self.view addSubview:self.typeSwitch];
+    [self.typeSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-        make.height.mas_equalTo(80 * 2 + 20); // 两行cell加上他们的行间距
     }];
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.top.mas_equalTo(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height - 40);
+        make.bottom.mas_equalTo(self.typeSwitch.mas_top);
         make.width.height.mas_equalTo(40);
     }];
     UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
@@ -89,7 +94,7 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     // 将vc.view里的所有subviews全部置为nil
     self.settingsButton = nil;
-    self.collectionView = nil;
+    self.typeSwitch = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar
@@ -106,64 +111,18 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)reloadData
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
-    [self.collectionView reloadData];
+    
 }
-
-#pragma mark - UICollectionViewDelegateFlowLayout
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake((kScreenWidth - 3*kCellSpacing)/2, 80);
-}
-
-#pragma mark - UICollectionViewDelegate
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-
-}
-
-#pragma mark - UICollectionViewDataSource
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return 4;
-}
-
-- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    DataEntranceCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[DataEntranceCollectionViewCell identifier] forIndexPath:indexPath];
-    DataEntranceType type = DataEntranceTypeToday;
-    if (indexPath.item == 0) type = DataEntranceTypeToday;
-    if (indexPath.item == 1) type = DataEntranceTypeThisWeek;
-    if (indexPath.item == 2) type = DataEntranceTypeThisMonth;
-    if (indexPath.item == 3) type = DataEntranceTypeThisYear;
-    [cell configCellWithType:type];
-    return cell;
-}
-
 
 #pragma mark - Getters
 
-- (UICollectionView *)collectionView
+- (UISegmentedControl *)typeSwitch
 {
-    if (!_collectionView) {
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
-        layout.minimumLineSpacing = 20;
-        layout.minimumInteritemSpacing = 20;
-        _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-        _collectionView.delegate = self;
-        _collectionView.dataSource = self;
-        _collectionView.backgroundColor = self.view.backgroundColor;
-        
-        [_collectionView registerClass:[DataEntranceCollectionViewCell class] forCellWithReuseIdentifier:[DataEntranceCollectionViewCell identifier]];
+    if (!_typeSwitch) {
+        _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[@"Week", @"Month", @"Year"]];
+        _typeSwitch.selectedSegmentIndex = 0;
     }
-    return _collectionView;
+    return _typeSwitch;
 }
 
 - (UIButton *)settingsButton
