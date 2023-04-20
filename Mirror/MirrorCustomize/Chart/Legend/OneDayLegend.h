@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) UIViewController<OneDayLegendDelegate> *delegate;
 
 - (instancetype)initWithDatePicker:(UIDatePicker *)datePicker;
+// 根据datepicker实时更新，找准时机reload collectionview就可，无需update方法
 - (CGFloat)legendViewHeight;
 @end
 

@@ -14,6 +14,7 @@
 #import <Masonry/Masonry.h>
 #import "LeftAnimation.h"
 #import "SettingsViewController.h"
+#import "SpanHistogram.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 
@@ -23,12 +24,17 @@ static CGFloat const kLeftRightSpacing = 20;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
 @property (nonatomic, strong) UISegmentedControl *typeSwitch;
+@property (nonatomic, strong) SpanHistogram *spanHistogram;
 
 /*
- 和type一起使用，每次切type的时候置为0。
+ offset和type一起使用，每次切type的时候置为0。
  offset = n means往右（往未来）拉n周/月/年；offset = -n means往左（往过去）拉n周/月/年；
  */
 @property (nonatomic, assign) NSInteger offset;
+@property (nonatomic, strong) UIButton *leftButton;
+@property (nonatomic, strong) UIButton *rightButton;
+@property (nonatomic, strong) UILabel *titleLabel;
+
 
 @end
 
@@ -77,6 +83,31 @@ static CGFloat const kLeftRightSpacing = 20;
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
     }];
+    [self.view addSubview:self.titleLabel];
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.offset(0);
+        make.top.mas_equalTo(self.typeSwitch.mas_bottom).offset(20);
+        make.width.mas_equalTo(2*self.view.frame.size.width/3);
+        make.height.mas_equalTo(40);
+    }];
+    
+    [self.view addSubview:self.leftButton];
+    [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.titleLabel);
+        make.right.mas_equalTo(self.titleLabel.mas_left).offset(-10);
+    }];
+    [self.view addSubview:self.rightButton];
+    [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.titleLabel);
+        make.left.mas_equalTo(self.titleLabel.mas_right).offset(10);
+    }];
+    [self.view addSubview:self.spanHistogram];
+    [self.spanHistogram mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
+    }];
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
@@ -114,6 +145,28 @@ static CGFloat const kLeftRightSpacing = 20;
     
 }
 
+#pragma mark - Actions
+
+- (void)clickLeft
+{
+    self.offset = self.offset - 1;
+    [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    self.titleLabel.text = [[self.spanHistogram.startDate stringByAppendingString:@" - "] stringByAppendingString:self.spanHistogram.endDate];
+}
+
+- (void)clickRight
+{
+    self.offset = self.offset + 1;
+    [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    self.titleLabel.text = [[self.spanHistogram.startDate stringByAppendingString:@" - "] stringByAppendingString:self.spanHistogram.endDate];
+}
+
+- (void)spanTypeChanged
+{
+    [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    self.titleLabel.text = [[self.spanHistogram.startDate stringByAppendingString:@" - "] stringByAppendingString:self.spanHistogram.endDate];
+}
+
 #pragma mark - Getters
 
 - (UISegmentedControl *)typeSwitch
@@ -121,8 +174,53 @@ static CGFloat const kLeftRightSpacing = 20;
     if (!_typeSwitch) {
         _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[@"Week", @"Month", @"Year"]];
         _typeSwitch.selectedSegmentIndex = 0;
+        [_typeSwitch addTarget:self action:@selector(spanTypeChanged) forControlEvents:UIControlEventValueChanged];
     }
     return _typeSwitch;
+}
+
+- (UILabel *)titleLabel
+{
+    if (!_titleLabel) {
+        _titleLabel = [UILabel new];
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        _titleLabel.text = @"gizmo";
+        _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
+    }
+    return _titleLabel;
+}
+
+- (UIButton *)leftButton
+{
+    if (!_leftButton) {
+        _leftButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"chevron.left"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_leftButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _leftButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_leftButton addTarget:self action:@selector(clickLeft) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _leftButton;
+}
+
+- (UIButton *)rightButton
+{
+    if (!_rightButton) {
+        _rightButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"chevron.right"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_rightButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _rightButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_rightButton addTarget:self action:@selector(clickRight) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _rightButton;
+}
+
+- (SpanHistogram *)spanHistogram
+{
+    if (!_spanHistogram) {
+        _spanHistogram = [[SpanHistogram alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    }
+    return _spanHistogram;
 }
 
 - (UIButton *)settingsButton

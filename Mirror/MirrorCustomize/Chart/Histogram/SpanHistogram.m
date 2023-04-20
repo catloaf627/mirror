@@ -1,11 +1,11 @@
 //
-//  OneDayHistogram.m
+//  SpanHistogram.m
 //  Mirror
 //
-//  Created by Yuqing Wang on 2023/4/5.
+//  Created by Yuqing Wang on 2023/4/20.
 //
 
-#import "OneDayHistogram.h"
+#import "SpanHistogram.h"
 #import "MirrorDataManager.h"
 #import "MirrorStorage.h"
 #import "HistogramCollectionViewCell.h"
@@ -16,23 +16,30 @@
 #import "MirrorLanguage.h"
 #import "TaskRecordViewController.h"
 #import "MirrorTool.h"
+
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
-@interface OneDayHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface SpanHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
-@property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 
-@end
-@implementation OneDayHistogram
+@property (nonatomic, assign) NSInteger spanType;
+@property (nonatomic, assign) NSInteger offset;
 
-- (instancetype)initWithDatePicker:(UIDatePicker *)datePicker
+@end
+
+@implementation SpanHistogram
+
+- (instancetype)initWithSpanType:(SpanType)spanType offset:(NSInteger)offset
 {
     self = [super init];
     if (self) {
+        self.spanType = spanType;
+        self.offset = offset;
+        self.startDate = @"";
+        self.endDate = @"";
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-        self.datePicker = datePicker;
         // empty hint
         [self updateHint];
         [self addSubview:self.emptyHintLabel];
@@ -48,6 +55,14 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     }
     return self;
 }
+
+- (void)updateWithSpanType:(SpanType)spanType offset:(NSInteger)offset
+{
+    self.spanType = spanType;
+    self.offset = offset;
+    [self.collectionView reloadData];
+}
+
 
 #pragma mark - UICollectionViewDataSource
 
@@ -163,32 +178,101 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (void)updateHint
 {
-    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_on_day" with1Placeholder:[self dayFromDate:self.datePicker.date]];
+//    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_tasks_on_day" with1Placeholder:[self dayFromDate:self.datePicker.date]];
     self.emptyHintLabel.hidden = self.data.count > 0;
 }
 
 - (NSMutableArray<MirrorDataModel *> *)data // 根据datePicker时时更新
 {
-    // 选中的那天的0:0:0
+    // span开始那天的0:0:0
     long startTime = 0;
-    NSCalendar *startGregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *startComponents = [startGregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
-    startComponents.timeZone = [NSTimeZone systemTimeZone];
-    startComponents.hour = 0;
-    startComponents.minute = 0;
-    startComponents.second = 0;
-    startTime = [[startGregorian dateFromComponents:startComponents] timeIntervalSince1970];
-    // 选中的那天的23:59:59
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    if (self.spanType == SpanTypeWeek) {
+        long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+        startTime = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;// now所在周的第一天的0:0:0
+        if (self.offset != 0) {
+            startTime = startTime + 7*86400*self.offset;
+        }
+    } else if (self.spanType == SpanTypeMonth) {
+        components.day = 1;
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在月的第一天的0:0:0
+        if (self.offset > 0) {
+            for (int i=0;i<self.offset;i++) {
+                if (components.month + 1 <= 12) {
+                    components.month = components.month + 1;
+                } else {
+                    components.year = components.year + 1;
+                    components.month = 1;
+                }
+            }
+        }
+        if (self.offset < 0) {
+            for (int i=0;i<-self.offset;i++) {
+                if (components.month - 1 >= 1) {
+                    components.month = components.month - 1;
+                } else {
+                    components.year = components.year - 1;
+                    components.month = 12;
+                }
+            }
+        }
+    } else if (self.spanType == SpanTypeYear) {
+        components.month = 1;
+        components.day = 1;
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在年的第一天的0:0:0
+        if (self.offset != 0) {
+            components.year = components.year + self.offset;
+        }
+    }
+    
+    
+    // span结束那天的23:59:59
     long endTime = 0;
-    NSCalendar *endGregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *endComponents = [endGregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:self.datePicker.date];
-    endComponents.timeZone = [NSTimeZone systemTimeZone];
-    endComponents.hour = 23;
-    endComponents.minute = 59;
-    endComponents.second = 59;
-    endTime = [[endGregorian dateFromComponents:endComponents] timeIntervalSince1970];
+    if (self.spanType == SpanTypeWeek) {
+        NSInteger numberOfDaysInWeek= 7;
+        endTime = startTime + numberOfDaysInWeek*86400 - 1;
+    } else if (self.spanType == SpanTypeMonth) {
+        NSRange rng = [[NSCalendar currentCalendar] rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:[NSDate dateWithTimeIntervalSince1970:startTime]];
+        NSInteger numberOfDaysInMonth = rng.length;
+        endTime = startTime + numberOfDaysInMonth*86400 - 1;
+    } else if (self.spanType == SpanTypeYear) {
+        NSRange rng = [[NSCalendar currentCalendar] rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitYear forDate:[NSDate dateWithTimeIntervalSince1970:startTime]];
+        NSInteger numberOfDaysIYear = rng.length;
+        endTime = startTime + numberOfDaysIYear*86400 - 1;
+    }
+    
     _data = [MirrorDataManager getDataWithStart:startTime end:endTime];
+    self.startDate = [self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:startTime]];
+    self.endDate = [self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:endTime]];
     return _data;
+}
+
+- (NSString *)dayFromDateWithWeekday:(NSDate *)date
+{
+    // setup
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday) fromDate:date];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    long year = (long)components.year;
+    long month = (long)components.month;
+    long day = (long)components.day;
+    long week = (long)components.weekday;
+    
+    NSString *weekday = @"unknow";
+    if (week == 1) weekday = @"Sun";
+    if (week == 2) weekday = @"Mon";
+    if (week == 3) weekday = @"Tue";
+    if (week == 4) weekday = @"Wed";
+    if (week == 5) weekday = @"Thu";
+    if (week == 6) weekday = @"Fri";
+    if (week == 7) weekday = @"Sat";
+    return [NSString stringWithFormat: @"%ld.%ld.%ld, %@", year, month, day, weekday];
 }
 
 - (NSString *)dayFromDate:(NSDate *)date
@@ -201,7 +285,7 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     long year = (long)components.year;
     long month = (long)components.month;
     long day = (long)components.day;
-
+    
     return [NSString stringWithFormat: @"%ld.%ld.%ld", year, month, day];
 }
 
