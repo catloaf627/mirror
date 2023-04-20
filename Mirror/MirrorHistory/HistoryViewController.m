@@ -185,6 +185,8 @@ static CGFloat const kLeftRightSpacing = 20;
     [self reloadData];
 }
 
+#pragma mark - SpanHistogramDelegate
+
 - (void)updateStartDate:(NSString *)startDate endDate:(NSString *)endDate
 {
     self.titleLabel.text = [[startDate stringByAppendingString:@" - "] stringByAppendingString:endDate];
@@ -210,7 +212,7 @@ static CGFloat const kLeftRightSpacing = 20;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.text = @"gizmo";
         _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
+        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 和nickname的文字颜色保持一致
     }
     return _titleLabel;
 }

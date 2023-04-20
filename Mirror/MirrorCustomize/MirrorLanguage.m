@@ -78,6 +78,8 @@
     [mirrorDict setValue:@[@"Fri ", @"周五"] forKey:@"friday"];
     [mirrorDict setValue:@[@"Sat ", @"周六"] forKey:@"saturday"];
     
+    // Span histogram empty hint
+    [mirrorDict setValue:@[@"No data ", @"暂无数据"] forKey:@"no_data"];
     
     
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
@@ -98,7 +100,7 @@
     [mirrorDict setValue:@[@"The start time of No.%@ task: No later than the end time of this task, nor earlier than the end time of the previous task", @"第%@次任务的开始时间：不得晚于本次任务的结束时间，不得早于上一个任务的结束时间"] forKey:@"start_time_for_period"];
     [mirrorDict setValue:@[@"The end time of No.%@ task: No earlier than the start time of this task, nor later than the start time of the next task", @"第%@次任务的结束时间：不得早于本次任务的开始时间，不得晚于下一个任务的开始时间"] forKey:@"end_time_for_period"];
     
-    // Histogram empty hint
+    // One day histogram empty hint
     [mirrorDict setValue:@[@"No records on %@", @"%@ 没有记录"] forKey:@"no_tasks_on_day"]; //gizmo
     
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
