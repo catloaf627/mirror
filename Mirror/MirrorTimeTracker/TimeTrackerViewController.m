@@ -110,9 +110,10 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         make.bottom.mas_equalTo(self.collectionView.mas_top);
         make.width.height.mas_equalTo(40);
     }];
-    UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
-    [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
-    [self.view addGestureRecognizer:panRecognizer];
+    UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
+    edgeRecognizer.edges = UIRectEdgeLeft;
+    [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
+    [self.view addGestureRecognizer:edgeRecognizer];
     // 计时状态
     if ([MirrorSettings appliedImmersiveMode]) {
         MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
@@ -300,7 +301,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 }
 
 // 从左边缘滑动唤起settings
-- (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
+- (void)edgeGestureRecognizerAction:(UIScreenEdgePanGestureRecognizer *)pan
 {
     //产生百分比
     CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);

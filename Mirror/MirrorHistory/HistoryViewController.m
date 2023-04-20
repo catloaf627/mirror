@@ -123,9 +123,10 @@ static CGFloat const kLeftRightSpacing = 20;
         make.bottom.mas_equalTo(self.typeSwitch.mas_top);
         make.width.height.mas_equalTo(40);
     }];
-    UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
-    [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
-    [self.view addGestureRecognizer:panRecognizer];
+    UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
+    edgeRecognizer.edges = UIRectEdgeLeft;
+    [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
+    [self.view addGestureRecognizer:edgeRecognizer];
     
 }
 
@@ -271,7 +272,7 @@ static CGFloat const kLeftRightSpacing = 20;
 }
 
 // 从左边缘滑动唤起settings
-- (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
+- (void)edgeGestureRecognizerAction:(UIScreenEdgePanGestureRecognizer *)pan
 {
     //产生百分比
     CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
