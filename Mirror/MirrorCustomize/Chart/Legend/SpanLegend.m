@@ -112,7 +112,6 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 - (NSMutableArray<MirrorDataModel *> *)data
 {
-    // span开始那天的0:0:0
     long startTime = 0;
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
@@ -120,7 +119,12 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
     components.hour = 0;
     components.minute = 0;
     components.second = 0;
-    if (self.spanType == SpanTypeWeek) {
+    if (self.spanType == SpanTypeDay) {
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+        if (self.offset != 0) {
+            startTime = startTime + 86400*self.offset;
+        }
+    } else if (self.spanType == SpanTypeWeek) {
         long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
         startTime = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;
         if (self.offset != 0) {
@@ -157,11 +161,11 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
         }
         startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     }
-    
-    
-    // span结束那天的23:59:59
+
     long endTime = 0;
-    if (self.spanType == SpanTypeWeek) {
+    if (self.spanType == SpanTypeDay) {
+        endTime = startTime + 86400 - 1;
+    } else if (self.spanType == SpanTypeWeek) {
         NSInteger numberOfDaysInWeek= 7;
         endTime = startTime + numberOfDaysInWeek*86400 - 1;
     } else if (self.spanType == SpanTypeMonth) {

@@ -189,7 +189,12 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)updateStartDate:(NSString *)startDate endDate:(NSString *)endDate
 {
-    self.titleLabel.text = [[startDate stringByAppendingString:@" - "] stringByAppendingString:endDate];
+    if ([startDate isEqualToString:endDate]) {
+        self.titleLabel.text = startDate; // 某天
+    } else {
+        self.titleLabel.text = [[startDate stringByAppendingString:@" - "] stringByAppendingString:endDate]; // 某天 - 某天
+    }
+    
 }
 
 #pragma mark - Getters
@@ -197,7 +202,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (UISegmentedControl *)typeSwitch
 {
     if (!_typeSwitch) {
-        _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[[MirrorLanguage mirror_stringWithKey:@"segment_week"], [MirrorLanguage mirror_stringWithKey:@"segment_month"], [MirrorLanguage mirror_stringWithKey:@"segment_year"]]];
+        _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[[MirrorLanguage mirror_stringWithKey:@"segment_day"], [MirrorLanguage mirror_stringWithKey:@"segment_week"], [MirrorLanguage mirror_stringWithKey:@"segment_month"], [MirrorLanguage mirror_stringWithKey:@"segment_year"]]];
         _typeSwitch.selectedSegmentIndex = 0;
         [_typeSwitch addTarget:self action:@selector(spanTypeChanged) forControlEvents:UIControlEventValueChanged];
         _typeSwitch.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;

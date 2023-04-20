@@ -190,7 +190,12 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     components.hour = 0;
     components.minute = 0;
     components.second = 0;
-    if (self.spanType == SpanTypeWeek) {
+    if (self.spanType == SpanTypeDay) {
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+        if (self.offset != 0) {
+            startTime = startTime + 86400*self.offset;
+        }
+    } else if (self.spanType == SpanTypeWeek) {
         long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
         startTime = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;// now所在周的第一天的0:0:0
         if (self.offset != 0) {
@@ -231,7 +236,9 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     
     // span结束那天的23:59:59
     long endTime = 0;
-    if (self.spanType == SpanTypeWeek) {
+    if (self.spanType == SpanTypeDay) {
+        endTime = startTime + 86400 - 1;
+    } else if (self.spanType == SpanTypeWeek) {
         NSInteger numberOfDaysInWeek= 7;
         endTime = startTime + numberOfDaysInWeek*86400 - 1;
     } else if (self.spanType == SpanTypeMonth) {

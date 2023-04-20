@@ -65,6 +65,7 @@
     [mirrorDict setValue:@[@"Delete this time period? ", @"确定删除这个时间段？"] forKey:@"delete_period_?"];
     
     // History type switch
+    [mirrorDict setValue:@[@"Day ", @"日"] forKey:@"segment_day"];
     [mirrorDict setValue:@[@"Week ", @"周"] forKey:@"segment_week"];
     [mirrorDict setValue:@[@"Month ", @"月"] forKey:@"segment_month"];
     [mirrorDict setValue:@[@"Year ", @"年"] forKey:@"segment_year"];
