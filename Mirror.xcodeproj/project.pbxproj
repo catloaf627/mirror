@@ -265,14 +265,14 @@
 			path = MirrorTimeTracker;
 			sourceTree = "<group>";
 		};
-		4A379B3C28E0371700785CAE /* MirrorStatistics */ = {
+		4A379B3C28E0371700785CAE /* MirrorToday */ = {
 			isa = PBXGroup;
 			children = (
 				4AE1153429ECF6F7003CBB39 /* Period */,
 				4A7CCD2429DBC7CF00879D9C /* DataViewController.h */,
 				4A7CCD2529DBC7CF00879D9C /* DataViewController.m */,
 			);
-			path = MirrorStatistics;
+			path = MirrorToday;
 			sourceTree = "<group>";
 		};
 		4A379B3D28E0372700785CAE /* MirrorSettings */ = {
@@ -451,7 +451,7 @@
 				4A379B3928E0340600785CAE /* MirrorSetups */,
 				4A379B3D28E0372700785CAE /* MirrorSettings */,
 				4A379B3B28E0370400785CAE /* MirrorTimeTracker */,
-				4A379B3C28E0371700785CAE /* MirrorStatistics */,
+				4A379B3C28E0371700785CAE /* MirrorToday */,
 				4A0D40F929EFE28300F13EAE /* MirrorHistory */,
 			);
 			path = Mirror;

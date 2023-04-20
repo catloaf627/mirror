@@ -18,8 +18,8 @@
     
     // tabs
     [mirrorDict setValue:@[@"Start", @"计时"] forKey:@"start"];
+    [mirrorDict setValue:@[@"Today", @"今天"] forKey:@"today"];
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
-    [mirrorDict setValue:@[@"History", @"历史"] forKey:@"history"];
     // time tracker cell
     [mirrorDict setValue:@[@"Tap to start", @"轻点开始计时"] forKey:@"tap_to_start"];
     // nickname

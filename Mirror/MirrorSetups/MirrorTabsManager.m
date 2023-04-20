@@ -57,17 +57,17 @@
 
 - (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self updateTabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"clock" selectedImageName:@"clock.fill"];
+    [self updateTabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"alarm" selectedImageName:@"alarm.fill"];
 }
 
 - (void)updateDataTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self updateTabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
+    [self updateTabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"today"] imageName:@"chart.pie" selectedImageName:@"chart.pie.fill"];
 }
 
 - (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"history"] imageName:@"chart.bar.doc.horizontal" selectedImageName:@"chart.bar.doc.horizontal.fill"];
+    [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
 }
 
 - (void)updateTabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName
