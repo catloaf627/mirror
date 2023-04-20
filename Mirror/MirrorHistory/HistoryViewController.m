@@ -107,14 +107,14 @@ static CGFloat const kLeftRightSpacing = 20;
     [self.legendView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(10);
         make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
     [self.view addSubview:self.histogramView];
     [self.histogramView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.legendView.mas_bottom);
+        make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
     [self.view addSubview:self.settingsButton];
@@ -152,7 +152,11 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)reloadData
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
-    
+    [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([self.legendView legendViewHeight]);
+    }];
+    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
 }
 
 #pragma mark - Actions
@@ -160,21 +164,19 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)clickLeft
 {
     self.offset = self.offset - 1;
-    [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self reloadData];
 }
 
 - (void)clickRight
 {
     self.offset = self.offset + 1;
-    [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self reloadData];
 }
 
 - (void)spanTypeChanged
 {
     self.offset = 0;
-    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self reloadData];
 }
 
 - (void)updateStartDate:(NSString *)startDate endDate:(NSString *)endDate

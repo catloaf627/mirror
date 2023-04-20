@@ -121,7 +121,7 @@ static CGFloat const kLeftRightSpacing = 20;
     [self.histogramView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.legendView.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.legendView.mas_bottom);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
     [self.view addSubview:self.settingsButton];
