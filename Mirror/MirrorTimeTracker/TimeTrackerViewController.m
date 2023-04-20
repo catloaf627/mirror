@@ -79,15 +79,29 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self  p_setupUI];
 }
 
+/*
+ 神奇：必须在viewDidAppear里重新update下self.collectionView的top-constraint
+ viewDidLoad时，navigationBar的y和height都是0 (这个时候self.navigationController都还是nil)
+ viewWillAppear时，navigationBar的y是0，但height是44
+ viewDidAppear时，navigationBar的y是50，但height是44 (这个时候的navigationBar的frame才真正稳定下来)
+ */
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+    }];
+}
+
 - (void)p_setupUI
 {
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
-            make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
-            make.top.mas_equalTo(self.view).offset(90);
-            make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
+        make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
+        make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height); // 这行没用，最后还是要在viewDidAppear里重新udpate才行
+        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
     // Settings button
     [self.view addSubview:self.settingsButton];
