@@ -136,6 +136,11 @@ static CGFloat const kLeftRightSpacing = 20;
     // 将vc.view里的所有subviews全部置为nil
     self.settingsButton = nil;
     self.typeSwitch = nil;
+    self.leftButton = nil;
+    self.rightButton = nil;
+    self.titleLabel = nil;
+    self.legendView = nil;
+    self.histogramView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar
@@ -192,6 +197,7 @@ static CGFloat const kLeftRightSpacing = 20;
         _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[@"Week", @"Month", @"Year"]];
         _typeSwitch.selectedSegmentIndex = 0;
         [_typeSwitch addTarget:self action:@selector(spanTypeChanged) forControlEvents:UIControlEventValueChanged];
+        _typeSwitch.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
     }
     return _typeSwitch;
 }
