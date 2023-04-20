@@ -37,8 +37,6 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     if (self) {
         self.spanType = spanType;
         self.offset = offset;
-        self.startDate = @"";
-        self.endDate = @"";
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         // empty hint
         [self updateHint];
@@ -184,7 +182,6 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (NSMutableArray<MirrorDataModel *> *)data
 {
-    NSLog(@"gizmo offset %d", self.offset);
     // span开始那天的0:0:0
     long startTime = 0;
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -248,8 +245,8 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     }
     
     _data = [MirrorDataManager getDataWithStart:startTime end:endTime];
-    self.startDate = [self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:startTime]];
-    self.endDate = [self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:endTime]];
+    // update label
+    [self.delegate updateStartDate:[self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:startTime]] endDate:[self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:endTime]]];
     return _data;
 }
 

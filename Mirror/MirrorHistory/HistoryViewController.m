@@ -161,7 +161,6 @@ static CGFloat const kLeftRightSpacing = 20;
     self.offset = self.offset - 1;
     [self.spanLegend updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
     [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-    self.titleLabel.text = [[self.spanHistogram.startDate stringByAppendingString:@" - "] stringByAppendingString:self.spanHistogram.endDate];
 }
 
 - (void)clickRight
@@ -169,13 +168,17 @@ static CGFloat const kLeftRightSpacing = 20;
     self.offset = self.offset + 1;
     [self.spanLegend updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
     [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-    self.titleLabel.text = [[self.spanHistogram.startDate stringByAppendingString:@" - "] stringByAppendingString:self.spanHistogram.endDate];
 }
 
 - (void)spanTypeChanged
 {
+    self.offset = 0;
     [self.spanHistogram updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-    self.titleLabel.text = [[self.spanHistogram.startDate stringByAppendingString:@" - "] stringByAppendingString:self.spanHistogram.endDate];
+}
+
+- (void)updateStartDate:(NSString *)startDate endDate:(NSString *)endDate
+{
+    self.titleLabel.text = [[startDate stringByAppendingString:@" - "] stringByAppendingString:endDate];
 }
 
 #pragma mark - Getters
