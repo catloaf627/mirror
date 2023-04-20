@@ -1,11 +1,11 @@
 //
-//  DataViewController.m
+//  TodayViewController.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/4.
 //
 
-#import "DataViewController.h"
+#import "TodayViewController.h"
 #import "MirrorTabsManager.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
@@ -19,7 +19,7 @@
 
 static CGFloat const kLeftRightSpacing = 20;
 
-@interface DataViewController () <OneDayLegendDelegate, OneDayHistogramDelegate, UIViewControllerTransitioningDelegate>
+@interface TodayViewController () <OneDayLegendDelegate, OneDayHistogramDelegate, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -30,7 +30,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 @end
 
-@implementation DataViewController
+@implementation TodayViewController
 
 - (instancetype)init
 {

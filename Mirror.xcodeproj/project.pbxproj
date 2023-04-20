@@ -33,7 +33,7 @@
 		4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A2729EA51750007003B /* LegendCollectionViewCell.m */; };
 		4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3029EA68870007003B /* TaskRecordViewController.m */; };
 		4A410A3429EA6BB60007003B /* TaskPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */; };
-		4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* DataViewController.m */; };
+		4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */; };
 		4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* LeftAnimation.m */; };
@@ -107,8 +107,8 @@
 		4A410A3029EA68870007003B /* TaskRecordViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskRecordViewController.m; sourceTree = "<group>"; };
 		4A410A3229EA6BB60007003B /* TaskPeriodCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskPeriodCollectionViewCell.h; sourceTree = "<group>"; };
 		4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskPeriodCollectionViewCell.m; sourceTree = "<group>"; };
-		4A7CCD2429DBC7CF00879D9C /* DataViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataViewController.h; sourceTree = "<group>"; };
-		4A7CCD2529DBC7CF00879D9C /* DataViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataViewController.m; sourceTree = "<group>"; };
+		4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
+		4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
 		4A7CCD2E29DBCEB200879D9C /* DataEntranceCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataEntranceCollectionViewCell.h; sourceTree = "<group>"; };
 		4A7CCD2F29DBCEB200879D9C /* DataEntranceCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataEntranceCollectionViewCell.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
@@ -269,8 +269,8 @@
 			isa = PBXGroup;
 			children = (
 				4AE1153429ECF6F7003CBB39 /* Period */,
-				4A7CCD2429DBC7CF00879D9C /* DataViewController.h */,
-				4A7CCD2529DBC7CF00879D9C /* DataViewController.m */,
+				4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */,
+				4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */,
 			);
 			path = MirrorToday;
 			sourceTree = "<group>";
@@ -585,7 +585,7 @@
 				4A7CCD3029DBCEB200879D9C /* DataEntranceCollectionViewCell.m in Sources */,
 				4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,
-				4A7CCD2629DBC7CF00879D9C /* DataViewController.m in Sources */,
+				4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */,
 				4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */,
 				4A379B5728E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.m in Sources */,
 				4A410A2529EA4EE10007003B /* OneDayLegend.m in Sources */,

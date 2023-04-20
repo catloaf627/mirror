@@ -1,5 +1,5 @@
 //
-//  DataViewController.h
+//  TodayViewController.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/4.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DataViewController : UIViewController
+@interface TodayViewController : UIViewController
 
 @end
 

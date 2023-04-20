@@ -8,7 +8,7 @@
 #import "MirrorTabsManager.h"
 
 #import "TimeTrackerViewController.h"
-#import "DataViewController.h"
+#import "TodayViewController.h"
 #import "HistoryViewController.h"
 
 #import "UIColor+MirrorColor.h"
@@ -36,13 +36,13 @@
 {
     if (!_mirrorTabVC) {
         TimeTrackerViewController *timeTrackerVC = [[TimeTrackerViewController alloc]init];
-        DataViewController *dataVC = [[DataViewController alloc]init];
+        TodayViewController *todayVC = [[TodayViewController alloc]init];
         HistoryViewController *historyVC = [[HistoryViewController alloc] init];
         //create a tabbar controller
         _mirrorTabVC  = [[UITabBarController alloc] init];
         
         //add 4 view controllers to tabbar controller
-        [_mirrorTabVC setViewControllers:@[timeTrackerVC, dataVC, historyVC]];
+        [_mirrorTabVC setViewControllers:@[timeTrackerVC, todayVC, historyVC]];
         _mirrorTabVC.selectedIndex = 0;
         _mirrorTabVC.tabBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         _mirrorTabVC.tabBar.backgroundImage = [UIImage new];
