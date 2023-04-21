@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol PushEditPeriodSheetProtocol <NSObject>
+@protocol PushEditPeriodSheetForTaskProtocol <NSObject>
 
 - (void)pushEditPeriodSheet:(UIViewController *)editVC;
 
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TaskPeriodCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, weak) UIViewController<PushEditPeriodSheetProtocol> *delegate;
+@property (nonatomic, weak) UIViewController<PushEditPeriodSheetForTaskProtocol> *delegate;
 + (NSString *)identifier;
 - (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
 

@@ -306,13 +306,13 @@ static CGFloat const kHeightRatio = 0.8;
         MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
         long start = timeStamp;
         long end = [task.periods[self.periodIndex][1] longValue];
-        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
         self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@" - "] stringByAppendingString:[self timeFromTimestamp:end]];
     } else {
         MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
         long start = [task.periods[self.periodIndex][0] longValue];
         long end = timeStamp;
-        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
         self.detailLabel.text = [[[self timeFromTimestamp:start] stringByAppendingString:@" - "] stringByAppendingString:[self timeFromTimestamp:end]];
     }
 

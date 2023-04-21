@@ -1,11 +1,12 @@
 //
-//  TaskPeriodCollectionViewCell.m
+//  TodayPeriodCollectionViewCell.m
 //  Mirror
 //
-//  Created by Yuqing Wang on 2023/4/15.
+//  Created by Yuqing Wang on 2023/4/21.
 //
 
-#import "TaskPeriodCollectionViewCell.h"
+#import "TodayPeriodCollectionViewCell.h"
+
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
@@ -15,7 +16,7 @@
 static const CGFloat kHorizontalPadding = 20;
 static const CGFloat kVerticalPadding = 10;
 
-@interface TaskPeriodCollectionViewCell () <UIGestureRecognizerDelegate>
+@interface TodayPeriodCollectionViewCell () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) NSString *taskName;
 @property (nonatomic, assign) NSInteger periodIndex;
@@ -27,7 +28,7 @@ static const CGFloat kVerticalPadding = 10;
 
 @end
 
-@implementation TaskPeriodCollectionViewCell
+@implementation TodayPeriodCollectionViewCell
 
 + (NSString *)identifier
 {
@@ -42,7 +43,7 @@ static const CGFloat kVerticalPadding = 10;
     if ([self periodsIsFinished]) {
         long start = [task.periods[index][0] longValue];
         long end = [task.periods[index][1] longValue];
-        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
         [self.startButton setTitle:[[self timeFromTimestamp:start] stringByAppendingString:@" -"] forState:UIControlStateNormal];
         [self.endButton setTitle:[@" " stringByAppendingString:[self timeFromTimestamp:end]] forState:UIControlStateNormal];
         self.startButton.hidden = NO;
@@ -178,26 +179,15 @@ static const CGFloat kVerticalPadding = 10;
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
     // setup
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
     components.timeZone = [NSTimeZone systemTimeZone];
     // details
-    long year = (long)components.year;
-    long month = (long)components.month;
-    long week = (long)components.weekday;
-    long day = (long)components.day;
     long hour = (long)components.hour;
     long minute = (long)components.minute;
     long second = (long)components.second;
-    // print
-    NSString *weekday = @"unknow";
-    if (week == 1) weekday = @"Sun";
-    if (week == 2) weekday = @"Mon";
-    if (week == 3) weekday = @"Tue";
-    if (week == 4) weekday = @"Wed";
-    if (week == 5) weekday = @"Thu";
-    if (week == 6) weekday = @"Fri";
-    if (week == 7) weekday = @"Sat";
-    return [NSString stringWithFormat: @"%ld.%ld.%ld,%@,%ld:%ld:%ld", year, month, day, weekday, hour, minute, second];
+
+    return [NSString stringWithFormat: @"%ld:%ld:%ld", hour, minute, second];
 }
+
 
 @end

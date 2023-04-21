@@ -15,13 +15,13 @@
 #import "SettingsViewController.h"
 #import "MirrorPiechart.h"
 #import "MirrorLanguage.h"
-#import "TaskPeriodCollectionViewCell.h"
+#import "TodayPeriodCollectionViewCell.h"
 #import "MirrorDataManager.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PushEditPeriodSheetProtocol, UIViewControllerTransitioningDelegate>
+@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PushEditPeriodSheetForTodayProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -175,7 +175,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [self updateDataSource];
-    TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
+    TodayPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TodayPeriodCollectionViewCell identifier] forIndexPath:indexPath];
     [cell configWithTaskname:self.tasknames[indexPath.item] periodIndex:[self.originIndexes[indexPath.item] integerValue]];
     cell.delegate = self;
     return cell;
@@ -218,7 +218,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = self.view.backgroundColor;
         
-        [_collectionView registerClass:[TaskPeriodCollectionViewCell class] forCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier]];
+        [_collectionView registerClass:[TodayPeriodCollectionViewCell class] forCellWithReuseIdentifier:[TodayPeriodCollectionViewCell identifier]];
         [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     }
     return _collectionView;

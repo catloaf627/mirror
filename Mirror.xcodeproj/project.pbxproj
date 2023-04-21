@@ -32,6 +32,7 @@
 		4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3029EA68870007003B /* TaskRecordViewController.m */; };
 		4A410A3429EA6BB60007003B /* TaskPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */; };
 		4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */; };
+		4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* LeftAnimation.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
@@ -102,6 +103,8 @@
 		4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskPeriodCollectionViewCell.m; sourceTree = "<group>"; };
 		4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
 		4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
+		4A88211429F26104009E422C /* TodayPeriodCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayPeriodCollectionViewCell.h; sourceTree = "<group>"; };
+		4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayPeriodCollectionViewCell.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4ACB422C29EEA411005EECC4 /* LeftAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftAnimation.h; sourceTree = "<group>"; };
@@ -210,6 +213,7 @@
 		4A0D40F929EFE28300F13EAE /* MirrorHistory */ = {
 			isa = PBXGroup;
 			children = (
+				4AE1153429ECF6F7003CBB39 /* Period */,
 				4A410A2A29EA5D750007003B /* Legend */,
 				4A410A2B29EA5D800007003B /* Histogram */,
 				4A0D40FA29EFE6BD00F13EAE /* HistoryViewController.h */,
@@ -249,6 +253,7 @@
 		4A379B3C28E0371700785CAE /* MirrorToday */ = {
 			isa = PBXGroup;
 			children = (
+				4A88211029F26094009E422C /* Period */,
 				4A410A2929EA5D650007003B /* PieChart */,
 				4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */,
 				4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */,
@@ -274,7 +279,6 @@
 		4A379B3E28E0379E00785CAE /* MirrorCustomize */ = {
 			isa = PBXGroup;
 			children = (
-				4AE1153429ECF6F7003CBB39 /* Period */,
 				4A01AAC329DF810700E2B5A8 /* MUX */,
 				4A099FAC29DD57AE002683A1 /* MirrorTool.h */,
 				4A099FAD29DD57AE002683A1 /* MirrorTool.m */,
@@ -331,6 +335,15 @@
 				4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */,
 			);
 			path = Histogram;
+			sourceTree = "<group>";
+		};
+		4A88211029F26094009E422C /* Period */ = {
+			isa = PBXGroup;
+			children = (
+				4A88211429F26104009E422C /* TodayPeriodCollectionViewCell.h */,
+				4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */,
+			);
+			path = Period;
 			sourceTree = "<group>";
 		};
 		4ACB422F29EECBC4005EECC4 /* Animations */ = {
@@ -565,6 +578,7 @@
 				4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */,
 				4A379B5728E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.m in Sources */,
 				4A099FA729DCFE3C002683A1 /* MirrorDataManager.m in Sources */,
+				4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */,
 				4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */,
 				4A01AAC929DF821200E2B5A8 /* MUXToast.m in Sources */,
 				4A406C1A29071939001E83A1 /* MirrorStorage.m in Sources */,
