@@ -14,12 +14,14 @@
 #import "LeftAnimation.h"
 #import "SettingsViewController.h"
 #import "MirrorPiechart.h"
-#import "MirrorStorage.h"
 #import "MirrorLanguage.h"
+#import "TaskPeriodCollectionViewCell.h"
+#import "MirrorDataManager.h"
 
 static CGFloat const kLeftRightSpacing = 20;
+static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TodayViewController () <UIViewControllerTransitioningDelegate>
+@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PushEditPeriodSheetProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -28,6 +30,12 @@ static CGFloat const kLeftRightSpacing = 20;
 @property (nonatomic, strong) UILabel *todayLabel;
 @property (nonatomic, strong) UILabel *todayDateLabel;
 @property (nonatomic, strong) MirrorPiechart *pieChart;
+
+@property (nonatomic, strong) UICollectionView *collectionView;
+// 下面三个都是数据源，三位一体，同步更新
+@property (nonatomic, strong) NSMutableArray<NSArray *> *periods;
+@property (nonatomic, strong) NSMutableArray<NSString *> *tasknames;
+@property (nonatomic, strong) NSMutableArray *originIndexes;
 
 @end
 
@@ -61,6 +69,7 @@ static CGFloat const kLeftRightSpacing = 20;
     self.todayLabel = nil;
     self.todayDateLabel = nil;
     self.pieChart = nil;
+    self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar
@@ -78,6 +87,7 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
     [self.pieChart updateTodayWithWidth:80];
+    [self.collectionView reloadData];
 }
 
 - (void)dealloc
@@ -122,7 +132,13 @@ static CGFloat const kLeftRightSpacing = 20;
         make.width.height.mas_equalTo(80);
         make.right.offset(0);
     }];
-    
+    [self.view addSubview:self.collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.todayView.mas_bottom);
+        make.left.offset(kLeftRightSpacing);
+        make.right.offset(-kLeftRightSpacing);
+        make.bottom.offset(-kTabBarHeight);
+    }];
 
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -136,7 +152,78 @@ static CGFloat const kLeftRightSpacing = 20;
     [self.view addGestureRecognizer:edgeRecognizer];
 }
 
+#pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+
+#pragma mark - UICollectionViewDataSource
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    [self updateDataSource];
+    return self.periods.count;
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self updateDataSource];
+    TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
+    [cell configWithTaskname:self.tasknames[indexPath.item] periodIndex:[self.originIndexes[indexPath.item] integerValue]];
+    cell.delegate = self;
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(kScreenWidth - 2*kCellSpacing, 80);
+}
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionReusableView *header;
+    if (kind == UICollectionElementKindSectionHeader) {
+        header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
+    }
+    return header;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(kScreenWidth, 10);
+}
+
+- (void)pushEditPeriodSheet:(UIViewController *)editVC
+{
+    [self.navigationController presentViewController:editVC animated:YES completion:nil];
+}
+
+
 #pragma mark - Getters
+
+- (UICollectionView *)collectionView
+{
+    if (!_collectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        layout.minimumLineSpacing = 10;
+        _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.backgroundColor = self.view.backgroundColor;
+        
+        [_collectionView registerClass:[TaskPeriodCollectionViewCell class] forCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier]];
+        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+    }
+    return _collectionView;
+}
+
 
 - (UIButton *)settingsButton
 {
@@ -186,6 +273,58 @@ static CGFloat const kLeftRightSpacing = 20;
         _pieChart = [[MirrorPiechart alloc] initTodayWithWidth:80];
     }
     return _pieChart;
+}
+
+- (void)updateDataSource
+{
+    self.periods = nil;
+    self.tasknames = nil;
+    self.originIndexes = nil;
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+    long endTime = startTime + 86400 - 1;
+    
+    NSArray *allTasks = [MirrorDataManager allTasks];
+    for (int i=0; i<allTasks.count; i++) {
+        MirrorDataModel *task = allTasks[i];
+        for (NSInteger periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
+            NSArray *period = task.periods[periodIndex];
+            if ([period[0] longValue] >= startTime && [period[0] longValue] <= endTime) { // 符合要求，可以展示在today页面
+                [self.periods addObject:period];
+                [self.tasknames addObject:task.taskName];
+                [self.originIndexes addObject:@(periodIndex)];
+            }
+        }
+    }
+}
+
+- (NSMutableArray<NSArray *> *)periods
+{
+    if (!_periods) {
+        _periods = [NSMutableArray new];
+    }
+    return _periods;
+}
+
+- (NSMutableArray<NSString *> *)tasknames
+{
+    if (!_tasknames) {
+        _tasknames = [NSMutableArray new];
+    }
+    return _tasknames;
+}
+
+- (NSMutableArray<NSArray *> *)originIndexes
+{
+    if (!_originIndexes) {
+        _originIndexes = [NSMutableArray new];
+    }
+    return _originIndexes;
 }
 
 #pragma mark - Settings

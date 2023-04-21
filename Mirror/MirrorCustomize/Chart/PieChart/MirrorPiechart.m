@@ -24,7 +24,6 @@
 
 @implementation MirrorPiechart
 
-// 给定一个起始时间，取出该时间以后的信息
 - (instancetype)initTodayWithWidth:(CGFloat)width
 {
     self = [super init];
@@ -87,15 +86,15 @@
 
 - (NSArray *)todayStartEndTime
 {
-    long startTime = 0;
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
     components.timeZone = [NSTimeZone systemTimeZone];
     components.hour = 0;
     components.minute = 0;
     components.second = 0;
-    startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    return @[@(startTime), @(startTime + 86400 - 1)];
+    long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+    long endTime = startTime + 86400 - 1;
+    return @[@(startTime), @(endTime)];
 }
 
 @end
