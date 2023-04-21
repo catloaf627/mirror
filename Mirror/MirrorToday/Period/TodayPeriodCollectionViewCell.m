@@ -24,9 +24,9 @@ static const CGFloat kVerticalPadding = 10;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UILabel *totalLabel; // 总时长
-@property (nonatomic, strong) UIDatePicker *startButton;
+@property (nonatomic, strong) UIDatePicker *startPicker;
 @property (nonatomic, strong) UILabel *dashLabel;
-@property (nonatomic, strong) UIDatePicker *endButton;
+@property (nonatomic, strong) UIDatePicker *endPicker;
 
 @end
 
@@ -53,22 +53,22 @@ static const CGFloat kVerticalPadding = 10;
     BOOL periodsIsFinished = task.periods[self.periodIndex].count == 2;
     self.taskNameLabel.text = self.taskName;
     if (periodsIsFinished) {
-        self.startButton.hidden = NO;
-        self.endButton.hidden = NO;
+        self.startPicker.hidden = NO;
+        self.endPicker.hidden = NO;
         self.dashLabel.hidden = NO;
         self.deleteButton.hidden = NO;
         long start = [task.periods[self.periodIndex][0] longValue];
         long end = [task.periods[self.periodIndex][1] longValue];
         self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
-        self.startButton.date = [NSDate dateWithTimeIntervalSince1970:start];
-        self.startButton.maximumDate = [self startMaxDate];
-        self.startButton.minimumDate = [self startMinDate];
-        self.endButton.date = [NSDate dateWithTimeIntervalSince1970:end];
-        self.endButton.maximumDate = [self endMaxDate];
-        self.endButton.minimumDate = [self endMinDate];
+        self.startPicker.date = [NSDate dateWithTimeIntervalSince1970:start];
+        self.startPicker.maximumDate = [self startMaxDate];
+        self.startPicker.minimumDate = [self startMinDate];
+        self.endPicker.date = [NSDate dateWithTimeIntervalSince1970:end];
+        self.endPicker.maximumDate = [self endMaxDate];
+        self.endPicker.minimumDate = [self endMinDate];
     } else {
-        self.startButton.hidden = YES;
-        self.endButton.hidden = YES;
+        self.startPicker.hidden = YES;
+        self.endPicker.hidden = YES;
         self.dashLabel.hidden = YES;
         self.deleteButton.hidden = YES;
         self.totalLabel.text = [MirrorLanguage mirror_stringWithKey:@"counting"];
@@ -92,8 +92,8 @@ static const CGFloat kVerticalPadding = 10;
     }];
     
     
-    [self addSubview:self.startButton];
-    [self.startButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self addSubview:self.startPicker];
+    [self.startPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.offset(-kVerticalPadding);
         make.left.offset(kHorizontalPadding);
         make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
@@ -101,11 +101,11 @@ static const CGFloat kVerticalPadding = 10;
     [self addSubview:self.dashLabel];
     [self.dashLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.offset(-kVerticalPadding);
-        make.left.mas_equalTo(self.startButton.mas_right);
+        make.left.mas_equalTo(self.startPicker.mas_right);
         make.width.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
     }];
-    [self addSubview:self.endButton];
-    [self.endButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self addSubview:self.endPicker];
+    [self.endPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.offset(-kVerticalPadding);
         make.left.mas_equalTo(self.dashLabel.mas_right);
         make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
@@ -123,13 +123,13 @@ static const CGFloat kVerticalPadding = 10;
 
 - (void)changeStartTime
 {
-    long startTime = [self.startButton.date timeIntervalSince1970];
+    long startTime = [self.startPicker.date timeIntervalSince1970];
     [MirrorStorage editPeriodIsStartTime:YES to:startTime withTaskname:self.taskName periodIndex:self.periodIndex];
     [self updateCellInfo];
 }
 - (void)changeEndTime
 {
-    long endTime = [self.startButton.date timeIntervalSince1970];
+    long endTime = [self.startPicker.date timeIntervalSince1970];
     [MirrorStorage editPeriodIsStartTime:NO to:endTime withTaskname:self.taskName periodIndex:self.periodIndex];
     [self updateCellInfo];
 }
@@ -176,18 +176,18 @@ static const CGFloat kVerticalPadding = 10;
 }
 
 
-- (UIDatePicker *)startButton
+- (UIDatePicker *)startPicker
 {
-    if (!_startButton) {
-        _startButton = [UIDatePicker new];
-        _startButton.datePickerMode = UIDatePickerModeTime;
-        _startButton.timeZone = [NSTimeZone systemTimeZone];
-        _startButton.preferredDatePickerStyle = UIDatePickerStyleCompact;
-        _startButton.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
-        _startButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_startButton addTarget:self action:@selector(changeStartTime) forControlEvents:UIControlEventValueChanged];
+    if (!_startPicker) {
+        _startPicker = [UIDatePicker new];
+        _startPicker.datePickerMode = UIDatePickerModeTime;
+        _startPicker.timeZone = [NSTimeZone systemTimeZone];
+        _startPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
+        _startPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
+        _startPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_startPicker addTarget:self action:@selector(changeStartTime) forControlEvents:UIControlEventValueChanged];
     }
-    return _startButton;
+    return _startPicker;
 }
 
 - (UILabel *)dashLabel
@@ -202,18 +202,18 @@ static const CGFloat kVerticalPadding = 10;
     return _dashLabel;
 }
 
-- (UIDatePicker *)endButton
+- (UIDatePicker *)endPicker
 {
-    if (!_endButton) {
-        _endButton = [UIDatePicker new];
-        _endButton.datePickerMode = UIDatePickerModeTime;
-        _endButton.timeZone = [NSTimeZone systemTimeZone];
-        _endButton.preferredDatePickerStyle = UIDatePickerStyleCompact;
-        _endButton.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
-        _endButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_endButton addTarget:self action:@selector(changeEndTime) forControlEvents:UIControlEventValueChanged];
+    if (!_endPicker) {
+        _endPicker = [UIDatePicker new];
+        _endPicker.datePickerMode = UIDatePickerModeTime;
+        _endPicker.timeZone = [NSTimeZone systemTimeZone];
+        _endPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
+        _endPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
+        _endPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_endPicker addTarget:self action:@selector(changeEndTime) forControlEvents:UIControlEventValueChanged];
     }
-    return _endButton;
+    return _endPicker;
 }
 
 - (UILabel *)taskNameLabel
