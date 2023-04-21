@@ -30,6 +30,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 @property (nonatomic, strong) UILabel *todayLabel;
 @property (nonatomic, strong) UILabel *todayDateLabel;
 @property (nonatomic, strong) MirrorPiechart *pieChart;
+@property (nonatomic, strong) UIButton *crownButton;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 // 下面三个都是数据源，三位一体，同步更新
@@ -69,6 +70,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     self.todayLabel = nil;
     self.todayDateLabel = nil;
     self.pieChart = nil;
+    self.crownButton = nil;
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -119,6 +121,12 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self.todayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(0);
         make.centerY.offset(-10);
+    }];
+    [self.todayView addSubview:self.crownButton];
+    [self.crownButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.todayLabel.mas_left);
+        make.centerY.mas_equalTo(self.todayLabel.mas_top);
+        make.width.height.mas_equalTo(20);
     }];
     [self.todayView addSubview:self.todayDateLabel];
     [self.todayDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -267,6 +275,18 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _pieChart = [[MirrorPiechart alloc] initTodayWithWidth:80];
     }
     return _pieChart;
+}
+
+
+- (UIButton *)crownButton
+{
+    if (!_crownButton) {
+        _crownButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"crown.fill"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_crownButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _crownButton.tintColor = [UIColor systemYellowColor];
+    }
+    return _crownButton;
 }
 
 - (void)updateDataSource
