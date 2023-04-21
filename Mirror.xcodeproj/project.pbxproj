@@ -41,7 +41,6 @@
 		4ADDC5BA28E5B95F006F02DE /* EditTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B928E5B95F006F02DE /* EditTaskViewController.m */; };
 		4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5BC28E6DF8B006F02DE /* ColorCollectionViewCell.m */; };
 		4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5C728E73935006F02DE /* AddTaskViewController.m */; };
-		4AE1153829ECF77A003CBB39 /* EditPeriodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE1153729ECF77A003CBB39 /* EditPeriodViewController.m */; };
 		4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */; };
 		4AE4171F28DF6155008A6A18 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* SettingsViewController.m */; };
 		4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */; };
@@ -121,8 +120,6 @@
 		4ADDC5BC28E6DF8B006F02DE /* ColorCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ColorCollectionViewCell.m; sourceTree = "<group>"; };
 		4ADDC5C628E73935006F02DE /* AddTaskViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddTaskViewController.h; sourceTree = "<group>"; };
 		4ADDC5C728E73935006F02DE /* AddTaskViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddTaskViewController.m; sourceTree = "<group>"; };
-		4AE1153629ECF77A003CBB39 /* EditPeriodViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditPeriodViewController.h; sourceTree = "<group>"; };
-		4AE1153729ECF77A003CBB39 /* EditPeriodViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditPeriodViewController.m; sourceTree = "<group>"; };
 		4AE4171728DF613D008A6A18 /* TimeTrackerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerViewController.h; sourceTree = "<group>"; };
 		4AE4171828DF613D008A6A18 /* TimeTrackerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerViewController.m; sourceTree = "<group>"; };
 		4AE4171D28DF6155008A6A18 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -380,22 +377,12 @@
 		4AE1153429ECF6F7003CBB39 /* Period */ = {
 			isa = PBXGroup;
 			children = (
-				4AE1153529ECF753003CBB39 /* EditPeriod */,
 				4A410A2F29EA68870007003B /* TaskRecordViewController.h */,
 				4A410A3029EA68870007003B /* TaskRecordViewController.m */,
 				4A410A3229EA6BB60007003B /* TaskPeriodCollectionViewCell.h */,
 				4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */,
 			);
 			path = Period;
-			sourceTree = "<group>";
-		};
-		4AE1153529ECF753003CBB39 /* EditPeriod */ = {
-			isa = PBXGroup;
-			children = (
-				4AE1153629ECF77A003CBB39 /* EditPeriodViewController.h */,
-				4AE1153729ECF77A003CBB39 /* EditPeriodViewController.m */,
-			);
-			path = EditPeriod;
 			sourceTree = "<group>";
 		};
 		4AFA3B7429E4EE0F004D5BE4 /* SettingsCells */ = {
@@ -569,7 +556,6 @@
 				4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */,
 				4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */,
 				4AE4171928DF613D008A6A18 /* TimeTrackerViewController.m in Sources */,
-				4AE1153829ECF77A003CBB39 /* EditPeriodViewController.m in Sources */,
 				4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */,

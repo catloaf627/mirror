@@ -10,7 +10,6 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
-#import "EditPeriodViewController.h"
 #import "MirrorSettings.h"
 
 static const CGFloat kHorizontalPadding = 20;
