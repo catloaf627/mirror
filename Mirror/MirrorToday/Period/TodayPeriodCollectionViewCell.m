@@ -6,7 +6,7 @@
 //
 
 #import "TodayPeriodCollectionViewCell.h"
-
+#import "MirrorSettings.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
@@ -21,10 +21,12 @@ static const CGFloat kVerticalPadding = 10;
 @property (nonatomic, strong) NSString *taskName;
 @property (nonatomic, assign) NSInteger periodIndex;
 
+@property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UILabel *totalLabel; // 总时长
-@property (nonatomic, strong) UIButton *startButton;
-@property (nonatomic, strong) UIButton *endButton;
+@property (nonatomic, strong) UIDatePicker *startButton;
+@property (nonatomic, strong) UILabel *dashLabel;
+@property (nonatomic, strong) UIDatePicker *endButton;
 
 @end
 
@@ -39,25 +41,34 @@ static const CGFloat kVerticalPadding = 10;
 {
     self.taskName = taskName;
     self.periodIndex = index;
+    [self updateCellInfo];
+    self.layer.cornerRadius = 14;
+    [self p_setupUI];
+}
+
+- (void)updateCellInfo
+{
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-    if ([self periodsIsFinished]) {
-        long start = [task.periods[index][0] longValue];
-        long end = [task.periods[index][1] longValue];
-        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
-        [self.startButton setTitle:[[self timeFromTimestamp:start] stringByAppendingString:@" -"] forState:UIControlStateNormal];
-        [self.endButton setTitle:[@" " stringByAppendingString:[self timeFromTimestamp:end]] forState:UIControlStateNormal];
+    self.backgroundColor = [UIColor mirrorColorNamed:task.color];
+    BOOL periodsIsFinished = task.periods[self.periodIndex].count == 2;
+    self.taskNameLabel.text = self.taskName;
+    if (periodsIsFinished) {
         self.startButton.hidden = NO;
         self.endButton.hidden = NO;
         self.deleteButton.hidden = NO;
-    } else if (task.periods[index].count == 1) {
-        self.totalLabel.text = [MirrorLanguage mirror_stringWithKey:@"counting"];
+        long start = [task.periods[self.periodIndex][0] longValue];
+        long end = [task.periods[self.periodIndex][1] longValue];
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.startButton.date = [NSDate dateWithTimeIntervalSince1970:start];
+        self.endButton.date = [NSDate dateWithTimeIntervalSince1970:end];
+    } else {
         self.startButton.hidden = YES;
         self.endButton.hidden = YES;
         self.deleteButton.hidden = YES;
+        self.totalLabel.text = [MirrorLanguage mirror_stringWithKey:@"counting"];
+        self.startButton.date = [NSDate now];
+        self.endButton.date = [NSDate now];
     }
-    self.backgroundColor = [UIColor mirrorColorNamed:task.color];
-    self.layer.cornerRadius = 14;
-    [self p_setupUI];
 }
 
 - (void)p_setupUI
@@ -69,33 +80,39 @@ static const CGFloat kVerticalPadding = 10;
         make.width.mas_equalTo(self.bounds.size.width - 3*kHorizontalPadding - 20);
         make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
     }];
-    if (![self periodsIsFinished]) return;
-    [self addSubview:self.startButton];
-    [self.startButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.offset(-kVerticalPadding);
-        make.left.offset(kHorizontalPadding);
-        make.width.mas_equalTo((self.bounds.size.width - 2*kHorizontalPadding)/2);
-        make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
-    }];
-    [self addSubview:self.endButton];
-    [self.endButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.offset(-kVerticalPadding);
-        make.right.offset(-kHorizontalPadding);
-        make.width.mas_equalTo((self.bounds.size.width - 2*kHorizontalPadding)/2);
-        make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
-    }];
     [self addSubview:self.deleteButton];
     [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.totalLabel);
         make.right.offset(-kHorizontalPadding);
         make.height.width.mas_equalTo(20);
     }];
-}
+    
+    
+    [self addSubview:self.startButton];
+    [self.startButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.offset(-kVerticalPadding);
+        make.left.offset(kHorizontalPadding);
+        make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
+    }];
+    [self addSubview:self.dashLabel];
+    [self.dashLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.offset(-kVerticalPadding);
+        make.left.mas_equalTo(self.startButton.mas_right);
+        make.width.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
+    }];
+    [self addSubview:self.endButton];
+    [self.endButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.offset(-kVerticalPadding);
+        make.left.mas_equalTo(self.dashLabel.mas_right);
+        make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
+    }];
+    [self addSubview:self.taskNameLabel];
+    [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.offset(-kVerticalPadding);
+        make.right.offset(-kHorizontalPadding);
+        make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
+    }];
 
-- (BOOL)periodsIsFinished
-{
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-    return task.periods[self.periodIndex].count == 2;
 }
 
 #pragma mark - Actions
@@ -134,31 +151,11 @@ static const CGFloat kVerticalPadding = 10;
         _totalLabel = [UILabel new];
         _totalLabel.adjustsFontSizeToFitWidth = YES;
         _totalLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        _totalLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
     }
     return _totalLabel;
 }
 
-- (UIButton *)startButton
-{
-    if (!_startButton) {
-        _startButton = [UIButton new];
-        _startButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-        [_startButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
-        [_startButton addTarget:self action:@selector(clickStartTime) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _startButton;
-}
-
-- (UIButton *)endButton
-{
-    if (!_endButton) {
-        _endButton = [UIButton new];
-        _endButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-        [_endButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
-        [_endButton addTarget:self action:@selector(clickEndTime) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _endButton;
-}
 
 - (UIButton *)deleteButton
 {
@@ -171,6 +168,59 @@ static const CGFloat kVerticalPadding = 10;
     }
     return _deleteButton;
 }
+
+
+- (UIDatePicker *)startButton
+{
+    if (!_startButton) {
+        _startButton = [UIDatePicker new];
+        _startButton.datePickerMode = UIDatePickerModeTime;
+        _startButton.timeZone = [NSTimeZone systemTimeZone];
+        _startButton.preferredDatePickerStyle = UIDatePickerStyleCompact;
+        _startButton.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
+        _startButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_startButton addTarget:self action:@selector(clickStartTime) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _startButton;
+}
+
+- (UILabel *)dashLabel
+{
+    if (!_dashLabel) {
+        _dashLabel = [UILabel new];
+        _dashLabel.text = @"-";
+        _dashLabel.textAlignment = NSTextAlignmentCenter;
+        _dashLabel.adjustsFontSizeToFitWidth = YES;
+        _dashLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    }
+    return _dashLabel;
+}
+
+- (UIDatePicker *)endButton
+{
+    if (!_endButton) {
+        _endButton = [UIDatePicker new];
+        _endButton.datePickerMode = UIDatePickerModeTime;
+        _endButton.timeZone = [NSTimeZone systemTimeZone];
+        _endButton.preferredDatePickerStyle = UIDatePickerStyleCompact;
+        _endButton.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
+        _endButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_endButton addTarget:self action:@selector(clickStartTime) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _endButton;
+}
+
+- (UILabel *)taskNameLabel
+{
+    if (!_taskNameLabel) {
+        _taskNameLabel = [UILabel new];
+        _taskNameLabel.adjustsFontSizeToFitWidth = YES;
+        _taskNameLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        _taskNameLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:12];
+    }
+    return _taskNameLabel;
+}
+
 
 #pragma mark - Privates
 
