@@ -15,7 +15,7 @@
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PushEditPeriodSheetForTaskProtocol>
+@interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTaskProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSString *taskName;
@@ -66,7 +66,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     }];
 }
 
-#pragma mark - PushEditPeriodSheetProtocol
+#pragma mark - EditPeriodForTaskProtocol
 
 - (void)pushEditPeriodSheet:(UIViewController *)editVC
 {

@@ -9,15 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol PushEditPeriodSheetForTodayProtocol <NSObject>
-
-- (void)pushEditPeriodSheet:(UIViewController *)editVC;
+@protocol EditPeriodForTodayProtocol <NSObject>
 
 @end
 
 @interface TodayPeriodCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, weak) UIViewController<PushEditPeriodSheetForTodayProtocol> *delegate;
+@property (nonatomic, weak) UIViewController<EditPeriodForTodayProtocol> *delegate;
 + (NSString *)identifier;
 - (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
 

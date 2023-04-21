@@ -21,7 +21,7 @@
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PushEditPeriodSheetForTodayProtocol, UIViewControllerTransitioningDelegate>
+@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -199,12 +199,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     return CGSizeMake(kScreenWidth, 10);
 }
-
-- (void)pushEditPeriodSheet:(UIViewController *)editVC
-{
-    [self.navigationController presentViewController:editVC animated:YES completion:nil];
-}
-
 
 #pragma mark - Getters
 
