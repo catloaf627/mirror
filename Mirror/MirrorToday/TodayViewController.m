@@ -126,7 +126,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self.crownButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.todayLabel.mas_left);
         make.centerY.mas_equalTo(self.todayLabel.mas_top);
-        make.width.height.mas_equalTo(20);
+        make.width.height.mas_equalTo(25);
     }];
     [self.todayView addSubview:self.todayDateLabel];
     [self.todayDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -208,6 +208,30 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return CGSizeMake(kScreenWidth, 10);
 }
 
+#pragma mark - Actions
+
+- (void)crownAnimation
+{
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy] impactOccurred];
+    [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
+        self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4-0.2); //左
+    } completion:^(BOOL finished) {
+        [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
+            self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4+0.2); //右
+        } completion:^(BOOL finished) {
+            [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
+                self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4-0.2); //左
+            } completion:^(BOOL finished) {
+                [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
+                    self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4+0.2); //右
+                } completion:^(BOOL finished) {
+                    self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4); //恢复
+                }];
+            }];
+        }];
+    }];
+}
+
 #pragma mark - Getters
 
 - (UICollectionView *)collectionView
@@ -284,7 +308,9 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _crownButton = [UIButton new];
         UIImage *iconImage = [[UIImage systemImageNamed:@"crown.fill"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_crownButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4);
         _crownButton.tintColor = [UIColor systemYellowColor];
+        [_crownButton addTarget:self action:@selector(crownAnimation) forControlEvents:UIControlEventTouchUpInside];
     }
     return _crownButton;
 }
