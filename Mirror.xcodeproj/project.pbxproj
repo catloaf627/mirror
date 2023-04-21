@@ -207,19 +207,11 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		4A099FB229DD85CA002683A1 /* Chart */ = {
-			isa = PBXGroup;
-			children = (
-				4A410A2929EA5D650007003B /* PieChart */,
-				4A410A2A29EA5D750007003B /* Legend */,
-				4A410A2B29EA5D800007003B /* Histogram */,
-			);
-			path = Chart;
-			sourceTree = "<group>";
-		};
 		4A0D40F929EFE28300F13EAE /* MirrorHistory */ = {
 			isa = PBXGroup;
 			children = (
+				4A410A2A29EA5D750007003B /* Legend */,
+				4A410A2B29EA5D800007003B /* Histogram */,
 				4A0D40FA29EFE6BD00F13EAE /* HistoryViewController.h */,
 				4A0D40FB29EFE6BD00F13EAE /* HistoryViewController.m */,
 			);
@@ -257,6 +249,7 @@
 		4A379B3C28E0371700785CAE /* MirrorToday */ = {
 			isa = PBXGroup;
 			children = (
+				4A410A2929EA5D650007003B /* PieChart */,
 				4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */,
 				4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */,
 			);
@@ -282,7 +275,6 @@
 			isa = PBXGroup;
 			children = (
 				4AE1153429ECF6F7003CBB39 /* Period */,
-				4A099FB229DD85CA002683A1 /* Chart */,
 				4A01AAC329DF810700E2B5A8 /* MUX */,
 				4A099FAC29DD57AE002683A1 /* MirrorTool.h */,
 				4A099FAD29DD57AE002683A1 /* MirrorTool.m */,
