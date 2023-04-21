@@ -93,18 +93,7 @@ static const CGFloat kHorizontalPadding = 20;
 - (MirrorPiechart *)pieChart
 {
     if (!_pieChart) {
-        if (_type == DataEntranceTypeToday) {
-            _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeToday]];
-        }
-        if (_type == DataEntranceTypeThisWeek) {
-            _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeThisWeek]];
-        }
-        if (_type == DataEntranceTypeThisMonth) {
-            _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeThisMonth]];
-        }
-        if (_type == DataEntranceTypeThisYear) {
-            _pieChart = [[MirrorPiechart alloc] initWithWidth:self.frame.size.height - 28 startedTime:[MirrorStorage startedTimeThisYear]];
-        }
+
     }
     return _pieChart;
 }

@@ -215,7 +215,7 @@ static CGFloat const kLeftRightSpacing = 20;
     if (!_titleLabel) {
         _titleLabel = [UILabel new];
         _titleLabel.textAlignment = NSTextAlignmentCenter;
-        _titleLabel.text = @"gizmo";
+        _titleLabel.text = @"";
         _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
         _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 和nickname的文字颜色保持一致
     }

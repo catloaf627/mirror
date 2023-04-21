@@ -18,7 +18,7 @@
 #import "MirrorTool.h"
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
-@interface OneDayHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface OneDayHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> // gizmo delete
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 @property (nonatomic, strong) UIDatePicker *datePicker;

@@ -182,7 +182,6 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
 - (NSMutableArray<MirrorDataModel *> *)data
 {
-    // span开始那天的0:0:0
     long startTime = 0;
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
@@ -197,7 +196,7 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
         }
     } else if (self.spanType == SpanTypeWeek) {
         long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        startTime = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;// now所在周的第一天的0:0:0
+        startTime = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;
         if (self.offset != 0) {
             startTime = startTime + 7*86400*self.offset;
         }
@@ -223,18 +222,16 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
                 }
             }
         }
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在月的第一天的0:0:0
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     } else if (self.spanType == SpanTypeYear) {
         components.month = 1;
         components.day = 1;
         if (self.offset != 0) {
             components.year = components.year + self.offset;
         }
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];// now所在月的第一天的0:0:0
+        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     }
     
-    
-    // span结束那天的23:59:59
     long endTime = 0;
     if (self.spanType == SpanTypeDay) {
         endTime = startTime + 86400 - 1;

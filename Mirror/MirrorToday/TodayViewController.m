@@ -10,23 +10,24 @@
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
-#import "DataEntranceCollectionViewCell.h"
-#import "OneDayHistogram.h"
-#import "OneDayLegend.h"
 #import "MirrorSettings.h"
 #import "LeftAnimation.h"
 #import "SettingsViewController.h"
+#import "MirrorPiechart.h"
+#import "MirrorStorage.h"
+#import "MirrorLanguage.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 
-@interface TodayViewController () <OneDayLegendDelegate, OneDayHistogramDelegate, UIViewControllerTransitioningDelegate>
+@interface TodayViewController () <UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
-@property (nonatomic, strong) UIDatePicker *datePicker;
-@property (nonatomic, strong) OneDayLegend *legendView;
-@property (nonatomic, strong) OneDayHistogram *histogramView;
+@property (nonatomic, strong) UIView *todayView;
+@property (nonatomic, strong) UILabel *todayLabel;
+@property (nonatomic, strong) UILabel *todayDateLabel;
+@property (nonatomic, strong) MirrorPiechart *pieChart;
 
 @end
 
@@ -56,9 +57,10 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     // 将vc.view里的所有subviews全部置为nil
     self.settingsButton = nil;
-    self.datePicker = nil;
-    self.legendView = nil;
-    self.histogramView = nil;
+    self.todayView = nil;
+    self.todayLabel = nil;
+    self.todayDateLabel = nil;
+    self.pieChart = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar
@@ -75,11 +77,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)reloadData
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
-    [self.legendView.collectionView reloadData];
-    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo([self.legendView legendViewHeight]);
-    }];
-    [self.histogramView.collectionView reloadData];
+    [self.pieChart updateTodayWithWidth:80];
 }
 
 - (void)dealloc
@@ -101,33 +99,35 @@ static CGFloat const kLeftRightSpacing = 20;
     self.navigationController.navigationBar.topItem.title = @""; //给父vc一个空title，让所有子vc的navibar返回文案都为空
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     
-    CGFloat heightWeightRatio = self.datePicker.frame.size.height / self.datePicker.frame.size.width;
-    [self.view addSubview:self.datePicker];
-    [self.datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.todayView];
+    [self.todayView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-        make.left.offset(kLeftRightSpacing);
-        make.width.mas_equalTo(self.view.frame.size.width - 2*kLeftRightSpacing);
-        make.height.mas_equalTo((self.view.frame.size.width - 2*kLeftRightSpacing) * heightWeightRatio);
+        make.centerX.offset(0);
+        make.height.mas_equalTo(100);
+    }];
+    [self.todayView addSubview:self.todayLabel];
+    [self.todayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.offset(0);
+        make.centerY.offset(-10);
+    }];
+    [self.todayView addSubview:self.todayDateLabel];
+    [self.todayDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.todayLabel.mas_bottom);
+        make.left.offset(0);
+    }];
+    [self.todayView addSubview:self.pieChart];
+    [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.offset(0);
+        make.left.mas_equalTo(self.todayDateLabel.mas_right).offset(20);
+        make.width.height.mas_equalTo(80);
+        make.right.offset(0);
     }];
     
-    [self.view addSubview:self.legendView];
-    [self.legendView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.datePicker.mas_bottom);
-        make.height.mas_equalTo([self.legendView legendViewHeight]);
-    }];
-    [self.view addSubview:self.histogramView];
-    [self.histogramView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.legendView.mas_bottom);
-        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
-    }];
+
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.bottom.mas_equalTo(self.datePicker.mas_top);
+        make.bottom.mas_equalTo(self.self.todayView.mas_top);
         make.width.height.mas_equalTo(40);
     }];
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
@@ -137,40 +137,6 @@ static CGFloat const kLeftRightSpacing = 20;
 }
 
 #pragma mark - Getters
-
-- (UIDatePicker *)datePicker
-{
-    if (!_datePicker) {
-        _datePicker = [UIDatePicker new];
-        _datePicker.datePickerMode = UIDatePickerModeDate;
-        _datePicker.timeZone = [NSTimeZone systemTimeZone];
-        _datePicker.preferredDatePickerStyle = UIDatePickerStyleInline;
-        _datePicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
-        _datePicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
-        _datePicker.date = [NSDate now];
-        [_datePicker addTarget:self action:@selector(reloadData) forControlEvents:UIControlEventValueChanged];
-    }
-    return _datePicker;
-}
-
-
-- (OneDayHistogram *)histogramView
-{
-    if (!_histogramView) {
-        _histogramView = [[OneDayHistogram alloc] initWithDatePicker:self.datePicker];
-        _histogramView.delegate = self;
-    }
-    return _histogramView;
-}
-
-- (OneDayLegend *)legendView
-{
-    if (!_legendView) {
-        _legendView = [[OneDayLegend alloc] initWithDatePicker:self.datePicker];
-        _legendView.delegate = self;
-    }
-    return _legendView;
-}
 
 - (UIButton *)settingsButton
 {
@@ -182,6 +148,44 @@ static CGFloat const kLeftRightSpacing = 20;
         [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
     }
     return _settingsButton;
+}
+
+- (UIView *)todayView
+{
+    if (!_todayView) {
+        _todayView = [UIView new];
+    }
+    return _todayView;
+}
+
+- (UILabel *)todayLabel
+{
+    if (!_todayLabel) {
+        _todayLabel = [UILabel new];
+        _todayLabel.text =[MirrorLanguage mirror_stringWithKey:@"today"];
+        _todayLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:37];
+        _todayLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    }
+    return _todayLabel;
+}
+
+- (UILabel *)todayDateLabel
+{
+    if (!_todayDateLabel) {
+        _todayDateLabel = [UILabel new];
+        _todayDateLabel.text = [self dayFromDateWithWeekday:[NSDate now]];
+        _todayDateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
+        _todayDateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
+    }
+    return _todayDateLabel;
+}
+
+- (MirrorPiechart *)pieChart
+{
+    if (!_pieChart) {
+        _pieChart = [[MirrorPiechart alloc] initTodayWithWidth:80];
+    }
+    return _pieChart;
 }
 
 #pragma mark - Settings
@@ -233,6 +237,32 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     return self.interactiveTransition;
 }
+
+#pragma mark - Privates
+
+- (NSString *)dayFromDateWithWeekday:(NSDate *)date
+{
+    // setup
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday) fromDate:date];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    long year = (long)components.year;
+    long month = (long)components.month;
+    long day = (long)components.day;
+    long week = (long)components.weekday;
+    
+    NSString *weekday = @"";
+    if (week == 1) weekday = [MirrorLanguage mirror_stringWithKey:@"sunday"];
+    if (week == 2) weekday = [MirrorLanguage mirror_stringWithKey:@"monday"];
+    if (week == 3) weekday = [MirrorLanguage mirror_stringWithKey:@"tuesday"];
+    if (week == 4) weekday = [MirrorLanguage mirror_stringWithKey:@"wednesday"];
+    if (week == 5) weekday = [MirrorLanguage mirror_stringWithKey:@"thursday"];
+    if (week == 6) weekday = [MirrorLanguage mirror_stringWithKey:@"friday"];
+    if (week == 7) weekday = [MirrorLanguage mirror_stringWithKey:@"saturday"];
+    return [NSString stringWithFormat: @"%ld.%ld.%ld, %@", year, month, day, weekday];
+}
+
 
 
 @end

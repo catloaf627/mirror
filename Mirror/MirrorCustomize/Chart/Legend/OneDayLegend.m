@@ -16,7 +16,7 @@
 static CGFloat const kCellHeight = 30; // 一个legend的高度
 static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
-@interface OneDayLegend () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface OneDayLegend () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout> // gizmo delete
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 @property (nonatomic, strong) UIDatePicker *datePicker;
