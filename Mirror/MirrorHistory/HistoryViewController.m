@@ -9,7 +9,6 @@
 #import "MirrorMacro.h"
 #import "MirrorSettings.h"
 #import "MirrorTabsManager.h"
-#import "DataEntranceCollectionViewCell.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "LeftAnimation.h"

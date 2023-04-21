@@ -59,17 +59,6 @@ typedef NS_ENUM(NSInteger, TaskSavedType) {
 
 + (NSMutableDictionary *)retriveMirrorData;
 
-
-// gizmo delete
-
-+ (long)startedTimeToday; // 今天起始点的时间戳
-
-+ (long)startedTimeThisWeek; // 本周起始点的时间戳
-
-+ (long)startedTimeThisMonth; // 本月起始点的时间戳
-
-+ (long)startedTimeThisYear; // 今年起始点的时间戳
-
 // Log
 
 + (void)printTask:(MirrorDataModel *)task info:(NSString *)info;
