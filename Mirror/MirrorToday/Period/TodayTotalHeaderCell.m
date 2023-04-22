@@ -1,23 +1,23 @@
 //
-//  PeriodsTotalHeaderCell.m
+//  TodayTotalHeaderCell.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/21.
 //
 
-#import "PeriodsTotalHeaderCell.h"
+#import "TodayTotalHeaderCell.h"
 #import "MirrorDataModel.h"
 #import "MirrorStorage.h"
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 
-@interface PeriodsTotalHeaderCell ()
+@interface TodayTotalHeaderCell ()
 
 @property (nonatomic, strong) UILabel *countLabel;
 
 @end
 
-@implementation PeriodsTotalHeaderCell
+@implementation TodayTotalHeaderCell
 
 - (void)configWithTasknames:(NSArray<NSString *> *)taskNames periodIndexes:(NSArray *)indexes
 {

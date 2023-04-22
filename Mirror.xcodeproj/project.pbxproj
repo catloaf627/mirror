@@ -33,7 +33,7 @@
 		4A410A3429EA6BB60007003B /* TaskPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */; };
 		4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */; };
 		4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */; };
-		4A88211929F2A2B8009E422C /* PeriodsTotalHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211829F2A2B8009E422C /* PeriodsTotalHeaderCell.m */; };
+		4A88211929F2A2B8009E422C /* TodayTotalHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211829F2A2B8009E422C /* TodayTotalHeaderCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* LeftAnimation.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
@@ -105,8 +105,8 @@
 		4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
 		4A88211429F26104009E422C /* TodayPeriodCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayPeriodCollectionViewCell.h; sourceTree = "<group>"; };
 		4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayPeriodCollectionViewCell.m; sourceTree = "<group>"; };
-		4A88211729F2A2B8009E422C /* PeriodsTotalHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PeriodsTotalHeaderCell.h; sourceTree = "<group>"; };
-		4A88211829F2A2B8009E422C /* PeriodsTotalHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PeriodsTotalHeaderCell.m; sourceTree = "<group>"; };
+		4A88211729F2A2B8009E422C /* TodayTotalHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayTotalHeaderCell.h; sourceTree = "<group>"; };
+		4A88211829F2A2B8009E422C /* TodayTotalHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayTotalHeaderCell.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4ACB422C29EEA411005EECC4 /* LeftAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftAnimation.h; sourceTree = "<group>"; };
@@ -342,8 +342,8 @@
 			children = (
 				4A88211429F26104009E422C /* TodayPeriodCollectionViewCell.h */,
 				4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */,
-				4A88211729F2A2B8009E422C /* PeriodsTotalHeaderCell.h */,
-				4A88211829F2A2B8009E422C /* PeriodsTotalHeaderCell.m */,
+				4A88211729F2A2B8009E422C /* TodayTotalHeaderCell.h */,
+				4A88211829F2A2B8009E422C /* TodayTotalHeaderCell.m */,
 			);
 			path = Period;
 			sourceTree = "<group>";
@@ -587,7 +587,7 @@
 				4A406C112906FC00001E83A1 /* ToggleCollectionViewCell.m in Sources */,
 				4A37368E29E166BF00187280 /* TimeTrackingLabel.m in Sources */,
 				4AE4171F28DF6155008A6A18 /* SettingsViewController.m in Sources */,
-				4A88211929F2A2B8009E422C /* PeriodsTotalHeaderCell.m in Sources */,
+				4A88211929F2A2B8009E422C /* TodayTotalHeaderCell.m in Sources */,
 				4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */,
 				4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */,
 				4A406C1729070FC1001E83A1 /* ImmersiveCollectionViewCell.m in Sources */,

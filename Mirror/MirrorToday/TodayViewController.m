@@ -17,7 +17,7 @@
 #import "MirrorLanguage.h"
 #import "TodayPeriodCollectionViewCell.h"
 #import "MirrorDataManager.h"
-#import "PeriodsTotalHeaderCell.h"
+#import "TodayTotalHeaderCell.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
@@ -199,7 +199,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     UICollectionReusableView *header;
     if (kind == UICollectionElementKindSectionHeader) {
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
-        PeriodsTotalHeaderCell* todayHeader = (PeriodsTotalHeaderCell *)header;
+        TodayTotalHeaderCell* todayHeader = (TodayTotalHeaderCell *)header;
         todayHeader.crownDelegate = self;
         [todayHeader configWithTasknames:self.tasknames periodIndexes:self.originIndexes];
         
@@ -261,7 +261,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.backgroundColor = self.view.backgroundColor;
         
         [_collectionView registerClass:[TodayPeriodCollectionViewCell class] forCellWithReuseIdentifier:[TodayPeriodCollectionViewCell identifier]];
-        [_collectionView registerClass:[PeriodsTotalHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+        [_collectionView registerClass:[TodayTotalHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     }
     return _collectionView;
 }

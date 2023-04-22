@@ -1,5 +1,5 @@
 //
-//  PeriodsTotalHeaderCell.h
+//  TodayTotalHeaderCell.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/21.
@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface PeriodsTotalHeaderCell : UICollectionViewCell
+@interface TodayTotalHeaderCell : UICollectionViewCell
 
 @property (nonatomic, strong) id<UpdateCrownDelegate> crownDelegate;
 - (void)configWithTasknames:(NSArray<NSString *> *)taskNames periodIndexes:(NSArray *)indexes;
