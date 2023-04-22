@@ -128,7 +128,7 @@ static const CGFloat kVerticalPadding = 10;
 }
 - (void)changeEndTime
 {
-    long endTime = [self.startPicker.date timeIntervalSince1970];
+    long endTime = [self.endPicker.date timeIntervalSince1970];
     [MirrorStorage editPeriodIsStartTime:NO to:endTime withTaskname:self.taskName periodIndex:self.periodIndex];
     [self updateCellInfo];
 }
