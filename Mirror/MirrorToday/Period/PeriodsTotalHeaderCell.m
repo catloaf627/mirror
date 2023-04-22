@@ -33,6 +33,11 @@
             count = count + (end-start);
         }
     }
+    if (count >= 8*3600) { // 大于8小时，展示王冠
+        [self.crownDelegate showCrown];
+    } else { // 不到8小时，隐藏王冠
+        [self.crownDelegate hideCrown];
+    }
     [self addSubview:self.countLabel];
     self.countLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:count]];
     [self.countLabel mas_makeConstraints:^(MASConstraintMaker *make) {

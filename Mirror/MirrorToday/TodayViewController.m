@@ -22,7 +22,7 @@
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UIViewControllerTransitioningDelegate>
+@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UpdateCrownDelegate, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -199,7 +199,10 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     UICollectionReusableView *header;
     if (kind == UICollectionElementKindSectionHeader) {
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
-        [(PeriodsTotalHeaderCell *)header configWithTasknames:self.tasknames periodIndexes:self.originIndexes];
+        PeriodsTotalHeaderCell* todayHeader = (PeriodsTotalHeaderCell *)header;
+        todayHeader.crownDelegate = self;
+        [todayHeader configWithTasknames:self.tasknames periodIndexes:self.originIndexes];
+        
     }
     return header;
 }
@@ -207,6 +210,18 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
     return CGSizeMake(kScreenWidth, 30);
+}
+
+#pragma mark - UpdateCrownDelegate
+
+- (void)showCrown
+{
+    self.crownButton.hidden = NO;
+}
+
+- (void)hideCrown
+{
+    self.crownButton.hidden = YES;
 }
 
 #pragma mark - Actions

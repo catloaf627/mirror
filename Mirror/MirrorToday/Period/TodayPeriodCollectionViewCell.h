@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol EditPeriodForTodayProtocol <NSObject>
+@protocol EditPeriodForTodayProtocol <NSObject> // present delete alert
 
 @end
 
