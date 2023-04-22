@@ -12,6 +12,7 @@
 #import "MirrorMacro.h"
 #import "TaskPeriodCollectionViewCell.h"
 #import "MirrorStorage.h"
+#import "TaskTotalHeaderCell.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
@@ -110,13 +111,16 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     UICollectionReusableView *header;
     if (kind == UICollectionElementKindSectionHeader) {
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
+        TaskTotalHeaderCell* taskHeader = (TaskTotalHeaderCell *)header;
+        [taskHeader configWithTaskname:self.taskName];
+        
     }
     return header;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(kScreenWidth, 10);
+    return CGSizeMake(kScreenWidth, 30);
 }
 
 
@@ -133,7 +137,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.backgroundColor = self.view.backgroundColor;
         
         [_collectionView registerClass:[TaskPeriodCollectionViewCell class] forCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier]];
-        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+        [_collectionView registerClass:[TaskTotalHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     }
     return _collectionView;
 }
