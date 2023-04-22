@@ -82,6 +82,8 @@
     // Span histogram empty hint
     [mirrorDict setValue:@[@"No data ", @"暂无数据"] forKey:@"no_data"];
     
+    // today total
+    [mirrorDict setValue:@[@"Total:", @"总时长："] forKey:@"total"];
     
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];

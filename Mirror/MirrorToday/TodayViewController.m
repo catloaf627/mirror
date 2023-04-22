@@ -17,6 +17,7 @@
 #import "MirrorLanguage.h"
 #import "TodayPeriodCollectionViewCell.h"
 #import "MirrorDataManager.h"
+#import "PeriodsTotalHeaderCell.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
@@ -33,8 +34,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 @property (nonatomic, strong) UIButton *crownButton;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-// 下面三个都是数据源，三位一体，同步更新
-@property (nonatomic, strong) NSMutableArray<NSArray *> *periods;
+// 下面两个都是数据源，同步更新
 @property (nonatomic, strong) NSMutableArray<NSString *> *tasknames;
 @property (nonatomic, strong) NSMutableArray *originIndexes;
 
@@ -177,7 +177,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     [self updateDataSource];
-    return self.periods.count;
+    return self.tasknames.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -199,13 +199,14 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     UICollectionReusableView *header;
     if (kind == UICollectionElementKindSectionHeader) {
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
+        [(PeriodsTotalHeaderCell *)header configWithTasknames:self.tasknames periodIndexes:self.originIndexes];
     }
     return header;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(kScreenWidth, 10);
+    return CGSizeMake(kScreenWidth, 30);
 }
 
 #pragma mark - Actions
@@ -245,7 +246,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.backgroundColor = self.view.backgroundColor;
         
         [_collectionView registerClass:[TodayPeriodCollectionViewCell class] forCellWithReuseIdentifier:[TodayPeriodCollectionViewCell identifier]];
-        [_collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+        [_collectionView registerClass:[PeriodsTotalHeaderCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     }
     return _collectionView;
 }
@@ -317,7 +318,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)updateDataSource
 {
-    self.periods = nil;
     self.tasknames = nil;
     self.originIndexes = nil;
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -335,20 +335,11 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         for (NSInteger periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
             NSArray *period = task.periods[periodIndex];
             if ([period[0] longValue] >= startTime && [period[0] longValue] <= endTime) { // 符合要求，可以展示在today页面
-                [self.periods addObject:period];
                 [self.tasknames addObject:task.taskName];
                 [self.originIndexes addObject:@(periodIndex)];
             }
         }
     }
-}
-
-- (NSMutableArray<NSArray *> *)periods
-{
-    if (!_periods) {
-        _periods = [NSMutableArray new];
-    }
-    return _periods;
 }
 
 - (NSMutableArray<NSString *> *)tasknames
