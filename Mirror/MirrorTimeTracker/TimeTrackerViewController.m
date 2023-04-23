@@ -44,7 +44,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchTimerModeNotification object:nil]; // 比其他vc多监听一个TimerMode通知
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopNotification:) name:MirrorTaskStopNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
@@ -174,11 +173,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         return;
     }
     // 点击了task model
-    if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
+    if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，如果有这种情况就是出bug了！
         [MirrorStorage stopTask:selectedModel.taskName at:[NSDate now] periodIndex:0];
-    } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
-        [MirrorStorage stopAllTasksExcept:selectedModel.taskName];
-        [MirrorStorage startTask:selectedModel.taskName at:[NSDate now] periodIndex:0];
+    } else { // 点击了未开始计时的selectedCell，开始selectedCell的计时
         [self openTimeTrackingViewWithTask:selectedModel];
     }
 }

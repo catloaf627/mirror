@@ -69,6 +69,7 @@ static CGFloat const kDashSpacing = 10;
 {
     self = [super init];
     if (self) {
+        [MirrorStorage startTask:taskName at:[NSDate now] periodIndex:0];
         self.taskModel = [MirrorStorage getTaskFromDB:taskName];
         [self p_setupUI];
     }

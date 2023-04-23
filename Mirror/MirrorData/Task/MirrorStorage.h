@@ -44,8 +44,6 @@ typedef NS_ENUM(NSInteger, TaskSavedType) {
 
 + (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index;
 
-+ (void)stopAllTasksExcept:(NSString *)exceptTaskName;
-
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName;
 
 // Period

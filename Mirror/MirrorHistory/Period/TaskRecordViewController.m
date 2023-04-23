@@ -120,7 +120,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(kScreenWidth, 30);
+    return CGSizeMake(kScreenWidth, 40);
 }
 
 

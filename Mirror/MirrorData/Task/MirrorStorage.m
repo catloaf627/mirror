@@ -160,24 +160,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:@{@"taskName":taskName, @"TaskSavedType" : @(savedType)}];
 }
 
-+ (void)stopAllTasksExcept:(NSString *)exceptTaskName
-{
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 大循环
-    for (id taskName in mirrorDict.allKeys) {
-        // 取出这个task以便作修改
-        MirrorDataModel *task = mirrorDict[taskName];
-        if ([task.taskName isEqualToString:exceptTaskName]) { // 被点击的task不要动
-            continue;
-        }
-        if (!task.isOngoing) { // 不在计时中的task不要动
-            continue;
-        }
-        [MirrorStorage stopTask:taskName at:[NSDate now] periodIndex:0];
-    }
-}
-
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];

@@ -50,7 +50,6 @@ typedef NS_ENUM(NSInteger, SpanType) {
 // Settings Notifications
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"
 #define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"
-#define MirrorSwitchTimerModeNotification @"MirrorSwitchTimerModeNotification"
 #define MirrorSwitchWeekStartsOnNotification @"MirrorSwitchWeekStartsOnNotification"
 // Data Notifications (MirrorStorage统一来发)
 #define MirrorTaskCreateNotification @"MirrorTaskCreateNotification"
