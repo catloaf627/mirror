@@ -250,7 +250,7 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     
     _data = [MirrorDataManager getDataWithStart:startTime end:endTime];
     // update label
-    [self.delegate updateStartDate:[self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:startTime]] endDate:[self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:endTime]]];
+    [self.delegate updateStartDate:[self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:startTime]] endDate:[self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:endTime-1]]]; // 这里减1是因为，period本身在读的时候取的是左闭右开，例如2023.4.17,Mon,00:00 - 2023.4.19,Wed,00:00间隔为2天，指的就是2023.4.17, 2023.4.18这两天，2023.4.19本身是不做数的。因此这里传日期的时候要减去1，将结束时间2023.4.19,Wed,00:00改为2023.4.18,Wed,23:59，这样传过去的label就只展示左闭右开区间里真实囊括的两天了。
     return _data;
 }
 
