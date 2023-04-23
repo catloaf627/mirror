@@ -43,7 +43,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)archiveTask:(NSString *)taskName
 {
-    [MirrorStorage stopTask:taskName];
+    [MirrorStorage stopTask:taskName at:[NSDate now] periodIndex:0];
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
@@ -77,17 +77,18 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
 }
 
-+ (void)startTask:(NSString *)taskName
+// 如果是计时，accurateDate为[NSDate now]，periodIndex为0
++ (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
+    NSDate *date = [self dateWithoutSeconds:accurateDate];
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
     MirrorDataModel *task = mirrorDict[taskName];
-    // 给task创建一个新的period，并给出这个period的起始时间（now）
+    // 给task创建一个新的period，并给出这个period的起始时间
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
-    long startDate = [[MirrorStorage dateWithoutSeconds:[NSDate now]] timeIntervalSince1970];
-    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@(round(startDate))]];
-    [allPeriods insertObject:newPeriod atIndex:0];
+    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@(round([date timeIntervalSince1970]))]];
+    [allPeriods insertObject:newPeriod atIndex:index];
     task.periods = allPeriods;
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:taskName];
@@ -97,26 +98,54 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStartNotification object:nil userInfo:nil];
 }
 
-+ (void)stopTask:(NSString *)taskName
+// 如果是计时，accurateDate为[NSDate now]，periodIndex为0
++ (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
+    NSDate *date = [self dateWithoutSeconds:accurateDate];
     TaskSavedType savedType = TaskSavedTypeNone;
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
     MirrorDataModel *task = mirrorDict[taskName];
-    // 将最后一个period取出来，给它一个结束时间（now）
+    // 将最后一个period取出来，给它一个结束时间
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
-    if (allPeriods.count > 0) {
-        NSMutableArray *latestPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[0]];
+    if (allPeriods.count > index) {
+        NSMutableArray *latestPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[index]];
         long start = [latestPeriod[0] longValue];
-        long end = [[NSDate now] timeIntervalSince1970];
+        long end = [date timeIntervalSince1970];
         long length = end - start;
         NSLog(@"%@计时结束 %ld",[UIColor getEmoji:task.color], length);
-        if (latestPeriod.count == 1 &&  length >= kMinSeconds) { // 长度为n秒以上开始记录
-            long endDate = [[MirrorStorage dateWithoutSeconds:[NSDate now]] timeIntervalSince1970];
-            [latestPeriod addObject:@(round(endDate))];
-            allPeriods[0] = latestPeriod;
-            savedType = TaskSavedTypeSaved;
+        if (latestPeriod.count == 1 &&  length >= kMinSeconds) { // 一分钟以上开始记录（在00:00处切割）
+            NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:start];
+            NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:end];
+            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+            NSDateComponents *startComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
+            NSDateComponents *endComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:endDate];
+            startComponents.timeZone = [NSTimeZone systemTimeZone];
+            endComponents.timeZone = [NSTimeZone systemTimeZone];
+            
+            if (startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day) { // 开始和结束在同一天，直接记录 (存在原处)
+                [latestPeriod addObject:@(round([date timeIntervalSince1970]))];
+                allPeriods[index] = latestPeriod;
+                savedType = TaskSavedTypeSaved;
+            } else { //开始和结束不在同一天，在00:00处切割分段
+                NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
+                endComponent0.hour = 23;
+                endComponent0.minute = 59;
+                long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970];
+                [latestPeriod addObject:@(round(endTime0))];  // 第一个分段 (存在原处)
+                allPeriods[index] = latestPeriod;
+                long startTimei = endTime0 + 1;
+                long endTimei = startTimei + 86400 -1;
+                while (endTimei < end) {
+                    NSArray *newPeriod = @[@(startTimei), @(endTimei)]; // 第i个分段（新插入）
+                    [allPeriods insertObject:newPeriod atIndex:index];
+                    startTimei = startTimei + 86400;
+                    endTimei = startTimei + 86400 -1;
+                }
+                NSArray *newPeriod = @[@(startTimei), @(endTimei)]; // 最后一个分段（新插入）
+                [allPeriods insertObject:newPeriod atIndex:index];
+            }
         } else { // 错误格式或者n秒以下，丢弃这个task
             [allPeriods removeObjectAtIndex:0];
             savedType = (length < kMinSeconds && length >= 0) ? TaskSavedTypeTooShort : TaskSavedTypeError;
@@ -145,7 +174,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
         if (!task.isOngoing) { // 不在计时中的task不要动
             continue;
         }
-        [MirrorStorage stopTask:taskName];
+        [MirrorStorage stopTask:taskName at:[NSDate now] periodIndex:0];
     }
 }
 
@@ -184,13 +213,18 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
+    // 取出这个task，直接使用start/stop task进行修改。
     MirrorDataModel *task = mirrorDict[taskName];
-    task.periods[index][isStartTime ? 0:1] = @(timestamp);
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage deletePeriodWithTaskname:taskName periodIndex:index];
+    long oldStartTime = [task.periods[index][0] longValue];
+    long oldEndTime = [task.periods[index][1] longValue];
+    if (isStartTime) {
+        [MirrorStorage startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
+        [MirrorStorage stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldEndTime] periodIndex:index];
+    } else {
+        [MirrorStorage startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldStartTime] periodIndex:index];
+        [MirrorStorage stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
+    }
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period is edited"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodEditNotification object:nil userInfo:nil];
 }
@@ -287,9 +321,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSDateComponents *components = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:date];
     components.timeZone = [NSTimeZone systemTimeZone];
     components.second = 0;
-    NSLog(@"date %@", date);
     NSDate *dateWithoutSeconds = [gregorian dateFromComponents:components];
-    NSLog(@"dateWithoutSeconds %@", dateWithoutSeconds);
     return dateWithoutSeconds;
 }
 @end

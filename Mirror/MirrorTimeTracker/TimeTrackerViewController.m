@@ -178,10 +178,10 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，停止selectedCell的计时
-        [MirrorStorage stopTask:selectedModel.taskName];
+        [MirrorStorage stopTask:selectedModel.taskName at:[NSDate now] periodIndex:0];
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [MirrorStorage stopAllTasksExcept:selectedModel.taskName];
-        [MirrorStorage startTask:selectedModel.taskName];
+        [MirrorStorage startTask:selectedModel.taskName at:[NSDate now] periodIndex:0];
         if ([MirrorSettings appliedImmersiveMode]) {
             [self openTimeTrackingViewWithTask:selectedModel];
         }

@@ -70,7 +70,7 @@
 
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
         [self.delegate destroyTimeTrackingLabel];
-        [MirrorStorage stopTask:self.taskModel.taskName];
+        [MirrorStorage stopTask:self.taskModel.taskName at:[NSDate now] periodIndex:0];
     }
 }
 

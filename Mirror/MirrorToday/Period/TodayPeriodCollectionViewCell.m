@@ -11,6 +11,7 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
+#import "MirrorMacro.h"
 
 static const CGFloat kHorizontalPadding = 20;
 static const CGFloat kVerticalPadding = 10;
@@ -249,7 +250,7 @@ static const CGFloat kVerticalPadding = 10;
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     long maxTime = 0;
     // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
-    maxTime = [task.periods[self.periodIndex][1] longValue] - 1; // 至多比自己的结束时间小一秒
+    maxTime = [task.periods[self.periodIndex][1] longValue] - kMinSeconds; // 至多比自己的结束时间小一分钟
     return [NSDate dateWithTimeIntervalSince1970:maxTime];
 }
 
@@ -260,9 +261,9 @@ static const CGFloat kVerticalPadding = 10;
     // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
     if (self.periodIndex-1 >= 0) { // 如果有下一个task的话
         NSArray *latterPeriod = task.periods[self.periodIndex-1];
-        maxTime = [latterPeriod[0] longValue] - 1; // 至多也要比下一个task的开始时间小一秒
+        maxTime = [latterPeriod[0] longValue]; // 至多也要等于下一个task的开始时间
     } else {
-        maxTime = [[NSDate now] timeIntervalSince1970];
+        maxTime = LONG_MAX;
     }
     return [NSDate dateWithTimeIntervalSince1970:maxTime];
 }
@@ -275,7 +276,7 @@ static const CGFloat kVerticalPadding = 10;
     // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
     if (self.periodIndex+1 < task.periods.count) { //如果有上一个task的话
         NSArray *formerPeriod = task.periods[self.periodIndex+1];
-        minTime = [formerPeriod[1] longValue] + 1; // 至少比前一个task的结束时间多一秒
+        minTime = [formerPeriod[1] longValue]; // 至少等于前一个task的结束时间
     } else {
         minTime = 0;
     }
@@ -288,7 +289,7 @@ static const CGFloat kVerticalPadding = 10;
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     long minTime = 0;
     // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
-    minTime = [task.periods[self.periodIndex][0] longValue] + 1;// 至少比开始的时间多一秒
+    minTime = [task.periods[self.periodIndex][0] longValue] + kMinSeconds;// 至少比开始的时间多一分钟
     return [NSDate dateWithTimeIntervalSince1970:minTime];
 }
 

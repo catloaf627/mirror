@@ -218,7 +218,7 @@ static CGFloat const kDashSpacing = 10;
     
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
         [self.delegate destroyTimeTrackingView];
-        [MirrorStorage stopTask:self.taskModel.taskName];
+        [MirrorStorage stopTask:self.taskModel.taskName at:[NSDate now] periodIndex:0];
         
     }
     if (![[dayFormatter stringFromDate:self.nowTime] isEqualToString:[dayFormatter stringFromDate:self.startTime]]) { // 如果两个时间不在同一天，给startTime一个[日期]的标记
@@ -230,7 +230,7 @@ static CGFloat const kDashSpacing = 10;
 - (void)stopButtonClicked
 {
     [self.delegate destroyTimeTrackingView];
-    [MirrorStorage stopTask:self.taskModel.taskName];
+    [MirrorStorage stopTask:self.taskModel.taskName at:[NSDate now] periodIndex:0];
 }
 
 #pragma mark - Data

@@ -40,9 +40,9 @@ typedef NS_ENUM(NSInteger, TaskSavedType) {
 
 + (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName;
 
-+ (void)startTask:(NSString *)taskName;
++ (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index;
 
-+ (void)stopTask:(NSString *)taskName;
++ (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index;
 
 + (void)stopAllTasksExcept:(NSString *)exceptTaskName;
 
