@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TodayTotalHeaderCell : UICollectionViewCell
 
-@property (nonatomic, strong) id<UpdateCrownDelegate> crownDelegate;
+@property (nonatomic, weak) id<UpdateCrownDelegate> crownDelegate;
 - (void)configWithTasknames:(NSArray<NSString *> *)taskNames periodIndexes:(NSArray *)indexes;
 
 @end

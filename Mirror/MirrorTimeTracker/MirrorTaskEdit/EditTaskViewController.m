@@ -31,11 +31,11 @@ static CGFloat const kHeightRatio = 0.8;
 
 @implementation EditTaskViewController
 
-- (instancetype)initWithTasks:(MirrorDataModel *)task
+- (instancetype)initWithTaskname:(NSString *)taskname
 {
     self = [super init];
     if (self) {
-        self.taskModel = task;
+        self.taskModel = [MirrorStorage getTaskFromDB:taskname];
         self.editTaskNameTextField.text = _taskModel.taskName;
         self.selectedColor = _taskModel.color;
     }

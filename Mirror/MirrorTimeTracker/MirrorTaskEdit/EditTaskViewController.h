@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface EditTaskViewController : UIViewController
 
-- (instancetype)initWithTasks:(MirrorDataModel *)task;
+- (instancetype)initWithTaskname:(NSString *)taskname;
 
 @end
 
