@@ -20,7 +20,6 @@ static CGFloat const kShadowWidth = 5;
 @property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *hintLabel;
-@property (nonatomic, strong) UIButton *editButton;
 @property (nonatomic, assign) BOOL cellIsTwinkling;
 
 @end
@@ -90,12 +89,6 @@ static CGFloat const kShadowWidth = 5;
         make.left.offset(8);
         make.right.offset(-8);
     }];
-    [self.contentView addSubview:self.editButton];
-    [self.editButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.offset(8);
-        make.right.offset(-8);
-        make.width.height.mas_equalTo(20);
-    }];
 }
 
 - (void)p_convertToColor:(MirrorColorType)color
@@ -151,13 +144,6 @@ static CGFloat const kShadowWidth = 5;
     self.hintLabel.hidden = YES;
 }
 
-#pragma mark - Actions
-
-- (void)editTask
-{
-    [self.delegate goToEdit:self.taskModel.taskName];
-}
-
 #pragma mark - Getters
 
 - (UILabel *)taskNameLabel
@@ -184,18 +170,6 @@ static CGFloat const kShadowWidth = 5;
         _hintLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:12];
     }
     return _hintLabel;
-}
-
-- (UIButton *)editButton
-{
-    if (!_editButton) {
-        _editButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"square.and.pencil"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_editButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _editButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_editButton addTarget:self action:@selector(editTask) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _editButton;
 }
 
 @end

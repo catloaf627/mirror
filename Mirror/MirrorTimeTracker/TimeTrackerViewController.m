@@ -27,7 +27,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, EditTaskProtocol, UIViewControllerTransitioningDelegate>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -139,15 +139,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         AddTaskViewController *addVC = [AddTaskViewController new];
         [self.navigationController presentViewController:addVC animated:YES completion:nil];
     } else { // 长按task
-        // gizmo todo
+        EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTaskname:[MirrorDataManager activatedTasksWithAddTask][indexPath.item].taskName];
+                [self.navigationController presentViewController:editVC animated:YES completion:nil];
     }
-}
-
-// 点按编辑
-- (void)goToEdit:(NSString *)taskname
-{
-    EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTaskname:taskname];
-    [self.navigationController presentViewController:editVC animated:YES completion:nil];
 }
 
 #pragma mark - TimeTrackingViewProtocol
@@ -204,7 +198,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     } else {
         TimeTrackerTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configWithModel:taskModel];
-        cell.delegate = self;
         return cell;
     }
 }

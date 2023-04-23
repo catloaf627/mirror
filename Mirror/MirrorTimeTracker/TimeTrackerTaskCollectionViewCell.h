@@ -12,15 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 static CGFloat const kInterspacing = 16;
 
-@protocol EditTaskProtocol <NSObject>
-
-- (void)goToEdit:(NSString *)taskname;
-
-@end
-
 @interface TimeTrackerTaskCollectionViewCell : UICollectionViewCell
-
-@property (nonatomic, weak) UIViewController<EditTaskProtocol> *delegate;
 
 + (NSString *)identifier;
 - (void)configWithModel:(MirrorDataModel *)taskModel;
