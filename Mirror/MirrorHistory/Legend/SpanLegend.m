@@ -164,18 +164,18 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
     long endTime = 0;
     if (self.spanType == SpanTypeDay) {
-        endTime = startTime + 86400 - 1;
+        endTime = startTime + 86400;
     } else if (self.spanType == SpanTypeWeek) {
         NSInteger numberOfDaysInWeek= 7;
-        endTime = startTime + numberOfDaysInWeek*86400 - 1;
+        endTime = startTime + numberOfDaysInWeek*86400;
     } else if (self.spanType == SpanTypeMonth) {
         NSRange rng = [[NSCalendar currentCalendar] rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:[NSDate dateWithTimeIntervalSince1970:startTime]];
         NSInteger numberOfDaysInMonth = rng.length;
-        endTime = startTime + numberOfDaysInMonth*86400 - 1;
+        endTime = startTime + numberOfDaysInMonth*86400;
     } else if (self.spanType == SpanTypeYear) {
         NSRange rng = [[NSCalendar currentCalendar] rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitYear forDate:[NSDate dateWithTimeIntervalSince1970:startTime]];
         NSInteger numberOfDaysIYear = rng.length;
-        endTime = startTime + numberOfDaysIYear*86400 - 1;
+        endTime = startTime + numberOfDaysIYear*86400;
     }
     
     _data = [MirrorDataManager getDataWithStart:startTime end:endTime];

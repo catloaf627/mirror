@@ -185,7 +185,7 @@ static const CGFloat kVerticalPadding = 10;
         _startPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
         _startPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _startPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_startPicker addTarget:self action:@selector(changeStartTime) forControlEvents:UIControlEventValueChanged];
+        [_startPicker addTarget:self action:@selector(changeStartTime) forControlEvents:UIControlEventEditingDidEnd];
     }
     return _startPicker;
 }
@@ -211,7 +211,7 @@ static const CGFloat kVerticalPadding = 10;
         _endPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
         _endPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _endPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_endPicker addTarget:self action:@selector(changeEndTime) forControlEvents:UIControlEventValueChanged];
+        [_endPicker addTarget:self action:@selector(changeEndTime) forControlEvents:UIControlEventEditingDidEnd];
     }
     return _endPicker;
 }

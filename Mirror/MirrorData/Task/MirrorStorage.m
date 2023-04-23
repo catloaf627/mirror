@@ -132,19 +132,19 @@ static NSString *const kMirrorDict = @"mirror_dict";
                 NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
                 endComponent0.hour = 23;
                 endComponent0.minute = 59;
-                long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970];
+                endComponent0.second = 59;
+                long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970] + 1;
                 [latestPeriod addObject:@(round(endTime0))];  // 第一个分段 (存在原处)
                 allPeriods[index] = latestPeriod;
-                long startTimei = endTime0 + 1;
-                long endTimei = startTimei + 86400 -1;
+
+                long startTimei = endTime0;
+                long endTimei = startTimei + 86400;
                 while (endTimei < end) {
-                    NSArray *newPeriod = @[@(startTimei), @(endTimei)]; // 第i个分段（新插入）
-                    [allPeriods insertObject:newPeriod atIndex:index];
+                    [allPeriods insertObject:@[@(startTimei), @(endTimei)] atIndex:index];// 第i个分段（新插入）
                     startTimei = startTimei + 86400;
-                    endTimei = startTimei + 86400 -1;
+                    endTimei = startTimei + 86400;
                 }
-                NSArray *newPeriod = @[@(startTimei), @(endTimei)]; // 最后一个分段（新插入）
-                [allPeriods insertObject:newPeriod atIndex:index];
+                [allPeriods insertObject: @[@(startTimei), @(end)] atIndex:index];// 最后一个分段（新插入）
             }
         } else { // 错误格式或者n秒以下，丢弃这个task
             [allPeriods removeObjectAtIndex:0];
@@ -215,13 +215,16 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task，直接使用start/stop task进行修改。
     MirrorDataModel *task = mirrorDict[taskName];
-    [MirrorStorage deletePeriodWithTaskname:taskName periodIndex:index];
     long oldStartTime = [task.periods[index][0] longValue];
     long oldEndTime = [task.periods[index][1] longValue];
     if (isStartTime) {
+        if (oldStartTime == timestamp) return;
+        [MirrorStorage deletePeriodWithTaskname:taskName periodIndex:index];
         [MirrorStorage startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
         [MirrorStorage stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldEndTime] periodIndex:index];
     } else {
+        if (oldEndTime == timestamp) return;
+        [MirrorStorage deletePeriodWithTaskname:taskName periodIndex:index];
         [MirrorStorage startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldStartTime] periodIndex:index];
         [MirrorStorage stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
     }
@@ -263,7 +266,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (NSMutableDictionary *)retriveMirrorData // 解档
 {
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
-    NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
+    NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class,NSArray.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
     return mirrorDict ?: [NSMutableDictionary new];
 }
 

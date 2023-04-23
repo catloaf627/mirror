@@ -99,7 +99,7 @@
                 if (printDetailsToDebug) NSLog(@"✔️跨越了start time，取后半段");
                 targetTaskIsEmpty = NO;// 跨越了start time，取后半段
                 [targetTask.periods addObject:[@[@(startTime), period[1]] mutableCopy]];
-            } else if (startTime < [period[0] longValue] && [period[1] longValue] < endTime) {
+            } else if (startTime <= [period[0] longValue] && [period[1] longValue] <= endTime) {
                 if (printDetailsToDebug) NSLog(@"✔️完整地发生在start time和end time中间");
                 targetTaskIsEmpty = NO;// 完整地发生在start time和end time中间
                 [targetTask.periods addObject:[@[period[0], period[1]] mutableCopy]];
