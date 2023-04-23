@@ -93,7 +93,7 @@
     components.minute = 0;
     components.second = 0;
     long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    long endTime = startTime + 86400 - 1;
+    long endTime = startTime + 86400;
     return @[@(startTime), @(endTime)];
 }
 

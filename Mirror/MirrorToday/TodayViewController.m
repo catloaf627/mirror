@@ -342,7 +342,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     components.minute = 0;
     components.second = 0;
     long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    long endTime = startTime + 86400 - 1;
+    long endTime = startTime + 86400;
     
     NSArray *allTasks = [MirrorDataManager allTasks];
     for (int i=0; i<allTasks.count; i++) {
