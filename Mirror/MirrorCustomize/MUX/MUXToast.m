@@ -22,9 +22,6 @@
         double latestPeriodInterval = [task.periods[0][1] doubleValue] - [task.periods[0][0] doubleValue];
         hintInfo = [MirrorLanguage mirror_stringWithKey:@"task_has_been_done" with1Placeholder:taskName with2Placeholder:[[NSDateComponentsFormatter new] stringFromTimeInterval:latestPeriodInterval]];
     }
-    if (savedType == TaskSavedTypeSaved24H) {
-        hintInfo = [MirrorLanguage mirror_stringWithKey:@"reached_limited_time" with1Placeholder:taskName];
-    }
     if (savedType == TaskSavedTypeTooShort) {
         hintInfo = [MirrorLanguage mirror_stringWithKey:@"too_short_to_save" with1Placeholder:taskName];
     }

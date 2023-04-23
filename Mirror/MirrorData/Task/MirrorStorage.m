@@ -85,7 +85,8 @@ static NSString *const kMirrorDict = @"mirror_dict";
     MirrorDataModel *task = mirrorDict[taskName];
     // 给task创建一个新的period，并给出这个period的起始时间（now）
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
-    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@(round([[NSDate now] timeIntervalSince1970]))]];
+    long startDate = [[MirrorStorage dateWithoutSeconds:[NSDate now]] timeIntervalSince1970];
+    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@(round(startDate))]];
     [allPeriods insertObject:newPeriod atIndex:0];
     task.periods = allPeriods;
     // 保存更新好的task到本地
@@ -112,9 +113,10 @@ static NSString *const kMirrorDict = @"mirror_dict";
         long length = end - start;
         NSLog(@"%@计时结束 %ld",[UIColor getEmoji:task.color], length);
         if (latestPeriod.count == 1 &&  length >= kMinSeconds) { // 长度为n秒以上开始记录
-            [latestPeriod addObject:@(round([[NSDate now] timeIntervalSince1970]))];
+            long endDate = [[MirrorStorage dateWithoutSeconds:[NSDate now]] timeIntervalSince1970];
+            [latestPeriod addObject:@(round(endDate))];
             allPeriods[0] = latestPeriod;
-            savedType = length >= kMaxSeconds ? TaskSavedTypeSaved24H : TaskSavedTypeSaved;
+            savedType = TaskSavedTypeSaved;
         } else { // 错误格式或者n秒以下，丢弃这个task
             [allPeriods removeObjectAtIndex:0];
             savedType = (length < kMinSeconds && length >= 0) ? TaskSavedTypeTooShort : TaskSavedTypeError;
@@ -277,4 +279,17 @@ static NSString *const kMirrorDict = @"mirror_dict";
     
 }
 
+#pragma mark - Privates
+
++ (NSDate *)dateWithoutSeconds:(NSDate *)date
+{
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:date];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    components.second = 0;
+    NSLog(@"date %@", date);
+    NSDate *dateWithoutSeconds = [gregorian dateFromComponents:components];
+    NSLog(@"dateWithoutSeconds %@", dateWithoutSeconds);
+    return dateWithoutSeconds;
+}
 @end

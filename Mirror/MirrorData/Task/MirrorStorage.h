@@ -19,7 +19,6 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 typedef NS_ENUM(NSInteger, TaskSavedType) {
     TaskSavedTypeNone,
     TaskSavedTypeSaved,
-    TaskSavedTypeSaved24H,
     TaskSavedTypeTooShort,
     TaskSavedTypeError,
 };

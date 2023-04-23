@@ -234,7 +234,7 @@ static const CGFloat kVerticalPadding = 10;
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
     // setup
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
     components.timeZone = [NSTimeZone systemTimeZone];
     // details
     long hour = (long)components.hour;

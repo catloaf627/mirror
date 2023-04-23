@@ -96,7 +96,6 @@
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
     
     // MUXToast
-    [mirrorDict setValue:@[@"[%@] has been lasted more than 24 hours. It was stopped and saved automatically.", @"【%@】时长超过24小时，已自动停止并保存"] forKey:@"reached_limited_time"];
     [mirrorDict setValue:@[@"[%@] not saved", @"【%@】未保存"] forKey:@"too_short_to_save"];
     
     // Edit period
