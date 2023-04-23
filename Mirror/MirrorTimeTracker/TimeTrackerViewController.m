@@ -16,7 +16,6 @@
 #import "EditTaskViewController.h"
 #import "AddTaskViewController.h"
 #import "TimeTrackingView.h"
-#import "TimeTrackingLabel.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
 #import "MUXToast.h"
@@ -115,11 +114,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
     [self.view addGestureRecognizer:edgeRecognizer];
     // 计时状态
-    if ([MirrorSettings appliedImmersiveMode]) {
-        MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
-        if (ongoingTask) {
-            [self openTimeTrackingViewWithTask:ongoingTask];
-        }
+    MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
+    if (ongoingTask) {
+        [self openTimeTrackingViewWithTask:ongoingTask];
     }
 }
 
@@ -182,9 +179,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     } else { // 点击了未开始计时的selectedCell，停止所有其他计时cell，再开始selectedCell的计时
         [MirrorStorage stopAllTasksExcept:selectedModel.taskName];
         [MirrorStorage startTask:selectedModel.taskName at:[NSDate now] periodIndex:0];
-        if ([MirrorSettings appliedImmersiveMode]) {
-            [self openTimeTrackingViewWithTask:selectedModel];
-        }
+        [self openTimeTrackingViewWithTask:selectedModel];
     }
 }
 
@@ -226,17 +221,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)reloadData
 {
-    // 如果有闪烁计时，销毁！
-    for (UIView *viewi in self.collectionView.subviews) {
-        if ([viewi isKindOfClass:TimeTrackerTaskCollectionViewCell.class]) {
-            TimeTrackerTaskCollectionViewCell *cell =  (TimeTrackerTaskCollectionViewCell *)viewi;
-            for (UIView *viewj in cell.contentView.subviews) {
-                if ([viewj isKindOfClass:TimeTrackingLabel.class]) {
-                    [viewj removeFromSuperview];
-                }
-            }
-        }
-    }
     // 如果有全屏计时，销毁！
     for (UIView *view in self.view.subviews) {
         if ([view isKindOfClass:TimeTrackingView.class]) {

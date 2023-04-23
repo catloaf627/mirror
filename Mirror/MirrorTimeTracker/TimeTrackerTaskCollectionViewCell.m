@@ -9,18 +9,16 @@
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
-#import "TimeTrackingLabel.h"
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
 
 static CGFloat const kShadowWidth = 5;
 
-@interface TimeTrackerTaskCollectionViewCell () <TimeTrackingLabelProtocol>
+@interface TimeTrackerTaskCollectionViewCell ()
 
 @property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *hintLabel;
-@property (nonatomic, assign) BOOL cellIsTwinkling;
 
 @end
 
@@ -39,26 +37,6 @@ static CGFloat const kShadowWidth = 5;
     self.contentView.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
 
     [self p_setupUI];
-    if (!taskModel.isOngoing || [MirrorSettings appliedImmersiveMode]) { // stop animation
-        self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color]; // 瞬间变回原色
-        [self destroyTimeTrackingLabel];
-    } else { // start animation
-        self.contentView.backgroundColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:self.taskModel.color]]; // 瞬间变成pulse色
-        if (!_cellIsTwinkling)[self p_convertToColor:self.taskModel.color]; // 开始闪烁
-        [self createTimeTrackingLabelWithTask:taskModel];
-    }
-}
-
-- (void)willMoveToSuperview:(UIView *)newSuperview // cell被游离，销毁timer
-{
-    [super willMoveToSuperview:newSuperview];
-    if (!newSuperview) {
-        for (UIView *view in self.contentView.subviews) {
-            if ([view isKindOfClass:TimeTrackingLabel.class]) {
-                [view removeFromSuperview];
-            }
-        }
-    }
 }
 
 - (void)p_setupUI
@@ -89,59 +67,6 @@ static CGFloat const kShadowWidth = 5;
         make.left.offset(8);
         make.right.offset(-8);
     }];
-}
-
-- (void)p_convertToColor:(MirrorColorType)color
-{
-    _cellIsTwinkling = YES;
-    [UIView animateKeyframesWithDuration:2.0  delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-        self.contentView.backgroundColor = [UIColor mirrorColorNamed:color];
-    } completion:^(BOOL finished) {
-        if (!self.taskModel.isOngoing || [MirrorSettings appliedImmersiveMode]) { // stop animation的条件对齐，不会因为view disappear就停止动画。
-            _cellIsTwinkling = NO;
-            return;
-        }
-        if (CGColorEqualToColor(self.contentView.backgroundColor.CGColor, [UIColor mirrorColorNamed:self.taskModel.color].CGColor)) {
-            [self p_convertToColor:[UIColor mirror_getPulseColorType:self.taskModel.color]];
-        } else {
-            [self p_convertToColor:self.taskModel.color];
-        }
-    }];
-}
-
-#pragma mark - TimeTrackingLabelProtocol
-
-- (void)destroyTimeTrackingLabel
-{
-    for (UIView *view in self.contentView.subviews) {
-        if ([view isKindOfClass:TimeTrackingLabel.class]) {
-            [view removeFromSuperview];
-        }
-    }
-    self.hintLabel.hidden = NO;
-}
-
-- (void)createTimeTrackingLabelWithTask:(MirrorDataModel *)task
-{
-    if (!task.isOngoing) return;
-    if ([MirrorSettings appliedImmersiveMode]) return;
-    TimeTrackingLabel *timeTrackingLabel = [[TimeTrackingLabel alloc] initWithTask:self.taskModel.taskName];
-    timeTrackingLabel.delegate = self;
-    // 避免复用导致的重复添加
-    for (UIView *view in self.contentView.subviews) {
-        if ([view isKindOfClass:TimeTrackingLabel.class]) {
-            [view removeFromSuperview];
-        }
-    }
-    // 和hintLabel布局一致
-    [self.contentView addSubview:timeTrackingLabel];
-    [timeTrackingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.taskNameLabel.mas_bottom).offset(8);
-        make.centerX.mas_equalTo(self);
-        make.left.offset(8);
-        make.right.offset(-8);
-    }];
-    self.hintLabel.hidden = YES;
 }
 
 #pragma mark - Getters

@@ -28,8 +28,6 @@
     [mirrorDict setValue:@[@"Apply darkmode", @"启用深色模式"] forKey:@"apply_darkmode"];
     // Profile cell - language
     [mirrorDict setValue:@[@"Apply Chinese", @"使用中文"] forKey:@"apply_chinese"];
-    // Profile cell - immersive mode
-    [mirrorDict setValue:@[@"Apply immersive mode", @"启用沉浸模式"] forKey:@"apply_immersive_mode"];
     // Profile cell - week starts on Monday
     [mirrorDict setValue:@[@"Week starts on Monday", @"将周一作为一周的第一天"] forKey:@"week_starts_on_Monday"];
     // Profile edit cell - hint

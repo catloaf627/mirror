@@ -19,10 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)appliedChinese;
 + (void)switchLanguage;
 
-// Timer mode
-+ (BOOL)appliedImmersiveMode;
-+ (void)switchTimerMode;
-
 // Week starts on
 + (BOOL)appliedWeekStarsOnMonday;
 + (void)switchWeekStartsOn;

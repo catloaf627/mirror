@@ -13,7 +13,6 @@
 #import "AvatarCollectionViewCell.h"
 #import "ThemeCollectionViewCell.h"
 #import "LanguageCollectionViewCell.h"
-#import "ImmersiveCollectionViewCell.h"
 #import "WeekStartsOnCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
@@ -26,7 +25,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeAvatar,
     MirrorSettingTypeTheme,
     MirrorSettingTypeLanguage,
-    MirrorSettingTypeImmersive,
     MirrorSettingTypeWeekStartsOn,
 };
 
@@ -152,8 +150,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         // Do nothing (use toggle to switch theme)
     } else if (indexPath.item == MirrorSettingTypeLanguage) {
         // Do nothing (use toggle to switch language)
-    } else if (indexPath.item == MirrorSettingTypeImmersive) {
-        // Do nothing (use toggle to switch language)
     } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
         // Do nothing (use toggle to switch weekStartsOn)
     }
@@ -175,10 +171,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         LanguageCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[LanguageCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
-    } else if (indexPath.item == MirrorSettingTypeImmersive) {
-        ImmersiveCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ImmersiveCollectionViewCell identifier] forIndexPath:indexPath];
-        [cell configCell];
-        return cell;
     } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
         WeekStartsOnCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
@@ -197,8 +189,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         case MirrorSettingTypeTheme:
             return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
         case MirrorSettingTypeLanguage:
-            return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
-        case MirrorSettingTypeImmersive:
             return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
         case MirrorSettingTypeWeekStartsOn:
             return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
@@ -235,7 +225,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[AvatarCollectionViewCell class] forCellWithReuseIdentifier:[AvatarCollectionViewCell identifier]];
         [_collectionView registerClass:[ThemeCollectionViewCell class] forCellWithReuseIdentifier:[ThemeCollectionViewCell identifier]];
         [_collectionView registerClass:[LanguageCollectionViewCell class] forCellWithReuseIdentifier:[LanguageCollectionViewCell identifier]];
-        [_collectionView registerClass:[ImmersiveCollectionViewCell class] forCellWithReuseIdentifier:[ImmersiveCollectionViewCell identifier]];
         [_collectionView registerClass:[WeekStartsOnCollectionViewCell class] forCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier]];
         
     }
@@ -245,7 +234,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeImmersive), @(MirrorSettingTypeWeekStartsOn)];
+        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn)];
     }
     return _dataSource;
 }

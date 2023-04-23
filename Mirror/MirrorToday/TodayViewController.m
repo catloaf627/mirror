@@ -89,6 +89,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
     [self.pieChart updateTodayWithWidth:80];
+    [self updateDataSource];
     [self.collectionView reloadData];
 }
 
@@ -176,7 +177,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    [self updateDataSource];
     return self.tasknames.count;
 }
 

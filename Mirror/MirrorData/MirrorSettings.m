@@ -40,21 +40,6 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchLanguageNotification object:nil];
 }
 
-+ (BOOL)appliedImmersiveMode
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredImmersiveMode"];
-}
-
-+ (void)switchTimerMode
-{
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredImmersiveMode"]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredImmersiveMode"];
-    } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredImmersiveMode"];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchTimerModeNotification object:nil];
-}
-
 + (BOOL)appliedWeekStarsOnMonday
 {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredWeekStartsOnMonday"];
