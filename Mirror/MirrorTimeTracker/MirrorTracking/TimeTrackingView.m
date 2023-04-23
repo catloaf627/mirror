@@ -49,7 +49,7 @@ static CGFloat const kDashSpacing = 10;
 
 // Data
 
-@property (nonatomic, strong) MirrorDataModel *taskModel; //通过taskname在本地db取值
+@property (nonatomic, strong) NSString *taskName;
 @property (nonatomic, strong) NSDate *nowTime;
 @property (nonatomic, strong) NSDate *startTime;
 @property (nonatomic, assign) NSTimeInterval timeInterval;
@@ -70,7 +70,7 @@ static CGFloat const kDashSpacing = 10;
     self = [super init];
     if (self) {
         [MirrorStorage startTask:taskName at:[NSDate now] periodIndex:0];
-        self.taskModel = [MirrorStorage getTaskFromDB:taskName];
+        self.taskName = taskName;
         [self p_setupUI];
     }
     return self;
@@ -93,7 +93,7 @@ static CGFloat const kDashSpacing = 10;
 
 - (void)p_setupUI
 {
-    self.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color];
+    self.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:self.taskName].color];
     [self addSubview:self.taskNameLabel];
     [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
@@ -215,11 +215,11 @@ static CGFloat const kDashSpacing = 10;
     self.timeIntervalLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:self.timeInterval];
     
     BOOL printTimeStamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
-    NSLog(@"%@全屏计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:self.taskModel.color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
+    NSLog(@"%@全屏计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:[MirrorStorage getTaskFromDB:self.taskName].color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
         [self.delegate destroyTimeTrackingView];
-        [MirrorStorage stopTask:self.taskModel.taskName at:[NSDate now] periodIndex:0];
+        [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
         
     }
     if (![[dayFormatter stringFromDate:self.nowTime] isEqualToString:[dayFormatter stringFromDate:self.startTime]]) { // 如果两个时间不在同一天，给startTime一个[日期]的标记
@@ -231,7 +231,7 @@ static CGFloat const kDashSpacing = 10;
 - (void)stopButtonClicked
 {
     [self.delegate destroyTimeTrackingView];
-    [MirrorStorage stopTask:self.taskModel.taskName at:[NSDate now] periodIndex:0];
+    [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
 }
 
 #pragma mark - Data
@@ -244,14 +244,13 @@ static CGFloat const kDashSpacing = 10;
 - (NSDate *)startTime
 {
     long startTimestamp = 0;
-    NSArray *periods = self.taskModel.periods;
+    NSArray *periods = [MirrorStorage getTaskFromDB:self.taskName].periods;
     if (periods.count > 0) {
         NSArray *latestPeriod = periods[0];
         if (latestPeriod.count == 1) { // the latest period is ongoing
             startTimestamp = [latestPeriod[0] longValue];
         }
     }
-    //     使用 po round(([NSDate now]timeIntervalSince1970] - (kMaxSeconds-20))) 的结果替换下面的startTimestamp可以在20秒内看到超时自动保存的效果
     NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimestamp];
     return startTime;
 }
@@ -269,7 +268,7 @@ static CGFloat const kDashSpacing = 10;
         _taskNameLabel = [UILabel new];
         _taskNameLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _taskNameLabel.font = [UIFont fontWithName:kHintFont size:kTaskNameSize];
-        _taskNameLabel.text = self.taskModel.taskName;
+        _taskNameLabel.text = self.taskName;
         _taskNameLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _taskNameLabel;
