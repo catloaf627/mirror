@@ -228,20 +228,21 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)crownAnimation
 {
+    __weak typeof(self) weakSelf = self;
     [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy] impactOccurred];
     [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-        self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4-0.2); //左
+        weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4-0.2); //左
     } completion:^(BOOL finished) {
         [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-            self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4+0.2); //右
+            weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4+0.2); //右
         } completion:^(BOOL finished) {
             [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-                self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4-0.2); //左
+                weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4-0.2); //左
             } completion:^(BOOL finished) {
                 [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-                    self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4+0.2); //右
+                    weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4+0.2); //右
                 } completion:^(BOOL finished) {
-                    self.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4); //恢复
+                    weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4); //恢复
                 }];
             }];
         }];
