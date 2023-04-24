@@ -5,7 +5,7 @@
 //  Created by Yuqing Wang on 2022/9/25.
 //
 
-#import "TimeTrackerViewController.h"
+#import "TimeViewController.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "TimeTrackerTaskCollectionViewCell.h"
@@ -27,7 +27,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
+@interface TimeViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -37,7 +37,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 @end
 
-@implementation TimeTrackerViewController
+@implementation TimeViewController
 
 - (instancetype)init
 {

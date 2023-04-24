@@ -7,7 +7,7 @@
 
 #import "MirrorTabsManager.h"
 
-#import "TimeTrackerViewController.h"
+#import "TimeViewController.h"
 #import "TodayViewController.h"
 #import "HistoryViewController.h"
 
@@ -35,7 +35,7 @@
 - (UITabBarController *)mirrorTabController
 {
     if (!_mirrorTabVC) {
-        TimeTrackerViewController *timeTrackerVC = [[TimeTrackerViewController alloc]init];
+        TimeViewController *timeTrackerVC = [[TimeViewController alloc]init];
         TodayViewController *todayVC = [[TodayViewController alloc]init];
         HistoryViewController *historyVC = [[HistoryViewController alloc] init];
         //create a tabbar controller

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 // ❗️❗️❗️这里的数据结构是数组结构，因为涉及到顺序的问题（与之相对的是MirrorStorage使用的是词典结构，因为主要用于寻找或者编辑某个task）
 @interface MirrorDataManager : NSObject
 
-+ (NSMutableArray<MirrorDataModel *> *)activatedTasksWithAddTask; // 所有没被archived的tasks，如果数量不足要加一个add task假model（TimeTrackerViewController专用）
++ (NSMutableArray<MirrorDataModel *> *)activatedTasksWithAddTask; // 所有没被archived的tasks，如果数量不足要加一个add task假model（TimeViewController专用）
 + (NSMutableArray<MirrorDataModel *> *)activatedTasks; // 所有没被archived的tasks
 + (NSMutableArray<MirrorDataModel *> *)archivedTasks; // 所有被archived了的tasks
 
