@@ -60,6 +60,8 @@ typedef NS_ENUM(NSInteger, TaskSavedType) {
 
 + (void)printTask:(MirrorDataModel *)task info:(NSString *)info;
 
++ (void)removeDirtyData;
+
 @end
 
 NS_ASSUME_NONNULL_END

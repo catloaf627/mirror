@@ -168,7 +168,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)presentCountingPageWithTaskName:(NSString *)taskName
 {
+    // 用户正式开始计时的瞬间。
     [self openTimeTrackingViewWithTaskName:taskName];
+    [MirrorStorage startTask:taskName at:[NSDate now] periodIndex:0]; // 这行不能写在time tracking view的init里，冷启后不会重新start！
 }
 
 #pragma mark - Collection view delegate

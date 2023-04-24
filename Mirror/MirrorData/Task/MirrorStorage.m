@@ -239,6 +239,32 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 #pragma mark - Local database
 
++ (void)removeDirtyData
+{
+    NSMutableDictionary *dict = [MirrorStorage retriveMirrorData];
+    for (id taskname in dict.allKeys) {
+        MirrorDataModel *task = dict[taskname];
+        NSMutableArray <NSMutableArray *> *cleanPeriods = [NSMutableArray new];
+        for (int i=0; i<task.periods.count; i++) {
+            NSMutableArray *period = task.periods[i];
+            if (i != 0 && period.count != 2) { // 后面的period有问题
+                continue;
+            } else if (i == 0 && (period.count != 1 || period.count != 2)) { // 第一个period有问题
+                continue;
+            } else if ([[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:[NSDate dateWithTimeIntervalSince1970:[period[0] longValue]]].second != 0) { // 有非0秒的数据被存了进去
+                continue;
+            } else if (period.count > 1 && [[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:[NSDate dateWithTimeIntervalSince1970:[period[1] longValue]]].second != 0) {  // 有非0秒的数据被存了进去
+                continue;
+            } else {
+                [cleanPeriods addObject:period];
+            }
+        }
+        task.periods = cleanPeriods;
+        [dict setValue:task forKey:taskname];
+    }
+    [MirrorStorage saveMirrorData:dict];
+}
+
 + (void)saveMirrorData:(NSMutableDictionary *)mirrorDict // 归档
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];

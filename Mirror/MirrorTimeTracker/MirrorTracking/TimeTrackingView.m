@@ -47,6 +47,8 @@ static CGFloat const kDashSpacing = 10;
 
 @property (nonatomic, strong) UILabel *differentDayLabel;
 
+@property (nonatomic, strong) UIButton *stopButton;
+
 // Data
 
 @property (nonatomic, strong) NSString *taskName;
@@ -69,7 +71,6 @@ static CGFloat const kDashSpacing = 10;
 {
     self = [super init];
     if (self) {
-        [MirrorStorage startTask:taskName at:[NSDate now] periodIndex:0];
         self.taskName = taskName;
         [self p_setupUI];
     }
@@ -175,9 +176,13 @@ static CGFloat const kDashSpacing = 10;
     }];
     self.differentDayLabel.hidden = YES;
     
-    // 轻点停止计时
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(stopButtonClicked)];
-    [self addGestureRecognizer:tapRecognizer];
+    [self addSubview:self.stopButton];
+    [self.stopButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.offset(0);
+        make.top.mas_equalTo(self.nowTimeLabelss.mas_bottom).offset(50);
+        make.height.mas_equalTo(50);
+        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4); // 和TimeEditingVC 的startbutton保持一个size
+    }];
     
     __weak typeof(self) weakSelf = self;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)1.0f repeats:YES block:^(NSTimer * _Nonnull timer) {
@@ -214,6 +219,14 @@ static CGFloat const kDashSpacing = 10;
     // update time interval
     self.timeIntervalLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:self.timeInterval];
     
+    // udpate stop button text
+    if (round(self.timeInterval) >= kMinSeconds) {
+        [self.stopButton setTitle:[MirrorLanguage mirror_stringWithKey:@"stop"] forState:UIControlStateNormal];
+    } else {
+        [self.stopButton setTitle:[MirrorLanguage mirror_stringWithKey:@"give_up"] forState:UIControlStateNormal];
+    }
+    
+    
     BOOL printTimeStamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
     NSLog(@"%@全屏计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:[MirrorStorage getTaskFromDB:self.taskName].color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
@@ -231,7 +244,11 @@ static CGFloat const kDashSpacing = 10;
 - (void)stopButtonClicked
 {
     [self.delegate destroyTimeTrackingView];
-    [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
+    if (round(self.timeInterval) >= kMinSeconds) {
+        [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
+    } else {
+        [MirrorStorage deletePeriodWithTaskname:self.taskName periodIndex:0];
+    }
 }
 
 #pragma mark - Data
@@ -429,6 +446,22 @@ static CGFloat const kDashSpacing = 10;
         _differentDayLabel.layer.masksToBounds = YES;
     }
     return _differentDayLabel;
+}
+
+- (UIButton *)stopButton
+{
+    if (!_stopButton) {
+        _stopButton = [UIButton new];
+        [_stopButton setTitle:[MirrorLanguage mirror_stringWithKey:@"give_up"] forState:UIControlStateNormal];
+        _stopButton.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_stopButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeBackground] forState:UIControlStateNormal];
+        _stopButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+        _stopButton.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeText].CGColor;
+        _stopButton.layer.borderWidth = 1;
+        _stopButton.layer.cornerRadius = 12;
+        [_stopButton addTarget:self action:@selector(stopButtonClicked) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _stopButton;
 }
 
 @end
