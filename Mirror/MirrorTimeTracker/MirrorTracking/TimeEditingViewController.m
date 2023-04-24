@@ -160,7 +160,7 @@
 
 - (void)startCounting
 {
-    [self.presentCountingPageDelegate presentCountingPageWithTaskName:self.taskName];
+    [MirrorStorage startTask:self.taskName at:[NSDate now] periodIndex:0];
     [self dismiss];
 }
 

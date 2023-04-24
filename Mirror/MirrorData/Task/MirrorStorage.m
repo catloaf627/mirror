@@ -225,19 +225,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
     return task;
 }
 
-+ (MirrorDataModel *)getOngoingTaskFromDB
-{
-    NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
-    for (id taskName in tasks.allKeys) {
-        MirrorDataModel *task = tasks[taskName];
-        if (task.isOngoing) {
-//            [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"-------Getting ongoing task-------"];
-            return task;
-        }
-    }
-    return nil;
-}
-
 #pragma mark - Local database
 
 + (void)removeDirtyData

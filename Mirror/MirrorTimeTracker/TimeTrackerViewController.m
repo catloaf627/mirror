@@ -27,7 +27,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PresentCountingPageProtocol, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -114,11 +114,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     edgeRecognizer.edges = UIRectEdgeLeft;
     [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
     [self.view addGestureRecognizer:edgeRecognizer];
-    // 计时状态
-    MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
-    if (ongoingTask) {
-        [self openTimeTrackingViewWithTaskName:ongoingTask.taskName];
-    }
 }
 
 #pragma mark - Actions
@@ -144,6 +139,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)openTimeTrackingViewWithTaskName:(NSString *)taskName
 {
+    for (UIView *view in self.view.subviews) {
+        if ([view isKindOfClass:TimeTrackingView.class]) {
+            [view removeFromSuperview];
+        }
+    }
     TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTaskName:taskName];
     timeTrackingView.delegate = self;
     [self.view addSubview:timeTrackingView];
@@ -161,15 +161,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
             [view removeFromSuperview];
         }
     }
-}
-
-#pragma mark - PresentCountingPageProtocol
-
-- (void)presentCountingPageWithTaskName:(NSString *)taskName
-{
-    // 用户正式开始计时的瞬间。
-    [self openTimeTrackingViewWithTaskName:taskName];
-    [MirrorStorage startTask:taskName at:[NSDate now] periodIndex:0]; // 这行不能写在time tracking view的init里，冷启后不会重新start！
 }
 
 #pragma mark - Collection view delegate
@@ -190,7 +181,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         self.selectedCellFrame = CGRectMake([self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.origin.x + self.collectionView.frame.origin.x, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.origin.y + self.collectionView.frame.origin.y, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.size.width, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.size.height);
         TimeEditingViewController *cellVC = [[TimeEditingViewController alloc] initWithTaskName:selectedModel.taskName];
         cellVC.transitioningDelegate = self; // 动画
-        cellVC.presentCountingPageDelegate = self; // present counting page
         cellVC.modalPresentationStyle = UIModalPresentationCustom;
         cellVC.cellFrame = self.selectedCellFrame;
         [self presentViewController:cellVC animated:YES completion:nil];
@@ -200,6 +190,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MirrorDataModel *taskModel = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
+    if (taskModel.isOngoing) {
+        [self openTimeTrackingViewWithTaskName:taskModel.taskName];
+    }
     if (taskModel.isAddTaskModel) {
         TimeTrackerAddTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier] forIndexPath:indexPath];
         [cell setupAddTaskCell];
