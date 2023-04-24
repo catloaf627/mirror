@@ -33,6 +33,7 @@
 		4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */; };
 		4A88211929F2A2B8009E422C /* TodayTotalHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211829F2A2B8009E422C /* TodayTotalHeaderCell.m */; };
 		4A88211C29F4A08D009E422C /* TaskTotalHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211B29F4A08D009E422C /* TaskTotalHeaderCell.m */; };
+		4A88212629F5E4F7009E422C /* TimeEditingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88212529F5E4F7009E422C /* TimeEditingView.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* LeftAnimation.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
@@ -104,6 +105,8 @@
 		4A88211829F2A2B8009E422C /* TodayTotalHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayTotalHeaderCell.m; sourceTree = "<group>"; };
 		4A88211A29F4A08D009E422C /* TaskTotalHeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskTotalHeaderCell.h; sourceTree = "<group>"; };
 		4A88211B29F4A08D009E422C /* TaskTotalHeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskTotalHeaderCell.m; sourceTree = "<group>"; };
+		4A88212429F5E4F7009E422C /* TimeEditingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeEditingView.h; sourceTree = "<group>"; };
+		4A88212529F5E4F7009E422C /* TimeEditingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeEditingView.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4ACB422C29EEA411005EECC4 /* LeftAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftAnimation.h; sourceTree = "<group>"; };
@@ -172,6 +175,8 @@
 		4A083B8C2904AA69002B91EB /* MirrorTracking */ = {
 			isa = PBXGroup;
 			children = (
+				4A88212429F5E4F7009E422C /* TimeEditingView.h */,
+				4A88212529F5E4F7009E422C /* TimeEditingView.m */,
 				4A083B8D2904AA97002B91EB /* TimeTrackingView.h */,
 				4A083B8E2904AA97002B91EB /* TimeTrackingView.m */,
 			);
@@ -582,6 +587,7 @@
 				4A0D40FC29EFE6BD00F13EAE /* HistoryViewController.m in Sources */,
 				4A406C112906FC00001E83A1 /* ToggleCollectionViewCell.m in Sources */,
 				4AE4171F28DF6155008A6A18 /* SettingsViewController.m in Sources */,
+				4A88212629F5E4F7009E422C /* TimeEditingView.m in Sources */,
 				4A88211929F2A2B8009E422C /* TodayTotalHeaderCell.m in Sources */,
 				4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */,
 				4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */,

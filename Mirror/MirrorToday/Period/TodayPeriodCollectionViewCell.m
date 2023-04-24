@@ -230,21 +230,6 @@ static const CGFloat kVerticalPadding = 10;
 
 #pragma mark - Privates
 
-- (NSString *)timeFromTimestamp:(long)timestamp
-{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
-    // setup
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    long hour = (long)components.hour;
-    long minute = (long)components.minute;
-    long second = (long)components.second;
-
-    return [NSString stringWithFormat: @"%ld:%ld:%ld", hour, minute, second];
-}
-
 - (NSDate *)startMaxDate
 {
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];

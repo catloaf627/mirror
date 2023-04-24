@@ -16,6 +16,7 @@
 #import "EditTaskViewController.h"
 #import "AddTaskViewController.h"
 #import "TimeTrackingView.h"
+#import "TimeEditingView.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
 #import "MUXToast.h"
@@ -26,7 +27,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, TimeEditingViewProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -115,7 +116,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // 计时状态
     MirrorDataModel *ongoingTask = [MirrorStorage getOngoingTaskFromDB];
     if (ongoingTask) {
-        [self openTimeTrackingViewWithTask:ongoingTask];
+        [self openTimeTrackingViewWithTaskName:ongoingTask.taskName];
     }
 }
 
@@ -140,6 +141,26 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
 }
 
+- (void)openTimeEditingViewWithTaskName:(NSString *)taskName
+{
+    TimeEditingView *timeEditingView = [[TimeEditingView alloc] initWithTaskName:taskName];
+    [self.view addSubview:timeEditingView];
+    timeEditingView.delegate = self;
+    [timeEditingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.offset(0);
+    }];
+}
+
+- (void)openTimeTrackingViewWithTaskName:(NSString *)taskName
+{
+    TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTaskName:taskName];
+    timeTrackingView.delegate = self;
+    [self.view addSubview:timeTrackingView];
+    [timeTrackingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.offset(0);
+    }];
+}
+
 #pragma mark - TimeTrackingViewProtocol
 
 - (void)destroyTimeTrackingView
@@ -151,15 +172,17 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
 }
 
-- (void)openTimeTrackingViewWithTask:(MirrorDataModel *)task
+#pragma mark - TimeEditingViewProtocol
+
+- (void)destroyTimeEditingView
 {
-    TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTaskName:task.taskName];
-    timeTrackingView.delegate = self;
-    [self.view addSubview:timeTrackingView];
-    [timeTrackingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.bottom.offset(0);
-    }];
+    for (UIView *view in self.view.subviews) {
+        if ([view isKindOfClass:TimeEditingView.class]) {
+            [view removeFromSuperview];
+        }
+    }
 }
+
 
 # pragma mark - Collection view delegate
 
@@ -175,8 +198,8 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // 点击了task model
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，如果有这种情况就是出bug了！
         [MirrorStorage stopTask:selectedModel.taskName at:[NSDate now] periodIndex:0];
-    } else { // 点击了未开始计时的selectedCell，开始selectedCell的计时
-        [self openTimeTrackingViewWithTask:selectedModel];
+    } else { // 点击了未开始计时的selectedCell，打开选择页面：直接编辑or开始计时
+        [self openTimeEditingViewWithTaskName:selectedModel.taskName];
     }
 }
 
