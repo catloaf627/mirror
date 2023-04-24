@@ -15,7 +15,7 @@
 #import "MirrorTabsManager.h"
 #import "EditTaskViewController.h"
 #import "AddTaskViewController.h"
-#import "TimeTrackingView.h"
+#import "TimeTrackingViewController.h"
 #import "TimeEditingViewController.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
@@ -27,7 +27,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
+@interface TimeViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -137,31 +137,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
 }
 
-- (void)openTimeTrackingViewWithTaskName:(NSString *)taskName
-{
-    for (UIView *view in self.view.subviews) {
-        if ([view isKindOfClass:TimeTrackingView.class]) {
-            [view removeFromSuperview];
-        }
-    }
-    TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTaskName:taskName];
-    timeTrackingView.delegate = self;
-    [self.view addSubview:timeTrackingView];
-    [timeTrackingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.bottom.offset(0);
-    }];
-}
-
-#pragma mark - TimeTrackingViewProtocol
-
-- (void)destroyTimeTrackingView
-{
-    for (UIView *view in self.view.subviews) {
-        if ([view isKindOfClass:TimeTrackingView.class]) {
-            [view removeFromSuperview];
-        }
-    }
-}
 
 #pragma mark - Collection view delegate
 
@@ -191,7 +166,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 {
     MirrorDataModel *taskModel = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
     if (taskModel.isOngoing) {
-        [self openTimeTrackingViewWithTaskName:taskModel.taskName];
+        TimeTrackingViewController * countingVC = [[TimeTrackingViewController alloc] initWithTaskName:taskModel.taskName];
+        countingVC.transitioningDelegate = self;
+        countingVC.modalPresentationStyle = UIModalPresentationCustom;
+        countingVC.cellFrame = self.selectedCellFrame;
+        [self presentViewController:countingVC animated:YES completion:nil];
     }
     if (taskModel.isAddTaskModel) {
         TimeTrackerAddTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier] forIndexPath:indexPath];
@@ -228,12 +207,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)reloadData
 {
-    // 如果有全屏计时，销毁！
-    for (UIView *view in self.view.subviews) {
-        if ([view isKindOfClass:TimeTrackingView.class]) {
-            [view removeFromSuperview];
-        }
-    }
     [self.collectionView reloadData];
 }
 
@@ -311,11 +284,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-    if ([presented isKindOfClass:SettingsViewController.class]) {
+    if ([presented isKindOfClass:SettingsViewController.class]) { // Settings
         LeftAnimation *animation = [LeftAnimation new];
         animation.isPresent = YES;
         return animation;
-    } else {
+    } else { // Time editing / Time tracking
         CellAnimation *animation = [CellAnimation new];
         animation.isPresent = YES;
         animation.cellFrame = self.selectedCellFrame;

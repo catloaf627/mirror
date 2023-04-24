@@ -51,6 +51,14 @@
     [self p_setupUI];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    for (UIView *subview in self.view.subviews) {
+        subview.hidden = YES;
+    }
+}
+
 - (void)p_setupUI
 {
     self.view.clipsToBounds = YES;
@@ -193,9 +201,6 @@
 
 - (void)dismiss
 {
-    for (UIView *subview in self.view.subviews) {
-        subview.hidden = YES;
-    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

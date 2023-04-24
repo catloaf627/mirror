@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		015564E428E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */; };
-		4A083B8F2904AA97002B91EB /* TimeTrackingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A083B8E2904AA97002B91EB /* TimeTrackingView.m */; };
 		4A099FA729DCFE3C002683A1 /* MirrorDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FA629DCFE3C002683A1 /* MirrorDataManager.m */; };
 		4A099FAA29DCFE54002683A1 /* MirrorDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FA929DCFE54002683A1 /* MirrorDataModel.m */; };
 		4A099FAE29DD57AE002683A1 /* MirrorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FAD29DD57AE002683A1 /* MirrorTool.m */; };
@@ -34,6 +33,7 @@
 		4A88211C29F4A08D009E422C /* TaskTotalHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211B29F4A08D009E422C /* TaskTotalHeaderCell.m */; };
 		4A88212929F6035E009E422C /* CellAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88212829F6035E009E422C /* CellAnimation.m */; };
 		4A88212C29F6066A009E422C /* TimeEditingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88212B29F6066A009E422C /* TimeEditingViewController.m */; };
+		4A88212F29F671F7009E422C /* TimeTrackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88212E29F671F7009E422C /* TimeTrackingViewController.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* LeftAnimation.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
@@ -55,8 +55,6 @@
 /* Begin PBXFileReference section */
 		015564E228E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerTaskCollectionViewCell.h; sourceTree = "<group>"; };
 		015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerTaskCollectionViewCell.m; sourceTree = "<group>"; };
-		4A083B8D2904AA97002B91EB /* TimeTrackingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackingView.h; sourceTree = "<group>"; };
-		4A083B8E2904AA97002B91EB /* TimeTrackingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackingView.m; sourceTree = "<group>"; };
 		4A099FA529DCFE3C002683A1 /* MirrorDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorDataManager.h; sourceTree = "<group>"; };
 		4A099FA629DCFE3C002683A1 /* MirrorDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorDataManager.m; sourceTree = "<group>"; };
 		4A099FA829DCFE54002683A1 /* MirrorDataModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorDataModel.h; sourceTree = "<group>"; };
@@ -107,6 +105,8 @@
 		4A88212829F6035E009E422C /* CellAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CellAnimation.m; sourceTree = "<group>"; };
 		4A88212A29F6066A009E422C /* TimeEditingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeEditingViewController.h; sourceTree = "<group>"; };
 		4A88212B29F6066A009E422C /* TimeEditingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeEditingViewController.m; sourceTree = "<group>"; };
+		4A88212D29F671F7009E422C /* TimeTrackingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackingViewController.h; sourceTree = "<group>"; };
+		4A88212E29F671F7009E422C /* TimeTrackingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackingViewController.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4ACB422C29EEA411005EECC4 /* LeftAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftAnimation.h; sourceTree = "<group>"; };
@@ -168,8 +168,8 @@
 			children = (
 				4A88212A29F6066A009E422C /* TimeEditingViewController.h */,
 				4A88212B29F6066A009E422C /* TimeEditingViewController.m */,
-				4A083B8D2904AA97002B91EB /* TimeTrackingView.h */,
-				4A083B8E2904AA97002B91EB /* TimeTrackingView.m */,
+				4A88212D29F671F7009E422C /* TimeTrackingViewController.h */,
+				4A88212E29F671F7009E422C /* TimeTrackingViewController.m */,
 			);
 			path = MirrorTracking;
 			sourceTree = "<group>";
@@ -572,6 +572,7 @@
 				4A0D410229F13C5300F13EAE /* SpanLegend.m in Sources */,
 				4A37369A29E3AD8700187280 /* MirrorSettings.m in Sources */,
 				4A37369729E2BD3C00187280 /* SliceLayer.m in Sources */,
+				4A88212F29F671F7009E422C /* TimeTrackingViewController.m in Sources */,
 				4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */,
 				4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */,
 				4A0D40FF29F1269700F13EAE /* SpanHistogram.m in Sources */,
@@ -590,7 +591,6 @@
 				4A099FAA29DCFE54002683A1 /* MirrorDataModel.m in Sources */,
 				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,
 				4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */,
-				4A083B8F2904AA97002B91EB /* TimeTrackingView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,11 +1,11 @@
 //
-//  TimeTrackingView.m
+//  TimeTrackingViewController.m
 //  Mirror
 //
-//  Created by Yuqing Wang on 2022/10/22.
+//  Created by Yuqing Wang on 2023/4/24.
 //
 
-#import "TimeTrackingView.h"
+#import "TimeTrackingViewController.h"
 #import "MirrorDataModel.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
@@ -13,6 +13,7 @@
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
+#import "CellAnimation.h"
 
 static CGFloat const kPadding = 20;
 
@@ -24,7 +25,8 @@ static NSString *const kHintFont = @"TrebuchetMS-Italic";
 static CGFloat const kTimeSpacing = 5;
 static CGFloat const kDashSpacing = 10;
 
-@interface TimeTrackingView ()
+
+@interface TimeTrackingViewController () <UIViewControllerTransitioningDelegate>
 
 // UI
 @property (nonatomic, strong) UILabel *taskNameLabel;
@@ -57,24 +59,25 @@ static CGFloat const kDashSpacing = 10;
 @property (nonatomic, assign) NSTimeInterval timeInterval;
 
 
-@end
-
-@interface TimeTrackingView ()
-
+// Timer
 @property (nonatomic, strong) NSTimer *timer;
 
 @end
 
-@implementation TimeTrackingView
+@implementation TimeTrackingViewController
 
 - (instancetype)initWithTaskName:(NSString *)taskName
 {
     self = [super init];
     if (self) {
         self.taskName = taskName;
-        [self p_setupUI];
     }
     return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self p_setupUI];
 }
 
 - (void)dealloc // 页面被销毁，销毁timer
@@ -83,44 +86,51 @@ static CGFloat const kDashSpacing = 10;
     self.timer = nil;
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview // 页面被游离，销毁timer
+- (void)viewDidDisappear:(BOOL)animated
 {
-    [super willMoveToSuperview:newSuperview];
-    if (!newSuperview && self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
+    [super viewDidDisappear:animated];
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    for (UIView *subview in self.view.subviews) {
+        subview.hidden = YES;
     }
 }
 
 - (void)p_setupUI
 {
-    self.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:self.taskName].color];
-    [self addSubview:self.taskNameLabel];
+    self.view.clipsToBounds = YES;
+    self.view.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:self.taskName].color];
+    [self.view addSubview:self.taskNameLabel];
     [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.centerY.offset(-180);
         make.width.equalTo(@(kScreenWidth - 2*kPadding));
     }];
-    [self addSubview:self.timeIntervalLabel];
+    [self.view addSubview:self.timeIntervalLabel];
     [self.timeIntervalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.centerY.equalTo(self.taskNameLabel.mas_bottom).offset(80);
         make.width.equalTo(@(kScreenWidth - 2*kPadding));
     }];
     
-    [self addSubview:self.startTimeLabelHH];
-    [self addSubview:self.startTimeColonLabelA];
-    [self addSubview:self.startTimeLabelmm];
-    [self addSubview:self.startTimeColonLabelB];
-    [self addSubview:self.startTimeLabelss];
+    [self.view addSubview:self.startTimeLabelHH];
+    [self.view addSubview:self.startTimeColonLabelA];
+    [self.view addSubview:self.startTimeLabelmm];
+    [self.view addSubview:self.startTimeColonLabelB];
+    [self.view addSubview:self.startTimeLabelss];
 
-    [self addSubview:self.dashLabel];
+    [self.view addSubview:self.dashLabel];
 
-    [self addSubview:self.nowTimeLabelHH];
-    [self addSubview:self.nowTimeColonLabelA];
-    [self addSubview:self.nowTimeLabelmm];
-    [self addSubview:self.nowTimeColonLabelB];
-    [self addSubview:self.nowTimeLabelss];
+    [self.view addSubview:self.nowTimeLabelHH];
+    [self.view addSubview:self.nowTimeColonLabelA];
+    [self.view addSubview:self.nowTimeLabelmm];
+    [self.view addSubview:self.nowTimeColonLabelB];
+    [self.view addSubview:self.nowTimeLabelss];
     
     [self.dashLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
@@ -169,14 +179,14 @@ static CGFloat const kDashSpacing = 10;
         make.centerY.equalTo(self.nowTimeColonLabelB);
     }];
     
-    [self addSubview:self.differentDayLabel];
+    [self.view addSubview:self.differentDayLabel];
     [self.differentDayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.startTimeLabelss.mas_top);
         make.centerX.equalTo(self.startTimeLabelss.mas_right);
     }];
     self.differentDayLabel.hidden = YES;
     
-    [self addSubview:self.stopButton];
+    [self.view addSubview:self.stopButton];
     [self.stopButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.mas_equalTo(self.nowTimeLabelss.mas_bottom).offset(50);
@@ -190,6 +200,9 @@ static CGFloat const kDashSpacing = 10;
         [weakSelf updateLabels];
     }];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    
+    // 动画
+    self.transitioningDelegate = self;
 }
 
 #pragma mark - Actions
@@ -231,7 +244,7 @@ static CGFloat const kDashSpacing = 10;
     NSLog(@"%@全屏计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:[MirrorStorage getTaskFromDB:self.taskName].color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
     if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
-        [self.delegate destroyTimeTrackingView];
+        [self dismissViewControllerAnimated:YES completion:nil];
         [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
         
     }
@@ -243,7 +256,7 @@ static CGFloat const kDashSpacing = 10;
 
 - (void)stopButtonClicked
 {
-    [self.delegate destroyTimeTrackingView];
+    [self dismissViewControllerAnimated:YES completion:nil];
     if (round(self.timeInterval) >= kMinSeconds) {
         [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
     } else {
@@ -463,5 +476,17 @@ static CGFloat const kDashSpacing = 10;
     }
     return _stopButton;
 }
+
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    CellAnimation *animation = [CellAnimation new];
+    animation.isPresent = NO;
+    animation.cellFrame = self.cellFrame;
+    return animation;
+}
+
 
 @end
