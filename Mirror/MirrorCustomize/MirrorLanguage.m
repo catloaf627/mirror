@@ -83,10 +83,9 @@
     // today total
     [mirrorDict setValue:@[@"Total:", @"总时长："] forKey:@"total"];
     
-    // Time editing
+    // Time editing (这个页面需要的save，上面已经有了)
     [mirrorDict setValue:@[@"Starts at", @"开始于"] forKey:@"starts_at"];
     [mirrorDict setValue:@[@"Ends at", @"结束于"] forKey:@"ends_at"];
-    [mirrorDict setValue:@[@"Save record directly", @"直接保存记录"] forKey:@"save_record_directly"];
     [mirrorDict setValue:@[@"OR", @"或者"] forKey:@"or"];
     [mirrorDict setValue:@[@"Start now", @"开始计时"] forKey:@"start_now"];
     

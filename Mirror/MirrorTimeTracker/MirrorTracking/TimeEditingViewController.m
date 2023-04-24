@@ -22,6 +22,7 @@
 @property (nonatomic, strong) UILabel *endLabel;
 @property (nonatomic, strong) UIDatePicker *startPicker;
 @property (nonatomic, strong) UIDatePicker *endPicker;
+@property (nonatomic, strong) UILabel *totalLabel;
 @property (nonatomic, strong) UIButton *saveButton;
 @property (nonatomic, strong) UILabel *orLabel;
 @property (nonatomic, strong) UIButton *startButton;
@@ -66,35 +67,42 @@
         make.left.offset(20);
         make.top.mas_equalTo(self.tasknameLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo((kScreenWidth - 2*20)/4);
+        make.width.mas_equalTo((kScreenWidth - 2*20)/3);
     }];
     [self.view addSubview:self.endLabel];
     [self.endLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(20);
         make.top.mas_equalTo(self.startLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo((kScreenWidth - 2*20)/4);
+        make.width.mas_equalTo((kScreenWidth - 2*20)/3);
     }];
     [self.view addSubview:self.startPicker];
     [self.startPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-20);
         make.top.mas_equalTo(self.tasknameLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
+        make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
     }];
     [self.view addSubview:self.endPicker];
     [self.endPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-20);
         make.top.mas_equalTo(self.startPicker.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
+        make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
+    }];
+    [self.view addSubview:self.totalLabel];
+    [self.totalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.offset((kScreenWidth - 160 - 80 - 20)/2);
+        make.top.mas_equalTo(self.endPicker.mas_bottom).offset(20);
+        make.height.mas_equalTo(40);
+        make.width.mas_equalTo(160);
     }];
     [self.view addSubview:self.saveButton];
     [self.saveButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.offset(0);
+        make.right.offset(-(kScreenWidth - 160 - 80 - 20)/2);
         make.top.mas_equalTo(self.endPicker.mas_bottom).offset(20);
-        make.height.mas_equalTo(50);
-        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
+        make.height.mas_equalTo(40);
+        make.width.mas_equalTo(80);
     }];
     [self.view addSubview:self.orLabel];
     [self.orLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -134,6 +142,7 @@
     self.startPicker.maximumDate = self.endPicker.date;
     self.startPicker.minimumDate = [NSDate dateWithTimeIntervalSince1970:[self formmerPeriodEndTime]];
     self.endPicker.minimumDate = self.startPicker.date;
+    self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[self.endPicker.date timeIntervalSinceDate:self.startPicker.date]]];
 }
     
 #pragma mark - Actions
@@ -212,7 +221,7 @@
         _startLabel = [UILabel new];
         _startLabel.textAlignment = NSTextAlignmentCenter;
         _startLabel.text = [MirrorLanguage mirror_stringWithKey:@"starts_at"];
-        _startLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        _startLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
         _startLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
     }
     return _startLabel;
@@ -224,7 +233,7 @@
         _endLabel = [UILabel new];
         _endLabel.textAlignment = NSTextAlignmentCenter;
         _endLabel.text = [MirrorLanguage mirror_stringWithKey:@"ends_at"];
-        _endLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        _endLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
         _endLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
     }
     return _endLabel;
@@ -234,6 +243,7 @@
 {
     if (!_startPicker) {
         _startPicker = [UIDatePicker new];
+        _startPicker.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         _startPicker.datePickerMode = UIDatePickerModeDateAndTime;
         _startPicker.timeZone = [NSTimeZone systemTimeZone];
         _startPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
@@ -262,11 +272,23 @@
     return _endPicker;
 }
 
+- (UILabel *)totalLabel
+{
+    if (!_totalLabel) {
+        _totalLabel = [UILabel new];
+        _totalLabel.adjustsFontSizeToFitWidth = YES;
+        _totalLabel.textAlignment = NSTextAlignmentCenter;
+        _totalLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        _totalLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+    }
+    return _totalLabel;
+}
+
 - (UIButton *)saveButton
 {
     if (!_saveButton) {
         _saveButton = [UIButton new];
-        [_saveButton setTitle:[MirrorLanguage mirror_stringWithKey:@"save_record_directly"] forState:UIControlStateNormal];
+        [_saveButton setTitle:[MirrorLanguage mirror_stringWithKey:@"save"] forState:UIControlStateNormal];
         [_saveButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
         _saveButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         _saveButton.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeText].CGColor;
