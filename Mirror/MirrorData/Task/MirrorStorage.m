@@ -10,6 +10,7 @@
 #import "MirrorLanguage.h"
 #import "MirrorTool.h"
 #import "MirrorMacro.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 static NSString *const kMirrorDict = @"mirror_dict";
 
@@ -80,6 +81,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 // 如果是计时，accurateDate为[NSDate now]，periodIndex为0
 + (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
     NSDate *date = [self dateWithoutSeconds:accurateDate];
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
@@ -101,6 +103,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 // 如果是计时，accurateDate为[NSDate now]，periodIndex为0
 + (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
     NSDate *date = [self dateWithoutSeconds:accurateDate];
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
@@ -175,6 +178,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
 {
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改

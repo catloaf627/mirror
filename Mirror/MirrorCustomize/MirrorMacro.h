@@ -47,6 +47,10 @@ typedef NS_ENUM(NSInteger, SpanType) {
 // 最小记录时间为一分钟（只要时长超过一分钟，分钟数必然有变化）全app忽略秒数（秒数全部记为0）
 #define kMinSeconds (60)
 
+// 系统声音 1050 - 1200 都还可以
+#define kAudioArchive (1104)
+#define kAudioClick (1123)
+
 // Settings Notifications
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"
 #define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"
