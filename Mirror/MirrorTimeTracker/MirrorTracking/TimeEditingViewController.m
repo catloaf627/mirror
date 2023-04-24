@@ -66,49 +66,49 @@
         make.left.offset(20);
         make.top.mas_equalTo(self.tasknameLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo((kScreenWidth - 2*20)/3);
+        make.width.mas_equalTo((kScreenWidth - 2*20)/4);
     }];
     [self.view addSubview:self.endLabel];
     [self.endLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(20);
         make.top.mas_equalTo(self.startLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo((kScreenWidth - 2*20)/3);
+        make.width.mas_equalTo((kScreenWidth - 2*20)/4);
     }];
     [self.view addSubview:self.startPicker];
     [self.startPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-20);
         make.top.mas_equalTo(self.tasknameLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
+        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
     }];
     [self.view addSubview:self.endPicker];
     [self.endPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-20);
         make.top.mas_equalTo(self.startPicker.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
+        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
     }];
     [self.view addSubview:self.saveButton];
     [self.saveButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.mas_equalTo(self.endPicker.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
+        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
     }];
     [self.view addSubview:self.orLabel];
     [self.orLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.mas_equalTo(self.saveButton.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
+        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
     }];
     [self.view addSubview:self.startButton];
     [self.startButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.mas_equalTo(self.orLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
+        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
     }];
     
     [self.view addSubview:self.dismissButton];
@@ -124,10 +124,37 @@
     [self.view addGestureRecognizer:panRecognizer];
     
     self.transitioningDelegate = self;
+    
+    // Picker
+    [self updatePickerRange];
+}
+
+- (void)updatePickerRange
+{
+    self.startPicker.maximumDate = self.endPicker.date;
+    self.startPicker.minimumDate = [NSDate dateWithTimeIntervalSince1970:[self formmerPeriodEndTime]];
+    self.endPicker.minimumDate = self.startPicker.date;
 }
     
 #pragma mark - Actions
     
+- (void)changeStartTime
+{
+    [self updatePickerRange]; // 只更新另一个picker的range，不保存数据
+}
+
+- (void)changeEndTime
+{
+    [self updatePickerRange]; // 只更新另一个picker的range，不保存数据
+}
+
+- (void)saveRecord
+{
+    [MirrorStorage startTask:self.taskName at:self.startPicker.date periodIndex:0];
+    [MirrorStorage stopTask:self.taskName at:self.endPicker.date periodIndex:0];
+    [self dismiss];
+}
+
 - (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
 {
     // pan手势在元素上，返回
@@ -147,8 +174,6 @@
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
-
 
 #pragma mark - Getters
     
@@ -208,6 +233,8 @@
         _startPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
         _startPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _startPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        // 如果上一个任务的结束时间在未来，设置start picker和未来那个数字对齐，否则，使用现在的时间
+        _startPicker.date = [self formmerPeriodEndTime] > [[NSDate now] timeIntervalSince1970]  ? [NSDate dateWithTimeIntervalSince1970:[self formmerPeriodEndTime]] : [NSDate now];
         [_startPicker addTarget:self action:@selector(changeStartTime) forControlEvents:UIControlEventEditingDidEnd];
     }
     return _startPicker;
@@ -222,6 +249,8 @@
         _endPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
         _endPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _endPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        // end picker初始值为start picker + 1hour
+        _endPicker.date = [NSDate dateWithTimeIntervalSince1970:([self.startPicker.date timeIntervalSince1970] + 3600)];
         [_endPicker addTarget:self action:@selector(changeEndTime) forControlEvents:UIControlEventEditingDidEnd];
     }
     return _endPicker;
@@ -237,6 +266,7 @@
         _saveButton.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeText].CGColor;
         _saveButton.layer.borderWidth = 1;
         _saveButton.layer.cornerRadius = 12;
+        [_saveButton addTarget:self action:@selector(saveRecord) forControlEvents:UIControlEventTouchUpInside];
     }
     return _saveButton;
 }
@@ -282,54 +312,16 @@
 
 #pragma mark - Privates
 
-//- (NSDate *)startMaxDate
-//{
-//    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-//    long maxTime = 0;
-//    // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
-//    maxTime = [task.periods[self.periodIndex][1] longValue] - kMinSeconds; // 至多比自己的结束时间小一分钟
-//    return [NSDate dateWithTimeIntervalSince1970:maxTime];
-//}
-//
-//- (NSDate *)endMaxDate
-//{
-//    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-//    long maxTime = 0;
-//    // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
-//    if (self.periodIndex-1 >= 0) { // 如果有下一个task的话
-//        NSArray *latterPeriod = task.periods[self.periodIndex-1];
-//        maxTime = [latterPeriod[0] longValue]; // 至多也要等于下一个task的开始时间
-//    } else {
-//        maxTime = LONG_MAX;
-//    }
-//    return [NSDate dateWithTimeIntervalSince1970:maxTime];
-//}
-//
-//
-//- (NSDate *)startMinDate
-//{
-//    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-//    long minTime = 0;
-//    // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
-//    if (self.periodIndex+1 < task.periods.count) { //如果有上一个task的话
-//        NSArray *formerPeriod = task.periods[self.periodIndex+1];
-//        minTime = [formerPeriod[1] longValue]; // 至少等于前一个task的结束时间
-//    } else {
-//        minTime = 0;
-//    }
-//
-//    return [NSDate dateWithTimeIntervalSince1970:minTime];
-//}
-//
-//- (NSDate *)endMinDate
-//{
-//    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-//    long minTime = 0;
-//    // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
-//    minTime = [task.periods[self.periodIndex][0] longValue] + kMinSeconds;// 至少比开始的时间多一分钟
-//    return [NSDate dateWithTimeIntervalSince1970:minTime];
-//}
-
-
+- (long)formmerPeriodEndTime
+{
+    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    NSInteger periodsCnt = task.periods.count;
+    if  (periodsCnt > 0) {
+        NSArray *formerPeriod = task.periods[0];
+        return [formerPeriod[1] longValue];
+    } else {
+        return LONG_MIN;
+    }
+}
 
 @end
