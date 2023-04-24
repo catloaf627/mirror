@@ -83,6 +83,13 @@
     // today total
     [mirrorDict setValue:@[@"Total:", @"总时长："] forKey:@"total"];
     
+    // Time editing
+    [mirrorDict setValue:@[@"Starts at", @"开始于"] forKey:@"starts_at"];
+    [mirrorDict setValue:@[@"Ends at", @"结束于"] forKey:@"ends_at"];
+    [mirrorDict setValue:@[@"Save record directly", @"直接保存记录"] forKey:@"save_record_directly"];
+    [mirrorDict setValue:@[@"OR", @"或者"] forKey:@"or"];
+    [mirrorDict setValue:@[@"Starts now", @"开始计时"] forKey:@"starts_now"];
+    
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }

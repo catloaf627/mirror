@@ -11,6 +11,7 @@
 #import "MirrorSettings.h"
 #import "MirrorMacro.h"
 #import "CellAnimation.h"
+#import "MirrorLanguage.h"
 
 @interface TimeEditingViewController () <UIViewControllerTransitioningDelegate>
 
@@ -178,7 +179,8 @@
 {
     if (!_startLabel) {
         _startLabel = [UILabel new];
-        _startLabel.text = @"Starts at";
+        _startLabel.textAlignment = NSTextAlignmentCenter;
+        _startLabel.text = [MirrorLanguage mirror_stringWithKey:@"starts_at"];
         _startLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _startLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
     }
@@ -189,7 +191,8 @@
 {
     if (!_endLabel) {
         _endLabel = [UILabel new];
-        _endLabel.text = @"Ends at";
+        _endLabel.textAlignment = NSTextAlignmentCenter;
+        _endLabel.text = [MirrorLanguage mirror_stringWithKey:@"ends_at"];
         _endLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _endLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
     }
@@ -228,7 +231,7 @@
 {
     if (!_saveButton) {
         _saveButton = [UIButton new];
-        [_saveButton setTitle:@"Save record" forState:UIControlStateNormal];
+        [_saveButton setTitle:[MirrorLanguage mirror_stringWithKey:@"save_record_directly"] forState:UIControlStateNormal];
         [_saveButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
         _saveButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         _saveButton.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeText].CGColor;
@@ -242,7 +245,7 @@
 {
     if (!_orLabel) {
         _orLabel = [UILabel new];
-        _orLabel.text = @"OR";
+        _orLabel.text = [MirrorLanguage mirror_stringWithKey:@"or"];
         _orLabel.textAlignment = NSTextAlignmentCenter;
         _orLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _orLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
@@ -255,7 +258,7 @@
 {
     if (!_startButton) {
         _startButton = [UIButton new];
-        [_startButton setTitle:@"Starts now" forState:UIControlStateNormal];
+        [_startButton setTitle:[MirrorLanguage mirror_stringWithKey:@"starts_now"] forState:UIControlStateNormal];
         _startButton.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_startButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeBackground] forState:UIControlStateNormal];
         _startButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
