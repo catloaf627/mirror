@@ -139,6 +139,7 @@
 
 - (void)updatePickerRange
 {
+    [self roundPickerDate];
     self.startPicker.maximumDate = self.endPicker.date;
     self.startPicker.minimumDate = [NSDate dateWithTimeIntervalSince1970:[self formmerPeriodEndTime]];
     self.endPicker.minimumDate = self.startPicker.date;
@@ -351,6 +352,22 @@
     } else {
         return LONG_MIN;
     }
+}
+
+- (void)roundPickerDate
+{
+    // 先改endpicker，因为删掉second相当于往小减，如果先改了startpicker，endpicker可能会变
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    NSDateComponents *ends = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:self.endPicker.date];
+    ends.timeZone = [NSTimeZone systemTimeZone];
+    ends.second = 0;
+    self.endPicker.date = [gregorian dateFromComponents:ends];
+    
+    NSDateComponents *starts = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:self.startPicker.date];
+    starts.timeZone = [NSTimeZone systemTimeZone];
+    starts.second = 0;
+    self.startPicker.date = [gregorian dateFromComponents:starts];
 }
 
 @end
