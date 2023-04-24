@@ -119,7 +119,7 @@ static CGFloat const kLeftRightSpacing = 20;
     }];
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.left.offset(kLeftRightSpacing);
         make.bottom.mas_equalTo(self.typeSwitch.mas_top);
         make.width.height.mas_equalTo(40);
     }];

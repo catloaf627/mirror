@@ -151,7 +151,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.left.offset(kLeftRightSpacing);
         make.bottom.mas_equalTo(self.self.todayView.mas_top);
         make.width.height.mas_equalTo(40);
     }];

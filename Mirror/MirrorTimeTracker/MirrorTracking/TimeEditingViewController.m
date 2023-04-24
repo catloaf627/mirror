@@ -15,7 +15,7 @@
 @interface TimeEditingViewController () <UIViewControllerTransitioningDelegate>
 
 // UI
-
+@property (nonatomic, strong) UIButton *dismissButton;
 @property (nonatomic, strong) UILabel *tasknameLabel;
 @property (nonatomic, strong) UILabel *startLabel;
 @property (nonatomic, strong) UILabel *endLabel;
@@ -109,6 +109,14 @@
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
     }];
+    
+    [self.view addSubview:self.dismissButton];
+    [self.dismissButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.offset(-20);
+        make.bottom.mas_equalTo(self.tasknameLabel.mas_top);
+        make.width.height.mas_equalTo(40);
+    }];
+    
     // 动画
     UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
     [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
@@ -142,6 +150,18 @@
 
 
 #pragma mark - Getters
+    
+- (UIButton *)dismissButton
+{
+    if (!_dismissButton) {
+        _dismissButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"xmark"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_dismissButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _dismissButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_dismissButton addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _dismissButton;
+}
 
 - (UILabel *)tasknameLabel
 {

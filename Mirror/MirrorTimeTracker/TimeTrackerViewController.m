@@ -107,7 +107,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // Settings button
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
+        make.left.offset(kCollectionViewPadding);
         make.bottom.mas_equalTo(self.collectionView.mas_top);
         make.width.height.mas_equalTo(40);
     }];
