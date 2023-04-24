@@ -148,6 +148,12 @@
     [self updatePickerRange]; // 只更新另一个picker的range，不保存数据
 }
 
+- (void)startCounting
+{
+    [self.presentCountingPageDelegate presentCountingPageWithTaskName:self.taskName];
+    [self dismiss];
+}
+
 - (void)saveRecord
 {
     [MirrorStorage startTask:self.taskName at:self.startPicker.date periodIndex:0];
@@ -288,13 +294,14 @@
 {
     if (!_startButton) {
         _startButton = [UIButton new];
-        [_startButton setTitle:[MirrorLanguage mirror_stringWithKey:@"starts_now"] forState:UIControlStateNormal];
+        [_startButton setTitle:[MirrorLanguage mirror_stringWithKey:@"start_now"] forState:UIControlStateNormal];
         _startButton.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_startButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeBackground] forState:UIControlStateNormal];
         _startButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         _startButton.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeText].CGColor;
         _startButton.layer.borderWidth = 1;
         _startButton.layer.cornerRadius = 12;
+        [_startButton addTarget:self action:@selector(startCounting) forControlEvents:UIControlEventTouchUpInside];
     }
     return _startButton;
 }

@@ -28,7 +28,7 @@
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, PresentCountingPageProtocol, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -164,7 +164,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
 }
 
-# pragma mark - Collection view delegate
+#pragma mark - PresentCountingPageProtocol
+
+- (void)presentCountingPageWithTaskName:(NSString *)taskName
+{
+    [self openTimeTrackingViewWithTaskName:taskName];
+}
+
+#pragma mark - Collection view delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
@@ -181,7 +188,8 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     } else { // 点击了未开始计时的selectedCell，打开选择页面：直接编辑or开始计时
         self.selectedCellFrame = CGRectMake([self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.origin.x + self.collectionView.frame.origin.x, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.origin.y + self.collectionView.frame.origin.y, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.size.width, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.size.height);
         TimeEditingViewController *cellVC = [[TimeEditingViewController alloc] initWithTaskName:selectedModel.taskName];
-        cellVC.transitioningDelegate = self;
+        cellVC.transitioningDelegate = self; // 动画
+        cellVC.presentCountingPageDelegate = self; // present counting page
         cellVC.modalPresentationStyle = UIModalPresentationCustom;
         cellVC.cellFrame = self.selectedCellFrame;
         [self presentViewController:cellVC animated:YES completion:nil];
