@@ -16,21 +16,23 @@
 #import "EditTaskViewController.h"
 #import "AddTaskViewController.h"
 #import "TimeTrackingView.h"
-#import "TimeEditingView.h"
+#import "TimeEditingViewController.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
 #import "MUXToast.h"
 #import "MirrorSettings.h"
 #import "SettingsViewController.h"
 #import "LeftAnimation.h"
+#import "CellAnimation.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
-@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, TimeEditingViewProtocol, UIViewControllerTransitioningDelegate>
+@interface TimeTrackerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, TimeTrackingViewProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
+@property (nonatomic, assign) CGRect selectedCellFrame;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -141,16 +143,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
 }
 
-- (void)openTimeEditingViewWithTaskName:(NSString *)taskName
-{
-    TimeEditingView *timeEditingView = [[TimeEditingView alloc] initWithTaskName:taskName];
-    [self.view addSubview:timeEditingView];
-    timeEditingView.delegate = self;
-    [timeEditingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.bottom.offset(0);
-    }];
-}
-
 - (void)openTimeTrackingViewWithTaskName:(NSString *)taskName
 {
     TimeTrackingView *timeTrackingView = [[TimeTrackingView alloc]initWithTaskName:taskName];
@@ -172,18 +164,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     }
 }
 
-#pragma mark - TimeEditingViewProtocol
-
-- (void)destroyTimeEditingView
-{
-    for (UIView *view in self.view.subviews) {
-        if ([view isKindOfClass:TimeEditingView.class]) {
-            [view removeFromSuperview];
-        }
-    }
-}
-
-
 # pragma mark - Collection view delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
@@ -199,7 +179,12 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，如果有这种情况就是出bug了！
         [MirrorStorage stopTask:selectedModel.taskName at:[NSDate now] periodIndex:0];
     } else { // 点击了未开始计时的selectedCell，打开选择页面：直接编辑or开始计时
-        [self openTimeEditingViewWithTaskName:selectedModel.taskName];
+        self.selectedCellFrame = CGRectMake([self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.origin.x + self.collectionView.frame.origin.x, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.origin.y + self.collectionView.frame.origin.y, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.size.width, [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame.size.height);
+        TimeEditingViewController *cellVC = [[TimeEditingViewController alloc] initWithTaskName:selectedModel.taskName];
+        cellVC.transitioningDelegate = self;
+        cellVC.modalPresentationStyle = UIModalPresentationCustom;
+        cellVC.cellFrame = self.selectedCellFrame;
+        [self presentViewController:cellVC animated:YES completion:nil];
     }
 }
 
@@ -332,9 +317,16 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-    LeftAnimation *animation = [LeftAnimation new];
-    animation.isPresent = YES;
-    return animation;
+    if ([presented isKindOfClass:SettingsViewController.class]) {
+        LeftAnimation *animation = [LeftAnimation new];
+        animation.isPresent = YES;
+        return animation;
+    } else {
+        CellAnimation *animation = [CellAnimation new];
+        animation.isPresent = YES;
+        animation.cellFrame = self.selectedCellFrame;
+        return animation;
+    }
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator

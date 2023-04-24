@@ -1,17 +1,18 @@
 //
-//  TimeEditingView.m
+//  TimeEditingViewController.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/24.
 //
 
-#import "TimeEditingView.h"
+#import "TimeEditingViewController.h"
 #import <Masonry/Masonry.h>
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
 #import "MirrorMacro.h"
+#import "CellAnimation.h"
 
-@interface TimeEditingView ()
+@interface TimeEditingViewController () <UIViewControllerTransitioningDelegate>
 
 // UI
 
@@ -29,7 +30,7 @@
 
 @end
 
-@implementation TimeEditingView
+@implementation TimeEditingViewController
 
 - (instancetype)initWithTaskName:(NSString *)taskName
 {
@@ -37,79 +38,108 @@
     if (self) {
         self.taskName = taskName;
         self.tasknameLabel.text = taskName;
-        [self p_setupUI];
+        
     }
     return self;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self p_setupUI];
+}
+
 - (void)p_setupUI
 {
-    self.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:self.taskName].color];
-    [self addSubview:self.tasknameLabel];
+    self.view.clipsToBounds = YES;
+    self.view.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:self.taskName].color];
+    [self.view addSubview:self.tasknameLabel];
     [self.tasknameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.offset(100);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(kScreenWidth);
     }];
-    [self addSubview:self.startLabel];
+    [self.view addSubview:self.startLabel];
     [self.startLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(20);
         make.top.mas_equalTo(self.tasknameLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo((kScreenWidth - 2*20)/3);
     }];
-    [self addSubview:self.endLabel];
+    [self.view addSubview:self.endLabel];
     [self.endLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(20);
         make.top.mas_equalTo(self.startLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo((kScreenWidth - 2*20)/3);
     }];
-    [self addSubview:self.startPicker];
+    [self.view addSubview:self.startPicker];
     [self.startPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-20);
         make.top.mas_equalTo(self.tasknameLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
     }];
-    [self addSubview:self.endPicker];
+    [self.view addSubview:self.endPicker];
     [self.endPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-20);
         make.top.mas_equalTo(self.startPicker.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
     }];
-    [self addSubview:self.saveButton];
+    [self.view addSubview:self.saveButton];
     [self.saveButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.mas_equalTo(self.endPicker.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
     }];
-    [self addSubview:self.orLabel];
+    [self.view addSubview:self.orLabel];
     [self.orLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.mas_equalTo(self.saveButton.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
     }];
-    [self addSubview:self.startButton];
+    [self.view addSubview:self.startButton];
     [self.startButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.mas_equalTo(self.orLabel.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
     }];
+    // 动画
+    UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
+    [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
+    [self.view addGestureRecognizer:panRecognizer];
+    
+    self.transitioningDelegate = self;
 }
-
-
+    
 #pragma mark - Actions
-
-- (void)stopButtonClicked
+    
+- (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan
 {
-    [self.delegate destroyTimeEditingView];
+    // pan手势在元素上，返回
+    CGPoint touchPoint = [pan locationInView:self.view];
+    for (UIView *subview in self.view.subviews) {
+        if (CGRectContainsPoint(subview.frame, touchPoint)) {
+            return;
+        }
+    }
+    [self dismiss];
 }
+    
+- (void)dismiss
+{
+    for (UIView *subview in self.view.subviews) {
+        subview.hidden = YES;
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
 
 #pragma mark - Getters
 
@@ -215,6 +245,17 @@
     }
     return _startButton;
 }
+    
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+    CellAnimation *animation = [CellAnimation new];
+    animation.isPresent = NO;
+    animation.cellFrame = self.cellFrame;
+    return animation;
+}
+
 
 #pragma mark - Privates
 
@@ -265,6 +306,7 @@
 //    minTime = [task.periods[self.periodIndex][0] longValue] + kMinSeconds;// 至少比开始的时间多一分钟
 //    return [NSDate dateWithTimeIntervalSince1970:minTime];
 //}
+
 
 
 @end
