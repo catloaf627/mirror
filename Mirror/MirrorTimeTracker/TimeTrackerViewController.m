@@ -19,7 +19,6 @@
 #import "TimeEditingViewController.h"
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
-#import "MUXToast.h"
 #import "MirrorSettings.h"
 #import "SettingsViewController.h"
 #import "LeftAnimation.h"
@@ -48,7 +47,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopNotification:) name:MirrorTaskStopNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskEditNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskDeleteNotification object:nil];
@@ -243,14 +242,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         }
     }
     [self.collectionView reloadData];
-}
-
-- (void)stopNotification:(NSNotification *)noti
-{
-    NSString *taskName = noti.userInfo[@"taskName"];
-    TaskSavedType savedType = [noti.userInfo[@"TaskSavedType"] integerValue];
-    [MUXToast taskSaved:taskName onVC:self type:savedType];
-    [self reloadData];
 }
 
 #pragma mark - Getters

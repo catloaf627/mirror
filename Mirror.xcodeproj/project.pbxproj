@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		015564E428E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */; };
-		4A01AAC929DF821200E2B5A8 /* MUXToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A01AAC829DF821200E2B5A8 /* MUXToast.m */; };
 		4A083B8F2904AA97002B91EB /* TimeTrackingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A083B8E2904AA97002B91EB /* TimeTrackingView.m */; };
 		4A099FA729DCFE3C002683A1 /* MirrorDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FA629DCFE3C002683A1 /* MirrorDataManager.m */; };
 		4A099FAA29DCFE54002683A1 /* MirrorDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FA929DCFE54002683A1 /* MirrorDataModel.m */; };
@@ -56,8 +55,6 @@
 /* Begin PBXFileReference section */
 		015564E228E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackerTaskCollectionViewCell.h; sourceTree = "<group>"; };
 		015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackerTaskCollectionViewCell.m; sourceTree = "<group>"; };
-		4A01AAC729DF821200E2B5A8 /* MUXToast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUXToast.h; sourceTree = "<group>"; };
-		4A01AAC829DF821200E2B5A8 /* MUXToast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUXToast.m; sourceTree = "<group>"; };
 		4A083B8D2904AA97002B91EB /* TimeTrackingView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackingView.h; sourceTree = "<group>"; };
 		4A083B8E2904AA97002B91EB /* TimeTrackingView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackingView.m; sourceTree = "<group>"; };
 		4A099FA529DCFE3C002683A1 /* MirrorDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorDataManager.h; sourceTree = "<group>"; };
@@ -164,15 +161,6 @@
 				BCE97AF04F189BBAB1043B98 /* Pods-Mirror.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		4A01AAC329DF810700E2B5A8 /* MUX */ = {
-			isa = PBXGroup;
-			children = (
-				4A01AAC729DF821200E2B5A8 /* MUXToast.h */,
-				4A01AAC829DF821200E2B5A8 /* MUXToast.m */,
-			);
-			path = MUX;
 			sourceTree = "<group>";
 		};
 		4A083B8C2904AA69002B91EB /* MirrorTracking */ = {
@@ -282,7 +270,6 @@
 		4A379B3E28E0379E00785CAE /* MirrorCustomize */ = {
 			isa = PBXGroup;
 			children = (
-				4A01AAC329DF810700E2B5A8 /* MUX */,
 				4A099FAC29DD57AE002683A1 /* MirrorTool.h */,
 				4A099FAD29DD57AE002683A1 /* MirrorTool.m */,
 				4A379B3F28E0381A00785CAE /* UIColor+MirrorColor.h */,
@@ -577,7 +564,6 @@
 				4A099FA729DCFE3C002683A1 /* MirrorDataManager.m in Sources */,
 				4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */,
 				4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */,
-				4A01AAC929DF821200E2B5A8 /* MUXToast.m in Sources */,
 				4A88211C29F4A08D009E422C /* TaskTotalHeaderCell.m in Sources */,
 				4A406C1A29071939001E83A1 /* MirrorStorage.m in Sources */,
 				4ADDC5B728E476A8006F02DE /* LanguageCollectionViewCell.m in Sources */,

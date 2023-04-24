@@ -102,7 +102,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
     NSDate *date = [self dateWithoutSeconds:accurateDate];
-    TaskSavedType savedType = TaskSavedTypeNone;
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
@@ -127,7 +126,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
             if (startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day) { // 开始和结束在同一天，直接记录 (存在原处)
                 [latestPeriod addObject:@(round([date timeIntervalSince1970]))];
                 allPeriods[index] = latestPeriod;
-                savedType = TaskSavedTypeSaved;
             } else { //开始和结束不在同一天，在00:00处切割分段
                 NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
                 endComponent0.hour = 23;
@@ -148,7 +146,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
             }
         } else { // 错误格式或者n秒以下，丢弃这个task
             [allPeriods removeObjectAtIndex:0];
-            savedType = (length < kMinSeconds && length >= 0) ? TaskSavedTypeTooShort : TaskSavedTypeError;
         }
         task.periods = allPeriods;
     }
@@ -157,7 +154,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Stop"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:@{@"taskName":taskName, @"TaskSavedType" : @(savedType)}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:nil];
 }
 
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
