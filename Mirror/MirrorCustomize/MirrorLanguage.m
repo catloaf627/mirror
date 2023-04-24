@@ -52,11 +52,11 @@
     
     // 全屏
     [mirrorDict setValue:@[@"Go!", @"开始!"] forKey:@"go"];
-    
-    // 闪烁 & Task record
-    [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
+    [mirrorDict setValue:@[@"Give up", @"放弃"] forKey:@"give_up"];
+    [mirrorDict setValue:@[@"Stop", @"结束"] forKey:@"stop"];
     
     // Task record
+    [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
     [mirrorDict setValue:@[@"Lasted: ", @"持续时间："] forKey:@"lasted"];
     
     // Delete period
