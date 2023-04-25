@@ -11,11 +11,65 @@
 
 @implementation MirrorTimeText
 
-//// 哪项没有省略哪项 16d,1h23m5s | 16天，1小时23分钟5秒 —> lasted后面的标记
-//+ (NSString *)XdXhXmXs:(long)timeInterval
-//{
-//
-//}
+// 哪项没有省略哪项 1h 23m | 1时23分 —> lasted后面的标记
++ (NSString *)XdXhXmXsShortWithstart:(long)start end:(long)end
+{
+    long timeInterval = end - start;
+    NSInteger numOfHours = (timeInterval % 86400) / 3600;
+    NSInteger numOfMins = ((timeInterval % 86400) % 3600) / 60;
+    NSInteger numOfSeconds = ((timeInterval % 86400) % 3600) % 60;
+    NSString *res = @"";
+    if (numOfHours > 0) {
+        NSString *str = [MirrorLanguage mirror_stringWithKey:@"h" with1Placeholder:[@(numOfHours) stringValue]];
+        res = [res stringByAppendingString:str];
+    }
+    if (numOfMins > 0) {
+        NSString *str = [MirrorLanguage mirror_stringWithKey:@"m" with1Placeholder:[@(numOfMins) stringValue]];
+        res = [res stringByAppendingString:str];
+    }
+    if (numOfSeconds > 0) {
+        NSString *str = [MirrorLanguage mirror_stringWithKey:@"s" with1Placeholder:[@(numOfSeconds) stringValue]];
+        res = [res stringByAppendingString:str];
+    }
+    return res;
+}
+
+// 哪项没有省略哪项 1hour 23 mins | 1小时23分钟 —> total后面的标记
++ (NSString *)XdXhXmXsFull:(long)timeInterval
+{
+    NSInteger numOfHours = (timeInterval % 86400) / 3600;
+    NSInteger numOfMins = ((timeInterval % 86400) % 3600) / 60;
+    NSInteger numOfSeconds = ((timeInterval % 86400) % 3600) % 60;
+    NSString *res = @"";
+    if (numOfHours > 0) {
+        NSString *str = @"";
+        if (numOfHours == 1) {
+            str = [MirrorLanguage mirror_stringWithKey:@"hour" with1Placeholder:[@(numOfHours) stringValue]];
+        } else {
+            str = [MirrorLanguage mirror_stringWithKey:@"hours" with1Placeholder:[@(numOfHours) stringValue]];
+        }
+        res = [res stringByAppendingString:str];
+    }
+    if (numOfMins > 0) {
+        NSString *str = @"";
+        if (numOfMins == 1) {
+            str = [MirrorLanguage mirror_stringWithKey:@"min" with1Placeholder:[@(numOfMins) stringValue]];
+        } else {
+            str = [MirrorLanguage mirror_stringWithKey:@"mins" with1Placeholder:[@(numOfMins) stringValue]];
+        }
+        res = [res stringByAppendingString:str];
+    }
+    if (numOfSeconds > 0) {
+        NSString *str = @"";
+        if (numOfMins == 1) {
+            str = [MirrorLanguage mirror_stringWithKey:@"second" with1Placeholder:[@(numOfSeconds) stringValue]];
+        } else {
+            str = [MirrorLanguage mirror_stringWithKey:@"seconds" with1Placeholder:[@(numOfSeconds) stringValue]];
+        }
+        res = [res stringByAppendingString:str];
+    }
+    return res;
+}
 //// 只展示最大项 1.3 days/4.5 hours | 1.3天/4.5小时 —> 柱状图上面的标记
 //+ (NSString *)XdXhXmXsWithOneMaxUnit:(long)timeInterval
 //{

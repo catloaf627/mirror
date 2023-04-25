@@ -97,7 +97,7 @@
     [mirrorDict setValue:@[@"No data ", @"暂无数据"] forKey:@"no_data"];
     
     // today total
-    [mirrorDict setValue:@[@"Total:", @"总时长："] forKey:@"total"];
+    [mirrorDict setValue:@[@"Total: ", @"总时长："] forKey:@"total"];
     
     // Time editing (这个页面需要的save，上面已经有了)
     [mirrorDict setValue:@[@"Starts at", @"开始于"] forKey:@"starts_at"];
@@ -121,6 +121,19 @@
     // Edit period
     [mirrorDict setValue:@[@"The start time of No.%@ task: No later than the end time of this task, nor earlier than the end time of the previous task", @"第%@次任务的开始时间：不得晚于本次任务的结束时间，不得早于上一个任务的结束时间"] forKey:@"start_time_for_period"];
     [mirrorDict setValue:@[@"The end time of No.%@ task: No earlier than the start time of this task, nor later than the start time of the next task", @"第%@次任务的结束时间：不得早于本次任务的开始时间，不得晚于下一个任务的开始时间"] forKey:@"end_time_for_period"];
+    
+    // 时间
+    [mirrorDict setValue:@[@"%@h ", @"%@时"] forKey:@"h"];
+    [mirrorDict setValue:@[@"%@m ", @"%@分"] forKey:@"m"];
+    [mirrorDict setValue:@[@"%@s", @"%@秒"] forKey:@"s"];
+    
+    [mirrorDict setValue:@[@"%@ hour ", @"%@小时"] forKey:@"hour"];
+    [mirrorDict setValue:@[@"%@ min ", @"%@分钟"] forKey:@"min"];
+    [mirrorDict setValue:@[@"%@ second", @"%@秒"] forKey:@"second"];
+    
+    [mirrorDict setValue:@[@"%@ hours ", @"%@小时"] forKey:@"hours"];
+    [mirrorDict setValue:@[@"%@ mins ", @"%@分钟"] forKey:@"mins"];
+    [mirrorDict setValue:@[@"%@ seconds", @"%@秒"] forKey:@"seconds"];
     
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder];

@@ -11,8 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MirrorTimeText : NSObject
 
-// 哪项没有省略哪项 16d,1h23m5s | 16天，1小时23分钟5秒 —> lasted后面的标记
-+ (NSString *)XdXhXmXs:(long)timeInterval;
+// 哪项没有省略哪项 1h 23m | 1时23分 —> lasted后面的标记
++ (NSString *)XdXhXmXsShortWithstart:(long)start end:(long)end;
+
+// 哪项没有省略哪项 1hour 23 mins | 16天1小时23分钟 —> total后面的标记
++ (NSString *)XdXhXmXsFull:(long)timeInterval;
 
 // 只展示最大项 1.3 days/4.5 hours | 1.3天/4.5小时 —> 柱状图上面的标记
 + (NSString *)XdXhXmXsWithOneMaxUnit:(long)timeInterval;

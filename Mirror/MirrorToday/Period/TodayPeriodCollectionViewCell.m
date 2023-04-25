@@ -12,6 +12,7 @@
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
 #import "MirrorMacro.h"
+#import "MirrorTimeText.h"
 
 static const CGFloat kHorizontalPadding = 20;
 static const CGFloat kVerticalPadding = 10;
@@ -59,7 +60,7 @@ static const CGFloat kVerticalPadding = 10;
         self.deleteButton.hidden = NO;
         long start = [task.periods[self.periodIndex][0] longValue];
         long end = [task.periods[self.periodIndex][1] longValue];
-        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
         self.startPicker.date = [NSDate dateWithTimeIntervalSince1970:start];
         self.startPicker.maximumDate = [self startMaxDate];
         self.startPicker.minimumDate = [self startMinDate];
