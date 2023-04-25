@@ -1,23 +1,23 @@
 //
-//  TaskTotalHeaderCell.m
+//  TaskTotalHeader.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/23.
 //
 
-#import "TaskTotalHeaderCell.h"
+#import "TaskTotalHeader.h"
 #import "MirrorDataModel.h"
 #import "MirrorStorage.h"
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 
-@interface TaskTotalHeaderCell ()
+@interface TaskTotalHeader ()
 
 @property (nonatomic, strong) UILabel *countLabel;
 
 @end
 
-@implementation TaskTotalHeaderCell
+@implementation TaskTotalHeader
 
 - (void)configWithTaskname:(NSString *)taskname
 {

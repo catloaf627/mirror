@@ -1,5 +1,5 @@
 //
-//  TaskTotalHeaderCell.h
+//  TaskTotalHeader.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/23.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TaskTotalHeaderCell : UICollectionViewCell
+@interface TaskTotalHeader : UICollectionViewCell
 
 - (void)configWithTaskname:(NSString *)taskname;
 

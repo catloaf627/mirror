@@ -1,11 +1,11 @@
 //
-//  TodayTotalHeaderCell.m
+//  TodayTotalHeader.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/21.
 //
 
-#import "TodayTotalHeaderCell.h"
+#import "TodayTotalHeader.h"
 #import "MirrorDataModel.h"
 #import "MirrorStorage.h"
 #import <Masonry/Masonry.h>
@@ -13,7 +13,7 @@
 #import "MirrorPiechart.h"
 #import "MirrorTimeText.h"
 
-@interface TodayTotalHeaderCell ()
+@interface TodayTotalHeader ()
 
 @property (nonatomic, assign) NSInteger count;
 
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation TodayTotalHeaderCell
+@implementation TodayTotalHeader
 
 - (void)configWithTasknames:(NSArray<NSString *> *)taskNames periodIndexes:(NSArray *)indexes
 {
