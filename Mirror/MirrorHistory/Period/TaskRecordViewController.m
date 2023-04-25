@@ -56,13 +56,15 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     }
     [self.navigationItem setTitle:title]; // title为taskname
     if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {
-        UIImage *iconImage = [[UIImage systemImageNamed:@"archivebox.fill"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        UIBarButtonItem *cancelArchiveItem = [[UIBarButtonItem alloc]  initWithImage:iconImage style:UIBarButtonItemStylePlain target:self action:@selector(cancelArchive)];
+        UIImage *image = [[UIImage systemImageNamed:@"archivebox.fill"] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
+        UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIBarButtonItem *cancelArchiveItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(cancelArchive)];
         cancelArchiveItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [self.navigationItem setRightBarButtonItem:cancelArchiveItem];
     } else {
-        UIImage *iconImage = [[UIImage systemImageNamed:@"archivebox"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        UIBarButtonItem *archiveItem = [[UIBarButtonItem alloc]  initWithImage:iconImage style:UIBarButtonItemStylePlain target:self action:@selector(archive)];
+        UIImage *image = [[UIImage systemImageNamed:@"archivebox"] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
+        UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIBarButtonItem *archiveItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(archive)];
         archiveItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [self.navigationItem setRightBarButtonItem:archiveItem];
     }
