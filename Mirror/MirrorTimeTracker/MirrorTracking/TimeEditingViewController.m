@@ -55,7 +55,7 @@
 {
     [super viewWillDisappear:animated];
     for (UIView *subview in self.view.subviews) {
-        subview.hidden = YES;
+        subview.alpha = 0; // 为了避免退场动画出现时subview的布局出现问题。
     }
 }
 
