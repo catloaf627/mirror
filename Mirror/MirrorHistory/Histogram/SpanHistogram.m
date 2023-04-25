@@ -20,6 +20,11 @@
 
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
+// 5-6的时候自适应是最好看的，小于5按照5取size（有header/footer padding），大于6按照5.5取size（右侧展示出来半个cell，提示用户需要滚动才能看全）
+static NSInteger const kPrettyCountMin = 5;
+static NSInteger const kPrettyCountMax = 6;
+static CGFloat const kPrettyCountShowHalf = 5.5;
+
 @interface SpanHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
@@ -88,11 +93,14 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.data.count == 0) return CGSizeZero;
-    if (self.data.count >= 4) { // 4,5,6...
+    if (self.data.count < kPrettyCountMin) {
+        CGFloat cellWidth = (self.bounds.size.width - (kPrettyCountMin - 1)*kCellSpacing) / kPrettyCountMin;
+        return CGSizeMake(cellWidth, self.bounds.size.height);
+    } else if (self.data.count >= kPrettyCountMin && self.data.count <= kPrettyCountMax) {
         CGFloat cellWidth = (self.bounds.size.width - (self.data.count - 1)*kCellSpacing) / self.data.count;
         return CGSizeMake(cellWidth, self.bounds.size.height);
-    } else { // 1,2,3
-        CGFloat cellWidth = (self.bounds.size.width - (4 - 1)*kCellSpacing) / 4;
+    } else {
+        CGFloat cellWidth = (self.bounds.size.width - [@(kPrettyCountShowHalf) integerValue]*kCellSpacing) / kPrettyCountShowHalf;
         return CGSizeMake(cellWidth, self.bounds.size.height);
     }
 }
@@ -114,24 +122,24 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
     if (self.data.count == 0) return CGSizeZero;
-    if (self.data.count >= 4) { // 4,5,6...
-        return CGSizeMake(0, 0);
-    } else {  // 1,2,3
-        CGFloat cellWidth = (self.bounds.size.width - (4 - 1 )*kCellSpacing) / 4;
+    if (self.data.count < kPrettyCountMin) {
+        CGFloat cellWidth = (self.bounds.size.width - (kPrettyCountMin - 1 )*kCellSpacing) / kPrettyCountMin;
         CGFloat width = cellWidth * self.data.count + kCellSpacing * (self.data.count-1);
         return CGSizeMake((self.bounds.size.width - width)/2, self.bounds.size.height);
+    } else {
+        return CGSizeMake(0, 0);
     }
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
     if (self.data.count == 0) return CGSizeZero;
-    if (self.data.count >= 4 ) { // 4,5,6...
-        return CGSizeMake(0, 0);
-    } else {  // 1,2,3
-        CGFloat cellWidth = (self.bounds.size.width - (4 - 1)*kCellSpacing) / 4;
+    if (self.data.count < kPrettyCountMin) {
+        CGFloat cellWidth = (self.bounds.size.width - (kPrettyCountMin - 1)*kCellSpacing) / kPrettyCountMin;
         CGFloat width = cellWidth * self.data.count + kCellSpacing * (self.data.count-1);
         return CGSizeMake((self.bounds.size.width - width)/2, self.bounds.size.height);
+    } else {
+        return CGSizeMake(0, 0);
     }
 }
 
