@@ -44,7 +44,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)archiveTask:(NSString *)taskName
 {
-    [MirrorStorage stopTask:taskName at:[NSDate now] periodIndex:0];
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
@@ -52,6 +51,23 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // stop task first
     // 更新task的archive状态
     task.isArchived = YES;
+    // 保存更新好的task到本地
+    [mirrorDict setValue:task forKey:taskName];
+    // 将mirror dict存回本地
+    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
+}
+
++ (void)cancelArchiveTask:(NSString *)taskName
+{
+    // 在本地取出task
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    // 取出这个task以便作修改
+    MirrorDataModel *task = mirrorDict[taskName];
+    // stop task first
+    // 更新task的archive状态
+    task.isArchived = NO;
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地

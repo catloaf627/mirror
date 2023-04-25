@@ -207,11 +207,11 @@
 		4A0D40F929EFE28300F13EAE /* MirrorHistory */ = {
 			isa = PBXGroup;
 			children = (
+				4A0D40FA29EFE6BD00F13EAE /* HistoryViewController.h */,
+				4A0D40FB29EFE6BD00F13EAE /* HistoryViewController.m */,
 				4AE1153429ECF6F7003CBB39 /* Period */,
 				4A410A2A29EA5D750007003B /* Legend */,
 				4A410A2B29EA5D800007003B /* Histogram */,
-				4A0D40FA29EFE6BD00F13EAE /* HistoryViewController.h */,
-				4A0D40FB29EFE6BD00F13EAE /* HistoryViewController.m */,
 			);
 			path = MirrorHistory;
 			sourceTree = "<group>";
@@ -247,10 +247,10 @@
 		4A379B3C28E0371700785CAE /* MirrorToday */ = {
 			isa = PBXGroup;
 			children = (
-				4A88211029F26094009E422C /* Period */,
-				4A410A2929EA5D650007003B /* PieChart */,
 				4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */,
 				4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */,
+				4A88211029F26094009E422C /* Period */,
+				4A410A2929EA5D650007003B /* PieChart */,
 			);
 			path = MirrorToday;
 			sourceTree = "<group>";

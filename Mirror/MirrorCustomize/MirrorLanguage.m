@@ -58,6 +58,7 @@
     // Task record
     [mirrorDict setValue:@[@"Counting...", @"计时中..."] forKey:@"counting"];
     [mirrorDict setValue:@[@"Lasted: ", @"持续时间："] forKey:@"lasted"];
+    [mirrorDict setValue:@[@" (Archived)", @"（已归档）"] forKey:@"archived_tag"];
     
     // Delete period
     [mirrorDict setValue:@[@"Delete this time period? ", @"确定删除这个时间段？"] forKey:@"delete_period_?"];

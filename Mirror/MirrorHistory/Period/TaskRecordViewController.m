@@ -13,6 +13,7 @@
 #import "TaskPeriodCollectionViewCell.h"
 #import "MirrorStorage.h"
 #import "TaskTotalHeader.h"
+#import "MirrorLanguage.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
@@ -32,13 +33,39 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         self.taskName = taskName;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNavibarUI) name:MirrorTaskArchiveNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)reloadData
 {
     [self.collectionView reloadData];
+}
+
+- (void)updateNavibarUI
+{
+    NSString *title = self.taskName;
+    if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {
+        title = [title stringByAppendingString:[MirrorLanguage mirror_stringWithKey:@"archived_tag"]];
+    }
+    [self.navigationItem setTitle:title]; // title为taskname
+    if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {
+        UIImage *iconImage = [[UIImage systemImageNamed:@"archivebox.fill"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIBarButtonItem *cancelArchiveItem = [[UIBarButtonItem alloc]  initWithImage:iconImage style:UIBarButtonItemStylePlain target:self action:@selector(cancelArchive)];
+        cancelArchiveItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [self.navigationItem setRightBarButtonItem:cancelArchiveItem];
+    } else {
+        UIImage *iconImage = [[UIImage systemImageNamed:@"archivebox"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIBarButtonItem *archiveItem = [[UIBarButtonItem alloc]  initWithImage:iconImage style:UIBarButtonItemStylePlain target:self action:@selector(archive)];
+        archiveItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [self.navigationItem setRightBarButtonItem:archiveItem];
+    }
 }
 
 - (void)viewDidLoad {
@@ -51,7 +78,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     // navibar
     self.navigationController.navigationBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground]; // navibar颜色为背景色
     self.navigationController.navigationBar.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 返回箭头颜色为文案颜色
-    [self.navigationItem setTitle:[MirrorStorage getTaskFromDB:self.taskName].taskName]; // title为taskname
+    [self updateNavibarUI];
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:NSForegroundColorAttributeName]; // title为文案颜色
 
     self.navigationController.navigationBar.shadowImage = [UIImage new]; // navibar底部1pt下划线隐藏
@@ -121,6 +148,18 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
     return CGSizeMake(kScreenWidth, 40);
+}
+
+#pragma mark - Actions
+
+- (void)cancelArchive
+{
+    [MirrorStorage cancelArchiveTask:self.taskName];
+}
+
+- (void)archive
+{
+    [MirrorStorage archiveTask:self.taskName];
 }
 
 
