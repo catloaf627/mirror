@@ -31,6 +31,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
+@property (nonatomic, strong) UIButton *allTasksButton;
 @property (nonatomic, assign) CGPoint collectionViewPoint; // self.collectionView.x, self.collectionView.y
 @property (nonatomic, assign) CGRect selectedCellFrame; // cell.x, cell.y, cell.width, cell.height
 
@@ -68,6 +69,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
     self.settingsButton = nil;
+    self.allTasksButton = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar
@@ -117,6 +119,12 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         make.bottom.mas_equalTo(self.collectionView.mas_top);
         make.width.height.mas_equalTo(40);
     }];
+    [self.view addSubview:self.allTasksButton];
+    [self.allTasksButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.offset(-kCollectionViewPadding);
+        make.bottom.mas_equalTo(self.collectionView.mas_top);
+        make.width.height.mas_equalTo(40);
+    }];
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
     edgeRecognizer.edges = UIRectEdgeLeft;
     [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
@@ -142,6 +150,20 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTaskname:[MirrorDataManager activatedTasksWithAddTask][indexPath.item].taskName];
                 [self.navigationController presentViewController:editVC animated:YES completion:nil];
     }
+}
+
+- (void)goToSettings
+{
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
+    settingsVC.transitioningDelegate = self;
+    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
+    [self presentViewController:settingsVC animated:YES completion:nil];
+}
+
+- (void)goToAllTasks
+{
+    
 }
 
 
@@ -252,15 +274,37 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return _settingsButton;
 }
 
-#pragma mark - Settings
-
-- (void)goToSettings
+- (UIButton *)allTasksButton
 {
-    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
-    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
-    settingsVC.transitioningDelegate = self;
-    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
-    [self presentViewController:settingsVC animated:YES completion:nil];
+    if (!_allTasksButton) {
+        _allTasksButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"tray"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_allTasksButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _allTasksButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_allTasksButton addTarget:self action:@selector(goToAllTasks) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _allTasksButton;
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    if ([presented isKindOfClass:SettingsViewController.class]) { // Settings
+        LeftAnimation *animation = [LeftAnimation new];
+        animation.isPresent = YES;
+        return animation;
+    } else { // Time editing / Time tracking
+        CellAnimation *animation = [CellAnimation new];
+        animation.isPresent = YES;
+        animation.cellFrame = CGRectMake(self.collectionViewPoint.x + self.selectedCellFrame.origin.x, self.collectionViewPoint.y + self.selectedCellFrame.origin.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
+        return animation;
+    }
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
+{
+    return self.interactiveTransition;
 }
 
 // 从左边缘滑动唤起settings
@@ -285,27 +329,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         }
         self.interactiveTransition = nil;
     }
-}
-
-#pragma mark - UIViewControllerTransitioningDelegate
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
-{
-    if ([presented isKindOfClass:SettingsViewController.class]) { // Settings
-        LeftAnimation *animation = [LeftAnimation new];
-        animation.isPresent = YES;
-        return animation;
-    } else { // Time editing / Time tracking
-        CellAnimation *animation = [CellAnimation new];
-        animation.isPresent = YES;
-        animation.cellFrame = CGRectMake(self.collectionViewPoint.x + self.selectedCellFrame.origin.x, self.collectionViewPoint.y + self.selectedCellFrame.origin.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
-        return animation;
-    }
-}
-
-- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
-{
-    return self.interactiveTransition;
 }
 
 
