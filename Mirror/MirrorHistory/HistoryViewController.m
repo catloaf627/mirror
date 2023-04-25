@@ -33,8 +33,9 @@ static CGFloat const kLeftRightSpacing = 20;
  offset = n means往右（往未来）拉n周/月/年；offset = -n means往左（往过去）拉n周/月/年；
  */
 @property (nonatomic, assign) NSInteger offset;
-@property (nonatomic, strong) UIButton *leftButton;
-@property (nonatomic, strong) UIButton *rightButton;
+@property (nonatomic, strong) UIView *interactionView; //在这个view的范围内，点左侧offset-1,点右侧offset+1
+@property (nonatomic, strong) UIImageView *leftArrow;
+@property (nonatomic, strong) UIImageView *rightArrow;
 @property (nonatomic, strong) UILabel *titleLabel;
 
 
@@ -88,21 +89,26 @@ static CGFloat const kLeftRightSpacing = 20;
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
     }];
-    [self.view addSubview:self.titleLabel];
+
+    [self.view addSubview:self.interactionView];
+    [self.interactionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.typeSwitch.mas_bottom).offset(10);
+        make.height.mas_equalTo(60);
+    }];
+    [self.interactionView addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.offset(0);
-        make.top.mas_equalTo(self.typeSwitch.mas_bottom).offset(20);
+        make.centerX.centerY.offset(0);
         make.width.mas_equalTo(2*self.view.frame.size.width/3);
         make.height.mas_equalTo(40);
     }];
-    
-    [self.view addSubview:self.leftButton];
-    [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.interactionView addSubview:self.leftArrow];
+    [self.leftArrow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.titleLabel.mas_left).offset(-10);
     }];
-    [self.view addSubview:self.rightButton];
-    [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.interactionView addSubview:self.rightArrow];
+    [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
         make.left.mas_equalTo(self.titleLabel.mas_right).offset(10);
     }];
@@ -110,7 +116,7 @@ static CGFloat const kLeftRightSpacing = 20;
     [self.legendView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.interactionView.mas_bottom).offset(10);
         make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
     [self.view addSubview:self.histogramView];
@@ -126,6 +132,11 @@ static CGFloat const kLeftRightSpacing = 20;
         make.bottom.mas_equalTo(self.typeSwitch.mas_top);
         make.width.height.mas_equalTo(40);
     }];
+    
+    UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
+    [tapRecognizer addTarget:self action:@selector(tapGestureRecognizerAction:)];
+    [self.interactionView addGestureRecognizer:tapRecognizer];
+    
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
     edgeRecognizer.edges = UIRectEdgeLeft;
     [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
@@ -139,8 +150,9 @@ static CGFloat const kLeftRightSpacing = 20;
     // 将vc.view里的所有subviews全部置为nil
     self.settingsButton = nil;
     self.typeSwitch = nil;
-    self.leftButton = nil;
-    self.rightButton = nil;
+    self.interactionView = nil;
+    self.leftArrow = nil;
+    self.rightArrow = nil;
     self.titleLabel = nil;
     self.legendView = nil;
     self.histogramView = nil;
@@ -169,16 +181,17 @@ static CGFloat const kLeftRightSpacing = 20;
 
 #pragma mark - Actions
 
-- (void)clickLeft
+- (void)tapGestureRecognizerAction:(UITapGestureRecognizer *)tap // 热区范围为左右1/3
 {
-    self.offset = self.offset - 1;
-    [self reloadData];
-}
-
-- (void)clickRight
-{
-    self.offset = self.offset + 1;
-    [self reloadData];
+    CGPoint touchPoint = [tap locationInView:self.view];
+    if (touchPoint.x < self.interactionView.frame.size.width/3) { // 左侧
+        self.offset = self.offset - 1;
+        [self reloadData];
+    } else if (touchPoint.x > 2 * self.interactionView.frame.size.width/3) { // 右侧
+        self.offset = self.offset + 1;
+        [self reloadData];
+    }
+    
 }
 
 - (void)spanTypeChanged
@@ -186,94 +199,6 @@ static CGFloat const kLeftRightSpacing = 20;
     self.offset = 0;
     [self reloadData];
 }
-
-#pragma mark - SpanHistogramDelegate
-
-- (void)updateSpanText:(NSString *)text
-{
-    self.titleLabel.text = text;
-}
-
-#pragma mark - Getters
-
-- (UISegmentedControl *)typeSwitch
-{
-    if (!_typeSwitch) {
-        _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[[MirrorLanguage mirror_stringWithKey:@"segment_day"], [MirrorLanguage mirror_stringWithKey:@"segment_week"], [MirrorLanguage mirror_stringWithKey:@"segment_month"], [MirrorLanguage mirror_stringWithKey:@"segment_year"]]];
-        _typeSwitch.selectedSegmentIndex = 0;
-        [_typeSwitch addTarget:self action:@selector(spanTypeChanged) forControlEvents:UIControlEventValueChanged];
-        _typeSwitch.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
-    }
-    return _typeSwitch;
-}
-
-- (UILabel *)titleLabel
-{
-    if (!_titleLabel) {
-        _titleLabel = [UILabel new];
-        _titleLabel.textAlignment = NSTextAlignmentCenter;
-        _titleLabel.text = @"";
-        _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 和nickname的文字颜色保持一致
-    }
-    return _titleLabel;
-}
-
-- (UIButton *)leftButton
-{
-    if (!_leftButton) {
-        _leftButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"chevron.left"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_leftButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _leftButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_leftButton addTarget:self action:@selector(clickLeft) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _leftButton;
-}
-
-- (UIButton *)rightButton
-{
-    if (!_rightButton) {
-        _rightButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"chevron.right"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_rightButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _rightButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_rightButton addTarget:self action:@selector(clickRight) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _rightButton;
-}
-
-- (SpanHistogram *)histogramView
-{
-    if (!_histogramView) {
-        _histogramView = [[SpanHistogram alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-        _histogramView.delegate = self;
-    }
-    return _histogramView;
-}
-
-- (SpanLegend *)legendView
-{
-    if (!_legendView) {
-        _legendView = [[SpanLegend alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-        _legendView.delegate = self;
-    }
-    return _legendView;
-}
-
-- (UIButton *)settingsButton
-{
-    if (!_settingsButton) {
-        _settingsButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"ellipsis"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _settingsButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _settingsButton;
-}
-
-#pragma mark - Settings
 
 - (void)goToSettings
 {
@@ -308,6 +233,96 @@ static CGFloat const kLeftRightSpacing = 20;
     }
 }
 
+
+#pragma mark - SpanHistogramDelegate
+
+- (void)updateSpanText:(NSString *)text
+{
+    self.titleLabel.text = text;
+}
+
+#pragma mark - Getters
+
+- (UISegmentedControl *)typeSwitch
+{
+    if (!_typeSwitch) {
+        _typeSwitch = [[UISegmentedControl alloc] initWithItems:@[[MirrorLanguage mirror_stringWithKey:@"segment_day"], [MirrorLanguage mirror_stringWithKey:@"segment_week"], [MirrorLanguage mirror_stringWithKey:@"segment_month"], [MirrorLanguage mirror_stringWithKey:@"segment_year"]]];
+        _typeSwitch.selectedSegmentIndex = 0;
+        [_typeSwitch addTarget:self action:@selector(spanTypeChanged) forControlEvents:UIControlEventValueChanged];
+        _typeSwitch.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+    }
+    return _typeSwitch;
+}
+
+- (UIView *)interactionView
+{
+    if (!_interactionView) {
+        _interactionView = [UIView new];
+    }
+    return _interactionView;
+}
+
+- (UILabel *)titleLabel
+{
+    if (!_titleLabel) {
+        _titleLabel = [UILabel new];
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        _titleLabel.text = @"";
+        _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 和nickname的文字颜色保持一致
+    }
+    return _titleLabel;
+}
+
+- (UIImageView *)leftArrow
+{
+    if (!_leftArrow) {
+        UIImage *image = [[UIImage systemImageNamed:@"chevron.left"] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
+        UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        _leftArrow = [[UIImageView alloc] initWithImage:imageWithRightColor];
+    }
+    return _leftArrow;
+}
+
+- (UIView *)rightArrow
+{
+    if (!_rightArrow) {
+        UIImage *image = [[UIImage systemImageNamed:@"chevron.right"] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
+        UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        _rightArrow = [[UIImageView alloc] initWithImage:imageWithRightColor];
+    }
+    return _rightArrow;
+}
+
+- (SpanHistogram *)histogramView
+{
+    if (!_histogramView) {
+        _histogramView = [[SpanHistogram alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+        _histogramView.delegate = self;
+    }
+    return _histogramView;
+}
+
+- (SpanLegend *)legendView
+{
+    if (!_legendView) {
+        _legendView = [[SpanLegend alloc] initWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+        _legendView.delegate = self;
+    }
+    return _legendView;
+}
+
+- (UIButton *)settingsButton
+{
+    if (!_settingsButton) {
+        _settingsButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"ellipsis"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _settingsButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _settingsButton;
+}
 
 #pragma mark - UIViewControllerTransitioningDelegate
 
