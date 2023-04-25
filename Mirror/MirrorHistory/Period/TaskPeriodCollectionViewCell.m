@@ -12,6 +12,7 @@
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
 #import "MirrorMacro.h"
+#import "MirrorTimeText.h"
 
 static const CGFloat kHorizontalPadding = 20;
 static const CGFloat kVerticalPadding = 10;
@@ -51,7 +52,7 @@ static const CGFloat kVerticalPadding = 10;
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     self.backgroundColor = [UIColor mirrorColorNamed:task.color];
     BOOL periodsIsFinished = task.periods[self.periodIndex].count == 2;
-    self.dateLabel.text = [self dayFromTimestampWithWeekday:[task.periods[self.periodIndex][0] longValue]];
+    self.dateLabel.text = [MirrorTimeText YYYYmmddWeekdayWithStart:[task.periods[self.periodIndex][0] longValue]];
     if (periodsIsFinished) {
         self.startPicker.hidden = NO;
         self.endPicker.hidden = NO;
@@ -59,7 +60,7 @@ static const CGFloat kVerticalPadding = 10;
         self.deleteButton.hidden = NO;
         long start = [task.periods[self.periodIndex][0] longValue];
         long end = [task.periods[self.periodIndex][1] longValue];
-        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[[NSDate dateWithTimeIntervalSince1970:end] timeIntervalSinceDate:[NSDate dateWithTimeIntervalSince1970:start]]]];
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
         self.startPicker.date = [NSDate dateWithTimeIntervalSince1970:start];
         self.startPicker.maximumDate = [self startMaxDate];
         self.startPicker.minimumDate = [self startMinDate];
@@ -276,29 +277,6 @@ static const CGFloat kVerticalPadding = 10;
     // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
     minTime = [task.periods[self.periodIndex][0] longValue] + kMinSeconds;// 至少比开始的时间多一分钟
     return [NSDate dateWithTimeIntervalSince1970:minTime];
-}
-
-- (NSString *)dayFromTimestampWithWeekday:(long)timestamp
-{
-    // setup
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday) fromDate:[NSDate dateWithTimeIntervalSince1970:timestamp]];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    long year = (long)components.year;
-    long month = (long)components.month;
-    long day = (long)components.day;
-    long week = (long)components.weekday;
-    
-    NSString *weekday = @"";
-    if (week == 1) weekday = [MirrorLanguage mirror_stringWithKey:@"sunday"];
-    if (week == 2) weekday = [MirrorLanguage mirror_stringWithKey:@"monday"];
-    if (week == 3) weekday = [MirrorLanguage mirror_stringWithKey:@"tuesday"];
-    if (week == 4) weekday = [MirrorLanguage mirror_stringWithKey:@"wednesday"];
-    if (week == 5) weekday = [MirrorLanguage mirror_stringWithKey:@"thursday"];
-    if (week == 6) weekday = [MirrorLanguage mirror_stringWithKey:@"friday"];
-    if (week == 7) weekday = [MirrorLanguage mirror_stringWithKey:@"saturday"];
-    return [NSString stringWithFormat: @"%ld.%ld.%ld, %@", year, month, day, weekday];
 }
 
 

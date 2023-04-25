@@ -12,6 +12,7 @@
 #import "MirrorMacro.h"
 #import "CellAnimation.h"
 #import "MirrorLanguage.h"
+#import "MirrorTimeText.h"
 
 @interface TimeEditingViewController () <UIViewControllerTransitioningDelegate>
 
@@ -155,7 +156,9 @@
     self.startPicker.maximumDate = self.endPicker.date;
     self.startPicker.minimumDate = [NSDate dateWithTimeIntervalSince1970:[self formmerPeriodEndTime]];
     self.endPicker.minimumDate = self.startPicker.date;
-    self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[[NSDateComponentsFormatter new] stringFromTimeInterval:[self.endPicker.date timeIntervalSinceDate:self.startPicker.date]]];
+    long start = [self.startPicker.date timeIntervalSince1970];
+    long end = [self.endPicker.date timeIntervalSince1970];
+    self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
 }
     
 #pragma mark - Actions
