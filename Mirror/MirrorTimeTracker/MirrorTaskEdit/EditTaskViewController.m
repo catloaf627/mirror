@@ -130,7 +130,7 @@ static CGFloat const kHeightRatio = 0.8;
     }
 }
 
-- (void)clickDeleteButton
+- (void)clickRemoveButton
 {
     UIAlertController* deleteButtonAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete_or_archive"] message:nil preferredStyle:UIAlertControllerStyleAlert];
 
@@ -292,7 +292,7 @@ static CGFloat const kHeightRatio = 0.8;
         // padding
         _removeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
         // action
-        [_removeButton addTarget:self action:@selector(clickDeleteButton) forControlEvents:UIControlEventTouchUpInside];
+        [_removeButton addTarget:self action:@selector(clickRemoveButton) forControlEvents:UIControlEventTouchUpInside];
     }
     return _removeButton;
 }
