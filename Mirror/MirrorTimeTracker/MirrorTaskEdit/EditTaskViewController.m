@@ -23,7 +23,7 @@ static CGFloat const kHeightRatio = 0.8;
 @property (nonatomic, strong) UILabel *editTaskNameHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray<MirrorColorModel *> *colorBlocks;
-@property (nonatomic, strong) UIButton *deleteButton;
+@property (nonatomic, strong) UIButton *removeButton;
 @property (nonatomic, strong) UIButton *saveButton;
 @property (nonatomic, assign) MirrorColorType selectedColor;
 
@@ -84,9 +84,9 @@ static CGFloat const kHeightRatio = 0.8;
         make.width.mas_equalTo(kScreenWidth - 2*kEditTaskVCPadding);
         make.height.mas_equalTo([self p_colorBlockWidth]);
     }];
-    [self.view addSubview:self.deleteButton];
+    [self.view addSubview:self.removeButton];
     [self.view addSubview:self.saveButton];
-    [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.removeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
         make.left.offset(kEditTaskVCPadding);
         make.width.mas_equalTo(kScreenWidth/2-kEditTaskVCPadding);
@@ -94,7 +94,7 @@ static CGFloat const kHeightRatio = 0.8;
     }];
     [self.saveButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
-        make.left.mas_equalTo(self.deleteButton.mas_right).offset(0);
+        make.left.mas_equalTo(self.removeButton.mas_right).offset(0);
         make.width.mas_equalTo(kScreenWidth/2-kEditTaskVCPadding);
         make.height.mas_equalTo(40);
     }];
@@ -132,7 +132,7 @@ static CGFloat const kHeightRatio = 0.8;
 
 - (void)clickDeleteButton
 {
-    UIAlertController* deleteButtonAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete_task_?"] message:[MirrorLanguage mirror_stringWithKey:@"you_can_also_archive_this_task"] preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController* deleteButtonAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete_or_archive"] message:nil preferredStyle:UIAlertControllerStyleAlert];
 
     UIAlertAction* deleteAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
         [self dismissViewControllerAnimated:YES completion:^{
@@ -278,23 +278,23 @@ static CGFloat const kHeightRatio = 0.8;
     return @[pinkModel,orangeModel,yellowModel,greenModel,tealModel,blueModel,purpleModel,grayModel];
 }
 
-- (UIButton *)deleteButton
+- (UIButton *)removeButton
 {
-    if (!_deleteButton) {
-        _deleteButton = [UIButton new];
+    if (!_removeButton) {
+        _removeButton = [UIButton new];
         // icon
-        [_deleteButton setImage:[[UIImage systemImageNamed:@"xmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _deleteButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_removeButton setImage:[[UIImage systemImageNamed:@"xmark.rectangle"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _removeButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         // title
-        [_deleteButton setTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] forState:UIControlStateNormal];
-        [_deleteButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
-        _deleteButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+        [_removeButton setTitle:[MirrorLanguage mirror_stringWithKey:@"remove"] forState:UIControlStateNormal];
+        [_removeButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
+        _removeButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         // padding
-        _deleteButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
+        _removeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
         // action
-        [_deleteButton addTarget:self action:@selector(clickDeleteButton) forControlEvents:UIControlEventTouchUpInside];
+        [_removeButton addTarget:self action:@selector(clickDeleteButton) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _deleteButton;
+    return _removeButton;
 }
 
 - (UIButton *)saveButton
