@@ -173,21 +173,21 @@
 - (void)startCounting
 {
     [MirrorStorage startTask:self.taskName at:[NSDate now] periodIndex:0];
-    [self dismiss];
+    [self dismissViewControllerAnimated:NO completion:nil]; // present time tracking vc，此时 time editing vc的退场不需要动画
 }
 
 - (void)saveRecord
 {
     [MirrorStorage startTask:self.taskName at:self.startPicker.date periodIndex:0];
     [MirrorStorage stopTask:self.taskName at:self.endPicker.date periodIndex:0];
-    [self dismiss];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)panGestureRecognizerAction:(UIPanGestureRecognizer *)pan // 摸到 startbutton 下方 20pt，dismiss
 {
     CGPoint touchPoint = [pan locationInView:self.view];
     if (touchPoint.y > self.startButton.frame.origin.y + self.startButton.frame.size.height + 20) {
-        [self dismiss];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
@@ -195,7 +195,7 @@
 {
     CGPoint touchPoint = [tap locationInView:self.view];
     if (touchPoint.y > self.startButton.frame.origin.y + self.startButton.frame.size.height + 20) {
-        [self dismiss];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 

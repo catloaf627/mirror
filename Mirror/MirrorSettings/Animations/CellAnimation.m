@@ -6,6 +6,9 @@
 //
 
 #import "CellAnimation.h"
+#import "UIColor+MirrorColor.h"
+
+static CGFloat const kShadowWidth = 5;
 
 @implementation CellAnimation
 
@@ -44,20 +47,32 @@
     CGFloat height = [UIScreen mainScreen].bounds.size.height;
     
     if (_isPresent) { // present
-        transView.frame = self.cellFrame;
-        transView.layer.cornerRadius = 14; // cell radius
+        transView.frame = CGRectMake(self.cellFrame.origin.x + kShadowWidth, self.cellFrame.origin.y + kShadowWidth, self.cellFrame.size.width - 2*kShadowWidth, self.cellFrame.size.height - 2*kShadowWidth);
+        transView.layer.cornerRadius = 14;
+        transView.layer.shadowColor = [UIColor mirrorColorNamed:MirrorColorTypeShadow].CGColor;
+        transView.layer.shadowRadius = kShadowWidth/2;
+        transView.layer.shadowOpacity = 1;
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
             transView.frame = CGRectMake(0, 0, width, height);
             transView.layer.cornerRadius = 0;
+            transView.layer.shadowColor = 0;
+            transView.layer.shadowRadius = 0;
+            transView.layer.shadowOpacity = 0;
         } completion:^(BOOL finished) {
              [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         }];
     } else { // dismiss
         transView.frame = CGRectMake(0, 0, width, height);
         transView.layer.cornerRadius = 0;
+        transView.layer.shadowColor = 0;
+        transView.layer.shadowRadius = 0;
+        transView.layer.shadowOpacity = 0;
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-            transView.frame = self.cellFrame;
-            transView.layer.cornerRadius = 14; // cell radius
+            transView.frame = CGRectMake(self.cellFrame.origin.x + kShadowWidth, self.cellFrame.origin.y + kShadowWidth, self.cellFrame.size.width - 2*kShadowWidth, self.cellFrame.size.height - 2*kShadowWidth);
+            transView.layer.cornerRadius = 14;
+            transView.layer.shadowColor = [UIColor mirrorColorNamed:MirrorColorTypeShadow].CGColor;
+            transView.layer.shadowRadius = kShadowWidth/2;
+            transView.layer.shadowOpacity = 1;
         } completion:^(BOOL finished) {
              [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
         }];
