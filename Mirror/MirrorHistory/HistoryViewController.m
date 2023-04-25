@@ -186,14 +186,9 @@ static CGFloat const kLeftRightSpacing = 20;
 
 #pragma mark - SpanHistogramDelegate
 
-- (void)updateStartDate:(NSString *)startDate endDate:(NSString *)endDate
+- (void)updateSpanText:(NSString *)text
 {
-    if ([startDate isEqualToString:endDate]) {
-        self.titleLabel.text = startDate; // 某天
-    } else {
-        self.titleLabel.text = [[startDate stringByAppendingString:@" - "] stringByAppendingString:endDate]; // 某天 - 某天
-    }
-    
+    self.titleLabel.text = text;
 }
 
 #pragma mark - Getters

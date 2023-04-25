@@ -18,6 +18,7 @@
 #import "TodayPeriodCollectionViewCell.h"
 #import "MirrorDataManager.h"
 #import "TodayTotalHeaderCell.h"
+#import "MirrorTimeText.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
@@ -118,21 +119,21 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         make.centerX.offset(0);
         make.height.mas_equalTo(100);
     }];
+    [self.todayView addSubview:self.todayDateLabel];
+    [self.todayDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.offset(0);
+        make.bottom.offset(-20);
+    }];
     [self.todayView addSubview:self.todayLabel];
     [self.todayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(0);
-        make.centerY.offset(-10);
+        make.centerX.mas_equalTo(self.todayDateLabel);
+        make.bottom.mas_equalTo(self.todayDateLabel.mas_top);
     }];
     [self.todayView addSubview:self.crownButton];
     [self.crownButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.todayLabel.mas_left);
         make.centerY.mas_equalTo(self.todayLabel.mas_top);
         make.width.height.mas_equalTo(25);
-    }];
-    [self.todayView addSubview:self.todayDateLabel];
-    [self.todayDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.todayLabel.mas_bottom);
-        make.left.offset(0);
     }];
     [self.todayView addSubview:self.pieChart];
     [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -303,7 +304,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     if (!_todayDateLabel) {
         _todayDateLabel = [UILabel new];
-        _todayDateLabel.text = [self dayFromDateWithWeekday:[NSDate now]];
+        _todayDateLabel.text = [MirrorTimeText YYYYmmddWeekday:[NSDate now]];
         _todayDateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
         _todayDateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
     }
@@ -423,32 +424,5 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     return self.interactiveTransition;
 }
-
-#pragma mark - Privates
-
-- (NSString *)dayFromDateWithWeekday:(NSDate *)date
-{
-    // setup
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday) fromDate:date];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    long year = (long)components.year;
-    long month = (long)components.month;
-    long day = (long)components.day;
-    long week = (long)components.weekday;
-    
-    NSString *weekday = @"";
-    if (week == 1) weekday = [MirrorLanguage mirror_stringWithKey:@"sunday"];
-    if (week == 2) weekday = [MirrorLanguage mirror_stringWithKey:@"monday"];
-    if (week == 3) weekday = [MirrorLanguage mirror_stringWithKey:@"tuesday"];
-    if (week == 4) weekday = [MirrorLanguage mirror_stringWithKey:@"wednesday"];
-    if (week == 5) weekday = [MirrorLanguage mirror_stringWithKey:@"thursday"];
-    if (week == 6) weekday = [MirrorLanguage mirror_stringWithKey:@"friday"];
-    if (week == 7) weekday = [MirrorLanguage mirror_stringWithKey:@"saturday"];
-    return [NSString stringWithFormat: @"%ld.%ld.%ld, %@", year, month, day, weekday];
-}
-
-
 
 @end

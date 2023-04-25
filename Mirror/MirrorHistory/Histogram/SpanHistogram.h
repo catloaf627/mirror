@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol SpanHistogramDelegate <NSObject>  // push viewcontroller用 + update label
 
-- (void)updateStartDate:(NSString *)startDate endDate:(NSString *)endDate;
+- (void)updateSpanText:(NSString *)text;
 
 @end
 

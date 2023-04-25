@@ -63,19 +63,35 @@
     [mirrorDict setValue:@[@"Delete this time period? ", @"确定删除这个时间段？"] forKey:@"delete_period_?"];
     
     // History type switch
-    [mirrorDict setValue:@[@"Day ", @"日"] forKey:@"segment_day"];
-    [mirrorDict setValue:@[@"Week ", @"周"] forKey:@"segment_week"];
-    [mirrorDict setValue:@[@"Month ", @"月"] forKey:@"segment_month"];
-    [mirrorDict setValue:@[@"Year ", @"年"] forKey:@"segment_year"];
+    [mirrorDict setValue:@[@"Day", @"日"] forKey:@"segment_day"];
+    [mirrorDict setValue:@[@"Week", @"周"] forKey:@"segment_week"];
+    [mirrorDict setValue:@[@"Month", @"月"] forKey:@"segment_month"];
+    [mirrorDict setValue:@[@"Year", @"年"] forKey:@"segment_year"];
     
     // 星期
-    [mirrorDict setValue:@[@"Sun ", @"周日"] forKey:@"sunday"];
-    [mirrorDict setValue:@[@"Mon ", @"周一"] forKey:@"monday"];
-    [mirrorDict setValue:@[@"Tue ", @"周二"] forKey:@"tuesday"];
+    [mirrorDict setValue:@[@"Sun", @"周日"] forKey:@"sunday"];
+    [mirrorDict setValue:@[@"Mon", @"周一"] forKey:@"monday"];
+    [mirrorDict setValue:@[@"Tue", @"周二"] forKey:@"tuesday"];
     [mirrorDict setValue:@[@"Wed", @"周三"] forKey:@"wednesday"];
-    [mirrorDict setValue:@[@"Thu ", @"周四"] forKey:@"thursday"];
-    [mirrorDict setValue:@[@"Fri ", @"周五"] forKey:@"friday"];
-    [mirrorDict setValue:@[@"Sat ", @"周六"] forKey:@"saturday"];
+    [mirrorDict setValue:@[@"Thu", @"周四"] forKey:@"thursday"];
+    [mirrorDict setValue:@[@"Fri", @"周五"] forKey:@"friday"];
+    [mirrorDict setValue:@[@"Sat", @"周六"] forKey:@"saturday"];
+    
+    // 月份
+    [mirrorDict setValue:@[@"Jan", @"1月"] forKey:@"january"];
+    [mirrorDict setValue:@[@"Feb", @"2月"] forKey:@"february"];
+    [mirrorDict setValue:@[@"Mar", @"3月"] forKey:@"march"];
+    [mirrorDict setValue:@[@"Apr", @"4月"] forKey:@"april"];
+    [mirrorDict setValue:@[@"May", @"5月"] forKey:@"may"];
+    [mirrorDict setValue:@[@"Jun", @"6月"] forKey:@"june"];
+    [mirrorDict setValue:@[@"Jul", @"7月"] forKey:@"july"];
+    [mirrorDict setValue:@[@"Aug", @"8月"] forKey:@"august"];
+    [mirrorDict setValue:@[@"Sep", @"9月"] forKey:@"september"];
+    [mirrorDict setValue:@[@"Oct", @"10月"] forKey:@"october"];
+    [mirrorDict setValue:@[@"Nov", @"11月"] forKey:@"november"];
+    [mirrorDict setValue:@[@"Dec", @"12月"] forKey:@"december"];
+    
+    
     
     // Span histogram empty hint
     [mirrorDict setValue:@[@"No data ", @"暂无数据"] forKey:@"no_data"];

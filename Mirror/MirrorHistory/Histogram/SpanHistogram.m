@@ -16,6 +16,7 @@
 #import "MirrorLanguage.h"
 #import "TaskRecordViewController.h"
 #import "MirrorTool.h"
+#import "MirrorTimeText.h"
 
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
@@ -250,32 +251,18 @@ static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
     
     _data = [MirrorDataManager getDataWithStart:startTime end:endTime];
     // update label
-    [self.delegate updateStartDate:[self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:startTime]] endDate:[self dayFromDateWithWeekday:[NSDate dateWithTimeIntervalSince1970:endTime-1]]]; // 这里减1是因为，period本身在读的时候取的是左闭右开，例如2023.4.17,Mon,00:00 - 2023.4.19,Wed,00:00间隔为2天，指的就是2023.4.17, 2023.4.18这两天，2023.4.19本身是不做数的。因此这里传日期的时候要减去1，将结束时间2023.4.19,Wed,00:00改为2023.4.18,Wed,23:59，这样传过去的label就只展示左闭右开区间里真实囊括的两天了。
+    NSString *startDate = [MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:startTime]];
+    NSString *endDate = [MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:endTime-1]];// 这里减1是因为，period本身在读的时候取的是左闭右开，例如2023.4.17,Mon,00:00 - 2023.4.19,Wed,00:00间隔为2天，指的就是2023.4.17, 2023.4.18这两天，2023.4.19本身是不做数的。因此这里传日期的时候要减去1，将结束时间2023.4.19,Wed,00:00改为2023.4.18,Wed,23:59，这样传过去的label就只展示左闭右开区间里真实囊括的两天了。
+    
+    if ([startDate isEqualToString:endDate]) {
+        [self.delegate updateSpanText:startDate];
+    } else {
+        startDate = [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:startTime]];
+        endDate = [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:endTime-1]];
+        NSString *combine  = [[startDate stringByAppendingString:@" - "] stringByAppendingString:endDate];
+        [self.delegate updateSpanText:combine];
+    }
     return _data;
 }
-
-- (NSString *)dayFromDateWithWeekday:(NSDate *)date
-{
-    // setup
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekday) fromDate:date];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    long year = (long)components.year;
-    long month = (long)components.month;
-    long day = (long)components.day;
-    long week = (long)components.weekday;
-    
-    NSString *weekday = @"";
-    if (week == 1) weekday = [MirrorLanguage mirror_stringWithKey:@"sunday"];
-    if (week == 2) weekday = [MirrorLanguage mirror_stringWithKey:@"monday"];
-    if (week == 3) weekday = [MirrorLanguage mirror_stringWithKey:@"tuesday"];
-    if (week == 4) weekday = [MirrorLanguage mirror_stringWithKey:@"wednesday"];
-    if (week == 5) weekday = [MirrorLanguage mirror_stringWithKey:@"thursday"];
-    if (week == 6) weekday = [MirrorLanguage mirror_stringWithKey:@"friday"];
-    if (week == 7) weekday = [MirrorLanguage mirror_stringWithKey:@"saturday"];
-    return [NSString stringWithFormat: @"%ld.%ld.%ld, %@", year, month, day, weekday];
-}
-
 
 @end
