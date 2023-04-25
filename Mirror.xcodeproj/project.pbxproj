@@ -258,7 +258,6 @@
 		4A379B3D28E0372700785CAE /* MirrorSettings */ = {
 			isa = PBXGroup;
 			children = (
-				4ACB422F29EECBC4005EECC4 /* Animations */,
 				4AE4171D28DF6155008A6A18 /* SettingsViewController.h */,
 				4AE4171E28DF6155008A6A18 /* SettingsViewController.m */,
 				4A406C0F2906FC00001E83A1 /* ToggleCollectionViewCell.h */,
@@ -273,6 +272,7 @@
 		4A379B3E28E0379E00785CAE /* MirrorCustomize */ = {
 			isa = PBXGroup;
 			children = (
+				4ACB422F29EECBC4005EECC4 /* Animations */,
 				4A099FAC29DD57AE002683A1 /* MirrorTool.h */,
 				4A099FAD29DD57AE002683A1 /* MirrorTool.m */,
 				4A32A3FC29F7782200DCCF57 /* MirrorTimeText.h */,
