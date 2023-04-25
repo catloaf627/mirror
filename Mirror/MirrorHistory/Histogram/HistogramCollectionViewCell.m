@@ -8,6 +8,7 @@
 #import "HistogramCollectionViewCell.h"
 #import "MirrorTool.h"
 #import <Masonry/Masonry.h>
+#import "MirrorTimeText.h"
 
 static const CGFloat kLabelHeight = 20;
 
@@ -40,7 +41,7 @@ static const CGFloat kLabelHeight = 20;
     }];
     
     [self addSubview:self.timeLabel];
-    self.timeLabel.text = [[NSDateComponentsFormatter new] stringFromTimeInterval:[MirrorTool getTotalTimeOfPeriods:data[index].periods]];
+    self.timeLabel.text = [MirrorTimeText XdXhXmXsShort:[MirrorTool getTotalTimeOfPeriods:data[index].periods]];
     self.timeLabel.textColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:data[index].color]];
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.offset(0);
