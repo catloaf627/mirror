@@ -148,15 +148,15 @@ static CGFloat const kLeftRightSpacing = 20;
     [self viewDidLoad];
 }
 
--(void)viewWillAppear:(BOOL)animated
+-(void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     [self reloadData];
 }
 
 - (void)reloadData
 {
-    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
+    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewDidAppear做一个兜底。
     [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.legendView legendViewHeight]);

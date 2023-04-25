@@ -67,15 +67,15 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self viewDidLoad];
 }
 
--(void)viewWillAppear:(BOOL)animated
+-(void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewDidAppear:animated];
     [self reloadData];
 }
 
 - (void)reloadData
 {
-    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
+    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewDidAppear做一个兜底。
     [self updateDataSource];
     [self.collectionView reloadData];
 }
