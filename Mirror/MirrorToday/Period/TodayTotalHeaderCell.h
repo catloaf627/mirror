@@ -9,16 +9,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol UpdateCrownDelegate <NSObject>
-
-- (void)showCrown;
-- (void)hideCrown;
-
-@end
-
 @interface TodayTotalHeaderCell : UICollectionViewCell
 
-@property (nonatomic, weak) id<UpdateCrownDelegate> crownDelegate;
 - (void)configWithTasknames:(NSArray<NSString *> *)taskNames periodIndexes:(NSArray *)indexes;
 
 @end

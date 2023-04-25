@@ -13,26 +13,18 @@
 #import "MirrorSettings.h"
 #import "LeftAnimation.h"
 #import "SettingsViewController.h"
-#import "MirrorPiechart.h"
 #import "MirrorLanguage.h"
 #import "TodayPeriodCollectionViewCell.h"
 #import "MirrorDataManager.h"
 #import "TodayTotalHeaderCell.h"
-#import "MirrorTimeText.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UpdateCrownDelegate, UIViewControllerTransitioningDelegate>
+@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
-
-@property (nonatomic, strong) UIView *todayView;
-@property (nonatomic, strong) UILabel *todayLabel;
-@property (nonatomic, strong) UILabel *todayDateLabel;
-@property (nonatomic, strong) MirrorPiechart *pieChart;
-@property (nonatomic, strong) UIButton *crownButton;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 // 下面两个都是数据源，同步更新
@@ -67,11 +59,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     // 将vc.view里的所有subviews全部置为nil
     self.settingsButton = nil;
-    self.todayView = nil;
-    self.todayLabel = nil;
-    self.todayDateLabel = nil;
-    self.pieChart = nil;
-    self.crownButton = nil;
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -89,7 +76,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)reloadData
 {
     // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewWillAppear做一个兜底。
-    [self.pieChart updateTodayWithWidth:80];
     [self updateDataSource];
     [self.collectionView reloadData];
 }
@@ -112,39 +98,10 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
      */
     self.navigationController.navigationBar.topItem.title = @""; //给父vc一个空title，让所有子vc的navibar返回文案都为空
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-    
-    [self.view addSubview:self.todayView];
-    [self.todayView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-        make.centerX.offset(0);
-        make.height.mas_equalTo(100);
-    }];
-    [self.todayView addSubview:self.todayDateLabel];
-    [self.todayDateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(0);
-        make.bottom.offset(-20);
-    }];
-    [self.todayView addSubview:self.todayLabel];
-    [self.todayLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.todayDateLabel);
-        make.bottom.mas_equalTo(self.todayDateLabel.mas_top);
-    }];
-    [self.todayView addSubview:self.crownButton];
-    [self.crownButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self.todayLabel.mas_left);
-        make.centerY.mas_equalTo(self.todayLabel.mas_top);
-        make.width.height.mas_equalTo(25);
-    }];
-    [self.todayView addSubview:self.pieChart];
-    [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.offset(0);
-        make.left.mas_equalTo(self.todayDateLabel.mas_right).offset(20);
-        make.width.height.mas_equalTo(80);
-        make.right.offset(0);
-    }];
+
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.todayView.mas_bottom);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.left.offset(kLeftRightSpacing);
         make.right.offset(-kLeftRightSpacing);
         make.bottom.offset(-kTabBarHeight);
@@ -153,7 +110,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self.view addSubview:self.settingsButton];
     [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(kLeftRightSpacing);
-        make.bottom.mas_equalTo(self.self.todayView.mas_top);
+        make.bottom.mas_equalTo(self.self.collectionView.mas_top);
         make.width.height.mas_equalTo(40);
     }];
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
@@ -201,7 +158,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     if (kind == UICollectionElementKindSectionHeader) {
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
         TodayTotalHeaderCell* todayHeader = (TodayTotalHeaderCell *)header;
-        todayHeader.crownDelegate = self;
         [todayHeader configWithTasknames:self.tasknames periodIndexes:self.originIndexes];
         
     }
@@ -210,45 +166,37 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(kScreenWidth, 30);
-}
-
-#pragma mark - UpdateCrownDelegate
-
-- (void)showCrown
-{
-    self.crownButton.hidden = NO;
-}
-
-- (void)hideCrown
-{
-    self.crownButton.hidden = YES;
+    return CGSizeMake(kScreenWidth, 130);
 }
 
 #pragma mark - Actions
 
-- (void)crownAnimation
+- (void)updateDataSource
 {
-    __weak typeof(self) weakSelf = self;
-    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy] impactOccurred];
-    [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-        weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4-0.2); //左
-    } completion:^(BOOL finished) {
-        [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-            weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4+0.2); //右
-        } completion:^(BOOL finished) {
-            [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-                weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4-0.2); //左
-            } completion:^(BOOL finished) {
-                [UIView animateKeyframesWithDuration:0.1 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
-                    weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4+0.2); //右
-                } completion:^(BOOL finished) {
-                    weakSelf.crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4); //恢复
-                }];
-            }];
-        }];
-    }];
+    self.tasknames = nil;
+    self.originIndexes = nil;
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+    long endTime = startTime + 86400;
+    
+    NSArray *allTasks = [MirrorDataManager allTasks];
+    for (int i=0; i<allTasks.count; i++) {
+        MirrorDataModel *task = allTasks[i];
+        for (NSInteger periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
+            NSArray *period = task.periods[periodIndex];
+            if ([period[0] longValue] >= startTime && [period[0] longValue] <= endTime) { // 符合要求，可以展示在today页面
+                [self.tasknames addObject:task.taskName];
+                [self.originIndexes addObject:@(periodIndex)];
+            }
+        }
+    }
 }
+
 
 #pragma mark - Getters
 
@@ -279,84 +227,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
     }
     return _settingsButton;
-}
-
-- (UIView *)todayView
-{
-    if (!_todayView) {
-        _todayView = [UIView new];
-    }
-    return _todayView;
-}
-
-- (UILabel *)todayLabel
-{
-    if (!_todayLabel) {
-        _todayLabel = [UILabel new];
-        _todayLabel.text =[MirrorLanguage mirror_stringWithKey:@"today"];
-        _todayLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:37];
-        _todayLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-    }
-    return _todayLabel;
-}
-
-- (UILabel *)todayDateLabel
-{
-    if (!_todayDateLabel) {
-        _todayDateLabel = [UILabel new];
-        _todayDateLabel.text = [MirrorTimeText YYYYmmddWeekday:[NSDate now]];
-        _todayDateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
-        _todayDateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
-    }
-    return _todayDateLabel;
-}
-
-- (MirrorPiechart *)pieChart
-{
-    if (!_pieChart) {
-        _pieChart = [[MirrorPiechart alloc] initTodayWithWidth:80];
-    }
-    return _pieChart;
-}
-
-
-- (UIButton *)crownButton
-{
-    if (!_crownButton) {
-        _crownButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"crown.fill"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_crownButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _crownButton.transform = CGAffineTransformMakeRotation(-M_PI/4);
-        _crownButton.tintColor = [UIColor systemYellowColor];
-        [_crownButton addTarget:self action:@selector(crownAnimation) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _crownButton;
-}
-
-- (void)updateDataSource
-{
-    self.tasknames = nil;
-    self.originIndexes = nil;
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    long endTime = startTime + 86400;
-    
-    NSArray *allTasks = [MirrorDataManager allTasks];
-    for (int i=0; i<allTasks.count; i++) {
-        MirrorDataModel *task = allTasks[i];
-        for (NSInteger periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
-            NSArray *period = task.periods[periodIndex];
-            if ([period[0] longValue] >= startTime && [period[0] longValue] <= endTime) { // 符合要求，可以展示在today页面
-                [self.tasknames addObject:task.taskName];
-                [self.originIndexes addObject:@(periodIndex)];
-            }
-        }
-    }
 }
 
 - (NSMutableArray<NSString *> *)tasknames
