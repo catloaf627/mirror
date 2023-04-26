@@ -12,6 +12,7 @@
 #import "MirrorDataManager.h"
 #import "TaskInfoCollectionViewCell.h"
 #import "TaskRecordViewController.h"
+#import "MirrorLanguage.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
@@ -29,6 +30,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskDeleteNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskChangeOrderNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
     }
     return self;
 }
@@ -72,11 +75,10 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)p_setupUI
 {
     // navibar
-    self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground]; // navibar颜色为背景色
     self.navigationController.navigationBar.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 返回箭头颜色为文案颜色
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:NSForegroundColorAttributeName]; // title为文案颜色
-    [self.navigationItem setTitle:@"All tasks"];
+    [self.navigationItem setTitle:[MirrorLanguage mirror_stringWithKey:@"all_tasks"]];
     self.navigationController.navigationBar.shadowImage = [UIImage new]; // navibar底部1pt下划线隐藏
     [self.view addSubview:self.navigationController.navigationBar]; // 给需要navigationbar的vc添加navigationbar
     // collection view

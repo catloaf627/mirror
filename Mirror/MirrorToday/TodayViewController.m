@@ -17,6 +17,7 @@
 #import "TodayPeriodCollectionViewCell.h"
 #import "MirrorDataManager.h"
 #import "TodayTotalHeader.h"
+#import "TaskRecordViewController.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
@@ -123,7 +124,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    [self.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.tasknames[indexPath.item]] animated:YES];
 }
 
 #pragma mark - UICollectionViewDataSource
