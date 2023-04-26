@@ -21,7 +21,7 @@
 
 static CGFloat const kPadding = 20;
 
-@interface TaskInfoCollectionViewCell () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface TaskInfoCollectionViewCell () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate>
 // Data
 @property (nonatomic, strong) NSString *taskName;
 // UI
@@ -124,6 +124,32 @@ static CGFloat const kPadding = 20;
 
 #pragma mark - Actions
 
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSString *currentText = textField.text;
+    BOOL textIsTheSame = [currentText isEqualToString:self.taskName];
+    BOOL textIsEmpty = !currentText || [currentText isEqualToString:@""];
+    TaskNameExistsType existType = [MirrorStorage taskNameExists:currentText];
+    if (textIsTheSame) { // taskname和之前一样
+        
+    } else if (textIsEmpty) { // taskname为空，不允许修改
+        UIAlertController* newNameIsEmptyAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"name_field_cannot_be_empty"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction* understandAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"gotcha"] style:UIAlertActionStyleDefault handler:nil];
+        [newNameIsEmptyAlert addAction:understandAction];
+        [self.delegate presentViewController:newNameIsEmptyAlert animated:YES completion:nil];
+        [self.taskNameField setText:self.taskName];
+    } else if (existType != TaskNameExistsTypeValid) { // taskname重复了，不允许修改
+        UIAlertController* newNameIsDuplicateAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"task_cannot_be_duplicated"] message: [MirrorLanguage mirror_stringWithKey:existType == TaskNameExistsTypeExistsInCurrentTasks ? @"this_task_exists_in_current_task_list" : @"this_task_exists_in_the_archived_task_list"] preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* understandAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"gotcha"] style:UIAlertActionStyleDefault handler:nil];
+        [newNameIsDuplicateAlert addAction:understandAction];
+        [self.delegate presentViewController:newNameIsDuplicateAlert animated:YES completion:nil];
+        [self.taskNameField setText:self.taskName];
+    } else { // taskname valid，允许修改
+        [MirrorStorage editTask:self.taskName name:textField.text];
+    }
+}
+
 - (void)showPickerHideLabel
 {
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
@@ -185,6 +211,7 @@ static CGFloat const kPadding = 20;
         _taskNameField.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _taskNameField.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         _taskNameField.enabled = YES;
+        _taskNameField.delegate = self;
         _taskNameField.textAlignment = NSTextAlignmentLeft;
     }
     return _taskNameField;
@@ -278,7 +305,7 @@ static CGFloat const kPadding = 20;
     // 选中某色块时，更新背景颜色为该色块颜色，更新selectedColor为该色块颜色
     MirrorColorType selectedColor =  self.colorBlocks[indexPath.item].color;
     self.backgroundColor = [UIColor mirrorColorNamed:selectedColor];
-    [MirrorStorage editTask:self.taskName color:selectedColor name:self.taskName];
+    [MirrorStorage editTask:self.taskName color:selectedColor];
     [collectionView reloadData];
 }
 

@@ -42,8 +42,6 @@ typedef NS_ENUM(NSInteger, SpanType) {
 #define kLeftSheetRatio (0.7)
 // Max number of colors
 #define kMaxColorNum (8)
-// Max number of tasks
-#define kMaxTaskNum (8)
 // 最小记录时间为一分钟（只要时长超过一分钟，分钟数必然有变化）全app忽略秒数（秒数全部记为0）
 #define kMinSeconds (60)
 

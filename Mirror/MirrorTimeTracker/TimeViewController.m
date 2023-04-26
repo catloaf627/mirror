@@ -13,7 +13,6 @@
 #import "MirrorDataManager.h"
 #import "MirrorMacro.h"
 #import "MirrorTabsManager.h"
-#import "EditTaskViewController.h"
 #import "AddTaskViewController.h"
 #import "TimeTrackingViewController.h"
 #import "TimeEditingViewController.h"
@@ -136,25 +135,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 #pragma mark - Actions
 
-// 长按唤起task编辑页面
-- (void)cellGetsLongPressed:(UISwipeGestureRecognizer *)swipeRecognizer
-{
-    CGPoint touchPoint = [swipeRecognizer locationInView:self.collectionView];
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:touchPoint];
-    if (indexPath == nil) {
-        return;
-    }
-    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
-    MirrorDataModel *task = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
-    if (task.isAddTaskModel) { // 长按[+]均可以像点击一样唤起add task
-        AddTaskViewController *addVC = [AddTaskViewController new];
-        [self.navigationController presentViewController:addVC animated:YES completion:nil];
-    } else { // 长按task
-        EditTaskViewController *editVC = [[EditTaskViewController alloc]initWithTaskname:[MirrorDataManager activatedTasksWithAddTask][indexPath.item].taskName];
-                [self.navigationController presentViewController:editVC animated:YES completion:nil];
-    }
-}
-
 - (void)goToSettings
 {
     [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
@@ -271,12 +251,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [_collectionView registerClass:[TimeTrackerTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier]];
         [_collectionView registerClass:[TimeTrackerAddTaskCollectionViewCell class] forCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier]];
         [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
-        
-        // 长按手势
-        UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(cellGetsLongPressed:)];
-        longPressRecognizer.minimumPressDuration = 0.25;
-        [_collectionView addGestureRecognizer:longPressRecognizer];
-        
     }
     return _collectionView;
 }

@@ -17,11 +17,8 @@
 + (NSMutableArray<MirrorDataModel *> *)activatedTasksWithAddTask
 {
     NSMutableArray<MirrorDataModel *> *activatedTasksWithAddTask = [MirrorDataManager activatedTasks];
-    if (activatedTasksWithAddTask.count < kMaxTaskNum) {
-        //cell数量不足的时候必加add task cell
-        MirrorDataModel *fakeModel = [[MirrorDataModel alloc] initWithTitle:nil createdTime:nil colorType:nil isArchived:nil periods:nil isAddTask:YES];
-        [activatedTasksWithAddTask addObject:fakeModel];
-    }
+    MirrorDataModel *fakeModel = [[MirrorDataModel alloc] initWithTitle:nil createdTime:nil colorType:nil isArchived:nil periods:nil isAddTask:YES];
+    [activatedTasksWithAddTask addObject:fakeModel];
     return activatedTasksWithAddTask;
 }
 

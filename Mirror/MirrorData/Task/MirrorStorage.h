@@ -32,7 +32,9 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 + (void)cancelArchiveTask:(NSString *)taskName;
 
-+ (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName;
++ (void)editTask:(NSString *)oldName name:(NSString *)newName;
+
++ (void)editTask:(NSString *)taskName color:(MirrorColorType)color;
 
 + (void)editTask:(NSString *)taskName createdTime:(long)createdTime;
 

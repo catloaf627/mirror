@@ -74,7 +74,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
 }
 
-+ (void)editTask:(NSString *)oldName color:(MirrorColorType)newColor name:(NSString *)newName
++ (void)editTask:(NSString *)oldName name:(NSString *)newName
 {
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
@@ -82,13 +82,28 @@ static NSString *const kMirrorDict = @"mirror_dict";
     MirrorDataModel *task = mirrorDict[oldName];
     // 更新task的color和taskname
     [mirrorDict removeObjectForKey:oldName];
-    task.color = newColor;
     task.taskName = newName;
     // 保存更新好的task到本地
     [mirrorDict setValue:task forKey:newName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][newName] info:@"Edit"];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][newName] info:@"Edit name"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
+}
+
++ (void)editTask:(NSString *)taskName color:(MirrorColorType)color
+{
+    // 在本地取出task
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    // 取出这个task以便作修改
+    MirrorDataModel *task = mirrorDict[taskName];
+    // 更新task的color和taskname
+    task.color = color;
+    // 保存更新好的task到本地
+    [mirrorDict setValue:task forKey:taskName];
+    // 将mirror dict存回本地
+    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Edit color"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
 }
 

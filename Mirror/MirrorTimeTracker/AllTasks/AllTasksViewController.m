@@ -92,6 +92,14 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     }];
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [[UIApplication sharedApplication].windows.firstObject endEditing: YES];
+}
+
+
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
