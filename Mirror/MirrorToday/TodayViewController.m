@@ -101,6 +101,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
 
     [self.view addSubview:self.collectionView];
+    [self updateDataSource];
+    [self.collectionView reloadData];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.left.offset(kLeftRightSpacing);
@@ -141,7 +143,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self updateDataSource];
     TodayPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TodayPeriodCollectionViewCell identifier] forIndexPath:indexPath];
     [cell configWithTaskname:self.tasknames[indexPath.item] periodIndex:[self.originIndexes[indexPath.item] integerValue]];
     cell.delegate = self;
