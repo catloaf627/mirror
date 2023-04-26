@@ -22,7 +22,7 @@
 #import "SettingsViewController.h"
 #import "LeftAnimation.h"
 #import "CellAnimation.h"
-#import "AllTasksViewController.h"
+#import "EditTasksViewController.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -146,7 +146,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)goToAllTasks
 {
-    [self.navigationController pushViewController:[AllTasksViewController new] animated:YES];
+    [self.navigationController pushViewController:[EditTasksViewController new] animated:YES];
 }
 
 

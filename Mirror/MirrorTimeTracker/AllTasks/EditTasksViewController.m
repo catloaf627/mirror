@@ -1,11 +1,11 @@
 //
-//  AllTasksViewController.m
+//  EditTasksViewController.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/26.
 //
 
-#import "AllTasksViewController.h"
+#import "EditTasksViewController.h"
 #import "MirrorMacro.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
@@ -16,13 +16,13 @@
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface AllTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol>
+@interface EditTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
 
-@implementation AllTasksViewController
+@implementation EditTasksViewController
 
 - (instancetype)init
 {
@@ -55,7 +55,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 1. 返回（B->A）的时候，需要给A重新添加一遍navibar
 2. 反悔（B->A取消）之后，需要给B重新添加一遍navibar
 3. 从其他页面push A或B的时候，不存在navibar的共用，hasNavibar将一直是YES
-4. VC A指的是AllTasksViewController，VC B指的是TaskRecordViewController
+4. VC A指的是EditTasksViewController，VC B指的是TaskRecordViewController
 */
 - (void)viewWillAppear:(BOOL)animated
 {
