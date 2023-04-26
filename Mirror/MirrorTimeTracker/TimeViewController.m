@@ -32,7 +32,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 @property (nonatomic, strong) UIButton *allTasksButton;
-@property (nonatomic, assign) CGPoint collectionViewPoint; // self.collectionView.x, self.collectionView.y
 @property (nonatomic, assign) CGRect selectedCellFrame; // cell.x, cell.y, cell.width, cell.height
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -96,12 +95,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
     }];
-}
-
-- (void)viewDidLayoutSubviews
-{
-    [super viewDidLayoutSubviews];
-    self.collectionViewPoint = self.collectionView.frame.origin; // update collectionview frame的时机
 }
 
 - (void)p_setupUI
@@ -169,7 +162,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         TimeEditingViewController *timeEditingVC = [[TimeEditingViewController alloc] initWithTaskName:selectedModel.taskName];
         timeEditingVC.transitioningDelegate = self; // 动画
         timeEditingVC.modalPresentationStyle = UIModalPresentationCustom;
-        timeEditingVC.cellFrame = CGRectMake(self.collectionViewPoint.x + self.selectedCellFrame.origin.x, self.collectionViewPoint.y + self.selectedCellFrame.origin.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
+        timeEditingVC.cellFrame = CGRectMake(self.collectionView.frame.origin.x + self.selectedCellFrame.origin.x, self.collectionView.frame.origin.y + self.selectedCellFrame.origin.y  - self.collectionView.contentOffset.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
         [self presentViewController:timeEditingVC animated:YES completion:nil];
     }
 }
@@ -181,7 +174,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         TimeTrackingViewController * timeTrackingVC = [[TimeTrackingViewController alloc] initWithTaskName:taskModel.taskName];
         timeTrackingVC.transitioningDelegate = self;
         timeTrackingVC.modalPresentationStyle = UIModalPresentationCustom;
-        timeTrackingVC.cellFrame = CGRectMake(self.collectionViewPoint.x + self.selectedCellFrame.origin.x, self.collectionViewPoint.y + self.selectedCellFrame.origin.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
+        timeTrackingVC.cellFrame = CGRectMake(self.collectionView.frame.origin.x + self.selectedCellFrame.origin.x, self.collectionView.frame.origin.y + self.selectedCellFrame.origin.y - self.collectionView.contentOffset.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
         [self presentViewController:timeTrackingVC animated:NO completion:nil]; // present time tracking vc 一定是通过 time editing vc 结束来的，所以不需要动画。
     }
     if (taskModel.isAddTaskModel) {
@@ -290,7 +283,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     } else { // Time editing / Time tracking
         CellAnimation *animation = [CellAnimation new];
         animation.isPresent = YES;
-        animation.cellFrame = CGRectMake(self.collectionViewPoint.x + self.selectedCellFrame.origin.x, self.collectionViewPoint.y + self.selectedCellFrame.origin.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
+        animation.cellFrame = CGRectMake(self.collectionView.frame.origin.x + self.selectedCellFrame.origin.x, self.collectionView.frame.origin.y -  self.collectionView.contentOffset.y + self.selectedCellFrame.origin.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
         return animation;
     }
 }
