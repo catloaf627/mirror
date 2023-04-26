@@ -59,6 +59,7 @@ typedef NS_ENUM(NSInteger, SpanType) {
 #define MirrorTaskCreateNotification @"MirrorTaskCreateNotification"
 #define MirrorTaskDeleteNotification @"MirrorTaskDeleteNotification"
 #define MirrorTaskArchiveNotification @"MirrorTaskArchiveNotification"
+#define MirrorTaskChangeOrderNotification @"MirrorTaskChangeOrderNotification"
 #define MirrorTaskEditNotification @"MirrorTaskEditNotification"
 #define MirrorTaskStartNotification @"MirrorTaskStartNotification"
 #define MirrorTaskStopNotification @"MirrorTaskStopNotification"

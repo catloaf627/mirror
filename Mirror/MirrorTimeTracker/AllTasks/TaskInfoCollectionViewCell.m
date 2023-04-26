@@ -68,7 +68,7 @@ static CGFloat const kPadding = 20;
     }];
     
     [self addSubview:self.createAtLabel];
-    [self.createAtLabel setTitle:[@"Created at " stringByAppendingString: [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:createdTime]]] forState:UIControlStateNormal];
+    [self.createAtLabel setTitle:[[MirrorLanguage mirror_stringWithKey:@"created_at"] stringByAppendingString: [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:createdTime]]] forState:UIControlStateNormal];
     [self.createAtLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.taskNameField);
         make.left.mas_equalTo(self.taskNameField.mas_right).offset(kPadding);
@@ -94,6 +94,7 @@ static CGFloat const kPadding = 20;
     }];
     
     [self addSubview:self.collectionView];
+    [self.collectionView reloadData];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.createAtPicker.mas_bottom).offset(10);
         make.centerX.offset(0);
@@ -137,7 +138,7 @@ static CGFloat const kPadding = 20;
     MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     self.createAtPicker.hidden = YES;
     self.createAtLabel.hidden = NO;
-    [self.createAtLabel setTitle:[@"Created at " stringByAppendingString: [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:task.createdTime]]] forState:UIControlStateNormal];
+    [self.createAtLabel setTitle:[[MirrorLanguage mirror_stringWithKey:@"created_at"]  stringByAppendingString: [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:task.createdTime]]] forState:UIControlStateNormal];
 }
 
 - (void)archiveAction

@@ -63,8 +63,9 @@
     // Delete period
     [mirrorDict setValue:@[@"Delete this time period? ", @"确定删除这个时间段？"] forKey:@"delete_period_?"];
     
-    // Delte task
+    // All tasks
     [mirrorDict setValue:@[@"Delete this task? ", @"确定删除这个任务？"] forKey:@"delete_task_?"];
+    [mirrorDict setValue:@[@"Created at " , @"创建于 "] forKey:@"created_at"];
     
     // History type switch
     [mirrorDict setValue:@[@"Day", @"日"] forKey:@"segment_day"];

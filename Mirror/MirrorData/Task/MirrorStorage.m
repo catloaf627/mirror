@@ -105,7 +105,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskChangeOrderNotification object:nil userInfo:nil];
 }
 
 // 如果是计时，accurateDate为[NSDate now]，periodIndex为0
