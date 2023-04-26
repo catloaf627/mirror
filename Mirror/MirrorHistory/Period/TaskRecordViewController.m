@@ -17,7 +17,7 @@
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTaskProtocol>
+@interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForPeriodCellProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSString *taskName;
@@ -75,6 +75,27 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self p_setupUI];
 }
 
+/* VC A 上push VC B，共用一个navibar，
+1. 返回（B->A）的时候，需要给A重新添加一遍navibar
+2. 反悔（B->A取消）之后，需要给B重新添加一遍navibar
+3. 从其他页面push A或B的时候，不存在navibar的共用，hasNavibar将一直是YES
+4. VC A指的是AllTasksViewController，VC B指的是TaskRecordViewController
+*/
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    BOOL hasNavibar = NO;
+    for (UIView *subview in self.view.subviews) {
+        if ([subview isKindOfClass:UINavigationBar.class]) {
+            hasNavibar = YES;
+            break;
+        }
+    }
+    if (!hasNavibar) {
+        [self.view addSubview:self.navigationController.navigationBar]; // 给需要navigationbar的vc添加navigationbar
+    }
+}
+
 - (void)p_setupUI
 {
     // navibar
@@ -91,17 +112,11 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCellSpacing);
         make.right.mas_equalTo(self.view).offset(-kCellSpacing);
-        make.top.mas_equalTo(self.navigationController.navigationBar.mas_bottom);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.bottom.mas_equalTo(self.view);
     }];
 }
 
-#pragma mark - EditPeriodForTaskProtocol
-
-- (void)pushEditPeriodSheet:(UIViewController *)editVC
-{
-    [self.navigationController presentViewController:editVC animated:YES completion:nil];
-}
 
 #pragma mark - UICollectionViewDelegate
 

@@ -260,7 +260,6 @@
 {
     if (!_startPicker) {
         _startPicker = [UIDatePicker new];
-        _startPicker.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         _startPicker.datePickerMode = UIDatePickerModeDateAndTime;
         _startPicker.timeZone = [NSTimeZone systemTimeZone];
         _startPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;

@@ -48,7 +48,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
     MirrorDataModel *task = mirrorDict[taskName];
-    // stop task first
     // 更新task的archive状态
     task.isArchived = YES;
     // 保存更新好的task到本地
@@ -65,7 +64,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
     MirrorDataModel *task = mirrorDict[taskName];
-    // stop task first
     // 更新task的archive状态
     task.isArchived = NO;
     // 保存更新好的task到本地
@@ -92,6 +90,22 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage saveMirrorData:mirrorDict];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][newName] info:@"Edit"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
+}
+
++ (void)editTask:(NSString *)taskName createdTime:(long)createdTime
+{
+    // 在本地取出task
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    // 取出这个task以便作修改
+    MirrorDataModel *task = mirrorDict[taskName];
+    // 更新task的archive状态
+    task.createdTime = createdTime;
+    // 保存更新好的task到本地
+    [mirrorDict setValue:task forKey:taskName];
+    // 将mirror dict存回本地
+    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
 }
 
 // 如果是计时，accurateDate为[NSDate now]，periodIndex为0

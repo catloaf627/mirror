@@ -10,15 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol EditPeriodForTaskProtocol <NSObject>
-
-- (void)pushEditPeriodSheet:(UIViewController *)editVC;
+@protocol VCForPeriodCellProtocol <NSObject>
 
 @end
 
 @interface TaskPeriodCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, weak) UIViewController<EditPeriodForTaskProtocol> *delegate;
+@property (nonatomic, weak) UIViewController<VCForPeriodCellProtocol> *delegate;
 + (NSString *)identifier;
 - (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
 

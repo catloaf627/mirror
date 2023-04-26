@@ -9,11 +9,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol VCForTaskCellProtocol <NSObject>
+
+@end
+
 @interface TaskInfoCollectionViewCell : UICollectionViewCell
 
-+ (NSString *)identifier;
+@property (nonatomic, weak) UIViewController<VCForTaskCellProtocol> *delegate;
 
-- (void)configWithTaskname:(NSString *)taskName;
++ (NSString *)identifier;
+- (void)configWithIndex:(NSInteger)index;
 
 @end
 

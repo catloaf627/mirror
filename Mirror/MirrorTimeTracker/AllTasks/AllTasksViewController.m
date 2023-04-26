@@ -11,10 +11,11 @@
 #import <Masonry/Masonry.h>
 #import "MirrorDataManager.h"
 #import "TaskInfoCollectionViewCell.h"
+#import "TaskRecordViewController.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface AllTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface AllTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -26,7 +27,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskEditNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskDeleteNotification object:nil];
     }
     return self;
 }
@@ -46,9 +47,31 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self p_setupUI];
 }
 
+/* VC A 上push VC B，共用一个navibar，
+1. 返回（B->A）的时候，需要给A重新添加一遍navibar
+2. 反悔（B->A取消）之后，需要给B重新添加一遍navibar
+3. 从其他页面push A或B的时候，不存在navibar的共用，hasNavibar将一直是YES
+4. VC A指的是AllTasksViewController，VC B指的是TaskRecordViewController
+*/
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    BOOL hasNavibar = NO;
+    for (UIView *subview in self.view.subviews) {
+        if ([subview isKindOfClass:UINavigationBar.class]) {
+            hasNavibar = YES;
+            break;
+        }
+    }
+    if (!hasNavibar) {
+        [self.view addSubview:self.navigationController.navigationBar]; // 给需要navigationbar的vc添加navigationbar
+    }
+}
+
 - (void)p_setupUI
 {
     // navibar
+    self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground]; // navibar颜色为背景色
     self.navigationController.navigationBar.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 返回箭头颜色为文案颜色
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:NSForegroundColorAttributeName]; // title为文案颜色
@@ -61,7 +84,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCellSpacing);
         make.right.mas_equalTo(self.view).offset(-kCellSpacing);
-        make.top.mas_equalTo(self.navigationController.navigationBar.mas_bottom);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.bottom.mas_equalTo(self.view);
     }];
 }
@@ -88,13 +111,14 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TaskInfoCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskInfoCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithTaskname:[MirrorDataManager allTasks][indexPath.item].taskName];
+    [cell configWithIndex:indexPath.item];
+    cell.delegate = self;
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(kScreenWidth - 2*kCellSpacing, 80);
+    return CGSizeMake(kScreenWidth - 2*kCellSpacing, 160);
 }
 
 - (UICollectionView *)collectionView
