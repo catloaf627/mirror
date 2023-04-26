@@ -147,6 +147,7 @@ static CGFloat const kPadding = 20;
         [self.taskNameField setText:self.taskName];
     } else { // taskname valid，允许修改
         [MirrorStorage editTask:self.taskName name:textField.text];
+        self.taskName = textField.text;
     }
 }
 
