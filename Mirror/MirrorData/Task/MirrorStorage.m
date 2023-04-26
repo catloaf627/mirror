@@ -70,7 +70,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Cancel archive"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
 }
 
