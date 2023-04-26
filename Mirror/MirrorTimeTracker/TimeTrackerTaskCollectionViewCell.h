@@ -15,7 +15,7 @@ static CGFloat const kInterspacing = 16;
 @interface TimeTrackerTaskCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
-- (void)configWithModel:(MirrorDataModel *)taskModel;
+- (void)configWithTaskname:(NSString *)taskName;
 
 @end
 

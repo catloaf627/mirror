@@ -73,7 +73,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     LegendCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[LegendCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configCellWithTask:self.data[indexPath.item]];
+    [cell configCellWithTaskname:self.data[indexPath.item].taskName];
     return cell;
 }
 

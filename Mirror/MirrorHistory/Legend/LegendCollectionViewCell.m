@@ -7,6 +7,7 @@
 
 #import "LegendCollectionViewCell.h"
 #import <Masonry/Masonry.h>
+#import "MirrorStorage.h"
 
 static CGFloat const kPadding = 10;
 
@@ -24,8 +25,9 @@ static CGFloat const kPadding = 10;
     return NSStringFromClass(self.class);
 }
 
-- (void)configCellWithTask:(MirrorDataModel *)task
+- (void)configCellWithTaskname:(NSString *)taskName
 {
+    MirrorDataModel *task = [MirrorStorage getTaskFromDB:taskName];
     [self addSubview:self.coloredView];
     self.coloredView.backgroundColor = [UIColor mirrorColorNamed:task.color];
     self.coloredView.layer.borderColor = [UIColor mirrorColorNamed: [UIColor mirror_getPulseColorType:task.color]].CGColor;

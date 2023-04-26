@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MirrorTimeText : NSObject
 
+// 584 hours | 584 小时 —> 主页面cell上的标记
++ (NSString *)Xh:(long)timeInterval;
+
 // 1h 23m | 1时23分 —> lasted后面的标记
 + (NSString *)XdXhXmXsShortWithstart:(long)start end:(long)end;
 

@@ -11,6 +11,20 @@
 
 @implementation MirrorTimeText
 
++ (NSString *)Xh:(long)timeInterval
+{
+    NSInteger numOfHours = timeInterval / 3600;
+    if (numOfHours > 0) {
+        if (numOfHours == 1) {
+            return [MirrorLanguage mirror_stringWithKey:@"hour" with1Placeholder:[@(numOfHours) stringValue]];
+        } else {
+            return [MirrorLanguage mirror_stringWithKey:@"hours" with1Placeholder:[@(numOfHours) stringValue]];
+        }
+    } else {
+        return @"";
+    }
+}
+
 // 1h 23m | 1时23分 —> lasted后面的标记
 + (NSString *)XdXhXmXsShortWithstart:(long)start end:(long)end
 {

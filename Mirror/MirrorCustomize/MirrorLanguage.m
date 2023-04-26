@@ -20,8 +20,6 @@
     [mirrorDict setValue:@[@"Start", @"计时"] forKey:@"start"];
     [mirrorDict setValue:@[@"Today", @"今天"] forKey:@"today"];
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
-    // time tracker cell
-    [mirrorDict setValue:@[@"Tap to start", @"轻点开始计时"] forKey:@"tap_to_start"];
     // nickname
     [mirrorDict setValue:@[@"nickname", @"我的昵称"] forKey:@"nickname"];
     // Profile cell - theme

@@ -14,6 +14,7 @@
 #import "MirrorStorage.h"
 #import "MirrorTool.h"
 #import "CellAnimation.h"
+#import "MirrorTimeText.h"
 
 static CGFloat const kPadding = 20;
 
@@ -216,8 +217,6 @@ static CGFloat const kDashSpacing = 10;
     minFormatter.dateFormat = @"mm";
     NSDateFormatter *secFormatter = [[NSDateFormatter alloc]init];
     secFormatter.dateFormat = @"ss";
-    NSDateFormatter *dayFormatter = [[NSDateFormatter alloc]init];
-    dayFormatter.dateFormat = @"yyyy-MM-dd";
     
     // udpate start time
     self.startTimeLabelHH.text = [hourFormatter stringFromDate:self.startTime];
@@ -248,9 +247,9 @@ static CGFloat const kDashSpacing = 10;
         [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
         
     }
-    if (![[dayFormatter stringFromDate:self.nowTime] isEqualToString:[dayFormatter stringFromDate:self.startTime]]) { // 如果两个时间不在同一天，给startTime一个[日期]的标记
+    if (![[MirrorTimeText YYYYmmdd:self.nowTime] isEqualToString:[MirrorTimeText YYYYmmdd:self.startTime]]) { // 如果两个时间不在同一天，给startTime一个[日期]的标记
         self.differentDayLabel.hidden = NO;
-        self.differentDayLabel.text = [dayFormatter stringFromDate:self.startTime];
+        self.differentDayLabel.text = [MirrorTimeText YYYYmmdd:self.startTime];
     }
 }
 
@@ -450,11 +449,6 @@ static CGFloat const kDashSpacing = 10;
         style.firstLineHeadIndent = 10.0f;
         style.headIndent = 5;
         style.tailIndent = 5;
-        NSDateFormatter *dayFormatter = [[NSDateFormatter alloc]init];
-        dayFormatter.dateFormat = @"yyyy-MM-dd";
-        NSString *text = [dayFormatter stringFromDate:self.startTime];
-        NSAttributedString *attributedStr = [[NSAttributedString alloc]initWithString:text attributes:@{NSParagraphStyleAttributeName:style}];
-        _differentDayLabel.attributedText = attributedStr;
         _differentDayLabel.layer.cornerRadius = 4;
         _differentDayLabel.layer.masksToBounds = YES;
     }

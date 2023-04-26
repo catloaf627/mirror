@@ -86,7 +86,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 - (void)p_setupUI
 {
-    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);

@@ -52,7 +52,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     NSString *title = self.taskName;
     if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {
-        title = [title stringByAppendingString:[MirrorLanguage mirror_stringWithKey:@"archived_tag"]];
+        title = [[MirrorLanguage mirror_stringWithKey:@"archived_tag"] stringByAppendingString:title];
     }
     [self.navigationItem setTitle:title]; // title为taskname
     if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {

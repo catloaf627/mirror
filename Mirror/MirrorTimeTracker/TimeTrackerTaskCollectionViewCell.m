@@ -11,12 +11,13 @@
 #import "MirrorLanguage.h"
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
+#import "MirrorTimeText.h"
+#import "MirrorTool.h"
 
 static CGFloat const kShadowWidth = 5;
 
 @interface TimeTrackerTaskCollectionViewCell ()
 
-@property (nonatomic, strong) MirrorDataModel *taskModel;
 @property (nonatomic, strong) UILabel *taskNameLabel;
 @property (nonatomic, strong) UILabel *hintLabel;
 
@@ -29,12 +30,11 @@ static CGFloat const kShadowWidth = 5;
     return NSStringFromClass(self.class);
 }
 
-- (void)configWithModel:(MirrorDataModel *)taskModel
+- (void)configWithTaskname:(NSString *)taskName
 {
-    self.taskModel = taskModel;
-    self.taskNameLabel.text = taskModel.taskName;
-    self.hintLabel.text = [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
-    self.contentView.backgroundColor = [UIColor mirrorColorNamed:taskModel.color];
+    self.taskNameLabel.text = taskName;
+    self.hintLabel.text = [MirrorTimeText Xh: [MirrorTool getTotalTimeOfPeriods:[MirrorStorage getTaskFromDB:taskName].periods]];
+    self.contentView.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:taskName].color];
 
     [self p_setupUI];
 }
@@ -47,7 +47,6 @@ static CGFloat const kShadowWidth = 5;
         make.top.offset(kShadowWidth);
         make.bottom.offset(-kShadowWidth);
     }];
-    self.contentView.backgroundColor = [UIColor mirrorColorNamed:self.taskModel.color];
     self.contentView.layer.cornerRadius = 14;
     self.contentView.layer.shadowColor = [UIColor mirrorColorNamed:MirrorColorTypeShadow].CGColor;
     self.contentView.layer.shadowRadius = kShadowWidth/2;
@@ -75,7 +74,6 @@ static CGFloat const kShadowWidth = 5;
 {
     if (!_taskNameLabel) {
         _taskNameLabel = [[UILabel alloc] init];
-        _taskNameLabel.text = self.taskModel.taskName;
         _taskNameLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _taskNameLabel.numberOfLines = 1;
         _taskNameLabel.textAlignment = NSTextAlignmentCenter;
@@ -88,7 +86,6 @@ static CGFloat const kShadowWidth = 5;
 {
     if (!_hintLabel) {
         _hintLabel = [[UILabel alloc] init];
-        _hintLabel.text = self.taskModel.isOngoing ? [MirrorLanguage mirror_stringWithKey:@"tap_to_stop"] : [MirrorLanguage mirror_stringWithKey:@"tap_to_start"];
         _hintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _hintLabel.numberOfLines = 1;
         _hintLabel.textAlignment = NSTextAlignmentCenter;

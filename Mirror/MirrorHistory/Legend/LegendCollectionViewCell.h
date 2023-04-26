@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)identifier;
 
-- (void)configCellWithTask:(MirrorDataModel *)task;
+- (void)configCellWithTaskname:(NSString *)taskName;
 
 @end
 

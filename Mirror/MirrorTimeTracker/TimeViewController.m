@@ -190,7 +190,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         return cell;
     } else {
         TimeTrackerTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerTaskCollectionViewCell identifier] forIndexPath:indexPath];
-        [cell configWithModel:taskModel];
+        [cell configWithTaskname:taskModel.taskName];
         return cell;
     }
 }
@@ -259,7 +259,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 {
     if (!_settingsButton) {
         _settingsButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"ellipsis"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"line.horizontal.3"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         _settingsButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];

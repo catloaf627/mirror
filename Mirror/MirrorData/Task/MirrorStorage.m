@@ -286,7 +286,9 @@ static NSString *const kMirrorDict = @"mirror_dict";
                 continue;
             } else if ([[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:[NSDate dateWithTimeIntervalSince1970:[period[0] longValue]]].second != 0) { // 有非0秒的数据被存了进去
                 continue;
-            } else if (period.count > 1 && [[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:[NSDate dateWithTimeIntervalSince1970:[period[1] longValue]]].second != 0) {  // 有非0秒的数据被存了进去
+            } else if (period.count == 2 && [[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:[NSDate dateWithTimeIntervalSince1970:[period[1] longValue]]].second != 0) {  // 有非0秒的数据被存了进去
+                continue;
+            } else if (period.count == 2 && [period[1] longValue] - [period[0] longValue] <= 0) { // 有结束时间早于开始时间的数据被存了进去
                 continue;
             } else {
                 [cleanPeriods addObject:period];
