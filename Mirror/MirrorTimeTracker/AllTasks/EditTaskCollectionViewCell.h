@@ -1,5 +1,5 @@
 //
-//  TaskInfoCollectionViewCell.h
+//  EditTaskCollectionViewCell.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/26.
@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface TaskInfoCollectionViewCell : UICollectionViewCell
+@interface EditTaskCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, weak) UIViewController<VCForTaskCellProtocol> *delegate;
 

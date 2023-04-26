@@ -10,7 +10,7 @@
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorDataManager.h"
-#import "TaskInfoCollectionViewCell.h"
+#import "EditTaskCollectionViewCell.h"
 #import "TaskRecordViewController.h"
 #import "MirrorLanguage.h"
 
@@ -121,7 +121,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    TaskInfoCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskInfoCollectionViewCell identifier] forIndexPath:indexPath];
+    EditTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[EditTaskCollectionViewCell identifier] forIndexPath:indexPath];
     [cell configWithIndex:indexPath.item];
     cell.delegate = self;
     return cell;
@@ -141,7 +141,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = self.view.backgroundColor;
-        [_collectionView registerClass:[TaskInfoCollectionViewCell class] forCellWithReuseIdentifier:[TaskInfoCollectionViewCell identifier]];
+        [_collectionView registerClass:[EditTaskCollectionViewCell class] forCellWithReuseIdentifier:[EditTaskCollectionViewCell identifier]];
     }
     return _collectionView;
 }

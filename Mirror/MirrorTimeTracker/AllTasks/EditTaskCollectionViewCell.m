@@ -1,11 +1,11 @@
 //
-//  TaskInfoCollectionViewCell.m
+//  EditTaskCollectionViewCell.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/26.
 //
 
-#import "TaskInfoCollectionViewCell.h"
+#import "EditTaskCollectionViewCell.h"
 #import "MirrorDataModel.h"
 #import "MirrorStorage.h"
 #import "MirrorDataManager.h"
@@ -21,7 +21,7 @@
 
 static CGFloat const kPadding = 20;
 
-@interface TaskInfoCollectionViewCell () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate>
+@interface EditTaskCollectionViewCell () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate>
 // Data
 @property (nonatomic, strong) NSString *taskName;
 // UI
@@ -35,7 +35,7 @@ static CGFloat const kPadding = 20;
 
 @end
 
-@implementation TaskInfoCollectionViewCell
+@implementation EditTaskCollectionViewCell
 
 + (NSString *)identifier
 {
