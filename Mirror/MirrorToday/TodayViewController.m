@@ -45,7 +45,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         
-        // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动) 对于这个vc来说，无需监听archive
+        // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskEditNotification object:nil];

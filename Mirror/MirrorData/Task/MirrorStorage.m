@@ -20,111 +20,123 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)createTask:(MirrorDataModel *)task
 {
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 新增一个task
-    [mirrorDict setValue:task forKey:task.taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage p_createTask:task];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"Create"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskCreateNotification object:nil userInfo:nil];
 }
 
++ (void)p_createTask:(MirrorDataModel *)task
+{
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    [mirrorDict setValue:task forKey:task.taskName];
+    [MirrorStorage saveMirrorData:mirrorDict];
+}
+
 + (void)deleteTask:(NSString *)taskName
 {
-    // 在本地取出词典
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 通过taskname删除task
-    [mirrorDict removeObjectForKey:taskName];
-    // 将mirror dict存回本地
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Delete"];
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage p_deleteTask:taskName];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskDeleteNotification object:nil userInfo:nil];
+}
+
+
++ (void)p_deleteTask:(NSString *)taskName
+{
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    [mirrorDict removeObjectForKey:taskName];
+    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
 + (void)archiveTask:(NSString *)taskName
 {
-    // 在本地取出task
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
-    MirrorDataModel *task = mirrorDict[taskName];
-    // 更新task的archive状态
-    task.isArchived = YES;
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage p_archiveTask:taskName];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
+}
+
++ (void)p_archiveTask:(NSString *)taskName
+{
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    MirrorDataModel *task = mirrorDict[taskName];
+    task.isArchived = YES;
+    [mirrorDict setValue:task forKey:taskName];
+    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
 + (void)cancelArchiveTask:(NSString *)taskName
 {
-    // 在本地取出task
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
-    MirrorDataModel *task = mirrorDict[taskName];
-    // 更新task的archive状态
-    task.isArchived = NO;
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage p_cancelArchiveTask:taskName];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Cancel archive"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
 }
 
++ (void)p_cancelArchiveTask:(NSString *)taskName
+{
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    MirrorDataModel *task = mirrorDict[taskName];
+    task.isArchived = NO;
+    [mirrorDict setValue:task forKey:taskName];
+    [MirrorStorage saveMirrorData:mirrorDict];
+}
+
 + (void)editTask:(NSString *)oldName name:(NSString *)newName
 {
-    // 在本地取出task
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
-    MirrorDataModel *task = mirrorDict[oldName];
-    // 更新task的color和taskname
-    [mirrorDict removeObjectForKey:oldName];
-    task.taskName = newName;
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:newName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage p_editTask:oldName name:newName];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][newName] info:@"Edit name"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
 }
 
++ (void)p_editTask:(NSString *)oldName name:(NSString *)newName
+{
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    MirrorDataModel *task = mirrorDict[oldName];
+    [mirrorDict removeObjectForKey:oldName];
+    task.taskName = newName;
+    [mirrorDict setValue:task forKey:newName];
+    [MirrorStorage saveMirrorData:mirrorDict];
+}
+
 + (void)editTask:(NSString *)taskName color:(MirrorColorType)color
 {
-    // 在本地取出task
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
-    MirrorDataModel *task = mirrorDict[taskName];
-    // 更新task的color和taskname
-    task.color = color;
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage p_editTask:taskName color:color];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Edit color"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
 }
 
++ (void)p_editTask:(NSString *)taskName color:(MirrorColorType)color
+{
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    MirrorDataModel *task = mirrorDict[taskName];
+    task.color = color;
+    [mirrorDict setValue:task forKey:taskName];
+    [MirrorStorage saveMirrorData:mirrorDict];
+}
+
 + (void)editTask:(NSString *)taskName createdTime:(long)createdTime
 {
-    // 在本地取出task
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
-    MirrorDataModel *task = mirrorDict[taskName];
-    // 更新task的archive状态
-    task.createdTime = createdTime;
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
+    [MirrorStorage p_editTask:taskName createdTime:createdTime];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Edit created time"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskChangeOrderNotification object:nil userInfo:nil];
 }
 
-// 如果是计时，accurateDate为[NSDate now]，periodIndex为0
++ (void)p_editTask:(NSString *)taskName createdTime:(long)createdTime
+{
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    MirrorDataModel *task = mirrorDict[taskName];
+    task.createdTime = createdTime;
+    [mirrorDict setValue:task forKey:taskName];
+    [MirrorStorage saveMirrorData:mirrorDict];
+}
+
 + (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
+{
+    [MirrorStorage p_startTask:taskName at:accurateDate periodIndex:index];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Start"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStartNotification object:nil userInfo:nil];
+}
+
+// 如果是计时，accurateDate为[NSDate now]，periodIndex为0
++ (void)p_startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
     NSDate *date = [self dateWithoutSeconds:accurateDate];
@@ -141,12 +153,17 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Start"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStartNotification object:nil userInfo:nil];
+}
+
++ (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
+{
+    [MirrorStorage p_stopTask:taskName at:accurateDate periodIndex:index];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Stop"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:nil];
 }
 
 // 如果是计时，accurateDate为[NSDate now]，periodIndex为0
-+ (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
++ (void)p_stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
     NSDate *date = [self dateWithoutSeconds:accurateDate];
@@ -201,8 +218,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [mirrorDict setValue:task forKey:taskName];
     // 将mirror dict存回本地
     [MirrorStorage saveMirrorData:mirrorDict];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Stop"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:nil];
 }
 
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
@@ -223,21 +238,29 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 + (void)deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
 {
-    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
-    MirrorDataModel *task = mirrorDict[taskName];
-    [task.periods removeObjectAtIndex:index];
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage p_deletePeriodWithTaskname:taskName periodIndex:index];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period is deleted"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodDeleteNotification object:nil userInfo:nil];
 }
 
++ (void)p_deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
+{
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    MirrorDataModel *task = mirrorDict[taskName];
+    [task.periods removeObjectAtIndex:index];
+    [mirrorDict setValue:task forKey:taskName];
+    [MirrorStorage saveMirrorData:mirrorDict];
+}
+
 + (void)editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp withTaskname:(NSString *)taskName periodIndex:(NSInteger)index
+{
+    [MirrorStorage p_editPeriodIsStartTime:isStartTime to:timestamp withTaskname:taskName periodIndex:index];
+    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period is edited"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodEditNotification object:nil userInfo:nil];
+}
+
++ (void)p_editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp withTaskname:(NSString *)taskName periodIndex:(NSInteger)index
 {
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
@@ -247,17 +270,15 @@ static NSString *const kMirrorDict = @"mirror_dict";
     long oldEndTime = [task.periods[index][1] longValue];
     if (isStartTime) {
         if (oldStartTime == timestamp) return;
-        [MirrorStorage deletePeriodWithTaskname:taskName periodIndex:index];
-        [MirrorStorage startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
-        [MirrorStorage stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldEndTime] periodIndex:index];
+        [MirrorStorage p_deletePeriodWithTaskname:taskName periodIndex:index];
+        [MirrorStorage p_startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
+        [MirrorStorage p_stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldEndTime] periodIndex:index];
     } else {
         if (oldEndTime == timestamp) return;
-        [MirrorStorage deletePeriodWithTaskname:taskName periodIndex:index];
-        [MirrorStorage startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldStartTime] periodIndex:index];
-        [MirrorStorage stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
+        [MirrorStorage p_deletePeriodWithTaskname:taskName periodIndex:index];
+        [MirrorStorage p_startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldStartTime] periodIndex:index];
+        [MirrorStorage p_stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
     }
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period is edited"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodEditNotification object:nil userInfo:nil];
 }
 
 
