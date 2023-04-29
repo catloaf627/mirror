@@ -132,6 +132,21 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return CGSizeMake(kScreenWidth - 2*kCellSpacing, 160);
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *footer;
+    if (kind == UICollectionElementKindSectionFooter) {
+        footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer" forIndexPath:indexPath];
+    }
+    return footer;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
+{
+    return CGSizeMake(kScreenWidth, kScreenHeight / 2); // 给collectionview一个大大的footer，最后一个cell在被编辑的时候可以被拖动到keyboard以上
+}
+
+
 - (UICollectionView *)collectionView
 {
     if (!_collectionView) {
@@ -142,6 +157,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = self.view.backgroundColor;
         [_collectionView registerClass:[EditTaskCollectionViewCell class] forCellWithReuseIdentifier:[EditTaskCollectionViewCell identifier]];
+        [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
     }
     return _collectionView;
 }
