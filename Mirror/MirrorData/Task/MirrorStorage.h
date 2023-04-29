@@ -38,6 +38,8 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 + (void)editTask:(NSString *)taskName createdTime:(long)createdTime;
 
++ (void)savePeriodWithTaskname:(NSString *)taskName startAt:(NSDate *)startDate endAt:(NSDate *)endDate; // 跳过start->stop，直接保存
+
 + (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index;
 
 + (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index;

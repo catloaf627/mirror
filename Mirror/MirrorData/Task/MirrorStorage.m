@@ -23,6 +23,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_createTask:task];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"Create"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskCreateNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 + (void)p_createTask:(MirrorDataModel *)task
@@ -37,6 +38,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Delete"];
     [MirrorStorage p_deleteTask:taskName];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskDeleteNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 
@@ -52,6 +54,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_archiveTask:taskName];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 + (void)p_archiveTask:(NSString *)taskName
@@ -68,6 +71,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_cancelArchiveTask:taskName];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Cancel archive"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 + (void)p_cancelArchiveTask:(NSString *)taskName
@@ -84,6 +88,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_editTask:oldName name:newName];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][newName] info:@"Edit name"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 + (void)p_editTask:(NSString *)oldName name:(NSString *)newName
@@ -101,6 +106,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_editTask:taskName color:color];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Edit color"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 + (void)p_editTask:(NSString *)taskName color:(MirrorColorType)color
@@ -117,6 +123,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_editTask:taskName createdTime:createdTime];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Edit created time"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskChangeOrderNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 + (void)p_editTask:(NSString *)taskName createdTime:(long)createdTime
@@ -128,17 +135,25 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
++ (void)savePeriodWithTaskname:(NSString *)taskName startAt:(NSDate *)startDate endAt:(NSDate *)endDate
+{
+    [MirrorStorage p_startTask:taskName at:startDate periodIndex:0];
+    [MirrorStorage p_stopTask:taskName at:endDate periodIndex:0];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:nil]; // 直接保存的也报stop
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
+}
+
 + (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
     [MirrorStorage p_startTask:taskName at:accurateDate periodIndex:index];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Start"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStartNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 // 如果是计时，accurateDate为[NSDate now]，periodIndex为0
 + (void)p_startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
-    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
     NSDate *date = [self dateWithoutSeconds:accurateDate];
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
@@ -160,12 +175,12 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_stopTask:taskName at:accurateDate periodIndex:index];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Stop"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 // 如果是计时，accurateDate为[NSDate now]，periodIndex为0
 + (void)p_stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
 {
-    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
     NSDate *date = [self dateWithoutSeconds:accurateDate];
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
@@ -241,11 +256,11 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_deletePeriodWithTaskname:taskName periodIndex:index];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period is deleted"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodDeleteNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 + (void)p_deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
 {
-    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     MirrorDataModel *task = mirrorDict[taskName];
     [task.periods removeObjectAtIndex:index];
@@ -258,6 +273,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage p_editPeriodIsStartTime:isStartTime to:timestamp withTaskname:taskName periodIndex:index];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period is edited"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodEditNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
 + (void)p_editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp withTaskname:(NSString *)taskName periodIndex:(NSInteger)index
@@ -334,25 +350,6 @@ static NSString *const kMirrorDict = @"mirror_dict";
     return mirrorDict ?: [NSMutableDictionary new];
 }
 
-+ (void)_printTime:(long)timeStamp info:(NSString *)info
-{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeStamp];
-    // setup
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:date];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    // details
-    long year = (long)components.year;
-    long month = (long)components.month;
-    long week = (long)components.weekday;
-    long day = (long)components.day;
-    long hour = (long)components.hour;
-    long minute = (long)components.minute;
-    long second = (long)components.second;
-    // print
-    NSLog(@"%@: %ld年%ld月%ld日，一周的第%ld天，%ld:%ld:%ld，时间戳为%ld，与此时此刻的时间差为%ld",info, year, month, day, week, hour, minute, second, (long)[date timeIntervalSince1970], (long)[[NSDate now] timeIntervalSince1970] - (long)[date timeIntervalSince1970]);
-}
-
 #pragma mark - Log
 
 + (void)printTask:(MirrorDataModel *)task info:(NSString *)info
@@ -360,23 +357,23 @@ static NSString *const kMirrorDict = @"mirror_dict";
     if (!task) NSLog(@"❗️❗️❗️❗️❗️❗️❗️❗️ACTION FAILED❗️❗️❗️❗️❗️❗️❗️❗️");
     if (info) NSLog(@"%@%@", info, [UIColor getLongEmoji:task.color]);
     
-    BOOL printTimestamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
-    NSString *tag = @"";
-    tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
-    tag = [tag stringByAppendingString:[UIColor getEmoji:task.color]];
-    tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
-    NSLog(@"%@%@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
-    for (int i=0; i<task.periods.count; i++) {
-        if (task.periods[i].count == 1) {
-            NSLog(@"[%@, ..........] 计时中..., ", [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp]);
-        }
-        if (task.periods[i].count == 2) {
-            NSLog(@"[%@, %@] Lasted:%@, ",
-                  [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp],
-                  [MirrorTool timeFromTimestamp:[task.periods[i][1] longValue] printTimeStamp:printTimestamp],
-                  [[NSDateComponentsFormatter new] stringFromTimeInterval:[task.periods[i][1] longValue]-[task.periods[i][0] longValue]]);
-        }
-    }
+//    BOOL printTimestamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
+//    NSString *tag = @"";
+//    tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
+//    tag = [tag stringByAppendingString:[UIColor getEmoji:task.color]];
+//    tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
+//    NSLog(@"%@%@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
+//    for (int i=0; i<task.periods.count; i++) {
+//        if (task.periods[i].count == 1) {
+//            NSLog(@"[%@, ..........] 计时中..., ", [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp]);
+//        }
+//        if (task.periods[i].count == 2) {
+//            NSLog(@"[%@, %@] Lasted:%@, ",
+//                  [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp],
+//                  [MirrorTool timeFromTimestamp:[task.periods[i][1] longValue] printTimeStamp:printTimestamp],
+//                  [[NSDateComponentsFormatter new] stringFromTimeInterval:[task.periods[i][1] longValue]-[task.periods[i][0] longValue]]);
+//        }
+//    }
     
 }
 

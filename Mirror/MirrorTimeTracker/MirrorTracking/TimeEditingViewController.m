@@ -181,8 +181,7 @@
 
 - (void)saveRecord
 {
-    [MirrorStorage startTask:self.taskName at:self.startPicker.date periodIndex:0];
-    [MirrorStorage stopTask:self.taskName at:self.endPicker.date periodIndex:0];
+    [MirrorStorage savePeriodWithTaskname:self.taskName startAt:self.startPicker.date endAt:self.endPicker.date];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

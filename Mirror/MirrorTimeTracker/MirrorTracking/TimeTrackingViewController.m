@@ -242,11 +242,6 @@ static CGFloat const kDashSpacing = 10;
     BOOL printTimeStamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
     NSLog(@"%@全屏计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:[MirrorStorage getTaskFromDB:self.taskName].color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
-    if (round(self.timeInterval) < 0) { // interval为负数立即停止计时
-        [self dismissViewControllerAnimated:YES completion:nil];
-        [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
-        
-    }
     if (![[MirrorTimeText YYYYmmdd:self.nowTime] isEqualToString:[MirrorTimeText YYYYmmdd:self.startTime]]) { // 如果两个时间不在同一天，给startTime一个[日期]的标记
         self.differentDayLabel.hidden = NO;
         self.differentDayLabel.text = [MirrorTimeText YYYYmmdd:self.startTime];
