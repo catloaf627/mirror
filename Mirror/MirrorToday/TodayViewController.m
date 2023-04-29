@@ -41,6 +41,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     self = [super init];
     if (self) {
+        // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         
@@ -57,6 +58,11 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
@@ -71,33 +77,22 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self p_setupUI];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self p_setupUI];
+}
+
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"today"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [self reloadData];
-}
-
 - (void)reloadData
 {
-    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewDidAppear做一个兜底。
     [self updateDataSource];
     [self.collectionView reloadData];
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self p_setupUI];
 }
 
 - (void)p_setupUI
@@ -223,7 +218,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _settingsButton = [UIButton new];
         UIImage *iconImage = [[UIImage systemImageNamed:@"line.horizontal.3"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _settingsButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
     }
     return _settingsButton;

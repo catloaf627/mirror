@@ -48,6 +48,7 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     self = [super init];
     if (self) {
+        // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchWeekStartsOnNotification object:nil]; // 比其他vc多监听一个week starts on通知
@@ -102,15 +103,8 @@ static CGFloat const kLeftRightSpacing = 20;
     [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [self reloadData];
-}
-
 - (void)reloadData
 {
-    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewDidAppear做一个兜底。
     [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.legendView legendViewHeight]);
@@ -317,7 +311,6 @@ static CGFloat const kLeftRightSpacing = 20;
         _settingsButton = [UIButton new];
         UIImage *iconImage = [[UIImage systemImageNamed:@"line.horizontal.3"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _settingsButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
     }
     return _settingsButton;

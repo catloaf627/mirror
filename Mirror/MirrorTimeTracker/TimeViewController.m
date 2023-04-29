@@ -92,6 +92,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] naviController:self.navigationController leftButton:self.settingsButton rightButton:self.allTasksButton];
 }
 
+- (void)reloadData
+{
+    [self.collectionView reloadData];
+}
+
 - (void)p_setupUI
 {
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
@@ -204,14 +209,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return CGSizeMake(kScreenWidth, 5); // 给collectionview一个小小的header，让第一行cell的shadow的过度更自然（没有截断的效果）
 }
 
-
-#pragma mark - Notifications (都需要reload data)
-
-- (void)reloadData
-{
-    [self.collectionView reloadData];
-}
-
 #pragma mark - Getters
 
 - (UICollectionView *)collectionView
@@ -236,7 +233,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         _settingsButton = [UIButton new];
         UIImage *iconImage = [[UIImage systemImageNamed:@"line.horizontal.3"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _settingsButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
     }
     return _settingsButton;
@@ -248,7 +244,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         _allTasksButton = [UIButton new];
         UIImage *iconImage = [[UIImage systemImageNamed:@"tray"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_allTasksButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _allTasksButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_allTasksButton addTarget:self action:@selector(goToAllTasks) forControlEvents:UIControlEventTouchUpInside];
     }
     return _allTasksButton;
