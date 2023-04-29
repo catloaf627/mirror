@@ -64,7 +64,7 @@
     // All tasks
     [mirrorDict setValue:@[@"Delete this task? ", @"确定删除这个任务？"] forKey:@"delete_task_?"];
     [mirrorDict setValue:@[@"Created at " , @"创建于 "] forKey:@"created_at"];
-    [mirrorDict setValue:@[@"All tasks" , @"所有任务"] forKey:@"all_tasks"];
+    [mirrorDict setValue:@[@"Edit tasks" , @"编辑任务"] forKey:@"edit_tasks"];
     
     // History type switch
     [mirrorDict setValue:@[@"Day", @"日"] forKey:@"segment_day"];
