@@ -59,12 +59,11 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [self viewDidLoad];
+    [self  p_setupUI];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self  p_setupUI];
 }
 

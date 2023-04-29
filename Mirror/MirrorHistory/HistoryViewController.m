@@ -9,6 +9,7 @@
 #import "MirrorMacro.h"
 #import "MirrorSettings.h"
 #import "MirrorTabsManager.h"
+#import "MirrorNaviManager.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "LeftAnimation.h"
@@ -69,21 +70,58 @@ static CGFloat const kLeftRightSpacing = 20;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+- (void)restartVC
+{
+    // 将vc.view里的所有subviews全部置为nil
+    self.typeSwitch = nil;
+    self.interactionView = nil;
+    self.leftArrow = nil;
+    self.rightArrow = nil;
+    self.titleLabel = nil;
+    self.legendView = nil;
+    self.histogramView = nil;
+    // 将vc.view里的所有subviews从父view上移除
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    // 更新tabbar 和 navibar
+    [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
+    if (self.tabBarController.selectedIndex == 2) {
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
+    }
     [self p_setupUI];
 }
 
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self p_setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self reloadData];
+}
+
+- (void)reloadData
+{
+    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewDidAppear做一个兜底。
+    [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([self.legendView legendViewHeight]);
+    }];
+    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
+}
+
 - (void)p_setupUI
 {
-    /*
-     If a custom bar button item is not specified by either of the view controllers, a default back button is used and its title is set to the value of the title property of the previous view controller—that is, the view controller one level down on the stack.
-     */
-    self.navigationController.navigationBar.topItem.title = @""; //给父vc一个空title，让所有子vc的navibar返回文案都为空
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-
+    
     [self.view addSubview:self.typeSwitch];
     [self.typeSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
@@ -127,12 +165,6 @@ static CGFloat const kLeftRightSpacing = 20;
         make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
-    [self.view addSubview:self.settingsButton];
-    [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(kLeftRightSpacing);
-        make.bottom.mas_equalTo(self.typeSwitch.mas_top);
-        make.width.height.mas_equalTo(40);
-    }];
     
     UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
     [tapRecognizer addTarget:self action:@selector(tapGestureRecognizerAction:)];
@@ -145,40 +177,6 @@ static CGFloat const kLeftRightSpacing = 20;
     
 }
 
-
-- (void)restartVC
-{
-    // 将vc.view里的所有subviews全部置为nil
-    self.settingsButton = nil;
-    self.typeSwitch = nil;
-    self.interactionView = nil;
-    self.leftArrow = nil;
-    self.rightArrow = nil;
-    self.titleLabel = nil;
-    self.legendView = nil;
-    self.histogramView = nil;
-    // 将vc.view里的所有subviews从父view上移除
-    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新tabbar
-    [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
-    [self viewDidLoad];
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [self reloadData];
-}
-
-- (void)reloadData
-{
-    // 当页面没有出现在屏幕上的时候reloaddata不会触发UICollectionViewDataSource的几个方法，所以需要上面viewDidAppear做一个兜底。
-    [self.legendView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo([self.legendView legendViewHeight]);
-    }];
-    [self.histogramView updateWithSpanType:self.typeSwitch.selectedSegmentIndex offset:self.offset];
-}
 
 #pragma mark - Actions
 

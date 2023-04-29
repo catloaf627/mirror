@@ -7,6 +7,7 @@
 
 #import "TodayViewController.h"
 #import "MirrorTabsManager.h"
+#import "MirrorNaviManager.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
@@ -59,13 +60,21 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
-    self.settingsButton = nil;
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新tabbar
+    // 更新tabbar 和 navibar
     [[MirrorTabsManager sharedInstance] updateDataTabItemWithTabController:self.tabBarController];
-    [self viewDidLoad];
+    if (self.tabBarController.selectedIndex == 1) {
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
+    }
+    [self p_setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"today"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -88,16 +97,11 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self p_setupUI];
 }
 
 - (void)p_setupUI
 {
-    /*
-     If a custom bar button item is not specified by either of the view controllers, a default back button is used and its title is set to the value of the title property of the previous view controller—that is, the view controller one level down on the stack.
-     */
-    self.navigationController.navigationBar.topItem.title = @""; //给父vc一个空title，让所有子vc的navibar返回文案都为空
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
 
     [self.view addSubview:self.collectionView];
@@ -110,12 +114,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         make.bottom.offset(-kTabBarHeight);
     }];
 
-    [self.view addSubview:self.settingsButton];
-    [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(kLeftRightSpacing);
-        make.bottom.mas_equalTo(self.self.collectionView.mas_top);
-        make.width.height.mas_equalTo(40);
-    }];
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
     edgeRecognizer.edges = UIRectEdgeLeft;
     [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];

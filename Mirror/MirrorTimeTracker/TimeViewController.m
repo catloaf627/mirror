@@ -13,6 +13,7 @@
 #import "MirrorDataManager.h"
 #import "MirrorMacro.h"
 #import "MirrorTabsManager.h"
+#import "MirrorNaviManager.h"
 #import "AddTaskViewController.h"
 #import "TimeTrackingViewController.h"
 #import "TimeEditingViewController.h"
@@ -23,6 +24,7 @@
 #import "LeftAnimation.h"
 #import "CellAnimation.h"
 #import "EditTasksViewController.h"
+#import "MirrorLanguage.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -69,13 +71,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 {
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
-    self.settingsButton = nil;
-    self.allTasksButton = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新tabbar
+    // 更新tabbar 和 navibar
     [[MirrorTabsManager sharedInstance] updateTimeTabItemWithTabController:self.tabBarController];
-    [self viewDidLoad];
+    if (self.tabBarController.selectedIndex == 0) {
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] naviController:self.navigationController leftButton:self.settingsButton rightButton:self.allTasksButton];
+    }
+    [self p_setupUI];
 }
 
 - (void)viewDidLoad {
@@ -83,18 +86,10 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self  p_setupUI];
 }
 
-/*
- 神奇：必须在viewDidAppear里重新update下self.collectionView的top-constraint
- viewDidLoad时，navigationBar的y和height都是0 (这个时候self.navigationController都还是nil)
- viewWillAppear时，navigationBar的y是0，但height是44
- viewDidAppear时，navigationBar的y是50，但height是44 (这个时候的navigationBar的frame才真正稳定下来)
- */
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-    }];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] naviController:self.navigationController leftButton:self.settingsButton rightButton:self.allTasksButton];
 }
 
 - (void)p_setupUI
@@ -104,21 +99,8 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height); // 这行没用，最后还是要在viewDidAppear里重新udpate才行
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
-    }];
-    // Settings button
-    [self.view addSubview:self.settingsButton];
-    [self.settingsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(kCollectionViewPadding);
-        make.bottom.mas_equalTo(self.collectionView.mas_top);
-        make.width.height.mas_equalTo(40);
-    }];
-    [self.view addSubview:self.allTasksButton];
-    [self.allTasksButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.offset(-kCollectionViewPadding);
-        make.bottom.mas_equalTo(self.collectionView.mas_top);
-        make.width.height.mas_equalTo(40);
     }];
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
     edgeRecognizer.edges = UIRectEdgeLeft;

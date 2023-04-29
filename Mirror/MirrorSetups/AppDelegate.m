@@ -24,8 +24,9 @@
     
     //init navigation controller with tabbar controller (nc needs a root view)
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tabbarController];
+    [navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    navigationController.navigationBar.shadowImage = [UIImage new];
     
-    [navigationController.navigationBar removeFromSuperview];
     _window.rootViewController = navigationController;
     [_window makeKeyAndVisible];
     

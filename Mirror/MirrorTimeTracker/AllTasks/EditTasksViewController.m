@@ -13,6 +13,7 @@
 #import "EditTaskCollectionViewCell.h"
 #import "TaskRecordViewController.h"
 #import "MirrorLanguage.h"
+#import "MirrorNaviManager.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
@@ -51,36 +52,13 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self p_setupUI];
 }
 
-/* VC A 上push VC B，共用一个navibar，
-1. 返回（B->A）的时候，需要给A重新添加一遍navibar
-2. 反悔（B->A取消）之后，需要给B重新添加一遍navibar
-3. 从其他页面push A或B的时候，不存在navibar的共用，hasNavibar将一直是YES
-4. VC A指的是EditTasksViewController，VC B指的是TaskRecordViewController
-*/
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    BOOL hasNavibar = NO;
-    for (UIView *subview in self.view.subviews) {
-        if ([subview isKindOfClass:UINavigationBar.class]) {
-            hasNavibar = YES;
-            break;
-        }
-    }
-    if (!hasNavibar) {
-        [self.view addSubview:self.navigationController.navigationBar]; // 给需要navigationbar的vc添加navigationbar
-    }
-}
-
 - (void)p_setupUI
 {
     // navibar
-    self.navigationController.navigationBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground]; // navibar颜色为背景色
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:@"" naviController:self.navigationController leftButton:nil rightButton:nil];
     self.navigationController.navigationBar.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 返回箭头颜色为文案颜色
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:NSForegroundColorAttributeName]; // title为文案颜色
     [self.navigationItem setTitle:[MirrorLanguage mirror_stringWithKey:@"edit_tasks"]];
-    self.navigationController.navigationBar.shadowImage = [UIImage new]; // navibar底部1pt下划线隐藏
-    [self.view addSubview:self.navigationController.navigationBar]; // 给需要navigationbar的vc添加navigationbar
     // collection view
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self.view addSubview:self.collectionView];
