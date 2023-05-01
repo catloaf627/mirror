@@ -247,7 +247,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 {
     if (!_editTasksButton) {
         _editTasksButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"tray"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"tray.full"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_editTasksButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [_editTasksButton addTarget:self action:@selector(goToAllTasks) forControlEvents:UIControlEventTouchUpInside];
     }

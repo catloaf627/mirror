@@ -129,7 +129,13 @@ static CGFloat const kLeftRightSpacing = 20;
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
     [self.piechartView updateWithData:self.data width:width enableInteractive:YES];
     [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(width);
+        if (width == [[self leftWidthLeftHeight][0] floatValue]) { // 宽度小于高度
+            make.top.mas_equalTo(self.legendView.mas_bottom).offset(10 + ([[self leftWidthLeftHeight][1] floatValue]-[[self leftWidthLeftHeight][0] floatValue])/2);
+            make.width.height.mas_equalTo(width);
+        } else {
+            make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
+            make.width.height.mas_equalTo(width);
+        }
     }];
 }
 
@@ -185,10 +191,17 @@ static CGFloat const kLeftRightSpacing = 20;
     self.histogramView.hidden = [MirrorSettings appliedPieChart];
 
     [self.view addSubview:self.piechartView];
+    CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
     [self.piechartView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
-        make.centerX.offset(0);
-        make.width.height.mas_equalTo(MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]));
+        if (width == [[self leftWidthLeftHeight][0] floatValue]) { // 宽度小于高度
+            make.top.mas_equalTo(self.legendView.mas_bottom).offset(10 + ([[self leftWidthLeftHeight][1] floatValue]-[[self leftWidthLeftHeight][0] floatValue])/2);
+            make.centerX.offset(0);
+            make.width.height.mas_equalTo(width);
+        } else {
+            make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
+            make.centerX.offset(0);
+            make.width.height.mas_equalTo(width);
+        }
     }];
     self.piechartView.hidden = ![MirrorSettings appliedPieChart];
     UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
