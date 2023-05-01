@@ -340,7 +340,7 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     if (!_pieChart) {
         CGFloat width = kScreenWidth - 2*kLeftRightSpacing; // gizmo 要改，防止legend太多，pie展示不全
-        _pieChart = [[MirrorPiechart alloc] initWithData:self.data width:width];
+        _pieChart = [[MirrorPiechart alloc] initWithData:self.data width:width enableInteractive:YES];
     }
     return _pieChart;
 }

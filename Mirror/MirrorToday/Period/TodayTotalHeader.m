@@ -93,7 +93,7 @@
     } else { // 不到8小时，隐藏王冠
         self.crownButton.hidden = YES;
     }
-    [self.pieChart updateWithData:[MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]] width:80]; // update piechart
+    [self.pieChart updateWithData:[MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]] width:80 enableInteractive:NO]; // update piechart
 }
 
 #pragma mark - Actions
@@ -156,7 +156,7 @@
 - (MirrorPiechart *)pieChart
 {
     if (!_pieChart) {
-        _pieChart = [[MirrorPiechart alloc] initWithData:[MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]] width:80];
+        _pieChart = [[MirrorPiechart alloc] initWithData:[MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]] width:80 enableInteractive:NO];
     }
     return _pieChart;
 }
