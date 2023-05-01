@@ -27,7 +27,6 @@ static CGFloat const kPadding = 20;
 // UI
 @property (nonatomic, strong) UITextField *taskNameField;
 @property (nonatomic, strong) UIButton *createAtLabel;
-@property (nonatomic, strong) UIDatePicker *createAtPicker;
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UICollectionView *collectionView; // 色块collectionview
 @property (nonatomic, strong) UIButton *archiveButton;
@@ -76,16 +75,6 @@ static CGFloat const kPadding = 20;
         make.height.mas_equalTo(14);
     }];
     
-    [self addSubview:self.createAtPicker];
-    self.createAtPicker.date = [NSDate dateWithTimeIntervalSince1970:createdTime];
-    [self.createAtPicker mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.taskNameField);
-        make.left.mas_equalTo(self.taskNameField.mas_right).offset(kPadding);
-        make.width.mas_equalTo(2*(self.frame.size.width - 3*kPadding- 30)/3);
-        make.height.mas_equalTo(30);
-    }];
-    self.createAtPicker.hidden = YES;
-    
     [self addSubview:self.deleteButton];
     [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.taskNameField);
@@ -96,7 +85,7 @@ static CGFloat const kPadding = 20;
     [self addSubview:self.collectionView];
     [self.collectionView reloadData];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.createAtPicker.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.createAtLabel.mas_bottom).offset(10);
         make.centerX.offset(0);
         make.width.mas_equalTo([self p_colorBlockWidth] * kMaxColorNum);
         make.height.mas_equalTo([self p_colorBlockWidth]);
@@ -149,23 +138,6 @@ static CGFloat const kPadding = 20;
         [MirrorStorage editTask:self.taskName name:textField.text];
         self.taskName = textField.text;
     }
-}
-
-- (void)showPickerHideLabel
-{
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-    self.createAtLabel.hidden = YES;
-    self.createAtPicker.hidden = NO;
-    self.createAtPicker.date = [NSDate dateWithTimeIntervalSince1970:task.createdTime];
-}
-
-- (void)showLabelHidePicker
-{
-    [MirrorStorage editTask:self.taskName createdTime:[self.createAtPicker.date timeIntervalSince1970]];
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-    self.createAtPicker.hidden = YES;
-    self.createAtLabel.hidden = NO;
-    [self.createAtLabel setTitle:[[MirrorLanguage mirror_stringWithKey:@"created_at"]  stringByAppendingString: [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:task.createdTime]]] forState:UIControlStateNormal];
 }
 
 - (void)archiveAction
@@ -225,25 +197,8 @@ static CGFloat const kPadding = 20;
         _createAtLabel.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
         [_createAtLabel setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeTextHint] forState:UIControlStateNormal];
         _createAtLabel.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        [_createAtLabel addTarget:self action:@selector(showPickerHideLabel) forControlEvents:UIControlEventTouchUpInside];
     }
     return _createAtLabel;
-}
-
-- (UIDatePicker *)createAtPicker
-{
-    if (!_createAtPicker) {
-        _createAtPicker = [UIDatePicker new];
-        _createAtPicker.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        _createAtPicker.datePickerMode = UIDatePickerModeDate;
-        _createAtPicker.timeZone = [NSTimeZone systemTimeZone];
-        _createAtPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
-        _createAtPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
-        _createAtPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        // 如果上一个任务的结束时间在未来，设置start picker和未来那个数字对齐，否则，使用现在的时间
-        [_createAtPicker addTarget:self action:@selector(showLabelHidePicker) forControlEvents:UIControlEventEditingDidEnd];
-    }
-    return _createAtPicker;
 }
 
 - (UICollectionView *)collectionView

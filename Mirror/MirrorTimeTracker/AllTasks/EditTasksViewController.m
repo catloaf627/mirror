@@ -10,6 +10,7 @@
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorDataManager.h"
+#import "MirrorStorage.h"
 #import "EditTaskCollectionViewCell.h"
 #import "TaskRecordViewController.h"
 #import "MirrorLanguage.h"
@@ -30,7 +31,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     self = [super init];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskDeleteNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskChangeOrderNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskChangeOrderNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
     }
@@ -63,11 +64,34 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kCellSpacing);
-        make.right.mas_equalTo(self.view).offset(-kCellSpacing);
+        make.left.mas_equalTo(self.view);
+        make.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.bottom.mas_equalTo(self.view);
     }];
+}
+
+#pragma mark - Actions
+
+- (void)longPress:(UILongPressGestureRecognizer *)longPress
+{
+    switch (longPress.state) {
+        case UIGestureRecognizerStateBegan:
+        {
+            NSIndexPath *selectedIndexPath = [self.collectionView indexPathForItemAtPoint:[longPress locationInView:self.collectionView]];
+            [self.collectionView beginInteractiveMovementForItemAtIndexPath:selectedIndexPath];
+        }
+            break;
+        case UIGestureRecognizerStateChanged:
+            [self.collectionView updateInteractiveMovementTargetPosition:[longPress locationInView:longPress.view]];
+            break;
+        case UIGestureRecognizerStateEnded:
+            [self.collectionView endInteractiveMovement];
+            break;
+        default:
+            [self.collectionView cancelInteractiveMovement];
+            break;
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -124,6 +148,21 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return CGSizeMake(kScreenWidth, kScreenHeight / 2); // 给collectionview一个大大的footer，最后一个cell在被编辑的时候可以被拖动到keyboard以上
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView canMoveItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    NSMutableArray <MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+    MirrorDataModel *selectedTask = allTasks[sourceIndexPath.item];
+    [allTasks removeObjectAtIndex:sourceIndexPath.item];
+    [allTasks insertObject:selectedTask atIndex:destinationIndexPath.item];
+    [MirrorStorage reorderTasks:allTasks];
+    [self.collectionView reloadData]; // 不立即reload data，而去等change order通知再reload，会导致一个奇怪的动画。所以这个页面不监听change order通知了，改了本地数据后直接reload。
+}
+
 
 - (UICollectionView *)collectionView
 {
@@ -136,6 +175,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.backgroundColor = self.view.backgroundColor;
         [_collectionView registerClass:[EditTaskCollectionViewCell class] forCellWithReuseIdentifier:[EditTaskCollectionViewCell identifier]];
         [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+        [_collectionView addGestureRecognizer:longPress];
     }
     return _collectionView;
 }

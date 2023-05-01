@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 + (void)editTask:(NSString *)taskName color:(MirrorColorType)color;
 
-+ (void)editTask:(NSString *)taskName createdTime:(long)createdTime;
++ (void)reorderTasks:(NSMutableArray <MirrorDataModel *> *)taskArray;
 
 + (void)savePeriodWithTaskname:(NSString *)taskName startAt:(NSDate *)startDate endAt:(NSDate *)endDate; // 跳过start->stop，直接保存
 

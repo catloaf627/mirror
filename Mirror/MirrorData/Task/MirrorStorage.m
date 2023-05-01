@@ -118,20 +118,22 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-+ (void)editTask:(NSString *)taskName createdTime:(long)createdTime
++ (void)reorderTasks:(NSMutableArray <MirrorDataModel *> *)taskArray
 {
-    [MirrorStorage p_editTask:taskName createdTime:createdTime];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Edit created time"];
+    [MirrorStorage p_reorderTasks:taskArray];
+    [MirrorStorage printTask:nil info:@"Edit order"];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskChangeOrderNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_editTask:(NSString *)taskName createdTime:(long)createdTime
++ (void)p_reorderTasks:(NSMutableArray <MirrorDataModel *> *)taskArray
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    MirrorDataModel *task = mirrorDict[taskName];
-    task.createdTime = createdTime;
-    [mirrorDict setValue:task forKey:taskName];
+    for (int i=0; i<taskArray.count; i++) {
+        MirrorDataModel *task = taskArray[i];
+        task.order = i;
+        [mirrorDict setValue:task forKey:task.taskName]; // 每一个order都要重置
+    }
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 

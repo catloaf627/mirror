@@ -18,13 +18,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isArchived;
 @property (nonatomic, assign) MirrorColorType color;
 @property (nonatomic, strong) NSMutableArray<NSMutableArray *> *periods;
-@property (nonatomic, assign) long createdTime; // 创建时间，用于排序
+@property (nonatomic, assign) long createdTime;
+@property (nonatomic, assign) NSInteger order;
 // 通过本地计算
 @property (nonatomic, assign) BOOL isOngoing;
 // 外部赋值
 @property (nonatomic, assign) BOOL isAddTaskModel;
 
-- (instancetype)initWithTitle:(NSString *)taskName createdTime:(long)createTime colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived periods:(NSMutableArray<NSMutableArray *> *)periods isAddTask:(BOOL)isAddTaskModel;
+- (instancetype)initWithTitle:(NSString *)taskName createdTime:(long)createTime order:(NSInteger)order colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived periods:(NSMutableArray<NSMutableArray *> *)periods isAddTask:(BOOL)isAddTaskModel;
 
 
 @end

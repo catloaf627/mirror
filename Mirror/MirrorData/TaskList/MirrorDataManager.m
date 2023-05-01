@@ -17,7 +17,7 @@
 + (NSMutableArray<MirrorDataModel *> *)activatedTasksWithAddTask
 {
     NSMutableArray<MirrorDataModel *> *activatedTasksWithAddTask = [MirrorDataManager activatedTasks];
-    MirrorDataModel *fakeModel = [[MirrorDataModel alloc] initWithTitle:nil createdTime:nil colorType:nil isArchived:nil periods:nil isAddTask:YES];
+    MirrorDataModel *fakeModel = [[MirrorDataModel alloc] initWithTitle:nil createdTime:nil order:nil colorType:nil isArchived:nil periods:nil isAddTask:YES];
     [activatedTasksWithAddTask addObject:fakeModel];
     return activatedTasksWithAddTask;
 }
@@ -58,7 +58,7 @@
         [allTasks addObject:task];
     }
     // sort
-    NSSortDescriptor *sdSortDate = [NSSortDescriptor sortDescriptorWithKey:@"createdTime" ascending:YES];
+    NSSortDescriptor *sdSortDate = [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES];
     allTasks = [NSMutableArray arrayWithArray:[allTasks sortedArrayUsingDescriptors:@[sdSortDate]]];
     return allTasks;
 }
@@ -79,7 +79,7 @@
     if (printDetailsToDebug) NSLog(@"数据库里的task个数 %@", @(allTasks.count));
     for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
         MirrorDataModel *task = allTasks[taskIndex];
-        MirrorDataModel *targetTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
+        MirrorDataModel *targetTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime order:task.order colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
         BOOL targetTaskIsEmpty = YES;
         for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
             NSMutableArray *period = task.periods[periodIndex];
