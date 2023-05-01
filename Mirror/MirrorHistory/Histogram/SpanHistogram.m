@@ -27,7 +27,6 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
-@property (nonatomic, strong) UILabel *emptyHintLabel;
 
 @property (nonatomic, assign) NSInteger spanType;
 @property (nonatomic, assign) NSInteger offset;
@@ -42,12 +41,6 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
     if (self) {
         self.data = data;
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-        // empty hint
-        [self addSubview:self.emptyHintLabel];
-        [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.left.right.offset(0);
-        }];
-        
         // histogram
         [self addSubview:self.collectionView];
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -59,7 +52,6 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data{
     self.data = data;
-    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     [self.collectionView reloadData];
 }
 
@@ -164,25 +156,6 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
         [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
     }
     return _collectionView;
-}
-
-- (UILabel *)emptyHintLabel
-{
-    if (!_emptyHintLabel) {
-        _emptyHintLabel = [UILabel new];
-        _emptyHintLabel.textAlignment = NSTextAlignmentCenter;
-        _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
-        _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data"];
-        _emptyHintLabel.hidden = self.data.count > 0;
-    }
-    return _emptyHintLabel;
-}
-
-- (void)updateHint
-{
-    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data"];
-    self.emptyHintLabel.hidden = self.data.count > 0;
 }
 
 @end

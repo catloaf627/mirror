@@ -21,7 +21,6 @@
 
 @property (nonatomic, strong) NSMutableArray *sliceLayerArray;
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
-@property (nonatomic, strong) UILabel *emptyHintLabel;
 @property (nonatomic, assign) BOOL enableInteractive;
 
 @end
@@ -35,10 +34,6 @@
     if (self) {
         self.sliceLayerArray = @[].mutableCopy;
         self.data = data;
-        [self addSubview:self.emptyHintLabel];
-        [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.left.right.offset(0);
-        }];
         self.enableInteractive = enableInteractive;
         [self drawPiechartWithWidth:(CGFloat)width];
     }
@@ -53,7 +48,6 @@
     }];
     self.sliceLayerArray = @[].mutableCopy;
     self.data = data;
-    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     self.enableInteractive = enableInteractive;
     [self drawPiechartWithWidth:(CGFloat)width];
 }
@@ -116,25 +110,6 @@
             [slice.textLayer removeFromSuperlayer];
         }
     }
-}
-
-- (UILabel *)emptyHintLabel
-{
-    if (!_emptyHintLabel) {
-        _emptyHintLabel = [UILabel new];
-        _emptyHintLabel.textAlignment = NSTextAlignmentCenter;
-        _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
-        _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data"];
-        _emptyHintLabel.hidden = self.data.count > 0;
-    }
-    return _emptyHintLabel;
-}
-
-- (void)updateHint
-{
-    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data"];
-    self.emptyHintLabel.hidden = self.data.count > 0;
 }
 
 @end

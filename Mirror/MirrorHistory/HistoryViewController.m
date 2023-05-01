@@ -38,6 +38,7 @@ static CGFloat const kLeftRightSpacing = 20;
 @property (nonatomic, strong) SpanLegend *legendView;
 @property (nonatomic, strong) SpanHistogram *histogramView;
 @property (nonatomic, strong) MirrorPiechart *piechartView;
+@property (nonatomic, strong) UILabel *emptyHintLabel;
 
 /*
  offset和type一起使用，每次切type的时候置为0。
@@ -115,7 +116,11 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)reloadData
 {
+    // data source
     [self updateData];
+    
+    // empty hint
+    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     
     // legend
     [self.legendView updateWithData:self.data];
@@ -204,6 +209,11 @@ static CGFloat const kLeftRightSpacing = 20;
         }
     }];
     self.piechartView.hidden = ![MirrorSettings appliedPieChart];
+    // empty hint
+    [self.view addSubview:self.emptyHintLabel];
+    [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.left.right.offset(0);
+    }];
     UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
     [tapRecognizer addTarget:self action:@selector(tapGestureRecognizerAction:)];
     [self.interactionView addGestureRecognizer:tapRecognizer];
@@ -389,6 +399,26 @@ static CGFloat const kLeftRightSpacing = 20;
     }
     return _typeButton;
 }
+
+- (UILabel *)emptyHintLabel
+{
+    if (!_emptyHintLabel) {
+        _emptyHintLabel = [UILabel new];
+        _emptyHintLabel.textAlignment = NSTextAlignmentCenter;
+        _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
+        _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data"];
+        _emptyHintLabel.hidden = self.data.count > 0;
+    }
+    return _emptyHintLabel;
+}
+
+- (void)updateHint
+{
+    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data"];
+    self.emptyHintLabel.hidden = self.data.count > 0;
+}
+
 
 #pragma mark - UIViewControllerTransitioningDelegate
 

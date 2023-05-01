@@ -110,10 +110,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     }];
     [self.view addSubview:self.emptyHintLabel];
     [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-        make.left.offset(kLeftRightSpacing);
-        make.right.offset(-kLeftRightSpacing);
-        make.bottom.offset(-kTabBarHeight);
+        make.top.bottom.left.right.offset(0);
     }];
 
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
