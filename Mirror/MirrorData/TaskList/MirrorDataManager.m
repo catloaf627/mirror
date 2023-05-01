@@ -73,7 +73,7 @@
                          start time             end time
     
     */
-    BOOL printDetailsToDebug = YES; // debug用
+    BOOL printDetailsToDebug = NO; // debug用
     NSMutableArray<MirrorDataModel *> *targetTasks = [NSMutableArray<MirrorDataModel *> new];
     NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
     if (printDetailsToDebug) NSLog(@"数据库里的task个数 %@", @(allTasks.count));
