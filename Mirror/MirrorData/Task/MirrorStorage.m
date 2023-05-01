@@ -191,43 +191,18 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 将最后一个period取出来，给它一个结束时间
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
     if (allPeriods.count > index) {
-        NSMutableArray *latestPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[index]];
-        long start = [latestPeriod[0] longValue];
+        NSMutableArray *editPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[index]];
+        long start = [editPeriod[0] longValue];
         long end = [date timeIntervalSince1970];
         long length = end - start;
         NSLog(@"%@计时结束 %ld",[UIColor getEmoji:task.color], length);
-        if (latestPeriod.count == 1 &&  length >= kMinSeconds) { // 一分钟以上开始记录（在00:00处切割）
-            NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:start];
-            NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:end];
-            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-            NSDateComponents *startComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
-            NSDateComponents *endComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:endDate];
-            startComponents.timeZone = [NSTimeZone systemTimeZone];
-            endComponents.timeZone = [NSTimeZone systemTimeZone];
-            
-            if (startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day) { // 开始和结束在同一天，直接记录 (存在原处)
-                [latestPeriod addObject:@(round([date timeIntervalSince1970]))];
-                allPeriods[index] = latestPeriod;
-            } else { //开始和结束不在同一天，在00:00处切割分段
-                NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
-                endComponent0.hour = 23;
-                endComponent0.minute = 59;
-                endComponent0.second = 59;
-                long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970] + 1;
-                [latestPeriod addObject:@(round(endTime0))];  // 第一个分段 (存在原处)
-                allPeriods[index] = latestPeriod;
-
-                long startTimei = endTime0;
-                long endTimei = startTimei + 86400;
-                while (endTimei < end) {
-                    [allPeriods insertObject:@[@(startTimei), @(endTimei)] atIndex:index];// 第i个分段（新插入）
-                    startTimei = startTimei + 86400;
-                    endTimei = startTimei + 86400;
-                }
-                [allPeriods insertObject: @[@(startTimei), @(end)] atIndex:index];// 最后一个分段（新插入）
+        if (editPeriod.count == 1) {
+            if (length >= kMinSeconds) { // 一分钟以上开始记录
+                [editPeriod addObject:@(round([date timeIntervalSince1970]))];
+                allPeriods[index] = editPeriod;
+            } else {
+                [allPeriods removeObjectAtIndex:index];
             }
-        } else { // 错误格式或者n秒以下，丢弃这个task
-            [allPeriods removeObjectAtIndex:0];
         }
         task.periods = allPeriods;
     }
