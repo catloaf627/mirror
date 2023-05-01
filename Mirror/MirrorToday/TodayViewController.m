@@ -27,7 +27,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
-
+@property (nonatomic, strong) UILabel *emptyHintLabel;
 @property (nonatomic, strong) UICollectionView *collectionView;
 // 下面两个都是数据源，同步更新
 @property (nonatomic, strong) NSMutableArray<NSString *> *tasknames;
@@ -66,6 +66,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
+    self.emptyHintLabel = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar 和 navibar
@@ -106,6 +107,14 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         make.right.offset(-kLeftRightSpacing);
         make.bottom.offset(-kTabBarHeight);
     }];
+    [self updateHint];
+    [self.view addSubview:self.emptyHintLabel];
+    [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.left.offset(kLeftRightSpacing);
+        make.right.offset(-kLeftRightSpacing);
+        make.bottom.offset(-kTabBarHeight);
+    }];
 
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
     edgeRecognizer.edges = UIRectEdgeLeft;
@@ -129,6 +138,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     return self.tasknames.count;
 }
 
@@ -163,6 +173,12 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 }
 
 #pragma mark - Actions
+
+- (void)updateHint
+{
+    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_started_today"];
+    self.emptyHintLabel.hidden = self.tasknames.count > 0;
+}
 
 - (void)updateDataSource
 {
@@ -209,6 +225,17 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return _collectionView;
 }
 
+- (UILabel *)emptyHintLabel
+{
+    if (!_emptyHintLabel) {
+        _emptyHintLabel = [UILabel new];
+        _emptyHintLabel.textAlignment = NSTextAlignmentCenter;
+        _emptyHintLabel.text = @"";
+        _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
+    }
+    return _emptyHintLabel;
+}
 
 - (UIButton *)settingsButton
 {
