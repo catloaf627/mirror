@@ -7,7 +7,6 @@
 
 #import "MirrorPiechart.h"
 #import "MirrorDataModel.h"
-#import "MirrorDataManager.h"
 #import "MirrorStorage.h"
 #import "SliceLayer.h"
 #import "MirrorTool.h"
@@ -38,29 +37,13 @@
 
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data width:(CGFloat)width
 {
-    
-}
-
-- (instancetype)initTodayWithWidth:(CGFloat)width
-{
-    self = [super init];
-    if (self) {
-        self.sliceLayerArray = @[].mutableCopy;
-        self.data = [MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]];
-        [self drawPiechartWithWidth:(CGFloat)width];
-    }
-    return self;
-}
-
-- (void)updateTodayWithWidth:(CGFloat)width
-{
     [[self.layer.sublayers copy] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CALayer * subLayer = obj;
         [subLayer removeFromSuperlayer];
 
     }];
     self.sliceLayerArray = @[].mutableCopy;
-    self.data = [MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]];
+    self.data = data;
     [self drawPiechartWithWidth:(CGFloat)width];
 }
 
@@ -99,19 +82,6 @@
         startAngle = endAngle;
     }
 
-}
-
-- (NSArray *)todayStartEndTime
-{
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    long endTime = startTime + 86400;
-    return @[@(startTime), @(endTime)];
 }
 
 @end

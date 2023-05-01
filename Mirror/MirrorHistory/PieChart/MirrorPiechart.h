@@ -15,9 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data width:(CGFloat)width;
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data width:(CGFloat)width;
 
-- (instancetype)initTodayWithWidth:(CGFloat)width;
-- (void)updateTodayWithWidth:(CGFloat)width;
-
 @end
 
 NS_ASSUME_NONNULL_END

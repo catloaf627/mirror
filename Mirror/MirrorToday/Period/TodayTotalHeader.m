@@ -12,6 +12,7 @@
 #import "MirrorLanguage.h"
 #import "MirrorPiechart.h"
 #import "MirrorTimeText.h"
+#import "MirrorDataManager.h"
 
 @interface TodayTotalHeader ()
 
@@ -92,7 +93,7 @@
     } else { // 不到8小时，隐藏王冠
         self.crownButton.hidden = YES;
     }
-    [self.pieChart updateTodayWithWidth:80]; // update piechart
+    [self.pieChart updateWithData:[MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]] width:80]; // update piechart
 }
 
 #pragma mark - Actions
@@ -155,7 +156,7 @@
 - (MirrorPiechart *)pieChart
 {
     if (!_pieChart) {
-        _pieChart = [[MirrorPiechart alloc] initTodayWithWidth:80];
+        _pieChart = [[MirrorPiechart alloc] initWithData:[MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]] width:80];
     }
     return _pieChart;
 }
@@ -186,6 +187,21 @@
         _countLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
     }
     return _countLabel;
+}
+
+#pragma mark - Privates
+
+- (NSArray *)todayStartEndTime
+{
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+    long endTime = startTime + 86400;
+    return @[@(startTime), @(endTime)];
 }
 
 
