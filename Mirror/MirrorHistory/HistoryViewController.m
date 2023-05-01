@@ -62,8 +62,6 @@ static CGFloat const kLeftRightSpacing = 20;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchWeekStartsOnNotification object:nil]; // 比其他vc多监听一个week starts on通知
-        // 系统通知
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:NSCalendarDayChangedNotification object:nil];// 日期改变
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动) 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
@@ -117,25 +115,22 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)reloadData
 {
-    // 时间变化通知可能在app处在后台的时候收到，这时需要线程回到主线程再reload
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        [self updateData];
-        
-        // legend
-        [self.legendView updateWithData:self.data];
-        [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo([self.legendView legendViewHeight]);
-        }];
-        // histogram
-        [self.histogramView updateWithData:self.data];
-        
-        // piechart
-        CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
-        [self.piechartView updateWithData:self.data width:width enableInteractive:YES];
-        [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_equalTo(width);
-        }];
-    });
+    [self updateData];
+    
+    // legend
+    [self.legendView updateWithData:self.data];
+    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([self.legendView legendViewHeight]);
+    }];
+    // histogram
+    [self.histogramView updateWithData:self.data];
+    
+    // piechart
+    CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
+    [self.piechartView updateWithData:self.data width:width enableInteractive:YES];
+    [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(width);
+    }];
 }
 
 - (void)p_setupUI

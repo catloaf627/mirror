@@ -44,8 +44,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
-        // 系统通知
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:NSCalendarDayChangedNotification object:nil];// 日期改变
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
@@ -92,10 +90,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)reloadData
 {
     [self updateDataSource];
-    // 时间变化通知可能在app处在后台的时候收到，这时需要线程回到主线程再reload
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        [self.collectionView reloadData];
-    });
+    [self.collectionView reloadData];
 }
 
 - (void)p_setupUI

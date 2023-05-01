@@ -73,7 +73,7 @@
                          start time             end time
     
     */
-    BOOL printDetailsToDebug = NO; // debug用
+    BOOL printDetailsToDebug = YES; // debug用
     NSMutableArray<MirrorDataModel *> *targetTasks = [NSMutableArray<MirrorDataModel *> new];
     NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
     if (printDetailsToDebug) NSLog(@"数据库里的task个数 %@", @(allTasks.count));
@@ -88,26 +88,37 @@
             }
             if (period.count != 2) {
                 if (printDetailsToDebug) NSLog(@"✖️正在计时中，不管");
-                continue; // 正在计时中，不管
-            } if ([period[1] longValue] < startTime) {
+                continue;
+            }
+            // [1] < starttime
+            else if ([period[1] longValue] < startTime) {
                 if (printDetailsToDebug) NSLog(@"✖️完整地发生在start time之前，不管");
-                // 完整地发生在start time之前，不管
-            } else if ([period[0] longValue] < startTime &&  startTime < [period[1] longValue]) {
+            }
+            // [0]<=starttime, startime<=[1]<=endtime
+            else if ([period[0] longValue] <= startTime &&  startTime <= [period[1] longValue] && [period[1] longValue] <= endTime ) {
                 if (printDetailsToDebug) NSLog(@"✔️跨越了start time，取后半段");
-                targetTaskIsEmpty = NO;// 跨越了start time，取后半段
+                targetTaskIsEmpty = NO;
                 [targetTask.periods addObject:[@[@(startTime), period[1]] mutableCopy]];
-            } else if (startTime <= [period[0] longValue] && [period[1] longValue] <= endTime) {
+            }
+            // starttime<=[0], [1]<=endtime
+            else if (startTime <= [period[0] longValue] && [period[1] longValue] <= endTime) {
                 if (printDetailsToDebug) NSLog(@"✔️完整地发生在start time和end time中间");
-                targetTaskIsEmpty = NO;// 完整地发生在start time和end time中间
+                targetTaskIsEmpty = NO;
                 [targetTask.periods addObject:[@[period[0], period[1]] mutableCopy]];
-            } else if ([period[0] longValue] < endTime && endTime < [period[1] longValue]) {
+            }
+            // starttime<=[0]<=endtime, endtime<=[1]
+            else if (startTime <= [period[0] longValue] && [period[0] longValue] <= endTime && endTime <= [period[1] longValue]) {
                 if (printDetailsToDebug) NSLog(@"✔️跨越了end time，取前半段");
                 targetTaskIsEmpty = NO;// 跨越了end time，取前半段
                 [targetTask.periods addObject:[@[ period[0], @(endTime)] mutableCopy]];
-            } else if (endTime < [period[0] longValue]) {
+            }
+            // endtime < [0]
+            else if (endTime < [period[0] longValue]) {
                 if (printDetailsToDebug) NSLog(@"✖️完整地发生在end time之后，不管");
                 // 完整地发生在end time之后，不管
-            } else if ([period[0] longValue] < startTime && endTime < [period[1] longValue]) {
+            }
+            // [0]<=starttime || endtime <=[1]
+            else if ([period[0] longValue] <= startTime && endTime <= [period[1] longValue]) {
                 if (printDetailsToDebug) NSLog(@"✖️囊括了整个starttime到endtime");
                 targetTaskIsEmpty = NO;// 囊括了整个starttime到endtime
                 [targetTask.periods addObject:[@[@(startTime), @(endTime)] mutableCopy]];
