@@ -37,7 +37,7 @@ static CGFloat const kLeftRightSpacing = 20;
 @property (nonatomic, strong) UISegmentedControl *typeSwitch;
 @property (nonatomic, strong) SpanLegend *legendView;
 @property (nonatomic, strong) SpanHistogram *histogramView;
-@property (nonatomic, strong) MirrorPiechart *pieChart;
+@property (nonatomic, strong) MirrorPiechart *piechartView;
 
 /*
  offset和type一起使用，每次切type的时候置为0。
@@ -91,6 +91,7 @@ static CGFloat const kLeftRightSpacing = 20;
     self.titleLabel = nil;
     self.legendView = nil;
     self.histogramView = nil;
+    self.piechartView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar 和 navibar
@@ -127,8 +128,8 @@ static CGFloat const kLeftRightSpacing = 20;
     
     // piechart
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
-    [self.pieChart updateWithData:self.data width:width enableInteractive:YES];
-    [self.pieChart mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.piechartView updateWithData:self.data width:width enableInteractive:YES];
+    [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(width);
     }];
 }
@@ -184,13 +185,13 @@ static CGFloat const kLeftRightSpacing = 20;
     }];
     self.histogramView.hidden = [MirrorSettings appliedPieChart];
 
-    [self.view addSubview:self.pieChart];
-    [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.piechartView];
+    [self.piechartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
         make.centerX.offset(0);
         make.width.height.mas_equalTo(MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]));
     }];
-    self.pieChart.hidden = ![MirrorSettings appliedPieChart];
+    self.piechartView.hidden = ![MirrorSettings appliedPieChart];
     UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
     [tapRecognizer addTarget:self action:@selector(tapGestureRecognizerAction:)];
     [self.interactionView addGestureRecognizer:tapRecognizer];
@@ -212,7 +213,7 @@ static CGFloat const kLeftRightSpacing = 20;
     UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     self.histogramView.hidden = [MirrorSettings appliedPieChart];
-    self.pieChart.hidden = ![MirrorSettings appliedPieChart];
+    self.piechartView.hidden = ![MirrorSettings appliedPieChart];
 }
 
 - (void)tapGestureRecognizerAction:(UITapGestureRecognizer *)tap // 热区范围为左右1/3
@@ -346,12 +347,12 @@ static CGFloat const kLeftRightSpacing = 20;
     return _legendView;
 }
 
-- (MirrorPiechart *)pieChart
+- (MirrorPiechart *)piechartView
 {
-    if (!_pieChart) {
-        _pieChart = [[MirrorPiechart alloc] initWithData:self.data width:MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]) enableInteractive:YES];
+    if (!_piechartView) {
+        _piechartView = [[MirrorPiechart alloc] initWithData:self.data width:MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]) enableInteractive:YES];
     }
-    return _pieChart;
+    return _piechartView;
 }
 
 - (UIButton *)settingsButton
