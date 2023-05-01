@@ -17,6 +17,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 @interface SpanLegend () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
+@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 
 @property (nonatomic, assign) NSInteger spanType;

@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SpanLegend : UIView
 
-@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, weak) UIViewController<SpanLegendDelegate> *delegate;
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;

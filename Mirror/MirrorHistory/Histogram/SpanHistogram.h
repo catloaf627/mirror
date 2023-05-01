@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SpanHistogram : UIView
 
-@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, weak) UIViewController<SpanHistogramDelegate> *delegate;
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;

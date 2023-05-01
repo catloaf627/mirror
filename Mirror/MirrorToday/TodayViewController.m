@@ -91,6 +91,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)reloadData
 {
     [self updateDataSource];
+    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     [self.collectionView reloadData];
 }
 
@@ -107,7 +108,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         make.right.offset(-kLeftRightSpacing);
         make.bottom.offset(-kTabBarHeight);
     }];
-    [self updateHint];
     [self.view addSubview:self.emptyHintLabel];
     [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
@@ -138,7 +138,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     return self.tasknames.count;
 }
 
@@ -173,12 +172,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 }
 
 #pragma mark - Actions
-
-- (void)updateHint
-{
-    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_started_today"];
-    self.emptyHintLabel.hidden = self.tasknames.count > 0;
-}
 
 - (void)updateDataSource
 {
@@ -230,12 +223,20 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     if (!_emptyHintLabel) {
         _emptyHintLabel = [UILabel new];
         _emptyHintLabel.textAlignment = NSTextAlignmentCenter;
-        _emptyHintLabel.text = @"";
         _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
         _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
+        _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_started_today"];
+        _emptyHintLabel.hidden = self.tasknames.count > 0;
     }
     return _emptyHintLabel;
 }
+
+- (void)updateHint
+{
+    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_started_today"];
+    self.emptyHintLabel.hidden = self.tasknames.count > 0;
+}
+
 
 - (UIButton *)settingsButton
 {

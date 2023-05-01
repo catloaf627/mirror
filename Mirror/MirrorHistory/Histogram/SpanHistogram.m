@@ -24,6 +24,8 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 @interface SpanHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
+@property (nonatomic, strong) UICollectionView *collectionView;
+
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 
@@ -41,7 +43,6 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
         self.data = data;
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         // empty hint
-        [self updateHint];
         [self addSubview:self.emptyHintLabel];
         [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.left.right.offset(0);
@@ -58,6 +59,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data{
     self.data = data;
+    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     [self.collectionView reloadData];
 }
 
@@ -71,7 +73,6 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     return self.data.count;
 }
 
@@ -170,9 +171,10 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
     if (!_emptyHintLabel) {
         _emptyHintLabel = [UILabel new];
         _emptyHintLabel.textAlignment = NSTextAlignmentCenter;
-        _emptyHintLabel.text = @"";
         _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
         _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
+        _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data"];
+        _emptyHintLabel.hidden = self.data.count > 0;
     }
     return _emptyHintLabel;
 }
