@@ -92,7 +92,10 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)reloadData
 {
     [self updateDataSource];
-    [self.collectionView reloadData];
+    // 时间变化通知可能在app处在后台的时候收到，这时需要线程回到主线程再reload
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self.collectionView reloadData];
+    });
 }
 
 - (void)p_setupUI
