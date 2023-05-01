@@ -70,7 +70,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar 和 navibar
-    [[MirrorTabsManager sharedInstance] updateDataTabItemWithTabController:self.tabBarController];
+    [[MirrorTabsManager sharedInstance] updateTodayTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 1) {
         [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
     }

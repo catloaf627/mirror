@@ -6,13 +6,11 @@
 //
 
 #import "SpanLegend.h"
-#import "MirrorDataManager.h"
 #import <Masonry/Masonry.h>
 #import "MirrorSettings.h"
 #import "MirrorStorage.h"
 #import "LegendCollectionViewCell.h"
 #import "TaskRecordViewController.h"
-#import "MirrorTool.h"
 
 static CGFloat const kCellHeight = 30; // 一个legend的高度
 static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
@@ -29,14 +27,13 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 @implementation SpanLegend
 
-- (instancetype)initWithSpanType:(SpanType)spanType offset:(NSInteger)offset
+- (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data
 {
     self = [super init];
     if (self) {
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         self.layer.cornerRadius = 14;
-        self.spanType = spanType;
-        self.offset = offset;
+        self.data = data;
         // legend
         [self addSubview:self.collectionView];
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -46,10 +43,9 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
     return self;
 }
 
-- (void)updateWithSpanType:(SpanType)spanType offset:(NSInteger)offset
+- (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data
 {
-    self.spanType = spanType;
-    self.offset = offset;
+    self.data = data;
     [self.collectionView reloadData];
 }
 
@@ -109,78 +105,5 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
     }
     return _collectionView;
 }
-
-- (NSMutableArray<MirrorDataModel *> *)data
-{
-    long startTime = 0;
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    if (self.spanType == SpanTypeDay) {
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        if (self.offset != 0) {
-            startTime = startTime + 86400*self.offset;
-        }
-    } else if (self.spanType == SpanTypeWeek) {
-        long todayZero = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        startTime = todayZero - [MirrorTool getDayGapFromTheFirstDayThisWeek] * 86400;
-        if (self.offset != 0) {
-            startTime = startTime + 7*86400*self.offset;
-        }
-    } else if (self.spanType == SpanTypeMonth) {
-        components.day = 1;
-        if (self.offset > 0) {
-            for (int i=0;i<self.offset;i++) {
-                if (components.month + 1 <= 12) {
-                    components.month = components.month + 1;
-                } else {
-                    components.year = components.year + 1;
-                    components.month = 1;
-                }
-            }
-        }
-        if (self.offset < 0) {
-            for (int i=0;i<-self.offset;i++) {
-                if (components.month - 1 >= 1) {
-                    components.month = components.month - 1;
-                } else {
-                    components.year = components.year - 1;
-                    components.month = 12;
-                }
-            }
-        }
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    } else if (self.spanType == SpanTypeYear) {
-        components.month = 1;
-        components.day = 1;
-        if (self.offset != 0) {
-            components.year = components.year + self.offset;
-        }
-        startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    }
-
-    long endTime = 0;
-    if (self.spanType == SpanTypeDay) {
-        endTime = startTime + 86400;
-    } else if (self.spanType == SpanTypeWeek) {
-        NSInteger numberOfDaysInWeek= 7;
-        endTime = startTime + numberOfDaysInWeek*86400;
-    } else if (self.spanType == SpanTypeMonth) {
-        NSRange rng = [[NSCalendar currentCalendar] rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:[NSDate dateWithTimeIntervalSince1970:startTime]];
-        NSInteger numberOfDaysInMonth = rng.length;
-        endTime = startTime + numberOfDaysInMonth*86400;
-    } else if (self.spanType == SpanTypeYear) {
-        NSRange rng = [[NSCalendar currentCalendar] rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitYear forDate:[NSDate dateWithTimeIntervalSince1970:startTime]];
-        NSInteger numberOfDaysIYear = rng.length;
-        endTime = startTime + numberOfDaysIYear*86400;
-    }
-    
-    _data = [MirrorDataManager getDataWithStart:startTime end:endTime];
-    return _data;
-}
-
 
 @end

@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MirrorMacro.h"
+#import "MirrorDataModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, weak) UIViewController<SpanLegendDelegate> *delegate;
 
-- (instancetype)initWithSpanType:(SpanType)spanType offset:(NSInteger)offset;
-- (void)updateWithSpanType:(SpanType)spanType offset:(NSInteger)offset;
+- (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
+- (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (CGFloat)legendViewHeight;
 
 @end

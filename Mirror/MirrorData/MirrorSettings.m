@@ -55,5 +55,20 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchWeekStartsOnNotification object:nil];
 }
 
++ (BOOL)appliedPieChart
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechart"];
+}
+
++ (void)switchChartType
+{
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechart"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredPiechart"];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredPiechart"];
+    }
+    // 不需要通知，修改页面就是展示页面。
+}
+
 
 @end

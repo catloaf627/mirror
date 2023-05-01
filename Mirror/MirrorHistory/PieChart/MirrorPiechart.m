@@ -12,6 +12,7 @@
 #import "SliceLayer.h"
 #import "MirrorTool.h"
 #import <Masonry/Masonry.h>
+#import "MirrorMacro.h"
 
 // https://blog.csdn.net/lerryteng/article/details/51564197
 
@@ -23,6 +24,22 @@
 @end
 
 @implementation MirrorPiechart
+
+- (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data width:(CGFloat)width
+{
+    self = [super init];
+    if (self) {
+        self.sliceLayerArray = @[].mutableCopy;
+        self.data = data;
+        [self drawPiechartWithWidth:(CGFloat)width];
+    }
+    return self;
+}
+
+- (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data width:(CGFloat)width
+{
+    
+}
 
 - (instancetype)initTodayWithWidth:(CGFloat)width
 {

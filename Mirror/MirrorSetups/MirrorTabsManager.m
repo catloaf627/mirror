@@ -13,6 +13,7 @@
 
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
+#import "MirrorSettings.h"
 
 @interface MirrorTabsManager ()
 
@@ -49,7 +50,7 @@
         _mirrorTabVC.tabBar.shadowImage = [UIImage new];
 
         [self updateTimeTabItemWithTabController:_mirrorTabVC];
-        [self updateDataTabItemWithTabController:_mirrorTabVC];
+        [self updateTodayTabItemWithTabController:_mirrorTabVC];
         [self updateHistoryTabItemWithTabController:_mirrorTabVC];
     }
     return _mirrorTabVC;
@@ -60,7 +61,7 @@
     [self updateTabbar:tabbarController.tabBar index:0 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] imageName:@"alarm" selectedImageName:@"alarm.fill"];
 }
 
-- (void)updateDataTabItemWithTabController:(UITabBarController *)tabbarController
+- (void)updateTodayTabItemWithTabController:(UITabBarController *)tabbarController
 {
     [self updateTabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"today"] imageName:@"chart.pie" selectedImageName:@"chart.pie.fill"];
 }

@@ -7,12 +7,11 @@
 
 #import <UIKit/UIKit.h>
 #import "MirrorMacro.h"
+#import "MirrorDataModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SpanHistogramDelegate <NSObject>  // push viewcontroller用 + update label
-
-- (void)updateSpanText:(NSString *)text;
+@protocol SpanHistogramDelegate <NSObject>  // push viewcontroller用
 
 @end
 
@@ -21,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, weak) UIViewController<SpanHistogramDelegate> *delegate;
 
-- (instancetype)initWithSpanType:(SpanType)spanType offset:(NSInteger)offset;
-- (void)updateWithSpanType:(SpanType)spanType offset:(NSInteger)offset;
+- (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
+- (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;
 
 @end
 

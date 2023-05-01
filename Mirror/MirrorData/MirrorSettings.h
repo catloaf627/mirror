@@ -23,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)appliedWeekStarsOnMonday;
 + (void)switchWeekStartsOn;
 
+// Pie chart
++ (BOOL)appliedPieChart;
++ (void)switchChartType;
+
 @end
 
 NS_ASSUME_NONNULL_END
