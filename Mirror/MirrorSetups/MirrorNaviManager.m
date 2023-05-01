@@ -55,19 +55,22 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         make.width.mas_equalTo(naviController.navigationBar.frame.size.width/2);
         make.height.mas_equalTo(naviController.navigationBar.frame.size.height);
     }];
-    [naviController.navigationBar addSubview:self.leftButton];
-    [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(kCollectionViewPadding);
-        make.centerY.offset(0);
-        make.width.height.mas_equalTo(naviController.navigationBar.frame.size.height);
-    }];
-    [naviController.navigationBar addSubview:self.rightButton];
-    [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.offset(-kCollectionViewPadding);
-        make.centerY.offset(0);
-        make.width.height.mas_equalTo(naviController.navigationBar.frame.size.height);
-    }];
-    
+    if (leftButton) {
+        [naviController.navigationBar addSubview:self.leftButton];
+        [self.leftButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.offset(kCollectionViewPadding);
+            make.centerY.offset(0);
+            make.width.height.mas_equalTo(naviController.navigationBar.frame.size.height);
+        }];
+    }
+    if (rightButton) {
+        [naviController.navigationBar addSubview:self.rightButton];
+        [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.offset(-kCollectionViewPadding);
+            make.centerY.offset(0);
+            make.width.height.mas_equalTo(naviController.navigationBar.frame.size.height);
+        }];
+    }
 }
 
 - (UILabel *)titleLabel

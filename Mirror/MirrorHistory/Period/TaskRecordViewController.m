@@ -34,7 +34,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         self.taskName = taskName;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateArchive) name:MirrorTaskArchiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTitleAndArchive) name:MirrorTaskArchiveNotification object:nil];
     }
     return self;
 }
@@ -53,6 +53,12 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     [super viewWillAppear:animated];
     [self updateTitle];
+}
+
+- (void)updateTitleAndArchive
+{
+    [self updateTitle];
+    [self updateArchive];
 }
 
 - (void)updateTitle

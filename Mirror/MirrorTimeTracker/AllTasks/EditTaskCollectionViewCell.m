@@ -67,7 +67,8 @@ static CGFloat const kPadding = 20;
     }];
     
     [self addSubview:self.createAtLabel];
-    [self.createAtLabel setTitle:[[MirrorLanguage mirror_stringWithKey:@"created_at"] stringByAppendingString: [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:createdTime]]] forState:UIControlStateNormal];
+//    [self.createAtLabel setTitle:[[MirrorLanguage mirror_stringWithKey:@"created_at"] stringByAppendingString: [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:createdTime]]] forState:UIControlStateNormal];
+    [self.createAtLabel setTitle:[@(task.order)stringValue]forState:UIControlStateNormal];
     [self.createAtLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.taskNameField);
         make.left.mas_equalTo(self.taskNameField.mas_right).offset(kPadding);

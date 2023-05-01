@@ -45,7 +45,13 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_deleteTask:(NSString *)taskName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    NSInteger order = ((MirrorDataModel *)mirrorDict[taskName]).order;
     [mirrorDict removeObjectForKey:taskName];
+    for (id key in mirrorDict) {
+        if (((MirrorDataModel *)mirrorDict[key]).order > order) {
+            ((MirrorDataModel *)mirrorDict[key]).order--;
+        }
+    }
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
@@ -60,9 +66,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_archiveTask:(NSString *)taskName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    MirrorDataModel *task = mirrorDict[taskName];
-    task.isArchived = YES;
-    [mirrorDict setValue:task forKey:taskName];
+    ((MirrorDataModel *)mirrorDict[taskName]).isArchived = YES;
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
@@ -77,9 +81,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_cancelArchiveTask:(NSString *)taskName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    MirrorDataModel *task = mirrorDict[taskName];
-    task.isArchived = NO;
-    [mirrorDict setValue:task forKey:taskName];
+    ((MirrorDataModel *)mirrorDict[taskName]).isArchived = NO;
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
@@ -112,9 +114,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_editTask:(NSString *)taskName color:(MirrorColorType)color
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    MirrorDataModel *task = mirrorDict[taskName];
-    task.color = color;
-    [mirrorDict setValue:task forKey:taskName];
+    ((MirrorDataModel *)mirrorDict[taskName]).color = color;
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
