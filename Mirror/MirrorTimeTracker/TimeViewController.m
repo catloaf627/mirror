@@ -33,7 +33,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
-@property (nonatomic, strong) UIButton *allTasksButton;
+@property (nonatomic, strong) UIButton *editTasksButton;
 @property (nonatomic, assign) CGRect selectedCellFrame; // cell.x, cell.y, cell.width, cell.height
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -78,7 +78,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // 更新tabbar 和 navibar
     [[MirrorTabsManager sharedInstance] updateTimeTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 0) {
-        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.allTasksButton];
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.editTasksButton];
     }
     [self p_setupUI];
 }
@@ -91,7 +91,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.allTasksButton];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.editTasksButton];
 }
 
 - (void)reloadData
@@ -240,15 +240,15 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return _settingsButton;
 }
 
-- (UIButton *)allTasksButton
+- (UIButton *)editTasksButton
 {
-    if (!_allTasksButton) {
-        _allTasksButton = [UIButton new];
+    if (!_editTasksButton) {
+        _editTasksButton = [UIButton new];
         UIImage *iconImage = [[UIImage systemImageNamed:@"tray"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_allTasksButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        [_allTasksButton addTarget:self action:@selector(goToAllTasks) forControlEvents:UIControlEventTouchUpInside];
+        [_editTasksButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [_editTasksButton addTarget:self action:@selector(goToAllTasks) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _allTasksButton;
+    return _editTasksButton;
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
