@@ -86,7 +86,7 @@ static CGFloat const kLeftRightSpacing = 20;
     // 更新tabbar 和 navibar
     [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 2) {
-        [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
     }
     [self p_setupUI];
 }
@@ -97,10 +97,10 @@ static CGFloat const kLeftRightSpacing = 20;
     [self p_setupUI];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
 }
 
 - (void)reloadData

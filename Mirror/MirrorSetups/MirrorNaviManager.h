@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (void)updateNaviItemWithTitle:(NSString *)title naviController:(UINavigationController *)naviController leftButton:(nullable UIButton *)leftButton rightButton:(nullable UIButton *)rightButton;
+- (void)updateNaviItemWithNaviController:(UINavigationController *)naviController title:(NSString *)title leftButton:(nullable UIButton *)leftButton rightButton:(nullable UIButton *)rightButton;
+
 
 @end
 

@@ -72,7 +72,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     // 更新tabbar 和 navibar
     [[MirrorTabsManager sharedInstance] updateDataTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 1) {
-        [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"start"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
     }
     [self p_setupUI];
 }
@@ -82,11 +82,10 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self p_setupUI];
 }
 
-
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"today"] naviController:self.navigationController leftButton:self.settingsButton rightButton:nil];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
 }
 
 - (void)reloadData

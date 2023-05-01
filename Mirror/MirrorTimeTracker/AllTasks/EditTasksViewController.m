@@ -53,13 +53,14 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self p_setupUI];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"edit_tasks"] leftButton:nil rightButton:nil];
+}
+
 - (void)p_setupUI
 {
-    // navibar
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:@"" naviController:self.navigationController leftButton:nil rightButton:nil];
-    self.navigationController.navigationBar.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 返回箭头颜色为文案颜色
-    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:NSForegroundColorAttributeName]; // title为文案颜色
-    [self.navigationItem setTitle:[MirrorLanguage mirror_stringWithKey:@"edit_tasks"]];
     // collection view
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self.view addSubview:self.collectionView];

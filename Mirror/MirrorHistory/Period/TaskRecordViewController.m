@@ -34,7 +34,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         self.taskName = taskName;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateNavibarUI) name:MirrorTaskArchiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateArchive) name:MirrorTaskArchiveNotification object:nil];
     }
     return self;
 }
@@ -49,13 +49,23 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self.collectionView reloadData];
 }
 
-- (void)updateNavibarUI
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self updateTitle];
+}
+
+- (void)updateTitle
 {
     NSString *title = self.taskName;
     if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {
         title = [[MirrorLanguage mirror_stringWithKey:@"archived_tag"] stringByAppendingString:title];
     }
-    [self.navigationItem setTitle:title]; // title为taskname
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:title leftButton:nil rightButton:nil];
+}
+
+- (void)updateArchive
+{
     if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {
         UIImage *image = [[UIImage systemImageNamed:@"archivebox.fill"] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
         UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -79,10 +89,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)p_setupUI
 {
     // navibar
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:@"" naviController:self.navigationController leftButton:nil rightButton:nil];
-    self.navigationController.navigationBar.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 返回箭头颜色为文案颜色
-    [self updateNavibarUI];
-    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor mirrorColorNamed:MirrorColorTypeText] forKey:NSForegroundColorAttributeName]; // title为文案颜色
+    [self updateArchive];
     // collection view
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self.view addSubview:self.collectionView];
