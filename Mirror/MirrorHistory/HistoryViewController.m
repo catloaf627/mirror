@@ -117,11 +117,20 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     [self updateData];
     
+    // legend
     [self.legendView updateWithData:self.data];
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
+    // histogram
     [self.histogramView updateWithData:self.data];
+    
+    // piechart
+    CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
+    [self.pieChart updateWithData:self.data width:width enableInteractive:YES];
+    [self.pieChart mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(width);
+    }];
 }
 
 - (void)p_setupUI
@@ -134,6 +143,7 @@ static CGFloat const kLeftRightSpacing = 20;
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.height.mas_equalTo(32);
     }];
 
     [self.view addSubview:self.interactionView];
@@ -173,12 +183,12 @@ static CGFloat const kLeftRightSpacing = 20;
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
     self.histogramView.hidden = [MirrorSettings appliedPieChart];
+
     [self.view addSubview:self.pieChart];
     [self.pieChart mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
-        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
+        make.centerX.offset(0);
+        make.width.height.mas_equalTo(MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]));
     }];
     self.pieChart.hidden = ![MirrorSettings appliedPieChart];
     UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
@@ -339,8 +349,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (MirrorPiechart *)pieChart
 {
     if (!_pieChart) {
-        CGFloat width = kScreenWidth - 2*kLeftRightSpacing; // gizmo 要改，防止legend太多，pie展示不全
-        _pieChart = [[MirrorPiechart alloc] initWithData:self.data width:width enableInteractive:YES];
+        _pieChart = [[MirrorPiechart alloc] initWithData:self.data width:MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]) enableInteractive:YES];
     }
     return _pieChart;
 }
@@ -473,6 +482,16 @@ static CGFloat const kLeftRightSpacing = 20;
         NSString *combine  = [[startDate stringByAppendingString:@" - "] stringByAppendingString:endDate];
         [self updateSpanText:combine];
     }
+}
+
+#pragma mark - Privates
+
+- (NSArray *)leftWidthLeftHeight
+{
+    CGFloat leftHeight = kScreenHeight - self.navigationController.navigationBar.frame.origin.y - self.navigationController.navigationBar.frame.size.height - 32 -  10 - 60 - 10 - [self.legendView legendViewHeight] - 10 - 20 -  kTabBarHeight;
+    CGFloat leftWidth = kScreenWidth - 2*kLeftRightSpacing;
+
+    return @[@(leftWidth), @(leftHeight)];
 }
 
 
