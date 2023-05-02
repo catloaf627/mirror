@@ -36,7 +36,6 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) NSMutableDictionary *data;
 @property (nonatomic, assign) NSInteger startTimestamp;
 @property (nonatomic, assign) NSInteger selectedCellIndex;
-@property (nonatomic, strong) UIButton *shadeButton;
 @property (nonatomic, assign) MirrorColorType randomColorType;
 
 @end
@@ -51,7 +50,7 @@ static CGFloat const kCellSpacing = 3;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"activities"] leftButton:nil rightButton:self.shadeButton];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"activities"] leftButton:nil rightButton:nil];
 }
 
 
@@ -100,6 +99,12 @@ static CGFloat const kCellSpacing = 3;
             make.width.height.mas_equalTo(width);
         }
     }];
+    NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
+    UIImage *image = [[UIImage systemImageNamed:iconName] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
+    UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIBarButtonItem *shadeItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(switchShadeType)];
+    shadeItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    [self.navigationItem setRightBarButtonItem:shadeItem];
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -314,24 +319,15 @@ static CGFloat const kCellSpacing = 3;
     return _collectionView;
 }
 
-- (UIButton *)shadeButton
-{
-    if (!_shadeButton) {
-        _shadeButton = [UIButton new];
-        NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_shadeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        [_shadeButton addTarget:self action:@selector(switchShadeType) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _shadeButton;
-}
-
 - (void)switchShadeType
 {
     [MirrorSettings switchShowShade];
     NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.shadeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    UIImage *image = [[UIImage systemImageNamed:iconName] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
+    UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIBarButtonItem *shadeItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(switchShadeType)];
+    shadeItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    [self.navigationItem setRightBarButtonItem:shadeItem];
     NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
     self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
     [MirrorSettings changePreferredShadeColor:self.randomColorType];
