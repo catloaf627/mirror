@@ -111,6 +111,9 @@
     [mirrorDict setValue:@[@"OR", @"或者"] forKey:@"or"];
     [mirrorDict setValue:@[@"Start now", @"开始计时"] forKey:@"start_now"];
     
+    // Grid VC
+    [mirrorDict setValue:@[@"Activities", @"活动记录"] forKey:@"activities"];
+    
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }

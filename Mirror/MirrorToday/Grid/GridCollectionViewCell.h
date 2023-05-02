@@ -6,13 +6,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GridComponent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GridCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
-- (void)config;
+- (void)configWithGridComponent:(GridComponent *)component;
 
 @end
 
