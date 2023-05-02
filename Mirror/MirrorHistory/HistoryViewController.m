@@ -296,9 +296,6 @@ static CGFloat const kLeftRightSpacing = 20;
     }
 }
 
-
-#pragma mark - SpanHistogramDelegate
-
 - (void)updateSpanText:(NSString *)text
 {
     self.titleLabel.text = text;

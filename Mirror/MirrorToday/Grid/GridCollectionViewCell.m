@@ -27,7 +27,7 @@
     
     self.layer.cornerRadius = 2;
     NSInteger winnerTaskColor = MirrorColorTypeAddTaskCellBG; //如果没有task的话，用这个超级浅的灰色兜底
-    double alpha = 1; //如果没有task的话，超级浅的灰色alpha为1
+    CGFloat alpha = 1; //如果没有task的话，超级浅的灰色alpha为1
     NSInteger maxTime = 0; // 那一天哪个task时间最长
     NSInteger totalTime = 0; // 那一天的所有task的工作时间总和
     for (int i=0; i<component.thatDayTasks.count; i++) {
@@ -42,8 +42,7 @@
         if (totalTime>7*3600) alpha = 1.0;
     }
     // 某一天、最多任务的颜色、总体一天肝了多久(颜色越深，说明肝得越久，<3h alpha=0.4, 3-7h alpha=0.7, 7h+,alpha=1)
-    self.backgroundColor = [UIColor mirrorColorNamed:winnerTaskColor];
-    self.alpha = alpha;
+    self.backgroundColor = [[UIColor mirrorColorNamed:winnerTaskColor] colorWithAlphaComponent:alpha];
     if (isSelected) {
         self.layer.borderColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:winnerTaskColor]].CGColor;
         self.layer.borderWidth = 2;

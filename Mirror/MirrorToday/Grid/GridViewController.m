@@ -19,6 +19,8 @@
 #import "GridComponent.h"
 #import "SpanLegend.h"
 #import "MirrorPiechart.h"
+#import "MirrorTimeText.h"
+#import "MirrorTool.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellWidth = 30;
@@ -27,6 +29,8 @@ static CGFloat const kCellSpacing = 3;
 @interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UILabel *dateLabel;
+@property (nonatomic, strong) UIView *weekdayView;
 @property (nonatomic, strong) SpanLegend *legendView;
 @property (nonatomic, strong) MirrorPiechart *piechartView;
 @property (nonatomic, strong) NSMutableDictionary *data;
@@ -53,18 +57,32 @@ static CGFloat const kCellSpacing = 3;
 {
     // collection view
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+    [self.view addSubview:self.weekdayView];
+    [self.weekdayView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.height.mas_equalTo(kCellWidth*7 + kCellSpacing*6);
+        make.width.mas_equalTo(kCellWidth);
+    }];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.left.mas_equalTo(self.weekdayView.mas_right).offset(kCellSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.height.mas_equalTo(kCellWidth*7 + kCellSpacing*6);
+    }];
+    [self.view addSubview:self.dateLabel];
+    [self.dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
+        make.height.mas_equalTo(20);
     }];
     [self.view addSubview:self.legendView];
     [self.legendView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.dateLabel.mas_bottom).offset(20);
         make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
     [self.view addSubview:self.piechartView];
@@ -93,11 +111,26 @@ static CGFloat const kCellSpacing = 3;
     }
     long timestamp = _startTimestamp + indexPath.item * 86400;
     NSMutableArray<MirrorDataModel *> *data = [MirrorDataManager getDataWithStart:timestamp end:timestamp+86400];
+    long totaltime = 0;
+    for (MirrorDataModel* task in data) {
+        totaltime = totaltime + [MirrorTool getTotalTimeOfPeriods:task.periods];
+    }
+    self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:timestamp]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totaltime]];
     [self.legendView updateWithData:data];
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
-    [self.piechartView updateWithData:data width:MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]) enableInteractive:YES];
+    CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
+    [self.piechartView updateWithData:data width:width enableInteractive:YES];
+    [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if (width == [[self leftWidthLeftHeight][0] floatValue]) { // 宽度小于高度
+            make.top.mas_equalTo(self.legendView.mas_bottom).offset(10 + ([[self leftWidthLeftHeight][1] floatValue]-[[self leftWidthLeftHeight][0] floatValue])/2);
+            make.width.height.mas_equalTo(width);
+        } else {
+            make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
+            make.width.height.mas_equalTo(width);
+        }
+    }];
     [collectionView reloadData];
 }
 
@@ -163,6 +196,106 @@ static CGFloat const kCellSpacing = 3;
     return _piechartView;
 }
 
+- (UILabel *)dateLabel
+{
+    if (!_dateLabel) {
+        _dateLabel = [UILabel new];
+        _dateLabel.textAlignment = NSTextAlignmentCenter;
+        _dateLabel.text = [MirrorTimeText YYYYmmddWeekday:[NSDate now]];
+        _dateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _dateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 和nickname的文字颜色保持一致
+    }
+    return _dateLabel;
+}
+
+- (UIView *)weekdayView
+{
+    if (!_weekdayView) {
+        _weekdayView = [UIView new];
+        BOOL appliedWeekStarsOnMonday = [MirrorSettings appliedWeekStarsOnMonday];
+        UIColor *textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        UILabel *day0 = [UILabel new];
+        day0.adjustsFontSizeToFitWidth = YES;
+        day0.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"monday"] : [MirrorLanguage mirror_stringWithKey:@"sunday"];
+        day0.textColor = textColor;
+        day0.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        [_weekdayView addSubview:day0];
+        [day0 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.offset(0);
+            make.top.offset(0);
+            make.height.offset(kCellWidth);
+        }];
+        UILabel *day1 = [UILabel new];
+        day1.adjustsFontSizeToFitWidth = YES;
+        day1.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"tuesday"] : [MirrorLanguage mirror_stringWithKey:@"monday"];
+        day1.textColor = textColor;
+        day1.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        [_weekdayView addSubview:day1];
+        [day1 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.offset(0);
+            make.top.mas_equalTo(day0.mas_bottom).offset(kCellSpacing);
+            make.height.offset(kCellWidth);
+        }];
+        UILabel *day2 = [UILabel new];
+        day2.adjustsFontSizeToFitWidth = YES;
+        day2.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"wednesday"] : [MirrorLanguage mirror_stringWithKey:@"tuesday"];
+        day2.textColor = textColor;
+        day2.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        [_weekdayView addSubview:day2];
+        [day2 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.offset(0);
+            make.top.mas_equalTo(day1.mas_bottom).offset(kCellSpacing);
+            make.height.offset(kCellWidth);
+        }];
+        UILabel *day3 = [UILabel new];
+        day3.adjustsFontSizeToFitWidth = YES;
+        day3.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"thursday"] : [MirrorLanguage mirror_stringWithKey:@"wednesday"];
+        day3.textColor = textColor;
+        day3.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        [_weekdayView addSubview:day3];
+        [day3 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.offset(0);
+            make.top.mas_equalTo(day2.mas_bottom).offset(kCellSpacing);
+            make.height.offset(kCellWidth);
+        }];
+        UILabel *day4 = [UILabel new];
+        day4.adjustsFontSizeToFitWidth = YES;
+        day4.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"friday"] : [MirrorLanguage mirror_stringWithKey:@"thursday"];
+        day4.textColor = textColor;
+        day4.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        [_weekdayView addSubview:day4];
+        [day4 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.offset(0);
+            make.top.mas_equalTo(day3.mas_bottom).offset(kCellSpacing);
+            make.height.offset(kCellWidth);
+        }];
+        UILabel *day5 = [UILabel new];
+        day5.adjustsFontSizeToFitWidth = YES;
+        day5.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"saturday"] : [MirrorLanguage mirror_stringWithKey:@"friday"];
+        day5.textColor = textColor;
+        day5.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        [_weekdayView addSubview:day5];
+        [day5 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.offset(0);
+            make.top.mas_equalTo(day4.mas_bottom).offset(kCellSpacing);
+            make.height.offset(kCellWidth);
+        }];
+        UILabel *day6 = [UILabel new];
+        day6.adjustsFontSizeToFitWidth = YES;
+        day6.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"sunday"] : [MirrorLanguage mirror_stringWithKey:@"saturday"];
+        day6.textColor = textColor;
+        day6.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        [_weekdayView addSubview:day6];
+        [day6 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.offset(0);
+            make.top.mas_equalTo(day5.mas_bottom).offset(kCellSpacing);
+            make.height.offset(kCellWidth);
+        }];
+        
+    }
+    return _weekdayView;
+}
+
 - (UICollectionView *)collectionView
 {
     if (!_collectionView) {
@@ -225,12 +358,12 @@ static CGFloat const kCellSpacing = 3;
             NSInteger numOfInvalidCell = 0;
             if ([MirrorSettings appliedWeekStarsOnMonday]) {
                 if (minComponents.weekday > 1) {
-                    numOfInvalidCell = minComponents.weekday - 1;
+                    numOfInvalidCell = minComponents.weekday - 2;
                 } else {
                     numOfInvalidCell = 6;
                 }
             } else {
-                numOfInvalidCell = minComponents.weekday;
+                numOfInvalidCell = minComponents.weekday - 1;
             }
             _startTimestamp = [minDate timeIntervalSince1970] - numOfInvalidCell*86400; // 第一个cell(可能是invalid的)
             // 今天的0点
@@ -262,7 +395,7 @@ static CGFloat const kCellSpacing = 3;
 
 - (NSArray *)leftWidthLeftHeight
 {
-    CGFloat leftHeight = kScreenHeight - self.navigationController.navigationBar.frame.origin.y - self.navigationController.navigationBar.frame.size.height - (kCellWidth*7 + kCellSpacing*6) - 20 - [self.legendView legendViewHeight] - 10 - 20 -  kTabBarHeight;
+    CGFloat leftHeight = kScreenHeight - self.navigationController.navigationBar.frame.origin.y - self.navigationController.navigationBar.frame.size.height - (kCellWidth*7 + kCellSpacing*6) - 20 -20 -20 - [self.legendView legendViewHeight] - 10 - 20 - kTabBarHeight;
     CGFloat leftWidth = kScreenWidth - 2*kLeftRightSpacing;
 
     return @[@(leftWidth), @(leftHeight)];
