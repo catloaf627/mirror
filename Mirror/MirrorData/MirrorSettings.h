@@ -30,6 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
 // Timezone
 + (NSInteger)timeZoneGap:(NSInteger)newSecondsFromGMT;
 
+// 按照时间长短更新颜色深浅
++ (BOOL)appliedShowShade;
++ (void)switchShowShade;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GridCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
-- (void)configWithGridComponent:(GridComponent *)component isSelected:(BOOL)isSelected;
+- (void)configWithGridComponent:(GridComponent *)component isSelected:(BOOL)isSelected randomColor:(MirrorColorType)randomColor;
 
 @end
 

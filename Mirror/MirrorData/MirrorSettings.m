@@ -84,5 +84,19 @@
      */
 }
 
+// 按照时间长短更新颜色深浅
++ (BOOL)appliedShowShade
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredShade"];
+}
++ (void)switchShowShade
+{
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredShade"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredShade"];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredShade"];
+    }
+    // 不需要通知，修改页面就是展示页面。
+}
 
 @end

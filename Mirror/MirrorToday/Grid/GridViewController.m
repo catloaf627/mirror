@@ -36,6 +36,8 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) NSMutableDictionary *data;
 @property (nonatomic, assign) NSInteger startTimestamp;
 @property (nonatomic, assign) NSInteger selectedCellIndex;
+@property (nonatomic, strong) UIButton *shadeButton;
+@property (nonatomic, assign) MirrorColorType randomColorType;
 
 @end
 
@@ -49,7 +51,7 @@ static CGFloat const kCellSpacing = 3;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"activities"] leftButton:nil rightButton:nil];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"activities"] leftButton:nil rightButton:self.shadeButton];
 }
 
 
@@ -152,7 +154,7 @@ static CGFloat const kCellSpacing = 3;
     NSInteger targetTimestamp = _startTimestamp + indexPath.item * 86400;
     GridComponent *grid = self.data[[@(targetTimestamp) stringValue]];
     BOOL isSelected = indexPath.item==_selectedCellIndex;
-    [cell configWithGridComponent:grid isSelected:isSelected];
+    [cell configWithGridComponent:grid isSelected:isSelected randomColor:self.randomColorType];
     return cell;
 }
 
@@ -311,6 +313,39 @@ static CGFloat const kCellSpacing = 3;
     }
     return _collectionView;
 }
+
+- (UIButton *)shadeButton
+{
+    if (!_shadeButton) {
+        _shadeButton = [UIButton new];
+        NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
+        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_shadeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [_shadeButton addTarget:self action:@selector(switchShadeType) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _shadeButton;
+}
+
+- (void)switchShadeType
+{
+    [MirrorSettings switchShowShade];
+    NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
+    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.shadeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
+    self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
+    [self.collectionView reloadData];
+}
+
+- (MirrorColorType)randomColorType
+{
+    if (!_randomColorType) {
+        NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
+        _randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
+    }
+    return _randomColorType;
+}
+
 
 // key是00:00的timestamp，value是GridComponent
 - (NSMutableDictionary *)data
