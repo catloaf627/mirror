@@ -85,7 +85,10 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"%ld", (long)[NSTimeZone systemTimeZone].secondsFromGMT);
+    NSInteger timeZoneGap = [MirrorSettings timeZoneGap:[NSTimeZone systemTimeZone].secondsFromGMT];
+    if (timeZoneGap) { // 用户当前的时区，和数据被执行零点切割的时区不一样了，需要修改所有时间数据
+        [MirrorStorage changeDataWithTimezoneGap:timeZoneGap];
+    }
     [self  p_setupUI];
 }
 

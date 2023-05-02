@@ -27,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)appliedPieChart;
 + (void)switchChartType;
 
+// Timezone
++ (NSInteger)timeZoneGap:(NSInteger)newSecondsFromGMT;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -341,6 +341,25 @@ static NSString *const kMirrorDict = @"mirror_dict";
     [MirrorStorage saveMirrorData:dict];
 }
 
++ (void)changeDataWithTimezoneGap:(NSInteger)timezoneGap
+{
+    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+    for (id key in mirrorDict.allKeys) {
+        MirrorDataModel *task = mirrorDict[key];
+        NSMutableArray<NSMutableArray *> *periods = [NSMutableArray new];
+        for (int i=0; i<task.periods.count; i++) {
+            NSMutableArray *period = [NSMutableArray new];
+            for (int j=0; j<task.periods[i].count; j++) {
+                [period addObject:@([task.periods[i][j] integerValue]+ timezoneGap)];
+            }
+            [periods addObject:period];
+        }
+        task.periods = periods;
+        mirrorDict[key] = task;
+    }
+    [MirrorStorage saveMirrorData:mirrorDict];
+}
+
 + (void)saveMirrorData:(NSMutableDictionary *)mirrorDict // 归档
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];

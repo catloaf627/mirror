@@ -52,6 +52,10 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 + (void)editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp withTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
 
+// 每次冷启检查时区是不是变了，变了需要改数据库
+
++ (void)changeDataWithTimezoneGap:(NSInteger)timezoneGap;
+
 // MirrorDataManager用
 
 + (NSMutableDictionary *)retriveMirrorData;
