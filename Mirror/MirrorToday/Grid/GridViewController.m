@@ -369,6 +369,9 @@ static CGFloat const kCellSpacing = 3;
         }
         // 2023.5.1 3:00 到 2023.5.3 19:00 算三天
         if (maxTimestamp != NSIntegerMin && minTimestamp != NSIntegerMax) { // 有 有效数据
+            if (maxTimestamp < [[NSDate now] timeIntervalSince1970]) {
+                maxTimestamp = [[NSDate now] timeIntervalSince1970]; // 如果现存最晚任务也在今天之前，设置最大时间为今天。
+            }
             NSDate *minDate = [NSDate dateWithTimeIntervalSince1970:minTimestamp];
             NSDate *maxDate = [NSDate dateWithTimeIntervalSince1970:maxTimestamp];
             NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
