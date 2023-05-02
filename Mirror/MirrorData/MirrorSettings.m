@@ -99,4 +99,14 @@
     // 不需要通知，修改页面就是展示页面。
 }
 
++ (NSInteger)preferredShadeColor
+{
+    return [[NSUserDefaults standardUserDefaults] integerForKey:@"MirrorUserPreferredShadeColor"];
+}
+
++ (void)changePreferredShadeColor:(NSInteger)color
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:color forKey:@"MirrorUserPreferredShadeColor"];
+}
+
 @end

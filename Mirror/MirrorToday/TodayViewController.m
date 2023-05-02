@@ -242,7 +242,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _emptyHintLabel.textAlignment = NSTextAlignmentCenter;
         _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
         _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
-        _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_started_today"];
+        _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_today"];
         _emptyHintLabel.hidden = self.tasknames.count > 0;
     }
     return _emptyHintLabel;
@@ -250,7 +250,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)updateHint
 {
-    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_started_today"];
+    self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_today"];
     self.emptyHintLabel.hidden = self.tasknames.count > 0;
 }
 

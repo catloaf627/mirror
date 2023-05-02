@@ -17,7 +17,7 @@
     return NSStringFromClass(self.class);
 }
 
-- (void)configWithGridComponent:(GridComponent *)component isSelected:(BOOL)isSelected randomColor:(MirrorColorType)randomColor
+- (void)configWithGridComponent:(GridComponent *)component isSelected:(BOOL)isSelected
 {
     if (!component.isValid) {
         self.backgroundColor = [UIColor clearColor];
@@ -51,7 +51,7 @@
         if (alpha == 0) { // meaning no records
             self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
         } else {
-            self.backgroundColor = [[UIColor mirrorColorNamed:randomColor] colorWithAlphaComponent:alpha];
+            self.backgroundColor = [[UIColor mirrorColorNamed:[MirrorSettings preferredShadeColor]] colorWithAlphaComponent:alpha];
         }
     }
     

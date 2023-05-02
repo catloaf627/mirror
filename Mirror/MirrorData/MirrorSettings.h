@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)appliedShowShade;
 + (void)switchShowShade;
 
++ (NSInteger)preferredShadeColor;
++ (void)changePreferredShadeColor:(NSInteger)color;
+
 @end
 
 NS_ASSUME_NONNULL_END

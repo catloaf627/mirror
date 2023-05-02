@@ -100,7 +100,7 @@
     // Span histogram empty hint
     [mirrorDict setValue:@[@"No data", @"暂无数据"] forKey:@"no_data"];
     // Today empty hint
-    [mirrorDict setValue:@[@"There're no tasks started today", @"今天还没有新启的任务"] forKey:@"no_data_started_today"];
+    [mirrorDict setValue:@[@"No tasks today", @"今天暂无任务"] forKey:@"no_data_today"];
     
     // today total
     [mirrorDict setValue:@[@"Total: ", @"总时长："] forKey:@"total"];

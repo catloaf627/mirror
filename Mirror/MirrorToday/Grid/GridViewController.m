@@ -154,7 +154,7 @@ static CGFloat const kCellSpacing = 3;
     NSInteger targetTimestamp = _startTimestamp + indexPath.item * 86400;
     GridComponent *grid = self.data[[@(targetTimestamp) stringValue]];
     BOOL isSelected = indexPath.item==_selectedCellIndex;
-    [cell configWithGridComponent:grid isSelected:isSelected randomColor:self.randomColorType];
+    [cell configWithGridComponent:grid isSelected:isSelected];
     return cell;
 }
 
@@ -334,14 +334,14 @@ static CGFloat const kCellSpacing = 3;
     [self.shadeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
     self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
+    [MirrorSettings changePreferredShadeColor:self.randomColorType];
     [self.collectionView reloadData];
 }
 
 - (MirrorColorType)randomColorType
 {
     if (!_randomColorType) {
-        NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
-        _randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
+        _randomColorType = [MirrorSettings preferredShadeColor];
     }
     return _randomColorType;
 }
