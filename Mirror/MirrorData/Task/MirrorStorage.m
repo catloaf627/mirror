@@ -197,9 +197,36 @@ static NSString *const kMirrorDict = @"mirror_dict";
         long length = end - start;
         NSLog(@"%@计时结束 %ld",[UIColor getEmoji:task.color], length);
         if (editPeriod.count == 1) {
-            if (length >= kMinSeconds) { // 一分钟以上开始记录
-                [editPeriod addObject:@(round([date timeIntervalSince1970]))];
-                allPeriods[index] = editPeriod;
+            if (length >= kMinSeconds) { // 一分钟以上开始记录（00:00处切割）
+                NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:start];
+                NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:end];
+                NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+                NSDateComponents *startComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
+                NSDateComponents *endComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:endDate];
+                startComponents.timeZone = [NSTimeZone systemTimeZone];
+                endComponents.timeZone = [NSTimeZone systemTimeZone];
+                
+                if (startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day) { // 开始和结束在同一天，直接记录 (存在原处)
+                    [editPeriod addObject:@(round([date timeIntervalSince1970]))];
+                    allPeriods[index] = editPeriod;
+                } else { //开始和结束不在同一天，在00:00处切割分段
+                    NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
+                    endComponent0.hour = 23;
+                    endComponent0.minute = 59;
+                    endComponent0.second = 59;
+                    long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970] + 1;
+                    [editPeriod addObject:@(round(endTime0))];  // 第一个分段 (存在原处)
+                    allPeriods[index] = editPeriod;
+
+                    long startTimei = endTime0;
+                    long endTimei = startTimei + 86400;
+                    while (endTimei < end) {
+                        [allPeriods insertObject:@[@(startTimei), @(endTimei)] atIndex:index];// 第i个分段（新插入）
+                        startTimei = startTimei + 86400;
+                        endTimei = startTimei + 86400;
+                    }
+                    [allPeriods insertObject: @[@(startTimei), @(end)] atIndex:index];// 最后一个分段（新插入）
+                }
             } else {
                 [allPeriods removeObjectAtIndex:index];
             }

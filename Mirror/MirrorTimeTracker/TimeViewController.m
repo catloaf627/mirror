@@ -85,6 +85,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSLog(@"%ld", (long)[NSTimeZone systemTimeZone].secondsFromGMT);
     [self  p_setupUI];
 }
 
