@@ -49,6 +49,9 @@ typedef NS_ENUM(NSInteger, SpanType) {
 #define kAudioArchive (1104)
 #define kAudioClick (1123)
 
+// System Notifications
+#define MirrorSignificantTimeChangeNotification @"MirrorSignificantTimeChangeNotification"
+
 // Settings Notifications
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"
 #define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"
