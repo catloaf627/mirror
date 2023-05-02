@@ -39,8 +39,8 @@
         }
         totalTime = totalTime + thisTaskTime;
         if ([MirrorSettings appliedShowShade]) {
-            if (totalTime>0*3600) alpha = 0.4;
-            if (totalTime>3*3600) alpha = 0.7;
+            if (totalTime>0*3600) alpha = 0.5;
+            if (totalTime>3*3600) alpha = 0.8;
             if (totalTime>7*3600) alpha = 1.0;
         }
 
@@ -48,7 +48,11 @@
     if (![MirrorSettings appliedShowShade]) {
         self.backgroundColor = [UIColor mirrorColorNamed:winnerTaskColor];
     } else {
-        self.backgroundColor = [[UIColor mirrorColorNamed:randomColor] colorWithAlphaComponent:alpha];
+        if (alpha == 0) { // meaning no records
+            self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
+        } else {
+            self.backgroundColor = [[UIColor mirrorColorNamed:randomColor] colorWithAlphaComponent:alpha];
+        }
     }
     
     if (isSelected) {

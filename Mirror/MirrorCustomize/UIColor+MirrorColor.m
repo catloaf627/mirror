@@ -59,7 +59,7 @@
         case MirrorColorTypeShadow:
             return [UIColor grayColor];
         case MirrorColorTypeAddTaskCellBG:
-            return isLight ? [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1] : [UIColor colorWithRed:15/255.0 green:15/255.0 blue:15/255.0 alpha:1];
+            return isLight ? [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:1] : [UIColor colorWithRed:15/255.0 green:15/255.0 blue:15/255.0 alpha:1];
         case MirrorColorTypeAddTaskCellPlus:
             return isLight ? [UIColor colorWithRed:200/255.0 green: 200/255.0  blue:200/255.0 alpha:1] : [UIColor colorWithRed:55/255.0 green: 55/255.0  blue:55/255.0 alpha:1];
         case MirrorColorTypeCellPink:
