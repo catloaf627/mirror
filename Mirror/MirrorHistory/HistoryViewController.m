@@ -126,24 +126,30 @@ static CGFloat const kLeftRightSpacing = 20;
     
     // legend
     [self.legendView updateWithData:self.data];
-    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo([self.legendView legendViewHeight]);
-    }];
+    if (self.legendView.superview) { //security
+        [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo([self.legendView legendViewHeight]);
+        }];
+    }
+
     // histogram
     [self.histogramView updateWithData:self.data];
     
     // piechart
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
     [self.piechartView updateWithData:self.data width:width enableInteractive:YES];
-    [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
-        if (width == [[self leftWidthLeftHeight][0] floatValue]) { // 宽度小于高度
-            make.top.mas_equalTo(self.legendView.mas_bottom).offset(10 + ([[self leftWidthLeftHeight][1] floatValue]-[[self leftWidthLeftHeight][0] floatValue])/2);
-            make.width.height.mas_equalTo(width);
-        } else {
-            make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
-            make.width.height.mas_equalTo(width);
-        }
-    }];
+    if (self.piechartView.superview) { //security
+        [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
+            if (width == [[self leftWidthLeftHeight][0] floatValue]) { // 宽度小于高度
+                make.top.mas_equalTo(self.legendView.mas_bottom).offset(10 + ([[self leftWidthLeftHeight][1] floatValue]-[[self leftWidthLeftHeight][0] floatValue])/2);
+                make.width.height.mas_equalTo(width);
+            } else {
+                make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
+                make.width.height.mas_equalTo(width);
+            }
+        }];
+    }
+
 }
 
 - (void)p_setupUI

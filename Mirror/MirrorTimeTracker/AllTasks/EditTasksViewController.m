@@ -80,6 +80,10 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         case UIGestureRecognizerStateBegan:
         {
             NSIndexPath *selectedIndexPath = [self.collectionView indexPathForItemAtPoint:[longPress locationInView:self.collectionView]];
+            UICollectionViewCell *selectedCell = [self.collectionView cellForItemAtIndexPath:selectedIndexPath];
+            selectedCell.layer.shadowColor = [UIColor mirrorColorNamed:MirrorColorTypeShadow].CGColor;
+            selectedCell.layer.shadowRadius = 4;
+            selectedCell.layer.shadowOpacity = 1;
             [self.collectionView beginInteractiveMovementForItemAtIndexPath:selectedIndexPath];
         }
             break;
@@ -87,10 +91,24 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
             [self.collectionView updateInteractiveMovementTargetPosition:[longPress locationInView:longPress.view]];
             break;
         case UIGestureRecognizerStateEnded:
+        {
+            NSIndexPath *selectedIndexPath = [self.collectionView indexPathForItemAtPoint:[longPress locationInView:self.collectionView]];
+            UICollectionViewCell *selectedCell = [self.collectionView cellForItemAtIndexPath:selectedIndexPath];
+            selectedCell.layer.shadowColor = [UIColor clearColor].CGColor;
+            selectedCell.layer.shadowRadius = 0;
+            selectedCell.layer.shadowOpacity = 0;
             [self.collectionView endInteractiveMovement];
+        }
             break;
         default:
+        {
+            NSIndexPath *selectedIndexPath = [self.collectionView indexPathForItemAtPoint:[longPress locationInView:self.collectionView]];
+            UICollectionViewCell *selectedCell = [self.collectionView cellForItemAtIndexPath:selectedIndexPath];
+            selectedCell.layer.shadowColor = [UIColor clearColor].CGColor;
+            selectedCell.layer.shadowRadius = 0;
+            selectedCell.layer.shadowOpacity = 0;
             [self.collectionView cancelInteractiveMovement];
+        }
             break;
     }
 }
@@ -137,11 +155,21 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *footer;
-    if (kind == UICollectionElementKindSectionFooter) {
+    
+    if (kind == UICollectionElementKindSectionHeader) {
+        UICollectionViewCell *header;
+        header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
+        return header;
+    } else {
+        UICollectionViewCell *footer;
         footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer" forIndexPath:indexPath];
+        return footer;
     }
-    return footer;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    return CGSizeMake(kScreenWidth, 5); // 给collectionview一个小小的header，让第一行cell的shadow的过度更自然（没有截断的效果）
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
@@ -175,6 +203,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = self.view.backgroundColor;
         [_collectionView registerClass:[EditTaskCollectionViewCell class] forCellWithReuseIdentifier:[EditTaskCollectionViewCell identifier]];
+        [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
         [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         [_collectionView addGestureRecognizer:longPress];
