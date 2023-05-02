@@ -19,6 +19,7 @@
 #import "MirrorDataManager.h"
 #import "TodayTotalHeader.h"
 #import "TaskRecordViewController.h"
+#import "GridViewController.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
@@ -27,6 +28,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
+@property (nonatomic, strong) UIButton *gridButton;
+
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 @property (nonatomic, strong) UICollectionView *collectionView;
 // 下面两个都是数据源，同步更新
@@ -74,7 +77,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     // 更新tabbar 和 navibar
     [[MirrorTabsManager sharedInstance] updateTodayTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 1) {
-        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.gridButton];
     }
     [self p_setupUI];
 }
@@ -87,7 +90,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.gridButton];
 }
 
 - (void)reloadData
@@ -198,6 +201,21 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     }
 }
 
+- (void)goToSettings
+{
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
+    settingsVC.transitioningDelegate = self;
+    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
+    [self presentViewController:settingsVC animated:YES completion:nil];
+}
+
+- (void)goToGrid
+{
+    GridViewController *gridVC = [[GridViewController alloc] init];
+    [self.navigationController pushViewController:gridVC animated:YES];
+}
+
 
 #pragma mark - Getters
 
@@ -248,6 +266,17 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return _settingsButton;
 }
 
+- (UIButton *)gridButton
+{
+    if (!_gridButton) {
+        _gridButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"square.grid.2x2"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_gridButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [_gridButton addTarget:self action:@selector(goToGrid) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _gridButton;
+}
+
 - (NSMutableArray<NSString *> *)tasknames
 {
     if (!_tasknames) {
@@ -264,16 +293,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return _originIndexes;
 }
 
-#pragma mark - Settings
-
-- (void)goToSettings
-{
-    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
-    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
-    settingsVC.transitioningDelegate = self;
-    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
-    [self presentViewController:settingsVC animated:YES completion:nil];
-}
+#pragma mark - Animations
 
 // 从左边缘滑动唤起settings
 - (void)edgeGestureRecognizerAction:(UIScreenEdgePanGestureRecognizer *)pan
@@ -298,9 +318,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         self.interactiveTransition = nil;
     }
 }
-
-
-#pragma mark - UIViewControllerTransitioningDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
