@@ -16,15 +16,17 @@
     return NSStringFromClass(self.class);
 }
 
-- (void)configWithGridComponent:(GridComponent *)component
+- (void)configWithGridComponent:(GridComponent *)component isSelected:(BOOL)isSelected
 {
     if (!component.isValid) {
         self.backgroundColor = [UIColor clearColor];
+        self.layer.borderColor = [UIColor clearColor].CGColor;
+        self.layer.borderWidth = 0;
         return;
     }
-    self.layer.cornerRadius = 2;
     
-    UIColor *winnerTaskColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG]; //如果没有task的话，用这个超级浅的灰色兜底
+    self.layer.cornerRadius = 2;
+    NSInteger winnerTaskColor = MirrorColorTypeAddTaskCellBG; //如果没有task的话，用这个超级浅的灰色兜底
     double alpha = 1; //如果没有task的话，超级浅的灰色alpha为1
     NSInteger maxTime = 0; // 那一天哪个task时间最长
     NSInteger totalTime = 0; // 那一天的所有task的工作时间总和
@@ -32,7 +34,7 @@
         NSInteger thisTaskTime = [MirrorTool getTotalTimeOfPeriods:component.thatDayTasks[i].periods];
         if (thisTaskTime > maxTime) {
             maxTime = thisTaskTime;
-            winnerTaskColor = [UIColor mirrorColorNamed:component.thatDayTasks[i].color];
+            winnerTaskColor = component.thatDayTasks[i].color;
         }
         totalTime = totalTime + thisTaskTime;
         if (totalTime>0*3600) alpha = 0.4;
@@ -40,8 +42,15 @@
         if (totalTime>7*3600) alpha = 1.0;
     }
     // 某一天、最多任务的颜色、总体一天肝了多久(颜色越深，说明肝得越久，<3h alpha=0.4, 3-7h alpha=0.7, 7h+,alpha=1)
-    self.backgroundColor = winnerTaskColor;
+    self.backgroundColor = [UIColor mirrorColorNamed:winnerTaskColor];
     self.alpha = alpha;
+    if (isSelected) {
+        self.layer.borderColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:winnerTaskColor]].CGColor;
+        self.layer.borderWidth = 2;
+    } else {
+        self.layer.borderColor = [UIColor clearColor].CGColor;
+        self.layer.borderWidth = 0;
+    }
 }
 
 

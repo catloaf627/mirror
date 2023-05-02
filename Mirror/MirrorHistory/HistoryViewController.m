@@ -126,11 +126,9 @@ static CGFloat const kLeftRightSpacing = 20;
     
     // legend
     [self.legendView updateWithData:self.data];
-    if (self.legendView.superview) { //security
-        [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo([self.legendView legendViewHeight]);
-        }];
-    }
+    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([self.legendView legendViewHeight]);
+    }];
 
     // histogram
     [self.histogramView updateWithData:self.data];

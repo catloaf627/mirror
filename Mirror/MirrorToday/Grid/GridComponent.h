@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GridComponent : NSObject
 
 @property (nonatomic, assign) BOOL isValid;
-@property (nonatomic, assign) NSMutableArray<MirrorDataModel *> *thatDayTasks;
+@property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *thatDayTasks;
 
 - (instancetype)initWithValid:(BOOL)isValid thatDayTasks:(NSMutableArray<MirrorDataModel *> *)thatDayTasks;
 
