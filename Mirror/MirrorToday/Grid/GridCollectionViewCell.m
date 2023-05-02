@@ -52,7 +52,7 @@
     }
     
     if (isSelected) {
-        self.layer.borderColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:winnerTaskColor]].CGColor;
+        self.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint].CGColor;
         self.layer.borderWidth = 2;
     } else {
         self.layer.borderColor = [UIColor clearColor].CGColor;

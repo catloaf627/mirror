@@ -118,9 +118,6 @@
             return MirrorColorTypeCellPurplePulse;
         case MirrorColorTypeCellGray:
             return MirrorColorTypeCellGrayPulse;
-            // 这一对pulse非常特殊，只有在grid页面用到过(选择一个色块，这个色块的的border是其pulse色，如果无数据色块本身颜色为AddTaskCellBG，选中它，border为AddTaskCellPlus)
-        case MirrorColorTypeAddTaskCellBG:
-            return MirrorColorTypeAddTaskCellPlus;
         default:
             return MirrorColorTypeBackground;
     }
