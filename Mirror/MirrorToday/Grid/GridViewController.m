@@ -328,8 +328,8 @@ static CGFloat const kCellSpacing = 3;
     UIBarButtonItem *shadeItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(switchShadeType)];
     shadeItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
     [self.navigationItem setRightBarButtonItem:shadeItem];
-    NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
-    self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
+    NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
+    self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
     [MirrorSettings changePreferredShadeColor:self.randomColorType];
     [self.collectionView reloadData];
 }

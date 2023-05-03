@@ -118,6 +118,23 @@
             return MirrorColorTypeCellPurplePulse;
         case MirrorColorTypeCellGray:
             return MirrorColorTypeCellGrayPulse;
+            
+        case MirrorColorTypeCellPinkPulse:
+            return MirrorColorTypeCellPink;
+        case MirrorColorTypeCellOrangePulse:
+            return MirrorColorTypeCellOrange;
+        case MirrorColorTypeCellYellowPulse:
+            return MirrorColorTypeCellYellow;
+        case MirrorColorTypeCellGreenPulse:
+            return MirrorColorTypeCellGreen;
+        case MirrorColorTypeCellTealPulse:
+            return MirrorColorTypeCellTeal;
+        case MirrorColorTypeCellBluePulse:
+            return MirrorColorTypeCellBlue;
+        case MirrorColorTypeCellPurplePulse:
+            return MirrorColorTypeCellPurple;
+        case MirrorColorTypeCellGrayPulse:
+            return MirrorColorTypeCellGray;
         default:
             return MirrorColorTypeBackground;
     }
