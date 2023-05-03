@@ -469,7 +469,6 @@ static CGFloat const kCellSpacing = 3;
             components.second = 0;
             long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970]; // 今天的timestamp
             _selectedCellIndex = (timestamp-_startTimestamp)/86400; // 今天cell的位置
-            _monthHint.text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp]]; // 月份hint设置为今天
             // 添加前面的空cell
             for (int i=0; i<numOfInvalidCell; i++) {
                 NSInteger invalidDateTimestamp = [minDate timeIntervalSince1970] - (numOfInvalidCell-i)*86400;
