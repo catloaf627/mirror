@@ -106,10 +106,13 @@
     [mirrorDict setValue:@[@"Total: ", @"总时长："] forKey:@"total"];
     
     // Time editing (这个页面需要的save，上面已经有了)
-    [mirrorDict setValue:@[@"Starts at", @"开始于"] forKey:@"starts_at"];
-    [mirrorDict setValue:@[@"Ends at", @"结束于"] forKey:@"ends_at"];
+    [mirrorDict setValue:@[@"Starts at", @"开始时间"] forKey:@"starts_at"];
     [mirrorDict setValue:@[@"OR", @"或者"] forKey:@"or"];
     [mirrorDict setValue:@[@"Start now", @"开始计时"] forKey:@"start_now"];
+    [mirrorDict setValue:@[@" hours", @" 小时"] forKey:@"picker_hours"];
+    [mirrorDict setValue:@[@" mins", @" 分钟"] forKey:@"picker_mins"];
+    [mirrorDict setValue:@[@" hour", @" 小时"] forKey:@"picker_hour"];
+    [mirrorDict setValue:@[@" min", @" 分钟"] forKey:@"picker_min"];
     
     // Grid VC
     [mirrorDict setValue:@[@"Activities", @"活动记录"] forKey:@"activities"];

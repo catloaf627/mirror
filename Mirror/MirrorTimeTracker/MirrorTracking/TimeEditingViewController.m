@@ -14,16 +14,14 @@
 #import "MirrorLanguage.h"
 #import "MirrorTimeText.h"
 
-@interface TimeEditingViewController () <UIViewControllerTransitioningDelegate>
+@interface TimeEditingViewController () <UIViewControllerTransitioningDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
 // UI
 @property (nonatomic, strong) UIButton *dismissButton;
 @property (nonatomic, strong) UILabel *tasknameLabel;
 @property (nonatomic, strong) UILabel *startLabel;
-@property (nonatomic, strong) UILabel *endLabel;
 @property (nonatomic, strong) UIDatePicker *startPicker;
-@property (nonatomic, strong) UIDatePicker *endPicker;
-@property (nonatomic, strong) UILabel *totalLabel;
+@property (nonatomic, strong) UIPickerView *lastedPicker;
 @property (nonatomic, strong) UIButton *saveButton;
 @property (nonatomic, strong) UILabel *orLabel;
 @property (nonatomic, strong) UIButton *startButton;
@@ -78,13 +76,6 @@
         make.height.mas_equalTo(50);
         make.width.mas_equalTo((kScreenWidth - 2*20)/3);
     }];
-    [self.view addSubview:self.endLabel];
-    [self.endLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(20);
-        make.top.mas_equalTo(self.startLabel.mas_bottom).offset(20);
-        make.height.mas_equalTo(50);
-        make.width.mas_equalTo((kScreenWidth - 2*20)/3);
-    }];
     [self.view addSubview:self.startPicker];
     [self.startPicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.offset(-20);
@@ -92,26 +83,19 @@
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
     }];
-    [self.view addSubview:self.endPicker];
-    [self.endPicker mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.offset(-20);
+    [self.view addSubview:self.lastedPicker];
+    [self.lastedPicker mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.offset(20);
         make.top.mas_equalTo(self.startPicker.mas_bottom).offset(20);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(2*(kScreenWidth - 2*20)/3);
-    }];
-    [self.view addSubview:self.totalLabel];
-    [self.totalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset((kScreenWidth - 160 - 80 - 20)/2);
-        make.top.mas_equalTo(self.endPicker.mas_bottom).offset(20);
-        make.height.mas_equalTo(40);
-        make.width.mas_equalTo(160);
+        make.width.mas_equalTo((kScreenWidth - 3*20)/2);
     }];
     [self.view addSubview:self.saveButton];
     [self.saveButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.offset(-(kScreenWidth - 160 - 80 - 20)/2);
-        make.top.mas_equalTo(self.endPicker.mas_bottom).offset(20);
+        make.left.mas_equalTo(self.lastedPicker.mas_right).offset(20);
+        make.centerY.mas_equalTo(self.lastedPicker);
         make.height.mas_equalTo(40);
-        make.width.mas_equalTo(80);
+        make.width.mas_equalTo((kScreenWidth - 3*20)/2);
     }];
     [self.view addSubview:self.orLabel];
     [self.orLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -146,32 +130,12 @@
     // 动画
     self.transitioningDelegate = self;
     
-    // Picker
-    [self updatePickerRange];
+    // 默认一小时
+    [self.lastedPicker selectRow:1 inComponent:0 animated:NO];
 }
 
-- (void)updatePickerRange
-{
-    [self roundPickerDate];
-    self.startPicker.maximumDate = self.endPicker.date;
-    self.startPicker.minimumDate = [NSDate dateWithTimeIntervalSince1970:[self formmerPeriodEndTime]];
-    self.endPicker.minimumDate = self.startPicker.date;
-    long start = [self.startPicker.date timeIntervalSince1970];
-    long end = [self.endPicker.date timeIntervalSince1970];
-    self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
-}
-    
 #pragma mark - Actions
     
-- (void)changeStartTime
-{
-    [self updatePickerRange]; // 只更新另一个picker的range，不保存数据
-}
-
-- (void)changeEndTime
-{
-    [self updatePickerRange]; // 只更新另一个picker的range，不保存数据
-}
 
 - (void)startCounting
 {
@@ -181,7 +145,13 @@
 
 - (void)saveRecord
 {
-    [MirrorStorage savePeriodWithTaskname:self.taskName startAt:self.startPicker.date endAt:self.endPicker.date];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *starts = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:self.startPicker.date];
+    starts.timeZone = [NSTimeZone systemTimeZone];
+    starts.second = 0;
+    NSDate *startDate = [gregorian dateFromComponents:starts]; // 去掉秒数
+    NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([startDate timeIntervalSince1970] + [self.lastedPicker selectedRowInComponent:0] * 3600 + [self.lastedPicker selectedRowInComponent:1] * 60)];
+    [MirrorStorage savePeriodWithTaskname:self.taskName startAt:startDate endAt:endDate];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -205,6 +175,53 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - UIPickerViewDataSource, UIPickerViewDelegate
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 2;
+}
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    if (component == 0) {
+        return 24;
+    } else {
+        return 60;
+    }
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
+{
+    return (kScreenWidth - 3*20)/4;
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
+{
+    return 40;
+}
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+{
+    UILabel *label = [UILabel new];
+    label.textAlignment = component == 0 ? NSTextAlignmentRight : NSTextAlignmentLeft;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    label.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
+    label.text = component == 0 ? [[@(row)stringValue] stringByAppendingString:row==1 ? [MirrorLanguage mirror_stringWithKey:@"picker_hour"] :[MirrorLanguage mirror_stringWithKey:@"picker_hours"]] : [[@(row)stringValue] stringByAppendingString:row==1 ? [MirrorLanguage mirror_stringWithKey:@"picker_min"] :[MirrorLanguage mirror_stringWithKey:@"picker_mins"]];
+    return label;
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    if ([pickerView selectedRowInComponent:1] == 0 && component == 0 && row == 0) { //在分钟为0的情况下选择了0小时
+        [pickerView selectRow:1 inComponent:1 animated:YES]; // 把分钟设置为1
+    }
+    if ([pickerView selectedRowInComponent:0] == 0 && component == 1 && row == 0) { //在小时为0的情况下选择了0分钟
+        [pickerView selectRow:1 inComponent:0 animated:YES]; // 把小时设置为1
+    }
+}
+
 
 #pragma mark - Getters
     
@@ -243,18 +260,6 @@
     return _startLabel;
 }
 
-- (UILabel *)endLabel
-{
-    if (!_endLabel) {
-        _endLabel = [UILabel new];
-        _endLabel.textAlignment = NSTextAlignmentCenter;
-        _endLabel.text = [MirrorLanguage mirror_stringWithKey:@"ends_at"];
-        _endLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
-        _endLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
-    }
-    return _endLabel;
-}
-
 - (UIDatePicker *)startPicker
 {
     if (!_startPicker) {
@@ -266,37 +271,17 @@
         _startPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         // 如果上一个任务的结束时间在未来，设置start picker和未来那个数字对齐，否则，使用现在的时间
         _startPicker.date = [self formmerPeriodEndTime] > [[NSDate now] timeIntervalSince1970]  ? [NSDate dateWithTimeIntervalSince1970:[self formmerPeriodEndTime]] : [NSDate now];
-        [_startPicker addTarget:self action:@selector(changeStartTime) forControlEvents:UIControlEventEditingDidEnd];
     }
     return _startPicker;
 }
 
-- (UIDatePicker *)endPicker
+- (UIPickerView *)lastedPicker
 {
-    if (!_endPicker) {
-        _endPicker = [UIDatePicker new];
-        _endPicker.datePickerMode = UIDatePickerModeDateAndTime;
-        _endPicker.timeZone = [NSTimeZone systemTimeZone];
-        _endPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
-        _endPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
-        _endPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        // end picker初始值为start picker + 1hour
-        _endPicker.date = [NSDate dateWithTimeIntervalSince1970:([self.startPicker.date timeIntervalSince1970] + 3600)];
-        [_endPicker addTarget:self action:@selector(changeEndTime) forControlEvents:UIControlEventEditingDidEnd];
+    if (!_lastedPicker) {
+        _lastedPicker = [UIPickerView new];
+        _lastedPicker.delegate = self;
     }
-    return _endPicker;
-}
-
-- (UILabel *)totalLabel
-{
-    if (!_totalLabel) {
-        _totalLabel = [UILabel new];
-        _totalLabel.adjustsFontSizeToFitWidth = YES;
-        _totalLabel.textAlignment = NSTextAlignmentCenter;
-        _totalLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        _totalLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
-    }
-    return _totalLabel;
+    return _lastedPicker;
 }
 
 - (UIButton *)saveButton
@@ -366,22 +351,6 @@
     } else {
         return LONG_MIN;
     }
-}
-
-- (void)roundPickerDate
-{
-    // 先改endpicker，因为删掉second相当于往小减，如果先改了startpicker，endpicker可能会变
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    
-    NSDateComponents *ends = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:self.endPicker.date];
-    ends.timeZone = [NSTimeZone systemTimeZone];
-    ends.second = 0;
-    self.endPicker.date = [gregorian dateFromComponents:ends];
-    
-    NSDateComponents *starts = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:self.startPicker.date];
-    starts.timeZone = [NSTimeZone systemTimeZone];
-    starts.second = 0;
-    self.startPicker.date = [gregorian dateFromComponents:starts];
 }
 
 @end
