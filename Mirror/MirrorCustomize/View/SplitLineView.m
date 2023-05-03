@@ -11,7 +11,7 @@
 
 static CGFloat const kIconWidth = 10;
 static CGFloat const kIconPadding = 3;
-static CGFloat const kLeftRightPadding = 20;
+static CGFloat const kLeftRightPadding = 50;
 static CGFloat const kLineHeight = 1;
 
 @interface SplitLineView ()
