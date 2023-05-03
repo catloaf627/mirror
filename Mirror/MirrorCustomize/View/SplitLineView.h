@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithColor:(UIColor *)color;
 
+- (instancetype)initWithText:(NSString *)text;
+
 @end
 
 NS_ASSUME_NONNULL_END

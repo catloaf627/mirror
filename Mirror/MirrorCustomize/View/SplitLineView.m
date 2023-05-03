@@ -17,7 +17,8 @@ static CGFloat const kLineHeight = 1;
 @interface SplitLineView ()
 
 @property (nonatomic, strong) UIView *leftLine;
-@property (nonatomic, strong) UIImageView *heartView ;
+@property (nonatomic, strong) UIImageView *heartView;
+@property (nonatomic, strong) UILabel *textLabel;
 @property (nonatomic, strong) UIView *rightLine;
 
 @end
@@ -28,16 +29,6 @@ static CGFloat const kLineHeight = 1;
 {
     self = [super init];
     if (self) {
-    
-        [self addSubview:self.leftLine];
-        self.leftLine.backgroundColor = color;
-        [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.offset(kLeftRightPadding);
-            make.centerY.offset(0);
-            make.width.mas_equalTo((kScreenWidth - 2*kLeftRightPadding - 2*kIconPadding - kIconWidth)/2);
-            make.height.mas_equalTo(kLineHeight);
-        }];
-        
         [self addSubview:self.heartView];
         [self.heartView setTintColor:color];
         [self.heartView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -45,10 +36,56 @@ static CGFloat const kLineHeight = 1;
             make.width.height.mas_equalTo(kIconWidth);
         }];
         
+        [self addSubview:self.leftLine];
+        self.leftLine.backgroundColor = color;
+        [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.offset(kLeftRightPadding);
+            make.right.mas_equalTo(self.heartView.mas_left).offset(-kIconPadding);
+            make.centerY.offset(0);
+            make.height.mas_equalTo(kLineHeight);
+        }];
+        
         [self addSubview:self.rightLine];
         self.rightLine.backgroundColor = color;
         [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.offset(-kLeftRightPadding);
+            make.left.mas_equalTo(self.heartView.mas_right).offset(kIconPadding);
+            make.centerY.offset(0);
+            make.width.mas_equalTo((kScreenWidth - 2*kLeftRightPadding - 2*kIconPadding - kIconWidth)/2);
+            make.height.mas_equalTo(kLineHeight);
+        }];
+        
+    }
+    return self;
+}
+
+- (instancetype)initWithText:(NSString *)text
+{
+    self = [super init];
+    if (self) {
+        [self addSubview:self.textLabel];
+        self.textLabel.textColor = [UIColor grayColor];
+        self.textLabel.text =  text;
+        [self.textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.centerY.offset(0);
+            make.width.mas_equalTo(100);
+            make.width.mas_equalTo(50);
+        }];
+        
+        [self addSubview:self.leftLine];
+        self.leftLine.backgroundColor = [UIColor grayColor];
+        [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.offset(kLeftRightPadding);
+            make.right.mas_equalTo(self.textLabel.mas_left).offset(-kIconPadding);
+            make.centerY.offset(0);
+            make.height.mas_equalTo(kLineHeight);
+        }];
+        
+        [self addSubview:self.rightLine];
+        self.rightLine.backgroundColor = [UIColor grayColor];
+        [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.offset(-kLeftRightPadding);
+            make.left.mas_equalTo(self.textLabel.mas_right).offset(kIconPadding);
             make.centerY.offset(0);
             make.width.mas_equalTo((kScreenWidth - 2*kLeftRightPadding - 2*kIconPadding - kIconWidth)/2);
             make.height.mas_equalTo(kLineHeight);
@@ -64,6 +101,16 @@ static CGFloat const kLineHeight = 1;
         _leftLine = [UIView new];
     }
     return _leftLine;
+}
+
+- (UILabel *)textLabel
+{
+    if (!_textLabel) {
+        _textLabel = [UILabel new];
+        _textLabel.adjustsFontSizeToFitWidth = YES;
+        _textLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:15];
+    }
+    return _textLabel;
 }
 
 - (UIImageView *)heartView
