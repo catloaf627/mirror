@@ -226,6 +226,38 @@
     }
 }
 
+// Apr, 2023 | 2023年4月 -> 格子图标记
++ (NSString *)YYYYmm:(NSDate *)date
+{
+    // setup
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay) fromDate:date];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    // details
+    long year = (long)components.year;
+    long month = (long)components.month;
+    
+    NSString *monthstr = @"";
+    if (month == 1) monthstr = [MirrorLanguage mirror_stringWithKey:@"january"];
+    if (month == 2) monthstr = [MirrorLanguage mirror_stringWithKey:@"february"];
+    if (month == 3) monthstr = [MirrorLanguage mirror_stringWithKey:@"march"];
+    if (month == 4) monthstr = [MirrorLanguage mirror_stringWithKey:@"april"];
+    if (month == 5) monthstr = [MirrorLanguage mirror_stringWithKey:@"may"];
+    if (month == 6) monthstr = [MirrorLanguage mirror_stringWithKey:@"june"];
+    if (month == 7) monthstr = [MirrorLanguage mirror_stringWithKey:@"july"];
+    if (month == 8) monthstr = [MirrorLanguage mirror_stringWithKey:@"august"];
+    if (month == 9) monthstr = [MirrorLanguage mirror_stringWithKey:@"september"];
+    if (month == 10) monthstr = [MirrorLanguage mirror_stringWithKey:@"october"];
+    if (month == 11) monthstr = [MirrorLanguage mirror_stringWithKey:@"november"];
+    if (month == 12) monthstr = [MirrorLanguage mirror_stringWithKey:@"december"];
+    
+    if ([MirrorSettings appliedChinese]) {
+        return [NSString stringWithFormat: @"%ld年%@", year, monthstr]; // 2023年4月
+    } else {
+        return [NSString stringWithFormat: @"%@, %ld",  monthstr, year]; // Apr, 2023
+    }
+}
+
 
 
 @end

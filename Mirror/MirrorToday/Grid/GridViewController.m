@@ -28,6 +28,7 @@ static CGFloat const kCellSpacing = 3;
 
 @interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
+@property (nonatomic, strong) UILabel *monthHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UIView *weekdayView;
@@ -53,15 +54,28 @@ static CGFloat const kCellSpacing = 3;
     [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"activities"] leftButton:nil rightButton:nil];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+}
+
 
 - (void)p_setupUI
 {
     // collection view
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+    [self.view addSubview:self.monthHint];
+    [self.monthHint mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.height.mas_equalTo(kCellWidth);
+    }];
     [self.view addSubview:self.weekdayView];
     [self.weekdayView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.top.mas_equalTo(self.monthHint.mas_bottom).offset(2);
         make.height.mas_equalTo(kCellWidth*7 + kCellSpacing*6);
         make.width.mas_equalTo(kCellWidth);
     }];
@@ -69,7 +83,7 @@ static CGFloat const kCellSpacing = 3;
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.weekdayView.mas_right).offset(kCellSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.top.mas_equalTo(self.monthHint.mas_bottom).offset(2);
         make.height.mas_equalTo(kCellWidth*7 + kCellSpacing*6);
     }];
     [self.view addSubview:self.dateLabel];
@@ -105,6 +119,41 @@ static CGFloat const kCellSpacing = 3;
     UIBarButtonItem *shadeItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(switchShadeType)];
     shadeItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
     [self.navigationItem setRightBarButtonItem:shadeItem];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSString *text = self.monthHint.text;
+    NSIndexPath *rightSide0 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 0*(kCellWidth+kCellSpacing))]; // 右上角的cell indexpath
+    if (rightSide0) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide0.item * 86400]];
+    NSIndexPath *rightSide1 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 1*(kCellWidth+kCellSpacing))];
+    if (rightSide1) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide1.item * 86400]];
+    NSIndexPath *rightSide2 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 2*(kCellWidth+kCellSpacing))];
+    if (rightSide2) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide2.item * 86400]];
+    NSIndexPath *rightSide3 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 3*(kCellWidth+kCellSpacing))];
+    if (rightSide3) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide3.item * 86400]];
+    NSIndexPath *rightSide4 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 4*(kCellWidth+kCellSpacing))];
+    if (rightSide4) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide4.item * 86400]];
+    NSIndexPath *rightSide5 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 5*(kCellWidth+kCellSpacing))];
+    if (rightSide5) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide5.item * 86400]];
+    NSIndexPath *rightSide6 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 6*(kCellWidth+kCellSpacing))]; // 右下角的cell indexpath
+    if (rightSide6) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide6.item * 86400]];
+    if (![text isEqualToString:self.monthHint.text]) {
+        self.monthHint.text = text;
+    }
+    /*
+     最右侧一列正着数，找到这一列最后一个有日子的cell，取出它的月份作为hint，例如下面七个cell：
+     [4月29日]        循环到0，文案设置为"2023年4月"
+     [4月30日]        循环到1，文案设置为"2023年4月"
+     [5月1日]         循环到2，文案设置为"2023年5月"
+     [5月2日]         循环到3，文案设置为"2023年5月"
+     [5月3日]         循环到4，文案设置为"2023年5月"
+     [cell不存在]           循环到5，跳过
+     [cell不存在]           循环到6，跳过
+     最后文案取为"2023年5月"
+     */
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -203,6 +252,18 @@ static CGFloat const kCellSpacing = 3;
     return _piechartView;
 }
 
+
+- (UILabel *)monthHint
+{
+    if (!_monthHint) {
+        _monthHint = [UILabel new];
+        _monthHint.textAlignment = NSTextAlignmentRight;
+        _monthHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _monthHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+    }
+    return _monthHint;
+}
+
 - (UILabel *)dateLabel
 {
     if (!_dateLabel) {
@@ -210,7 +271,7 @@ static CGFloat const kCellSpacing = 3;
         _dateLabel.textAlignment = NSTextAlignmentCenter;
         _dateLabel.text = [MirrorTimeText YYYYmmddWeekday:[NSDate now]];
         _dateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _dateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 和nickname的文字颜色保持一致
+        _dateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
     }
     return _dateLabel;
 }
@@ -406,8 +467,9 @@ static CGFloat const kCellSpacing = 3;
             components.hour = 0;
             components.minute = 0;
             components.second = 0;
-            long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-            _selectedCellIndex = (timestamp-_startTimestamp)/86400;
+            long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970]; // 今天的timestamp
+            _selectedCellIndex = (timestamp-_startTimestamp)/86400; // 今天cell的位置
+            _monthHint.text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp]]; // 月份hint设置为今天
             // 添加前面的空cell
             for (int i=0; i<numOfInvalidCell; i++) {
                 NSInteger invalidDateTimestamp = [minDate timeIntervalSince1970] - (numOfInvalidCell-i)*86400;
@@ -429,7 +491,7 @@ static CGFloat const kCellSpacing = 3;
 
 - (NSArray *)leftWidthLeftHeight
 {
-    CGFloat leftHeight = kScreenHeight - self.navigationController.navigationBar.frame.origin.y - self.navigationController.navigationBar.frame.size.height - (kCellWidth*7 + kCellSpacing*6) - 20 -20 -20 - [self.legendView legendViewHeight] - 10 - 20 - kTabBarHeight;
+    CGFloat leftHeight = kScreenHeight - self.navigationController.navigationBar.frame.origin.y - self.navigationController.navigationBar.frame.size.height - kCellWidth - 2 - (kCellWidth*7 + kCellSpacing*6) - 20 -20 -20 - [self.legendView legendViewHeight] - 10 - 20 - kTabBarHeight;
     CGFloat leftWidth = kScreenWidth - 2*kLeftRightSpacing;
 
     return @[@(leftWidth), @(leftHeight)];

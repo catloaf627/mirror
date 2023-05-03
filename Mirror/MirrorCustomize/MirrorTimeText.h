@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 // Apr 25, 2023 | 2023年4月23日 -> 柱状图区间切换的标记（区间）
 + (NSString *)YYYYmmdd:(NSDate *)date;
 
+// Apr, 2023 | 2023年4月 -> 格子图标记
++ (NSString *)YYYYmm:(NSDate *)date;
 
 
 
