@@ -51,6 +51,12 @@
     [self p_setupUI];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.lastedPicker selectRow:1 inComponent:0 animated:YES]; // 默认一小时，在页面出现以后滚一下，让用户知道这个picker可以滚动
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -129,9 +135,6 @@
     
     // 动画
     self.transitioningDelegate = self;
-    
-    // 默认一小时
-    [self.lastedPicker selectRow:1 inComponent:0 animated:NO];
 }
 
 #pragma mark - Actions
