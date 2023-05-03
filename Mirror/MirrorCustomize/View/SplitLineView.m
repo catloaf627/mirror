@@ -8,6 +8,7 @@
 #import "SplitLineView.h"
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
+#import "UIColor+MirrorColor.h"
 
 static CGFloat const kIconWidth = 10;
 static CGFloat const kIconPadding = 3;
@@ -64,7 +65,7 @@ static CGFloat const kLineHeight = 1;
     self = [super init];
     if (self) {
         [self addSubview:self.textLabel];
-        self.textLabel.textColor = [UIColor grayColor];
+        self.textLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
         self.textLabel.text =  text;
         [self.textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.centerY.offset(0);
@@ -73,7 +74,7 @@ static CGFloat const kLineHeight = 1;
         }];
         
         [self addSubview:self.leftLine];
-        self.leftLine.backgroundColor = [UIColor grayColor];
+        self.leftLine.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
         [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.offset(kLeftRightPadding);
             make.right.mas_equalTo(self.textLabel.mas_left).offset(-kIconPadding);
@@ -82,7 +83,7 @@ static CGFloat const kLineHeight = 1;
         }];
         
         [self addSubview:self.rightLine];
-        self.rightLine.backgroundColor = [UIColor grayColor];
+        self.rightLine.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
         [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.offset(-kLeftRightPadding);
             make.left.mas_equalTo(self.textLabel.mas_right).offset(kIconPadding);
