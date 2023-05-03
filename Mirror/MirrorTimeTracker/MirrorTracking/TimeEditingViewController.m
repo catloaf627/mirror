@@ -13,6 +13,7 @@
 #import "CellAnimation.h"
 #import "MirrorLanguage.h"
 #import "MirrorTimeText.h"
+#import "SplitLineView.h"
 
 @interface TimeEditingViewController () <UIViewControllerTransitioningDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
@@ -23,7 +24,7 @@
 @property (nonatomic, strong) UIDatePicker *startPicker;
 @property (nonatomic, strong) UIPickerView *lastedPicker;
 @property (nonatomic, strong) UIButton *saveButton;
-@property (nonatomic, strong) UILabel *orLabel;
+@property (nonatomic, strong) UIView *splitView;
 @property (nonatomic, strong) UIButton *startButton;
 
 // Data
@@ -97,17 +98,16 @@
         make.height.mas_equalTo(40);
         make.width.mas_equalTo((kScreenWidth - 3*20)/2);
     }];
-    [self.view addSubview:self.orLabel];
-    [self.orLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.offset(0);
-        make.top.mas_equalTo(self.saveButton.mas_bottom).offset(20);
-        make.height.mas_equalTo(50);
-        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
+    [self.view addSubview:self.splitView];
+    [self.splitView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.centerY.offset(0);
+        make.height.mas_equalTo(10);
+        make.width.mas_equalTo(kScreenWidth);
     }];
     [self.view addSubview:self.startButton];
     [self.startButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
-        make.top.mas_equalTo(self.orLabel.mas_bottom).offset(20);
+        make.centerY.offset(kScreenHeight/6);
         make.height.mas_equalTo(50);
         make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4);
     }];
@@ -299,16 +299,12 @@
     return _saveButton;
 }
 
-- (UILabel *)orLabel
+- (UIView *)splitView
 {
-    if (!_orLabel) {
-        _orLabel = [UILabel new];
-        _orLabel.text = [MirrorLanguage mirror_stringWithKey:@"or"];
-        _orLabel.textAlignment = NSTextAlignmentCenter;
-        _orLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        _orLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
+    if (!_splitView) {
+        _splitView = [[SplitLineView alloc] initWithColor:[UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:[MirrorStorage getTaskFromDB:self.taskName].color]]];
     }
-    return _orLabel;
+    return _splitView;
 }
 
 

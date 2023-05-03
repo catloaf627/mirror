@@ -190,9 +190,9 @@ static CGFloat const kDashSpacing = 10;
     [self.view addSubview:self.stopButton];
     [self.stopButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
-        make.top.mas_equalTo(self.nowTimeLabelss.mas_bottom).offset(50);
+        make.centerY.offset(kScreenHeight/6);
         make.height.mas_equalTo(50);
-        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4); // 和TimeEditingVC 的startbutton保持一个size
+        make.width.mas_equalTo(3*(kScreenWidth - 2*20)/4); // 和TimeEditingVC 的startbutton保持一个位置和大小
     }];
     
     __weak typeof(self) weakSelf = self;

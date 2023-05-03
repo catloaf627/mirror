@@ -50,6 +50,7 @@
 		4AE4171928DF613D008A6A18 /* TimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeViewController.m */; };
 		4AE4171F28DF6155008A6A18 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* SettingsViewController.m */; };
 		4AE5E88E2A013A1A004228C1 /* GridComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5E88D2A013A1A004228C1 /* GridComponent.m */; };
+		4AE5E8922A0253DA004228C1 /* SplitLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5E8912A0253DA004228C1 /* SplitLineView.m */; };
 		4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */; };
 		4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A128DF4A380064CBCA /* AppDelegate.m */; };
 		4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A428DF4A380064CBCA /* SceneDelegate.m */; };
@@ -145,6 +146,8 @@
 		4AE4171E28DF6155008A6A18 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		4AE5E88C2A013A1A004228C1 /* GridComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GridComponent.h; sourceTree = "<group>"; };
 		4AE5E88D2A013A1A004228C1 /* GridComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GridComponent.m; sourceTree = "<group>"; };
+		4AE5E8902A0253DA004228C1 /* SplitLineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitLineView.h; sourceTree = "<group>"; };
+		4AE5E8912A0253DA004228C1 /* SplitLineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplitLineView.m; sourceTree = "<group>"; };
 		4AFA3B7529E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeekStartsOnCollectionViewCell.h; sourceTree = "<group>"; };
 		4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeekStartsOnCollectionViewCell.m; sourceTree = "<group>"; };
 		4AFB779D28DF4A380064CBCA /* Mirror.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mirror.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -301,6 +304,7 @@
 		4A379B3E28E0379E00785CAE /* MirrorCustomize */ = {
 			isa = PBXGroup;
 			children = (
+				4AE5E88F2A0253A3004228C1 /* View */,
 				4ACB422F29EECBC4005EECC4 /* Animations */,
 				4A099FAC29DD57AE002683A1 /* MirrorTool.h */,
 				4A099FAD29DD57AE002683A1 /* MirrorTool.m */,
@@ -420,6 +424,15 @@
 				4A88211B29F4A08D009E422C /* TaskTotalHeader.m */,
 			);
 			path = Period;
+			sourceTree = "<group>";
+		};
+		4AE5E88F2A0253A3004228C1 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4AE5E8902A0253DA004228C1 /* SplitLineView.h */,
+				4AE5E8912A0253DA004228C1 /* SplitLineView.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		4AFA3B7429E4EE0F004D5BE4 /* SettingsCells */ = {
@@ -613,6 +626,7 @@
 				4A37369729E2BD3C00187280 /* SliceLayer.m in Sources */,
 				4A88212F29F671F7009E422C /* TimeTrackingViewController.m in Sources */,
 				4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */,
+				4AE5E8922A0253DA004228C1 /* SplitLineView.m in Sources */,
 				4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */,
 				4A0D40FF29F1269700F13EAE /* SpanHistogram.m in Sources */,
 				4A37369429E2AEE900187280 /* MirrorPiechart.m in Sources */,
