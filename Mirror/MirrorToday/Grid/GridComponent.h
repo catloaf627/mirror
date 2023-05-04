@@ -6,16 +6,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MirrorTaskModel.h"
+#import "MirrorChartModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GridComponent : NSObject
 
 @property (nonatomic, assign) BOOL isValid;
-@property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *thatDayTasks;
+@property (nonatomic, strong) NSMutableArray<MirrorChartModel *> *thatDayData;
 
-- (instancetype)initWithValid:(BOOL)isValid thatDayTasks:(NSMutableArray<MirrorTaskModel *> *)thatDayTasks;
+- (instancetype)initWithValid:(BOOL)isValid thatDayData:(NSMutableArray<MirrorChartModel *> *)thatDayData;
 
 @end
 

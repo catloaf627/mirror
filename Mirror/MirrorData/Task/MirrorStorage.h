@@ -6,8 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MirrorTaskModel.h"
-
+#import "MirrorChartModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +21,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 // 业务用
 
-+ (MirrorTaskModel *)getTaskFromDB:(NSString *)taskName; //取出某个task
++ (NSMutableArray<MirrorTaskModel *> *)tasksWithAddNew;
 
 + (void)createTask:(MirrorTaskModel *)task;
 
@@ -40,31 +39,38 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 + (void)savePeriodWithTaskname:(NSString *)taskName startAt:(NSDate *)startDate endAt:(NSDate *)endDate; // 跳过start->stop，直接保存
 
-+ (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index;
++ (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate;
 
-+ (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index;
++ (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate;
 
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName;
 
 // Period
 
-+ (void)deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
++ (void)deletePeriodAtIndex:(NSInteger)index;
 
-+ (void)editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp withTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
++ (void)editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp periodIndex:(NSInteger)index;
 
 // 每次冷启检查时区是不是变了，变了需要改数据库
 
 + (void)changeDataWithTimezoneGap:(NSInteger)timezoneGap;
 
-// MirrorDataManager用
+// Retrive
++ (NSMutableArray<MirrorTaskModel *> *)retriveMirrorTasks;
 
-+ (NSMutableDictionary *)retriveMirrorData;
++ (NSMutableArray<MirrorRecordModel *> *)retriveMirrorRecords;
 
-// Log
+// 取出一个taskmodel
++ (MirrorTaskModel *)getTaskModelFromDB:(NSString *)taskName;
 
-+ (void)printTask:(MirrorTaskModel *)task info:(NSString *)info;
+// 取出一个任务从古至今的所有records
++ (MirrorChartModel *)getAllTaskRecords:(NSString *)taskNam;
 
-+ (void)removeDirtyData;
+// 取出从startTime到endTime的所有条record
++ (NSMutableArray<MirrorRecordModel *> *)getAllRecordsWithStart:(long)startTime end:(long)endTime;
+
+// 取出从startTime到endTime的所有条record，并按照taskname存储
++ (NSMutableArray<MirrorChartModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime;
 
 @end
 

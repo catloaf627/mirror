@@ -8,7 +8,6 @@
 #import "TaskRecordViewController.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
-#import "MirrorDataManager.h"
 #import "MirrorMacro.h"
 #import "TaskPeriodCollectionViewCell.h"
 #import "MirrorStorage.h"
@@ -64,7 +63,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)updateTitle
 {
     NSString *title = self.taskName;
-    if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {
+    if ([MirrorStorage getTaskModelFromDB:self.taskName].isArchived) {
         title = [[MirrorLanguage mirror_stringWithKey:@"archived_tag"] stringByAppendingString:title];
     }
     [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:title leftButton:nil rightButton:nil];
@@ -72,7 +71,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)updateArchive
 {
-    if ([MirrorStorage getTaskFromDB:self.taskName].isArchived) {
+    if ([MirrorStorage getTaskModelFromDB:self.taskName].isArchived) {
         UIImage *image = [[UIImage systemImageNamed:@"archivebox.fill"] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
         UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         UIBarButtonItem *cancelArchiveItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(cancelArchive)];
@@ -124,13 +123,13 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [MirrorStorage getTaskFromDB:self.taskName].periods.count;
+    return [MirrorStorage getAllTaskRecords:self.taskName].records.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithTaskname:self.taskName periodIndex:indexPath.item];
+    [cell configWithTaskname:self.taskName periodIndex:[MirrorStorage getAllTaskRecords:self.taskName].records[indexPath.item].originalIndex];
     cell.delegate = self;
     return cell;
 }

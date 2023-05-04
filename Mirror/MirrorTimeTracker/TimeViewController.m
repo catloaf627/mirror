@@ -10,7 +10,6 @@
 #import <Masonry/Masonry.h>
 #import "TimeTrackerTaskCollectionViewCell.h"
 #import "TimeTrackerAddTaskCollectionViewCell.h"
-#import "MirrorDataManager.h"
 #import "MirrorMacro.h"
 #import "MirrorTabsManager.h"
 #import "MirrorNaviManager.h"
@@ -139,7 +138,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
-    MirrorTaskModel *selectedModel = [MirrorDataManager activatedTasksWithAddTask][selectedIndexPath.item];
+    MirrorTaskModel *selectedModel = [MirrorStorage tasksWithAddNew][selectedIndexPath.item];
     // 点击了[+]
     if (selectedModel.isAddTaskModel) {
         AddTaskViewController *addVC = [AddTaskViewController new];
@@ -147,28 +146,27 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         return;
     }
     // 点击了task model
-    if (selectedModel.isOngoing) { // 点击了正在计时的selectedCell，如果有这种情况就是出bug了！
-        [MirrorStorage stopTask:selectedModel.taskName at:[NSDate now] periodIndex:0];
-    } else { // 点击了未开始计时的selectedCell，打开选择页面：直接编辑or开始计时
-        self.selectedCellFrame = [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame; // update selected cell frame的时机
-        TimeEditingViewController *timeEditingVC = [[TimeEditingViewController alloc] initWithTaskName:selectedModel.taskName];
-        timeEditingVC.transitioningDelegate = self; // 动画
-        timeEditingVC.modalPresentationStyle = UIModalPresentationCustom;
-        timeEditingVC.cellFrame = CGRectMake(self.collectionView.frame.origin.x + self.selectedCellFrame.origin.x, self.collectionView.frame.origin.y + self.selectedCellFrame.origin.y  - self.collectionView.contentOffset.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
-        [self presentViewController:timeEditingVC animated:YES completion:nil];
-    }
+    self.selectedCellFrame = [self.collectionView cellForItemAtIndexPath:selectedIndexPath].frame; // update selected cell frame的时机
+    TimeEditingViewController *timeEditingVC = [[TimeEditingViewController alloc] initWithTaskName:selectedModel.taskName];
+    timeEditingVC.transitioningDelegate = self; // 动画
+    timeEditingVC.modalPresentationStyle = UIModalPresentationCustom;
+    timeEditingVC.cellFrame = CGRectMake(self.collectionView.frame.origin.x + self.selectedCellFrame.origin.x, self.collectionView.frame.origin.y + self.selectedCellFrame.origin.y  - self.collectionView.contentOffset.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
+    [self presentViewController:timeEditingVC animated:YES completion:nil];
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    MirrorTaskModel *taskModel = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
-    if (taskModel.isOngoing) {
+    MirrorTaskModel *taskModel = [MirrorStorage tasksWithAddNew][indexPath.item];
+    // 如果在计时中，先打开计时页面
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    if (allRecords.count > 0 && !taskModel.isAddTaskModel && [allRecords[allRecords.count-1].taskName isEqualToString:taskModel.taskName] && allRecords[allRecords.count-1].endTime == 0) { // this task is ongoing
         TimeTrackingViewController * timeTrackingVC = [[TimeTrackingViewController alloc] initWithTaskName:taskModel.taskName];
         timeTrackingVC.transitioningDelegate = self;
         timeTrackingVC.modalPresentationStyle = UIModalPresentationCustom;
         timeTrackingVC.cellFrame = CGRectMake(self.collectionView.frame.origin.x + self.selectedCellFrame.origin.x, self.collectionView.frame.origin.y + self.selectedCellFrame.origin.y - self.collectionView.contentOffset.y, self.selectedCellFrame.size.width, self.selectedCellFrame.size.height);
         [self presentViewController:timeTrackingVC animated:NO completion:nil]; // present time tracking vc 一定是通过 time editing vc 结束来的，所以不需要动画。
     }
+    
     if (taskModel.isAddTaskModel) {
         TimeTrackerAddTaskCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TimeTrackerAddTaskCollectionViewCell identifier] forIndexPath:indexPath];
         [cell setupAddTaskCell];
@@ -182,7 +180,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [MirrorDataManager activatedTasksWithAddTask].count;
+    return [MirrorStorage tasksWithAddNew].count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath

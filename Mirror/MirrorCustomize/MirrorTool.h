@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MirrorRecordModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)timeFromDate:(NSDate *)date printTimeStamp:(BOOL)printTimeStamp;
 + (NSString *)timeFromTimestamp:(long)timestamp printTimeStamp:(BOOL)printTimeStamp;
 + (long)getDayGapFromTheFirstDayThisWeek; // 本日0点与本周0点的天数差距（取决于本周的开始是算周一，还是算周日）
-+ (long)getTotalTimeOfPeriods:(NSMutableArray<NSMutableArray *> *)periods;
++ (long)getTotalTimeOfPeriods:(NSMutableArray<MirrorRecordModel *> *)periods;
 
 @end
 

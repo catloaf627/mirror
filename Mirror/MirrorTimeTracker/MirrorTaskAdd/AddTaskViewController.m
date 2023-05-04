@@ -68,7 +68,6 @@ static CGFloat const kHeightRatio = 0.8;
         [self dismissViewControllerAnimated:YES completion:^{
             self.brandNewTaskModel.taskName = currentText; //taskname退出时更新
             self.brandNewTaskModel.createdTime = (long)[[NSDate now] timeIntervalSince1970]; //获取当前时间
-            self.brandNewTaskModel.priority = [MirrorStorage retriveMirrorData].allKeys.count; //获取当前任务数量
             [MirrorStorage createTask:self.brandNewTaskModel];
         }];
     }
@@ -186,7 +185,7 @@ static CGFloat const kHeightRatio = 0.8;
     if (!_brandNewTaskModel) {
         NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
         MirrorColorType type = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
-        _brandNewTaskModel = [[MirrorTaskModel alloc] initWithTitle:[MirrorLanguage mirror_stringWithKey:@"untitled"] createdTime:nil order:nil colorType:type isArchived:NO periods:[NSMutableArray new] isAddTask:NO];
+        _brandNewTaskModel = [[MirrorTaskModel alloc] initWithTitle:[MirrorLanguage mirror_stringWithKey:@"untitled"] createdTime:nil colorType:type isArchived:NO isAddTask:NO];
     }
     return _brandNewTaskModel;
 }

@@ -16,10 +16,10 @@
 #import "SettingsViewController.h"
 #import "MirrorLanguage.h"
 #import "TodayPeriodCollectionViewCell.h"
-#import "MirrorDataManager.h"
 #import "TodayTotalHeader.h"
 #import "TaskRecordViewController.h"
 #import "GridViewController.h"
+#import "MirrorStorage.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
@@ -33,8 +33,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 @property (nonatomic, strong) UICollectionView *collectionView;
 // 下面两个都是数据源，同步更新
-@property (nonatomic, strong) NSMutableArray<NSString *> *tasknames;
-@property (nonatomic, strong) NSMutableArray *originIndexes;
+@property (nonatomic, strong) NSMutableArray<MirrorRecordModel *> *todayRecords;
 
 @end
 
@@ -128,7 +127,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.tasknames[indexPath.item]] animated:YES];
+    [self.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.todayRecords[indexPath.item].taskName] animated:YES];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -140,13 +139,13 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.tasknames.count;
+    return self.todayRecords.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TodayPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TodayPeriodCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithTaskname:self.tasknames[indexPath.item] periodIndex:[self.originIndexes[indexPath.item] integerValue]];
+    [cell configWithTaskname:self.todayRecords[indexPath.item].taskName periodIndex:self.todayRecords[indexPath.item].originalIndex];
     cell.delegate = self;
     return cell;
 }
@@ -162,8 +161,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     if (kind == UICollectionElementKindSectionHeader) {
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
         TodayTotalHeader* todayHeader = (TodayTotalHeader *)header;
-        [todayHeader configWithTasknames:self.tasknames periodIndexes:self.originIndexes];
-        
+        [todayHeader configWithRecords:self.todayRecords];
     }
     return header;
 }
@@ -177,8 +175,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)updateDataSource
 {
-    self.tasknames = nil;
-    self.originIndexes = nil;
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
     components.timeZone = [NSTimeZone systemTimeZone];
@@ -188,17 +184,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     long endTime = startTime + 86400;
     
-    NSArray *allTasks = [MirrorDataManager allTasks];
-    for (int i=0; i<allTasks.count; i++) {
-        MirrorTaskModel *task = allTasks[i];
-        for (NSInteger periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
-            NSArray *period = task.periods[periodIndex];
-            if ([period[0] longValue] >= startTime && [period[0] longValue] <= endTime) { // 符合要求，可以展示在today页面
-                [self.tasknames addObject:task.taskName];
-                [self.originIndexes addObject:@(periodIndex)];
-            }
-        }
-    }
+    self.todayRecords = [MirrorStorage getAllRecordsWithStart:startTime end:endTime];
 }
 
 - (void)goToSettings
@@ -243,7 +229,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
         _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
         _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_today"];
-        _emptyHintLabel.hidden = self.tasknames.count > 0;
+        _emptyHintLabel.hidden = self.todayRecords.count > 0;
     }
     return _emptyHintLabel;
 }
@@ -251,7 +237,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)updateHint
 {
     self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_today"];
-    self.emptyHintLabel.hidden = self.tasknames.count > 0;
+    self.emptyHintLabel.hidden = self.todayRecords.count > 0;
 }
 
 
@@ -277,22 +263,21 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return _gridButton;
 }
 
-- (NSMutableArray<NSString *> *)tasknames
+- (NSMutableArray<MirrorRecordModel *> *)todayRecords
 {
-    if (!_tasknames) {
-        _tasknames = [NSMutableArray new];
+    if (!_todayRecords) {
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+        components.timeZone = [NSTimeZone systemTimeZone];
+        components.hour = 0;
+        components.minute = 0;
+        components.second = 0;
+        long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+        long endTime = startTime + 86400;
+        _todayRecords = [MirrorStorage getAllRecordsWithStart:startTime end:endTime];
     }
-    return _tasknames;
+    return _todayRecords;
 }
-
-- (NSMutableArray<NSArray *> *)originIndexes
-{
-    if (!_originIndexes) {
-        _originIndexes = [NSMutableArray new];
-    }
-    return _originIndexes;
-}
-
 #pragma mark - Animations
 
 // 从左边缘滑动唤起settings

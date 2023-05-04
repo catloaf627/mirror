@@ -9,7 +9,6 @@
 #import "MirrorMacro.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
-#import "MirrorDataManager.h"
 #import "MirrorStorage.h"
 #import "EditTaskCollectionViewCell.h"
 #import "TaskRecordViewController.h"
@@ -137,7 +136,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [MirrorDataManager allTasks].count;
+    return [MirrorStorage retriveMirrorTasks].count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -185,7 +184,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    NSMutableArray <MirrorTaskModel *> *allTasks = [MirrorDataManager allTasks];
+    NSMutableArray <MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
     MirrorTaskModel *selectedTask = allTasks[sourceIndexPath.item];
     [allTasks removeObjectAtIndex:sourceIndexPath.item];
     [allTasks insertObject:selectedTask atIndex:destinationIndexPath.item];

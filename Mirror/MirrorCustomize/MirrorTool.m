@@ -97,13 +97,13 @@
     }
 }
 
-+ (long)getTotalTimeOfPeriods:(NSMutableArray<NSMutableArray *> *)periods
++ (long)getTotalTimeOfPeriods:(NSMutableArray<MirrorRecordModel *> *)periods
 {
     long seconds = 0;
     for (int i=0; i<periods.count; i++) {
-        NSMutableArray *period = periods[i];
-        if (period.count == 2) {
-            seconds = seconds + ([period[1] longValue] - [period[0] longValue]);
+        MirrorRecordModel *period = periods[i];
+        if (period.endTime != 0) {
+            seconds = seconds + (period.endTime - period.startTime);
         }
     }
     return seconds;

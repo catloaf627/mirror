@@ -105,7 +105,7 @@ static CGFloat const kDashSpacing = 10;
 - (void)p_setupUI
 {
     self.view.clipsToBounds = YES;
-    self.view.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:self.taskName].color];
+    self.view.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskModelFromDB:self.taskName].color];
     [self.view addSubview:self.taskNameLabel];
     [self.taskNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
@@ -240,7 +240,7 @@ static CGFloat const kDashSpacing = 10;
     
     
     BOOL printTimeStamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
-    NSLog(@"%@全屏计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:[MirrorStorage getTaskFromDB:self.taskName].color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
+    NSLog(@"%@全屏计时中: %@(now) - %@(start) = %f",[UIColor getEmoji:[MirrorStorage getTaskModelFromDB:self.taskName].color], [MirrorTool timeFromDate:self.nowTime printTimeStamp:printTimeStamp], [MirrorTool timeFromDate:self.startTime printTimeStamp:printTimeStamp], self.timeInterval);
     
     if (![[MirrorTimeText YYYYmmdd:self.nowTime] isEqualToString:[MirrorTimeText YYYYmmdd:self.startTime]]) { // 如果两个时间不在同一天，给startTime一个[日期]的标记
         self.differentDayLabel.hidden = NO;
@@ -252,9 +252,9 @@ static CGFloat const kDashSpacing = 10;
 {
     [self dismissViewControllerAnimated:YES completion:nil];
     if (round(self.timeInterval) >= kMinSeconds) {
-        [MirrorStorage stopTask:self.taskName at:[NSDate now] periodIndex:0];
+        [MirrorStorage stopTask:self.taskName at:[NSDate now]];
     } else {
-        [MirrorStorage deletePeriodWithTaskname:self.taskName periodIndex:0];
+        [MirrorStorage deletePeriodAtIndex:[MirrorStorage retriveMirrorRecords].count-1];
     }
 }
 
@@ -267,14 +267,8 @@ static CGFloat const kDashSpacing = 10;
 
 - (NSDate *)startTime
 {
-    long startTimestamp = 0;
-    NSArray *periods = [MirrorStorage getTaskFromDB:self.taskName].periods;
-    if (periods.count > 0) {
-        NSArray *latestPeriod = periods[0];
-        if (latestPeriod.count == 1) { // the latest period is ongoing
-            startTimestamp = [latestPeriod[0] longValue];
-        }
-    }
+    NSMutableArray<MirrorRecordModel *> * records = [MirrorStorage retriveMirrorRecords];
+    long startTimestamp = records[records.count -1].startTime;
     NSDate *startTime = [NSDate dateWithTimeIntervalSince1970:startTimestamp];
     return startTime;
 }

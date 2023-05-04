@@ -13,7 +13,6 @@
 #import "MirrorMacro.h"
 #import "MirrorLanguage.h"
 #import "MirrorTaskModel.h"
-#import "MirrorDataManager.h"
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
 #import "GridComponent.h"
@@ -166,10 +165,10 @@ static CGFloat const kCellSpacing = 3;
         _selectedCellIndex = indexPath.item; // 选择
     }
     long timestamp = _startTimestamp + indexPath.item * 86400;
-    NSMutableArray<MirrorTaskModel *> *data = [MirrorDataManager getDataWithStart:timestamp end:timestamp+86400];
+    NSMutableArray<MirrorChartModel *> *data = [MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400];
     long totaltime = 0;
-    for (MirrorTaskModel* task in data) {
-        totaltime = totaltime + [MirrorTool getTotalTimeOfPeriods:task.periods];
+    for (MirrorChartModel* model in data) {
+        totaltime = totaltime + [MirrorTool getTotalTimeOfPeriods:model.records];
     }
     self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:timestamp]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totaltime]];
     [self.legendView updateWithData:data];
@@ -231,7 +230,7 @@ static CGFloat const kCellSpacing = 3;
         components.minute = 0;
         components.second = 0;
         long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        _legendView = [[SpanLegend alloc] initWithData:[MirrorDataManager getDataWithStart:timestamp end:timestamp+86400]];
+        _legendView = [[SpanLegend alloc] initWithData:[MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400]];
     }
     return _legendView;
 }
@@ -247,7 +246,7 @@ static CGFloat const kCellSpacing = 3;
         components.second = 0;
         long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970];
         CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
-        _piechartView = [[MirrorPiechart alloc] initWithData:[MirrorDataManager getDataWithStart:timestamp end:timestamp+86400] width:width enableInteractive:YES];
+        _piechartView = [[MirrorPiechart alloc] initWithData:[MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400] width:width enableInteractive:YES];
     }
     return _piechartView;
 }
@@ -409,20 +408,18 @@ static CGFloat const kCellSpacing = 3;
 {
     if (!_data) {
         _data = [NSMutableDictionary new];
-        NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
+        NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
         NSInteger minTimestamp = NSIntegerMax;
         NSInteger maxTimestamp = NSIntegerMin;
-        for (id key in mirrorDict.allKeys) {
-            MirrorTaskModel *task = mirrorDict[key];
-            for (int i=0; i<task.periods.count; i++) {
-                NSInteger timestamp = [task.periods[i][0] integerValue];
-                if (task.periods[i].count == 2 && timestamp < minTimestamp) {
+        for (int i=0; i<allRecords.count; i++) {
+            MirrorRecordModel *record = allRecords[i];
+                NSInteger timestamp = record.startTime;
+                if (record.endTime != 0 && timestamp < minTimestamp) {
                     minTimestamp = timestamp;
                 }
-                if (task.periods[i].count == 2 && timestamp > maxTimestamp) {
+                if (record.endTime != 0 && timestamp > maxTimestamp) {
                     maxTimestamp = timestamp;
                 }
-            }
         }
         // 2023.5.1 3:00 到 2023.5.3 19:00 算三天
         if (maxTimestamp != NSIntegerMin && minTimestamp != NSIntegerMax) { // 有 有效数据
@@ -472,13 +469,13 @@ static CGFloat const kCellSpacing = 3;
             // 添加前面的空cell
             for (int i=0; i<numOfInvalidCell; i++) {
                 NSInteger invalidDateTimestamp = [minDate timeIntervalSince1970] - (numOfInvalidCell-i)*86400;
-                GridComponent *grid = [[GridComponent alloc] initWithValid:NO thatDayTasks:[NSMutableArray new]];
+                GridComponent *grid = [[GridComponent alloc] initWithValid:NO thatDayData:[NSMutableArray new]];
                 [_data setValue:grid forKey:[@(invalidDateTimestamp) stringValue]];
             }
             // 添加valid cell
             for (int i=0; i<dateNum; i++) {
                 NSInteger validDateTimestamp = [minDate timeIntervalSince1970] + i*86400;
-                GridComponent *grid = [[GridComponent alloc] initWithValid:YES thatDayTasks:[MirrorDataManager getDataWithStart:validDateTimestamp end:validDateTimestamp+86400]];
+                GridComponent *grid = [[GridComponent alloc] initWithValid:YES thatDayData:[MirrorStorage getAllRecordsInTaskOrderWithStart:validDateTimestamp end:validDateTimestamp+86400]];
                 [_data setValue:grid forKey:[@(validDateTimestamp) stringValue]];
             }
         }

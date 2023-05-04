@@ -68,7 +68,7 @@
 - (void)p_setupUI
 {
     self.view.clipsToBounds = YES;
-    self.view.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:self.taskName].color];
+    self.view.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskModelFromDB:self.taskName].color];
     [self.view addSubview:self.tasknameLabel];
     [self.tasknameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
@@ -142,7 +142,7 @@
 
 - (void)startCounting
 {
-    [MirrorStorage startTask:self.taskName at:[NSDate now] periodIndex:0];
+    [MirrorStorage startTask:self.taskName at:[NSDate now]];
     [self dismissViewControllerAnimated:NO completion:nil]; // present time tracking vc，此时 time editing vc的退场不需要动画
 }
 
@@ -273,7 +273,15 @@
         _startPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _startPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         // 如果上一个任务的结束时间在未来，设置start picker和未来那个数字对齐，否则，使用现在的时间
-        _startPicker.date = [self formmerPeriodEndTime] > [[NSDate now] timeIntervalSince1970]  ? [NSDate dateWithTimeIntervalSince1970:[self formmerPeriodEndTime]] : [NSDate now];
+        NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+        if (records.count > 0) {
+            long formmerEndTime = records[records.count-1].endTime;
+            _startPicker.date = formmerEndTime > [[NSDate now] timeIntervalSince1970]  ? [NSDate dateWithTimeIntervalSince1970:formmerEndTime] : [NSDate now];
+            _startPicker.minimumDate = [NSDate dateWithTimeIntervalSince1970:formmerEndTime];
+        } else {
+            _startPicker.date = [NSDate now];
+            _startPicker.minimumDate =  0;
+        }
     }
     return _startPicker;
 }
@@ -305,7 +313,7 @@
 - (UIView *)splitView
 {
     if (!_splitView) {
-        _splitView = [[SplitLineView alloc] initWithColor:[UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:[MirrorStorage getTaskFromDB:self.taskName].color]]];
+        _splitView = [[SplitLineView alloc] initWithColor:[UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:[MirrorStorage getTaskModelFromDB:self.taskName].color]]];
     }
     return _splitView;
 }
@@ -337,19 +345,5 @@
     return animation;
 }
 
-
-#pragma mark - Privates
-
-- (long)formmerPeriodEndTime
-{
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
-    NSInteger periodsCnt = task.periods.count;
-    if  (periodsCnt > 0) {
-        NSArray *formerPeriod = task.periods[0];
-        return [formerPeriod[1] longValue];
-    } else {
-        return LONG_MIN;
-    }
-}
 
 @end

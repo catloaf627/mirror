@@ -6,14 +6,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MirrorTaskModel.h"
+#import "MirrorChartModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MirrorPiechart : UIView
 
-- (instancetype)initWithData:(NSMutableArray<MirrorTaskModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive;
-- (void)updateWithData:(NSMutableArray<MirrorTaskModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive;
+- (instancetype)initWithData:(NSMutableArray<MirrorChartModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive;
+- (void)updateWithData:(NSMutableArray<MirrorChartModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive;
 
 @end
 

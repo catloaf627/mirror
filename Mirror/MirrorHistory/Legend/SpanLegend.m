@@ -18,7 +18,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 @interface SpanLegend () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
+@property (nonatomic, strong) NSMutableArray<MirrorChartModel *> *data;
 
 @property (nonatomic, assign) NSInteger spanType;
 @property (nonatomic, assign) NSInteger offset;
@@ -28,7 +28,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 @implementation SpanLegend
 
-- (instancetype)initWithData:(NSMutableArray<MirrorTaskModel *> *)data
+- (instancetype)initWithData:(NSMutableArray<MirrorChartModel *> *)data
 {
     self = [super init];
     if (self) {
@@ -44,7 +44,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
     return self;
 }
 
-- (void)updateWithData:(NSMutableArray<MirrorTaskModel *> *)data
+- (void)updateWithData:(NSMutableArray<MirrorChartModel *> *)data
 {
     self.data = data;
     [self.collectionView reloadData];
@@ -70,7 +70,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     LegendCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[LegendCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configCellWithTaskname:self.data[indexPath.item].taskName];
+    [cell configCellWithTaskname:self.data[indexPath.item].taskModel.taskName];
     return cell;
 }
 
@@ -86,7 +86,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.delegate.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.data[indexPath.item].taskName] animated:YES];
+    [self.delegate.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.data[indexPath.item].taskModel.taskName] animated:YES];
 }
 
 

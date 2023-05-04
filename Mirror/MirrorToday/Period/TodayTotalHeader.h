@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MirrorRecordModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TodayTotalHeader : UICollectionViewCell
 
-- (void)configWithTasknames:(NSArray<NSString *> *)taskNames periodIndexes:(NSArray *)indexes;
+- (void)configWithRecords:(NSMutableArray<MirrorRecordModel *> *)todayRecords;
 
 @end
 

@@ -6,14 +6,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MirrorTaskModel.h"
+#import "MirrorChartModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HistogramCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
-- (void)configCellWithData:(NSMutableArray<MirrorTaskModel *> *)data index:(NSInteger)index;
+- (void)configCellWithData:(NSMutableArray<MirrorChartModel *> *)data index:(NSInteger)index;
 
 @end
 

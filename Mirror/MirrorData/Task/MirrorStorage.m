@@ -12,240 +12,209 @@
 #import "MirrorMacro.h"
 #import <AudioToolbox/AudioToolbox.h>
 
-static NSString *const kMirrorDict = @"mirror_dict";
+static NSString *const kMirrorTasks = @"mirror_tasks";
+static NSString *const kMirrorRecords = @"mirror_records";
 
 @implementation MirrorStorage
 
 #pragma mark - Public
 
++ (NSMutableArray<MirrorTaskModel *> *)tasksWithAddNew
+{
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    MirrorTaskModel *fakemodel = [[MirrorTaskModel alloc] initWithTitle:@"" createdTime:0 colorType:0 isArchived:NO isAddTask:YES];
+    [tasks addObject:fakemodel];
+    return tasks;
+}
+
 + (void)createTask:(MirrorTaskModel *)task
 {
-    [MirrorStorage p_createTask:task];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"Create"];
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    [tasks addObject:task];
+    NSLog(@"Create");
+    [MirrorStorage saveMirrorTasks:tasks];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskCreateNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_createTask:(MirrorTaskModel *)task
-{
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    [mirrorDict setValue:task forKey:task.taskName];
-    [MirrorStorage saveMirrorData:mirrorDict];
-}
-
 + (void)deleteTask:(NSString *)taskName
 {
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Delete"];
-    [MirrorStorage p_deleteTask:taskName];
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    NSInteger deletedIndex = NSNotFound;
+    for (int i=0; i<tasks.count; i++) {
+        if ([tasks[i].taskName isEqualToString:taskName]) {
+            NSLog(@"Delete");
+            deletedIndex = i;
+            break;
+        }
+    }
+    if (deletedIndex != NSNotFound) [tasks removeObjectAtIndex:deletedIndex];
+    [MirrorStorage saveMirrorTasks:tasks];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskDeleteNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-
-+ (void)p_deleteTask:(NSString *)taskName
-{
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    NSInteger order = ((MirrorTaskModel *)mirrorDict[taskName]).priority;
-    [mirrorDict removeObjectForKey:taskName];
-    for (id key in mirrorDict) {
-        if (((MirrorTaskModel *)mirrorDict[key]).priority > order) {
-            ((MirrorTaskModel *)mirrorDict[key]).priority--;
-        }
-    }
-    [MirrorStorage saveMirrorData:mirrorDict];
-}
-
 + (void)archiveTask:(NSString *)taskName
 {
-    [MirrorStorage p_archiveTask:taskName];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Archive"];
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    for (int i=0; i<tasks.count; i++) {
+        if ([tasks[i].taskName isEqualToString:taskName]) {
+            NSLog(@"Archive");
+            tasks[i].isArchived = YES;
+            break;
+        }
+    }
+    [MirrorStorage saveMirrorTasks:tasks];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
-}
-
-+ (void)p_archiveTask:(NSString *)taskName
-{
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    ((MirrorTaskModel *)mirrorDict[taskName]).isArchived = YES;
-    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
 + (void)cancelArchiveTask:(NSString *)taskName
 {
-    [MirrorStorage p_cancelArchiveTask:taskName];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Cancel archive"];
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    for (int i=0; i<tasks.count; i++) {
+        if ([tasks[i].taskName isEqualToString:taskName]) {
+            NSLog(@"Cancel Archive");
+            tasks[i].isArchived = NO;
+            break;
+        }
+    }
+    [MirrorStorage saveMirrorTasks:tasks];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_cancelArchiveTask:(NSString *)taskName
-{
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    ((MirrorTaskModel *)mirrorDict[taskName]).isArchived = NO;
-    [MirrorStorage saveMirrorData:mirrorDict];
-}
-
 + (void)editTask:(NSString *)oldName name:(NSString *)newName
 {
-    [MirrorStorage p_editTask:oldName name:newName];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][newName] info:@"Edit name"];
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    for (int i=0; i<tasks.count; i++) {
+        if ([tasks[i].taskName isEqualToString:oldName]) {
+            NSLog(@"Edit name");
+            tasks[i].taskName = newName;
+            break;
+        }
+    }
+    [MirrorStorage saveMirrorTasks:tasks];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_editTask:(NSString *)oldName name:(NSString *)newName
-{
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    MirrorTaskModel *task = mirrorDict[oldName];
-    [mirrorDict removeObjectForKey:oldName];
-    task.taskName = newName;
-    [mirrorDict setValue:task forKey:newName];
-    [MirrorStorage saveMirrorData:mirrorDict];
-}
+
 
 + (void)editTask:(NSString *)taskName color:(MirrorColorType)color
 {
-    [MirrorStorage p_editTask:taskName color:color];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Edit color"];
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    for (int i=0; i<tasks.count; i++) {
+        if ([tasks[i].taskName isEqualToString:taskName]) {
+            NSLog(@"Edit color");
+            tasks[i].color = color;
+            break;
+        }
+    }
+    [MirrorStorage saveMirrorTasks:tasks];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
-}
-
-+ (void)p_editTask:(NSString *)taskName color:(MirrorColorType)color
-{
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    ((MirrorTaskModel *)mirrorDict[taskName]).color = color;
-    [MirrorStorage saveMirrorData:mirrorDict];
 }
 
 + (void)reorderTasks:(NSMutableArray <MirrorTaskModel *> *)taskArray
 {
-    [MirrorStorage p_reorderTasks:taskArray];
-    [MirrorStorage printTask:nil info:@"Edit order"];
+    [MirrorStorage saveMirrorTasks:taskArray]; // reorder 的话直接保存数组即可
+    NSLog(@"Edit order");
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskChangeOrderNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_reorderTasks:(NSMutableArray <MirrorTaskModel *> *)taskArray
-{
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    for (int i=0; i<taskArray.count; i++) {
-        MirrorTaskModel *task = taskArray[i];
-        task.priority = i;
-        [mirrorDict setValue:task forKey:task.taskName]; // 每一个order都要重置
-    }
-    [MirrorStorage saveMirrorData:mirrorDict];
-}
-
 + (void)savePeriodWithTaskname:(NSString *)taskName startAt:(NSDate *)startDate endAt:(NSDate *)endDate
 {
-    [MirrorStorage p_startTask:taskName at:startDate periodIndex:0];
-    [MirrorStorage p_stopTask:taskName at:endDate periodIndex:0];
+    [MirrorStorage p_startTask:taskName at:startDate];
+    [MirrorStorage p_stopTask:taskName at:endDate];
+    NSLog(@"Save period start %@, end %@", [MirrorTool timeFromDate:startDate printTimeStamp:NO],  [MirrorTool timeFromDate:endDate printTimeStamp:NO]);
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:nil]; // 直接保存的也报stop
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
++ (void)startTask:(NSString *)taskName at:(NSDate *)accurateDate
 {
-    [MirrorStorage p_startTask:taskName at:accurateDate periodIndex:index];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Start"];
+    [MirrorStorage p_startTask:taskName at:accurateDate];
+    NSLog(@"Start at %@", [MirrorTool timeFromDate:accurateDate printTimeStamp:NO]);
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStartNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-// 如果是计时，accurateDate为[NSDate now]，periodIndex为0
-+ (void)p_startTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
++ (void)p_startTask:(NSString *)taskName at:(NSDate *)accurateDate
 {
     NSDate *date = [self dateWithoutSeconds:accurateDate];
-    // 在本地取出task
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
-    MirrorTaskModel *task = mirrorDict[taskName];
-    // 给task创建一个新的period，并给出这个period的起始时间
-    NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
-    NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@(round([date timeIntervalSince1970]))]];
-    [allPeriods insertObject:newPeriod atIndex:index];
-    task.periods = allPeriods;
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    NSMutableArray <MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+    MirrorRecordModel *newRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:round([date timeIntervalSince1970]) endTime:0];
+    [records addObject:newRecord];
+    [MirrorStorage saveMirrorRecords:records];
 }
 
-+ (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
++ (void)stopTask:(NSString *)taskName at:(NSDate *)accurateDate
 {
-    [MirrorStorage p_stopTask:taskName at:accurateDate periodIndex:index];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Stop"];
+    [MirrorStorage p_stopTask:taskName at:accurateDate];
+    NSLog(@"Stop at %@", [MirrorTool timeFromDate:accurateDate printTimeStamp:NO]);
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskStopNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-// 如果是计时，accurateDate为[NSDate now]，periodIndex为0
-+ (void)p_stopTask:(NSString *)taskName at:(NSDate *)accurateDate periodIndex:(NSInteger)index
++ (void)p_stopTask:(NSString *)taskName at:(NSDate *)accurateDate // 这里taskname没用
 {
     NSDate *date = [self dateWithoutSeconds:accurateDate];
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task以便作修改
-    MirrorTaskModel *task = mirrorDict[taskName];
-    // 将最后一个period取出来，给它一个结束时间
-    NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
-    if (allPeriods.count > index) {
-        NSMutableArray *editPeriod = [[NSMutableArray alloc] initWithArray:allPeriods[index]];
-        long start = [editPeriod[0] longValue];
-        long end = [date timeIntervalSince1970];
-        long length = end - start;
-        NSLog(@"%@计时结束 %ld",[UIColor getEmoji:task.color], length);
-        if (editPeriod.count == 1) {
-            if (length >= kMinSeconds) { // 一分钟以上开始记录（00:00处切割）
-                NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:start];
-                NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:end];
-                NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-                NSDateComponents *startComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
-                NSDateComponents *endComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:endDate];
-                startComponents.timeZone = [NSTimeZone systemTimeZone];
-                endComponents.timeZone = [NSTimeZone systemTimeZone];
-                
-                if (startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day) { // 开始和结束在同一天，直接记录 (存在原处)
-                    [editPeriod addObject:@(round([date timeIntervalSince1970]))];
-                    allPeriods[index] = editPeriod;
-                } else { //开始和结束不在同一天，在00:00处切割分段
-                    NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
-                    endComponent0.hour = 23;
-                    endComponent0.minute = 59;
-                    endComponent0.second = 59;
-                    long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970] + 1;
-                    [editPeriod addObject:@(round(endTime0))];  // 第一个分段 (存在原处)
-                    allPeriods[index] = editPeriod;
-
-                    long startTimei = endTime0;
-                    long endTimei = startTimei + 86400;
-                    while (endTimei < end) {
-                        [allPeriods insertObject:@[@(startTimei), @(endTimei)] atIndex:index];// 第i个分段（新插入）
-                        startTimei = startTimei + 86400;
-                        endTimei = startTimei + 86400;
-                    }
-                    [allPeriods insertObject: @[@(startTimei), @(end)] atIndex:index];// 最后一个分段（新插入）
-                }
-            } else {
-                [allPeriods removeObjectAtIndex:index];
-            }
-        }
-        task.periods = allPeriods;
+    NSMutableArray <MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+    MirrorRecordModel *recordToBeEditted = records[records.count-1]; // 最后(新)一个record
+    if (![taskName isEqualToString:recordToBeEditted.taskName]) {
+        NSLog(@"出问题了出问题了出问题了出问题了");
     }
-    // 保存更新好的task到本地
-    [mirrorDict setValue:task forKey:taskName];
-    // 将mirror dict存回本地
-    [MirrorStorage saveMirrorData:mirrorDict];
+    long start = recordToBeEditted.startTime;
+    long end = [date timeIntervalSince1970];
+    long length = end - start;
+    NSLog(@"%@计时结束 %ld", taskName, length);
+    
+        if (length >= kMinSeconds) { // 一分钟以上开始记录（00:00处切割）
+            NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:start];
+            NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:end];
+            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+            NSDateComponents *startComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
+            NSDateComponents *endComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:endDate];
+            startComponents.timeZone = [NSTimeZone systemTimeZone];
+            endComponents.timeZone = [NSTimeZone systemTimeZone];
+            
+            if (startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day) { // 开始和结束在同一天，直接记录 (存在原处)
+                recordToBeEditted.endTime = round([date timeIntervalSince1970]);
+                records[records.count -1] = recordToBeEditted;
+            } else { //开始和结束不在同一天，在00:00处切割分段
+                NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
+                endComponent0.hour = 23;
+                endComponent0.minute = 59;
+                endComponent0.second = 59;
+                long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970] + 1;
+                recordToBeEditted.endTime = endTime0;
+                records[records.count -1] = recordToBeEditted;
+
+                long startTimei = endTime0;
+                long endTimei = startTimei + 86400;
+                while (endTimei < end) {
+                    MirrorRecordModel *newRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:startTimei endTime:endTimei];
+                    [records addObject:newRecord];
+                    startTimei = startTimei + 86400;
+                    endTimei = startTimei + 86400;
+                }
+                MirrorRecordModel *newRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:startTimei endTime:end];
+                [records addObject:newRecord];// 最后一个分段（新插入）
+            }
+        } else {
+            [records removeObjectAtIndex:records.count-1];
+        }
+    [MirrorStorage saveMirrorRecords:records];
 }
 
 + (TaskNameExistsType)taskNameExists:(NSString *)newTaskName
 {
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    for (id taskName in mirrorDict.allKeys) {
-        if ([taskName isEqualToString:newTaskName]) {
-            MirrorTaskModel *task = mirrorDict[taskName];
-            if (task.isArchived) {
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    for (int i=0; i<tasks.count; i++) {
+        if ([tasks[i].taskName isEqualToString:newTaskName]) {
+            if (tasks[i].isArchived) {
                 return TaskNameExistsTypeExistsInArchivedTasks;
             } else {
                 return TaskNameExistsTypeExistsInCurrentTasks;
@@ -255,150 +224,211 @@ static NSString *const kMirrorDict = @"mirror_dict";
     return TaskNameExistsTypeValid;
 }
 
-+ (void)deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
++ (void)deletePeriodAtIndex:(NSInteger)index
 {
-    [MirrorStorage p_deletePeriodWithTaskname:taskName periodIndex:index];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period is deleted"];
+    NSMutableArray *records = [MirrorStorage retriveMirrorRecords];
+    [records removeObjectAtIndex:index];
+    [MirrorStorage saveMirrorRecords:records];
+    NSLog(@"Period deleted");
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodDeleteNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
++ (void)editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp periodIndex:(NSInteger)index
 {
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    MirrorTaskModel *task = mirrorDict[taskName];
-    [task.periods removeObjectAtIndex:index];
-    [mirrorDict setValue:task forKey:taskName];
-    [MirrorStorage saveMirrorData:mirrorDict];
-}
-
-+ (void)editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp withTaskname:(NSString *)taskName periodIndex:(NSInteger)index
-{
-    [MirrorStorage p_editPeriodIsStartTime:isStartTime to:timestamp withTaskname:taskName periodIndex:index];
-    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][taskName] info:@"Period is edited"];
+    NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+    if (isStartTime) {
+        records[index].startTime = timestamp;
+    } else {
+        records[index].endTime = timestamp;
+    }
+    [MirrorStorage saveMirrorRecords:records];
+    NSLog(@"Period is edited");
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorPeriodEditNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_editPeriodIsStartTime:(BOOL)isStartTime to:(long)timestamp withTaskname:(NSString *)taskName periodIndex:(NSInteger)index
-{
-    // 在本地取出mirror dict
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    // 取出这个task，直接使用start/stop task进行修改。
-    MirrorTaskModel *task = mirrorDict[taskName];
-    long oldStartTime = [task.periods[index][0] longValue];
-    long oldEndTime = [task.periods[index][1] longValue];
-    if (isStartTime) {
-        if (oldStartTime == timestamp) return;
-        [MirrorStorage p_deletePeriodWithTaskname:taskName periodIndex:index];
-        [MirrorStorage p_startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
-        [MirrorStorage p_stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldEndTime] periodIndex:index];
-    } else {
-        if (oldEndTime == timestamp) return;
-        [MirrorStorage p_deletePeriodWithTaskname:taskName periodIndex:index];
-        [MirrorStorage p_startTask:taskName at:[NSDate dateWithTimeIntervalSince1970:oldStartTime] periodIndex:index];
-        [MirrorStorage p_stopTask:taskName at:[NSDate dateWithTimeIntervalSince1970:timestamp] periodIndex:index];
-    }
-}
-
-
-
-+ (MirrorTaskModel *)getTaskFromDB:(NSString *)taskName
-{
-    NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
-    MirrorTaskModel *task = tasks[taskName];
-//    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"-------Getting one task-------"];
-    return task;
-}
-
 #pragma mark - Local database
-
-+ (void)removeDirtyData
-{
-    NSMutableDictionary *dict = [MirrorStorage retriveMirrorData];
-    for (id taskname in dict.allKeys) {
-        MirrorTaskModel *task = dict[taskname];
-        NSMutableArray <NSMutableArray *> *cleanPeriods = [NSMutableArray new];
-        for (int i=0; i<task.periods.count; i++) {
-            NSMutableArray *period = task.periods[i];
-            if (i != 0 && period.count != 2) { // 后面的period有问题
-                continue;
-            } else if (i == 0 && (period.count != 1 || period.count != 2)) { // 第一个period有问题
-                continue;
-            } else if ([[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:[NSDate dateWithTimeIntervalSince1970:[period[0] longValue]]].second != 0) { // 有非0秒的数据被存了进去
-                continue;
-            } else if (period.count == 2 && [[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian] components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:[NSDate dateWithTimeIntervalSince1970:[period[1] longValue]]].second != 0) {  // 有非0秒的数据被存了进去
-                continue;
-            } else if (period.count == 2 && [period[1] longValue] - [period[0] longValue] <= 0) { // 有结束时间早于开始时间的数据被存了进去
-                continue;
-            } else {
-                [cleanPeriods addObject:period];
-            }
-        }
-        task.periods = cleanPeriods;
-        [dict setValue:task forKey:taskname];
-    }
-    [MirrorStorage saveMirrorData:dict];
-}
 
 + (void)changeDataWithTimezoneGap:(NSInteger)timezoneGap
 {
-    NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    for (id key in mirrorDict.allKeys) {
-        MirrorTaskModel *task = mirrorDict[key];
-        NSMutableArray<NSMutableArray *> *periods = [NSMutableArray new];
-        for (int i=0; i<task.periods.count; i++) {
-            NSMutableArray *period = [NSMutableArray new];
-            for (int j=0; j<task.periods[i].count; j++) {
-                [period addObject:@([task.periods[i][j] integerValue]+ timezoneGap)];
-            }
-            [periods addObject:period];
-        }
-        task.periods = periods;
-        mirrorDict[key] = task;
+    NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+    for (int i=0; i<records.count; i++) {
+        records[i].startTime = records[i].startTime + timezoneGap;
+        if (records[i].endTime != 0) records[i].endTime = records[i].endTime + timezoneGap;
     }
-    [MirrorStorage saveMirrorData:mirrorDict];
+    [MirrorStorage saveMirrorRecords:records];
 }
 
-+ (void)saveMirrorData:(NSMutableDictionary *)mirrorDict // 归档
++ (void)saveMirrorTasks:(NSMutableArray<MirrorTaskModel *> *)tasks // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:mirrorDict requiringSecureCoding:YES error:nil];
-    [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorDict];
+    for (int i=0; i<tasks.count; i++) {
+        NSLog(@"name %@, color %ld, createdtime %ld, isArchived %@", tasks[i].taskName, tasks[i].color, tasks[i].createdTime, tasks[i].isArchived ? @"Y":@"N");
+    }
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:tasks requiringSecureCoding:YES error:nil];
+    [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorTasks];
 }
 
-+ (NSMutableDictionary *)retriveMirrorData // 解档
++ (NSMutableArray<MirrorTaskModel *> *)retriveMirrorTasks // 解档
 {
-    NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
-    NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class,NSMutableDictionary.class,NSArray.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
-    return mirrorDict ?: [NSMutableDictionary new];
+    NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorTasks];
+    NSMutableArray<MirrorTaskModel *> *tasks = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
+    return tasks ?: [NSMutableArray new];
 }
 
-#pragma mark - Log
-
-+ (void)printTask:(MirrorTaskModel *)task info:(NSString *)info
++ (void)saveMirrorRecords:(NSMutableArray<MirrorRecordModel *> *)records // 归档
 {
-    if (!task) NSLog(@"❗️❗️❗️❗️❗️❗️❗️❗️ACTION FAILED❗️❗️❗️❗️❗️❗️❗️❗️");
-    if (info) NSLog(@"%@%@", info, [UIColor getLongEmoji:task.color]);
+    for (int i=0; i<records.count; i++) {
+        NSLog(@"name %@, [%ld, %ld]", records[i].taskName, records[i].startTime, records[i].endTime);
+    }
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:records requiringSecureCoding:YES error:nil];
+    [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorRecords];
+}
+
++ (NSMutableArray<MirrorRecordModel *> *)retriveMirrorRecords // 解档
+{
+    NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorRecords];
+    NSMutableArray<MirrorRecordModel *> *records = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class]] fromData:storedEncodedObject error:nil];
+    return records ?: [NSMutableArray new];
+}
+#pragma mark - 取出部分数据
+
++ (MirrorTaskModel *)getTaskModelFromDB:(NSString *)taskName
+{
+    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
+    MirrorTaskModel *targetTask = nil;
+    for (int i=0; i<allTasks.count; i++) {
+        MirrorTaskModel *task = allTasks[i];
+        if ([task.taskName isEqualToString:taskName]) {
+            targetTask = task;
+            break;
+        }
+    }
+    return targetTask;
+}
+
+// 取出一个任务从古至今的所有records
++ (MirrorChartModel *)getAllTaskRecords:(NSString *)taskName
+{
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    NSMutableArray<MirrorRecordModel *> *taskRecord = [NSMutableArray new];
+    for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
+        MirrorRecordModel *record = allRecords[recordIndex];
+        if ([record.taskName isEqualToString:taskName]) {
+            MirrorRecordModel *recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
+            recordCopy.originalIndex = recordIndex;
+            [taskRecord addObject:recordCopy];
+        }
+    }
+    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
+    MirrorTaskModel *taskModel = nil;
+    for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
+        MirrorTaskModel *task = allTasks[taskIndex];
+        if ([task.taskName isEqualToString:taskName]) {
+            taskModel = task;
+            break;
+        }
+    }
     
-//    BOOL printTimestamp = NO; // 是否打印时间戳（平时不需要打印，出错debug的时候打印一下）
-//    NSString *tag = @"";
-//    tag = [tag stringByAppendingString:task.isArchived ? @"[":@" "];
-//    tag = [tag stringByAppendingString:[UIColor getEmoji:task.color]];
-//    tag = [tag stringByAppendingString:task.isArchived ? @"]":@" "];
-//    NSLog(@"%@%@, Created at %@",tag, task.taskName,  [MirrorTool timeFromTimestamp:task.createdTime printTimeStamp:printTimestamp]);
-//    for (int i=0; i<task.periods.count; i++) {
-//        if (task.periods[i].count == 1) {
-//            NSLog(@"[%@, ..........] 计时中..., ", [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp]);
-//        }
-//        if (task.periods[i].count == 2) {
-//            NSLog(@"[%@, %@] Lasted:%@, ",
-//                  [MirrorTool timeFromTimestamp:[task.periods[i][0] longValue] printTimeStamp:printTimestamp],
-//                  [MirrorTool timeFromTimestamp:[task.periods[i][1] longValue] printTimeStamp:printTimestamp],
-//                  [[NSDateComponentsFormatter new] stringFromTimeInterval:[task.periods[i][1] longValue]-[task.periods[i][0] longValue]]);
-//        }
-//    }
-    
+    return [[MirrorChartModel alloc] initWithTask:taskModel records:taskRecord];;
 }
+
+// 取出从startTime到endTime的所有条record
++ (NSMutableArray<MirrorRecordModel *> *)getAllRecordsWithStart:(long)startTime end:(long)endTime
+{
+    BOOL printDetailsToDebug = YES; // debug用
+    NSMutableArray<MirrorRecordModel *> *targetRecords = [NSMutableArray<MirrorRecordModel *> new];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+
+    for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
+        MirrorRecordModel *record = allRecords[recordIndex];
+        if (printDetailsToDebug) {
+            NSLog(@"period数据：[%@,%@]，选取的时间段：[%@,%@]", [MirrorTool timeFromTimestamp:record.startTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:record.endTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:startTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:endTime printTimeStamp:NO]);
+        }
+        if (record.endTime == 0) {
+            if (printDetailsToDebug) NSLog(@"✖️正在计时中，不管");
+            continue;
+        }
+        // r.end < starttime
+        else if (record.endTime < startTime) {
+            if (printDetailsToDebug) NSLog(@"✖️完整地发生在start time之前，不管");
+        }
+        // starttime<=r.start, r.end<=endtime
+        else if (startTime <= record.startTime && record.endTime <= endTime) {
+            if (printDetailsToDebug) NSLog(@"✔️完整地发生在start time和end time中间");
+            MirrorRecordModel* recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
+            recordCopy.originalIndex = recordIndex;
+            [targetRecords addObject:recordCopy];
+            
+        }
+        // endtime < r.start
+        else if (endTime < record.startTime) {
+            if (printDetailsToDebug) NSLog(@"✖️完整地发生在end time之后，不管");
+        }
+        // r.start<=starttime, startime<=r.end<=endtime ✔️跨越了start time，取后半段【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
+        // starttime<=r.start<=endtime, endtime<=r.end ✔️跨越了end time，取前半段【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
+        // r.start<=starttime && endtime<=r.end ✖️囊括了整个starttime到endtime【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
+    }
+    return targetRecords;
+}
+
+// 取出从startTime到endTime的所有条record，并按照MirrorChartModel的方式存储
++ (NSMutableArray<MirrorChartModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime
+{
+    BOOL printDetailsToDebug = YES; // debug用
+    NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> *dict = [NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> new];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+
+    for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
+        MirrorRecordModel *record = allRecords[recordIndex];
+        if (printDetailsToDebug) {
+            NSLog(@"period数据：[%@,%@]，选取的时间段：[%@,%@]", [MirrorTool timeFromTimestamp:record.startTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:record.startTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:startTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:endTime printTimeStamp:NO]);
+        }
+        if (record.endTime == 0) {
+            if (printDetailsToDebug) NSLog(@"✖️正在计时中，不管");
+            continue;
+        }
+        // r.end < starttime
+        else if (record.endTime < startTime) {
+            if (printDetailsToDebug) NSLog(@"✖️完整地发生在start time之前，不管");
+        }
+        // starttime<=r.start, r.end<=endtime
+        else if (startTime <= record.startTime && record.endTime <= endTime) {
+            if (printDetailsToDebug) NSLog(@"✔️完整地发生在start time和end time中间");
+            if (dict[record.taskName]) {
+                NSMutableArray<MirrorRecordModel *> *value = dict[record.taskName];
+                MirrorRecordModel *recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
+                recordCopy.originalIndex = recordIndex;
+                [value addObject:recordCopy];
+                [dict setValue:value forKey:recordCopy.taskName];
+            } else {
+                NSMutableArray<MirrorRecordModel *> *value = [NSMutableArray<MirrorRecordModel *> new];
+                MirrorRecordModel *recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
+                recordCopy.originalIndex = recordIndex;
+                [value addObject:recordCopy];
+                [dict setValue:value forKey:record.taskName];
+            }
+        }
+        // endtime < r.start
+        else if (endTime < record.startTime) {
+            if (printDetailsToDebug) NSLog(@"✖️完整地发生在end time之后，不管");
+        }
+        // r.start<=starttime, startime<=r.end<=endtime ✔️跨越了start time，取后半段【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
+        // starttime<=r.start<=endtime, endtime<=r.end ✔️跨越了end time，取前半段【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
+        // r.start<=starttime && endtime<=r.end ✖️囊括了整个starttime到endtime【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
+    }
+    NSMutableArray<MirrorChartModel *> *res = [NSMutableArray new];
+    NSMutableArray<MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    for (int i=0 ;i<tasks.count; i++) { // 按照任务在mirror_task里的顺序
+        MirrorTaskModel *task = tasks[i];
+        if ([dict.allKeys containsObject:task.taskName]) { // 这个task在时间段内有数据
+            MirrorChartModel *chartModel = [[MirrorChartModel alloc] initWithTask:task records:dict[task.taskName]];
+            [res addObject:chartModel];
+        }
+    }
+    return res;
+}
+
 
 #pragma mark - Privates
 

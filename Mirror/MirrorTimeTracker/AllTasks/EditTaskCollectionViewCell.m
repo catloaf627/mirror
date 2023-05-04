@@ -8,7 +8,6 @@
 #import "EditTaskCollectionViewCell.h"
 #import "MirrorTaskModel.h"
 #import "MirrorStorage.h"
-#import "MirrorDataManager.h"
 #import "MirrorTool.h"
 #import "UIColor+MirrorColor.h"
 #import "ColorCollectionViewCell.h"
@@ -43,16 +42,16 @@ static CGFloat const kPadding = 20;
 
 - (void)configWithIndex:(NSInteger)index
 {
-    self.taskName = [MirrorDataManager allTasks][index].taskName;
+    self.taskName = [MirrorStorage retriveMirrorTasks][index].taskName;
     [self p_setupUI];
 }
 
 - (void)p_setupUI
 {
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:self.taskName];
     UIColor *color = [UIColor mirrorColorNamed:task.color];
     long createdTime = task.createdTime;
-    long totalTime = [MirrorTool getTotalTimeOfPeriods:task.periods];
+    long totalTime = [MirrorTool getTotalTimeOfPeriods:[MirrorStorage getAllTaskRecords:self.taskName].records];
     BOOL isArchived = task.isArchived;
     
     self.backgroundColor = color;
@@ -142,7 +141,7 @@ static CGFloat const kPadding = 20;
 
 - (void)archiveAction
 {
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:self.taskName];
     if (task.isArchived) {
         [MirrorStorage cancelArchiveTask:self.taskName];
         [self.archiveButton setImage:[[[[UIImage systemImageNamed:@"archivebox"] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];

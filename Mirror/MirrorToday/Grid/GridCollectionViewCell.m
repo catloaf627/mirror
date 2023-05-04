@@ -32,12 +32,12 @@
     BOOL isEmpty = YES;
     NSInteger maxTime = 0; // 那一天哪个task时间最长
     NSInteger totalTime = 0; // 那一天的所有task的工作时间总和
-    for (int i=0; i<component.thatDayTasks.count; i++) {
+    for (int i=0; i<component.thatDayData.count; i++) {
         isEmpty = NO;
-        NSInteger thisTaskTime = [MirrorTool getTotalTimeOfPeriods:component.thatDayTasks[i].periods];
+        NSInteger thisTaskTime = [MirrorTool getTotalTimeOfPeriods:component.thatDayData[i].records];
         if (thisTaskTime > maxTime) {
             maxTime = thisTaskTime;
-            winnerTaskColor = component.thatDayTasks[i].color;
+            winnerTaskColor = component.thatDayData[i].taskModel.color;
         }
         totalTime = totalTime + thisTaskTime;
         if (totalTime>0*3600) alpha = 0.5;

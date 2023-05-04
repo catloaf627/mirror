@@ -33,8 +33,8 @@ static CGFloat const kShadowWidth = 5;
 - (void)configWithTaskname:(NSString *)taskName
 {
     self.taskNameLabel.text = taskName;
-    self.hintLabel.text = [MirrorTimeText Xh: [MirrorTool getTotalTimeOfPeriods:[MirrorStorage getTaskFromDB:taskName].periods]];
-    self.contentView.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskFromDB:taskName].color];
+    self.hintLabel.text = [MirrorTimeText Xh: [MirrorTool getTotalTimeOfPeriods:[MirrorStorage getAllTaskRecords:taskName].records]];
+    self.contentView.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskModelFromDB:taskName].color];
 
     [self p_setupUI];
 }

@@ -12,11 +12,10 @@
 #import "MirrorLanguage.h"
 #import "MirrorPiechart.h"
 #import "MirrorTimeText.h"
-#import "MirrorDataManager.h"
 
 @interface TodayTotalHeader ()
 
-@property (nonatomic, assign) NSInteger count;
+@property (nonatomic, assign) long count;
 
 @property (nonatomic, strong) UIView *todayView;
 @property (nonatomic, strong) UILabel *todayLabel;
@@ -29,19 +28,12 @@
 
 @implementation TodayTotalHeader
 
-- (void)configWithTasknames:(NSArray<NSString *> *)taskNames periodIndexes:(NSArray *)indexes
+- (void)configWithRecords:(NSMutableArray<MirrorRecordModel *> *)todayRecords
 {
-    NSInteger count = 0;
-    for (int i=0; i<taskNames.count; i++) {
-        NSString *taskName = taskNames[i];
-        NSInteger index = [indexes[i] integerValue];
-        MirrorTaskModel *task = [MirrorStorage getTaskFromDB:taskName];
-        BOOL periodsIsFinished = task.periods[index].count == 2;
-        if (periodsIsFinished) {
-            long start = [task.periods[index][0] longValue];
-            long end = [task.periods[index][1] longValue];
-            count = count + (end-start);
-        }
+    long count = 0;
+    for (int i=0; i<todayRecords.count; i++) {
+        MirrorRecordModel *record = todayRecords[i];
+        count = count + (record.endTime -  record.startTime);
     }
     self.count = count;
     [self p_setupUI];
@@ -93,7 +85,16 @@
     } else { // 不到8小时，隐藏王冠
         self.crownButton.hidden = YES;
     }
-    [self.pieChart updateWithData:[MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]] width:80 enableInteractive:NO]; // update piechart
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+    long endTime = startTime + 86400;
+    NSMutableArray<MirrorChartModel *> *todayRecordsSortByTasks = [MirrorStorage getAllRecordsInTaskOrderWithStart:startTime end:endTime];
+    [self.pieChart updateWithData:todayRecordsSortByTasks width:80 enableInteractive:NO];
 }
 
 #pragma mark - Actions
@@ -156,7 +157,16 @@
 - (MirrorPiechart *)pieChart
 {
     if (!_pieChart) {
-        _pieChart = [[MirrorPiechart alloc] initWithData:[MirrorDataManager getDataWithStart:[[self todayStartEndTime][0] longValue] end:[[self todayStartEndTime][1] longValue]] width:80 enableInteractive:NO];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+        components.timeZone = [NSTimeZone systemTimeZone];
+        components.hour = 0;
+        components.minute = 0;
+        components.second = 0;
+        long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+        long endTime = startTime + 86400;
+        NSMutableArray<MirrorChartModel *> *todayRecordsSortByTasks = [MirrorStorage getAllRecordsInTaskOrderWithStart:startTime end:endTime];
+        _pieChart = [[MirrorPiechart alloc] initWithData:todayRecordsSortByTasks width:80 enableInteractive:NO];
     }
     return _pieChart;
 }

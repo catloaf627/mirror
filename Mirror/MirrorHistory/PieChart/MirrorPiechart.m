@@ -20,7 +20,7 @@
 @interface MirrorPiechart ()
 
 @property (nonatomic, strong) NSMutableArray *sliceLayerArray;
-@property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
+@property (nonatomic, strong) NSMutableArray<MirrorChartModel *> *data;
 @property (nonatomic, assign) BOOL enableInteractive;
 
 @end
@@ -28,7 +28,7 @@
 @implementation MirrorPiechart
 
 
-- (instancetype)initWithData:(NSMutableArray<MirrorTaskModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive
+- (instancetype)initWithData:(NSMutableArray<MirrorChartModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive
 {
     self = [super init];
     if (self) {
@@ -40,7 +40,7 @@
     return self;
 }
 
-- (void)updateWithData:(NSMutableArray<MirrorTaskModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive
+- (void)updateWithData:(NSMutableArray<MirrorChartModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive
 {
     [[self.layer.sublayers copy] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         CALayer * subLayer = obj;
@@ -61,11 +61,11 @@
     NSMutableArray *texts = [NSMutableArray new];
     long totalTime = 0;
     for (int i=0; i<self.data.count; i++) {
-        MirrorTaskModel *task = self.data[i];
-        [percentages addObject:@([MirrorTool getTotalTimeOfPeriods:task.periods])];
-        totalTime = totalTime + [MirrorTool getTotalTimeOfPeriods:task.periods];
-        colors[i] = @(task.color);
-        NSString *hourText = [MirrorTimeText XdXhXmXsShort:[MirrorTool getTotalTimeOfPeriods:task.periods]];
+        MirrorChartModel *chartModel = self.data[i];
+        [percentages addObject:@([MirrorTool getTotalTimeOfPeriods:chartModel.records])];
+        totalTime = totalTime + [MirrorTool getTotalTimeOfPeriods:chartModel.records];
+        colors[i] = @(chartModel.taskModel.color);
+        NSString *hourText = [MirrorTimeText XdXhXmXsShort:[MirrorTool getTotalTimeOfPeriods:chartModel.records]];
         texts[i] = hourText;
     }
 

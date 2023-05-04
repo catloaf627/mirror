@@ -26,7 +26,7 @@ static const CGFloat kLabelHeight = 20;
     return NSStringFromClass(self.class);
 }
 
-- (void)configCellWithData:(NSMutableArray<MirrorTaskModel *> *)data index:(NSInteger)index
+- (void)configCellWithData:(NSMutableArray<MirrorChartModel *> *)data index:(NSInteger)index
 {
     float percentage = [self percentageFromData:data index:index];
     // 每次update都重新init coloredView以保证实时更新，先removeFromSuperview再设置为nil才是正确的顺序！
@@ -34,15 +34,15 @@ static const CGFloat kLabelHeight = 20;
     self.coloredView = nil;
 
     [self addSubview:self.coloredView];
-    self.coloredView.backgroundColor = [UIColor mirrorColorNamed:data[index].color];
+    self.coloredView.backgroundColor = [UIColor mirrorColorNamed:data[index].taskModel.color];
     [self.coloredView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.offset(0);
         make.height.mas_equalTo((self.frame.size.height - kLabelHeight) * percentage);
     }];
     
     [self addSubview:self.timeLabel];
-    self.timeLabel.text = [MirrorTimeText XdXhXmXsShort:[MirrorTool getTotalTimeOfPeriods:data[index].periods]];
-    self.timeLabel.textColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:data[index].color]];
+    self.timeLabel.text = [MirrorTimeText XdXhXmXsShort:[MirrorTool getTotalTimeOfPeriods:data[index].records]];
+    self.timeLabel.textColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:data[index].taskModel.color]];
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.offset(0);
         make.bottom.mas_equalTo(self.coloredView.mas_top);
@@ -50,15 +50,14 @@ static const CGFloat kLabelHeight = 20;
     }];
 }
 
-- (float)percentageFromData:(NSMutableArray<MirrorTaskModel *> *)data index:(NSInteger)index
+- (float)percentageFromData:(NSMutableArray<MirrorChartModel *> *)data index:(NSInteger)index
 {
-    MirrorTaskModel *task = data[index];
     long maxTime = 0;
     for (int i=0; i<data.count; i++) {
-        long taskiTime = [MirrorTool getTotalTimeOfPeriods:data[i].periods]; // 第i个task的总时间
+        long taskiTime = [MirrorTool getTotalTimeOfPeriods:data[i].records]; // 第i个task的总时间
         if (taskiTime > maxTime) maxTime = taskiTime;
     }
-    float percentage = maxTime ? [MirrorTool getTotalTimeOfPeriods:task.periods]/(double)maxTime : 0;
+    float percentage = maxTime ? [MirrorTool getTotalTimeOfPeriods:data[index].records]/(double)maxTime : 0;
     return percentage;
 }
 

@@ -26,7 +26,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
-@property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
+@property (nonatomic, strong) NSMutableArray<MirrorChartModel *> *data;
 
 @property (nonatomic, assign) NSInteger spanType;
 @property (nonatomic, assign) NSInteger offset;
@@ -35,7 +35,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 @implementation SpanHistogram
 
-- (instancetype)initWithData:(NSMutableArray<MirrorTaskModel *> *)data
+- (instancetype)initWithData:(NSMutableArray<MirrorChartModel *> *)data
 {
     self = [super init];
     if (self) {
@@ -50,7 +50,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
     return self;
 }
 
-- (void)updateWithData:(NSMutableArray<MirrorTaskModel *> *)data{
+- (void)updateWithData:(NSMutableArray<MirrorChartModel *> *)data{
     self.data = data;
     [self.collectionView reloadData];
 }
@@ -134,7 +134,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.delegate.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.data[indexPath.item].taskName] animated:YES];
+    [self.delegate.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.data[indexPath.item].taskModel.taskName] animated:YES];
 }
 
 #pragma mark - Getters

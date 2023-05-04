@@ -49,17 +49,18 @@ static const CGFloat kVerticalPadding = 10;
 
 - (void)updateCellInfo
 {
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:self.taskName];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
     self.backgroundColor = [UIColor mirrorColorNamed:task.color];
-    BOOL periodsIsFinished = task.periods[self.periodIndex].count == 2;
-    self.dateLabel.text = [MirrorTimeText YYYYmmddWeekdayWithStart:[task.periods[self.periodIndex][0] longValue]];
+    BOOL periodsIsFinished = allRecords[self.periodIndex].endTime != 0;
+    self.dateLabel.text = [MirrorTimeText YYYYmmddWeekdayWithStart:allRecords[self.periodIndex].startTime];
     if (periodsIsFinished) {
         self.startPicker.hidden = NO;
         self.endPicker.hidden = NO;
         self.dashLabel.hidden = NO;
         self.deleteButton.hidden = NO;
-        long start = [task.periods[self.periodIndex][0] longValue];
-        long end = [task.periods[self.periodIndex][1] longValue];
+        long start = allRecords[self.periodIndex].startTime;
+        long end =  allRecords[self.periodIndex].endTime;
         self.totalLabel.text = [MirrorTimeText XdXhXmXsShortWithstart:start end:end];
         self.startPicker.date = [NSDate dateWithTimeIntervalSince1970:start];
         self.startPicker.maximumDate = [self startMaxDate];
@@ -125,13 +126,13 @@ static const CGFloat kVerticalPadding = 10;
 - (void)changeStartTime
 {
     long startTime = [self.startPicker.date timeIntervalSince1970];
-    [MirrorStorage editPeriodIsStartTime:YES to:startTime withTaskname:self.taskName periodIndex:self.periodIndex];
+    [MirrorStorage editPeriodIsStartTime:YES to:startTime periodIndex:self.periodIndex];
     [self updateCellInfo];
 }
 - (void)changeEndTime
 {
     long endTime = [self.endPicker.date timeIntervalSince1970];
-    [MirrorStorage editPeriodIsStartTime:NO to:endTime withTaskname:self.taskName periodIndex:self.periodIndex];
+    [MirrorStorage editPeriodIsStartTime:NO to:endTime periodIndex:self.periodIndex];
     [self updateCellInfo];
 }
 
@@ -140,7 +141,7 @@ static const CGFloat kVerticalPadding = 10;
     UIAlertController* deleteButtonAlert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete_period_?"] message:nil preferredStyle:UIAlertControllerStyleAlert];
 
     UIAlertAction* deleteAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-        [MirrorStorage deletePeriodWithTaskname:self.taskName periodIndex:self.periodIndex];
+        [MirrorStorage deletePeriodAtIndex:self.periodIndex];
     }];
     
     UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:nil];
@@ -233,21 +234,20 @@ static const CGFloat kVerticalPadding = 10;
 
 - (NSDate *)startMaxDate
 {
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorRecordModel *record = [MirrorStorage retriveMirrorRecords][self.periodIndex];
     long maxTime = 0;
-    // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
-    maxTime = [task.periods[self.periodIndex][1] longValue] - kMinSeconds; // 至多比自己的结束时间小一分钟
+    // 对于一个开始时间来说，最大不能大于自己的结束时间-kMinSeconds
+    maxTime = record.endTime - kMinSeconds; // 至多比自己的结束时间小一分钟
     return [NSDate dateWithTimeIntervalSince1970:maxTime];
 }
 
 - (NSDate *)endMaxDate
 {
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     long maxTime = 0;
-    // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
-    if (self.periodIndex-1 >= 0) { // 如果有下一个task的话
-        NSArray *latterPeriod = task.periods[self.periodIndex-1];
-        maxTime = [latterPeriod[0] longValue]; // 至多也要等于下一个task的开始时间
+    // 对于一个结束时间来说，最大不能大于下一个task的开始时间（如果有下一个task的话）
+    if (self.periodIndex+1 <= [MirrorStorage retriveMirrorRecords].count-1) { // 如果有下一个task的话
+        MirrorRecordModel *nextRecord = [MirrorStorage retriveMirrorRecords][self.periodIndex+1];
+        maxTime = nextRecord.startTime; // 至多也要等于下一个task的开始时间
     } else {
         maxTime = LONG_MAX;
     }
@@ -257,12 +257,11 @@ static const CGFloat kVerticalPadding = 10;
 
 - (NSDate *)startMinDate
 {
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     long minTime = 0;
-    // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
-    if (self.periodIndex+1 < task.periods.count) { //如果有上一个task的话
-        NSArray *formerPeriod = task.periods[self.periodIndex+1];
-        minTime = [formerPeriod[1] longValue]; // 至少等于前一个task的结束时间
+    // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话
+    if (self.periodIndex-1 >= 0) { //如果有上一个task的话
+        MirrorRecordModel *formmerRecord = [MirrorStorage retriveMirrorRecords][self.periodIndex-1];
+        minTime = formmerRecord.endTime; // 至少等于前一个task的结束时间
     } else {
         minTime = 0;
     }
@@ -272,12 +271,13 @@ static const CGFloat kVerticalPadding = 10;
 
 - (NSDate *)endMinDate
 {
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorRecordModel *record = [MirrorStorage retriveMirrorRecords][self.periodIndex];
     long minTime = 0;
-    // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
-    minTime = [task.periods[self.periodIndex][0] longValue] + kMinSeconds;// 至少比开始的时间多一分钟
+    // 对于一个结束时间来说，它最小不能小于自己的开始时间+kMinSeconds
+    minTime = record.startTime + kMinSeconds;// 至少比开始的时间多一分钟
     return [NSDate dateWithTimeIntervalSince1970:minTime];
 }
+
 
 
 @end

@@ -6,11 +6,12 @@
 //
 
 #import "TaskTotalHeader.h"
-#import "MirrorTaskModel.h"
+#import "MirrorChartModel.h"
 #import "MirrorStorage.h"
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
 #import "MirrorTimeText.h"
+#import "MirrorTool.h"
 
 @interface TaskTotalHeader ()
 
@@ -22,16 +23,15 @@
 
 - (void)configWithTaskname:(NSString *)taskname
 {
-    NSInteger count = 0;
-    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:taskname];
-    for (int i=0; i<task.periods.count; i++) {
-        BOOL periodsIsFinished = task.periods[i].count == 2;
-        if (periodsIsFinished) {
-            long start = [task.periods[i][0] longValue];
-            long end = [task.periods[i][1] longValue];
-            count = count + (end-start);
+    NSMutableArray<MirrorChartModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX];
+    MirrorChartModel *chartModel = nil;
+    for (int i=0; i<chartModels.count; i++) {
+        if ([chartModels[i].taskModel.taskName isEqualToString:taskname]) {
+            chartModel = chartModels[i];
+            break;
         }
     }
+    long count = [MirrorTool getTotalTimeOfPeriods:chartModel.records];
     [self addSubview:self.countLabel];
     self.countLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:count]];
     [self.countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
