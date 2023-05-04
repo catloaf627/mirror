@@ -16,8 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TodayPeriodCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, weak) UIViewController<EditPeriodForTodayProtocol> *delegate;
+
 + (NSString *)identifier;
 - (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
+- (void)showOrHideOriginalIndex;
 
 @end
 

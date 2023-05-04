@@ -47,34 +47,34 @@ static const CGFloat kVerticalPadding = 10;
     [self p_setupUI];
 }
 
+- (void)showOrHideOriginalIndex
+{
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    long start = allRecords[self.periodIndex].startTime;
+    long end = allRecords[self.periodIndex].endTime;
+    if ([self.totalLabel.text containsString:@"No."]) {
+        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
+    } else {
+        NSString *indexStr =  [[@"No." stringByAppendingString:[@(self.periodIndex) stringValue]] stringByAppendingString:@" "];
+        self.totalLabel.text = [indexStr stringByAppendingString:[[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]]];
+    }
+}
+
 - (void)updateCellInfo
 {
     MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:self.taskName];
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
     self.backgroundColor = [UIColor mirrorColorNamed:task.color];
-    BOOL periodsIsFinished = allRecords[self.periodIndex].endTime != 0;
     self.taskNameLabel.text = self.taskName;
-    if (periodsIsFinished) {
-        self.startPicker.hidden = NO;
-        self.endPicker.hidden = NO;
-        self.dashLabel.hidden = NO;
-        self.deleteButton.hidden = NO;
-        long start = allRecords[self.periodIndex].startTime;
-        long end = allRecords[self.periodIndex].endTime;
-        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
-        self.startPicker.date = [NSDate dateWithTimeIntervalSince1970:start];
-        self.startPicker.maximumDate = [self startMaxDate];
-        self.startPicker.minimumDate = [self startMinDate];
-        self.endPicker.date = [NSDate dateWithTimeIntervalSince1970:end];
-        self.endPicker.maximumDate = [self endMaxDate];
-        self.endPicker.minimumDate = [self endMinDate];
-    } else {
-        self.startPicker.hidden = YES;
-        self.endPicker.hidden = YES;
-        self.dashLabel.hidden = YES;
-        self.deleteButton.hidden = YES;
-        self.totalLabel.text = [MirrorLanguage mirror_stringWithKey:@"counting"];
-    }
+    long start = allRecords[self.periodIndex].startTime;
+    long end = allRecords[self.periodIndex].endTime;
+    self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
+    self.startPicker.date = [NSDate dateWithTimeIntervalSince1970:start];
+    self.startPicker.maximumDate = [self startMaxDate];
+    self.startPicker.minimumDate = [self startMinDate];
+    self.endPicker.date = [NSDate dateWithTimeIntervalSince1970:end];
+    self.endPicker.maximumDate = [self endMaxDate];
+    self.endPicker.minimumDate = [self endMinDate];
 }
 
 - (void)p_setupUI

@@ -17,8 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TaskPeriodCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, weak) UIViewController<VCForPeriodCellProtocol> *delegate;
+
 + (NSString *)identifier;
 - (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
+- (void)showOrHideOriginalIndex;
 
 
 @end
