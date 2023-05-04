@@ -308,29 +308,19 @@ static NSString *const kMirrorRecords = @"mirror_records";
 }
 
 // 取出一个任务从古至今的所有records
-+ (MirrorDataModel *)getAllTaskRecords:(NSString *)taskName
++ (NSMutableArray<MirrorRecordModel *> *)getAllTaskRecords:(NSString *)taskName
 {
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
-    NSMutableArray<MirrorRecordModel *> *taskRecord = [NSMutableArray new];
+    NSMutableArray<MirrorRecordModel *> *taskRecords = [NSMutableArray new];
     for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
         MirrorRecordModel *record = allRecords[recordIndex];
         if ([record.taskName isEqualToString:taskName]) {
             MirrorRecordModel *recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
             recordCopy.originalIndex = recordIndex;
-            [taskRecord addObject:recordCopy];
+            [taskRecords addObject:recordCopy];
         }
     }
-    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
-    MirrorTaskModel *taskModel = nil;
-    for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
-        MirrorTaskModel *task = allTasks[taskIndex];
-        if ([task.taskName isEqualToString:taskName]) {
-            taskModel = task;
-            break;
-        }
-    }
-    
-    return [[MirrorDataModel alloc] initWithTask:taskModel records:taskRecord];;
+    return taskRecords;
 }
 
 // 取出从startTime到endTime的所有条record

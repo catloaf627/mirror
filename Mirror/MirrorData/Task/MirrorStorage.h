@@ -16,7 +16,6 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
     TaskNameExistsTypeExistsInArchivedTasks,
 };
 
-// ❗️❗️❗️这里的数据结构是词典结构，因为主要用于寻找或者编辑某个task（与之相对的是MirrorDataManager使用的是数组结构，因为涉及到顺序的问题）
 @interface MirrorStorage : NSObject
 
 // 业务用
@@ -60,16 +59,32 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 + (NSMutableArray<MirrorRecordModel *> *)retriveMirrorRecords;
 
-// 取出一个taskmodel
+/*
+ 取出一个taskmodel
+ {英语, 未归档, 粉色, 2023年5月1日创建}
+ 适用场景：想要得到归档信息、颜色信息、创建日期
+ */
 + (MirrorTaskModel *)getTaskModelFromDB:(NSString *)taskName;
 
-// 取出一个任务从古至今的所有records
-+ (MirrorDataModel *)getAllTaskRecords:(NSString *)taskNam;
+/*
+ 取出【某任务】从古至今的所有records
+ {[此record在总表中的index], 英语, 05:00, 06:00}, {[此record在总表中的index], 英语, 08:00, 09:00}, {[此record在总表中的index], 英语, 11:00, 12:00}...
+ 适用场景：某任务totaltime、某任务所有records页面
+ */
++ (NSMutableArray<MirrorRecordModel *> *)getAllTaskRecords:(NSString *)taskName;
 
-// 取出从startTime到endTime的所有条record
+/*
+ 取出【所有任务】从【某时间】到【某时间】的所有records
+ {[此record在总表中的index], 英语, 05:00, 06:00}, {[此record在总表中的index], 数学, 06:00, 07:00}..
+ 适用场景：目前只有today的record展示用到这个方法
+ */
 + (NSMutableArray<MirrorRecordModel *> *)getAllRecordsWithStart:(long)startTime end:(long)endTime;
 
-// 取出从startTime到endTime的所有条record，并按照taskname存储
+/*
+ 取出【所有任务】从【某时间】到【某时间】的所有records，并按照优先级排序 （如顺序为数学、英语）
+ {[此record在总表中的index], 数学, 06:00, 07:00}, {[此record在总表中的index], 英语, 05:00, 06:00}...
+ 适用场景：grid，饼图，柱形图，legend
+ */
 + (NSMutableArray<MirrorDataModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime;
 
 @end
