@@ -26,7 +26,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
-@property (nonatomic, strong) NSMutableArray<MirrorChartModel *> *data;
+@property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 
 @property (nonatomic, assign) NSInteger spanType;
 @property (nonatomic, assign) NSInteger offset;
@@ -35,7 +35,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 @implementation SpanHistogram
 
-- (instancetype)initWithData:(NSMutableArray<MirrorChartModel *> *)data
+- (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data
 {
     self = [super init];
     if (self) {
@@ -50,7 +50,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
     return self;
 }
 
-- (void)updateWithData:(NSMutableArray<MirrorChartModel *> *)data{
+- (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data{
     self.data = data;
     [self.collectionView reloadData];
 }

@@ -6,7 +6,7 @@
 //
 
 #import "TaskTotalHeader.h"
-#import "MirrorChartModel.h"
+#import "MirrorDataModel.h"
 #import "MirrorStorage.h"
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
@@ -23,8 +23,8 @@
 
 - (void)configWithTaskname:(NSString *)taskname
 {
-    NSMutableArray<MirrorChartModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX];
-    MirrorChartModel *chartModel = nil;
+    NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX];
+    MirrorDataModel *chartModel = nil;
     for (int i=0; i<chartModels.count; i++) {
         if ([chartModels[i].taskModel.taskName isEqualToString:taskname]) {
             chartModel = chartModels[i];

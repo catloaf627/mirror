@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MirrorChartModel.h"
+#import "MirrorDataModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -64,13 +64,13 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 + (MirrorTaskModel *)getTaskModelFromDB:(NSString *)taskName;
 
 // 取出一个任务从古至今的所有records
-+ (MirrorChartModel *)getAllTaskRecords:(NSString *)taskNam;
++ (MirrorDataModel *)getAllTaskRecords:(NSString *)taskNam;
 
 // 取出从startTime到endTime的所有条record
 + (NSMutableArray<MirrorRecordModel *> *)getAllRecordsWithStart:(long)startTime end:(long)endTime;
 
 // 取出从startTime到endTime的所有条record，并按照taskname存储
-+ (NSMutableArray<MirrorChartModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime;
++ (NSMutableArray<MirrorDataModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime;
 
 @end
 

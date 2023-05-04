@@ -41,7 +41,7 @@
 		4A88212F29F671F7009E422C /* TimeTrackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88212E29F671F7009E422C /* TimeTrackingViewController.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4AC1FDBD2A0384A600CDCED9 /* MirrorRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBC2A0384A600CDCED9 /* MirrorRecordModel.m */; };
-		4AC1FDC02A03B05100CDCED9 /* MirrorChartModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBF2A03B05100CDCED9 /* MirrorChartModel.m */; };
+		4AC1FDC02A03B05100CDCED9 /* MirrorDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBF2A03B05100CDCED9 /* MirrorDataModel.m */; };
 		4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* LeftAnimation.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
 		4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B328E4762E006F02DE /* ThemeCollectionViewCell.m */; };
@@ -130,8 +130,8 @@
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4AC1FDBB2A0384A600CDCED9 /* MirrorRecordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorRecordModel.h; sourceTree = "<group>"; };
 		4AC1FDBC2A0384A600CDCED9 /* MirrorRecordModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorRecordModel.m; sourceTree = "<group>"; };
-		4AC1FDBE2A03B05100CDCED9 /* MirrorChartModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorChartModel.h; sourceTree = "<group>"; };
-		4AC1FDBF2A03B05100CDCED9 /* MirrorChartModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorChartModel.m; sourceTree = "<group>"; };
+		4AC1FDBE2A03B05100CDCED9 /* MirrorDataModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorDataModel.h; sourceTree = "<group>"; };
+		4AC1FDBF2A03B05100CDCED9 /* MirrorDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorDataModel.m; sourceTree = "<group>"; };
 		4ACB422C29EEA411005EECC4 /* LeftAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftAnimation.h; sourceTree = "<group>"; };
 		4ACB422D29EEA411005EECC4 /* LeftAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LeftAnimation.m; sourceTree = "<group>"; };
 		4ADDC5AF28E4704B006F02DE /* AvatarCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvatarCollectionViewCell.h; sourceTree = "<group>"; };
@@ -217,8 +217,8 @@
 				4A099FA929DCFE54002683A1 /* MirrorTaskModel.m */,
 				4AC1FDBB2A0384A600CDCED9 /* MirrorRecordModel.h */,
 				4AC1FDBC2A0384A600CDCED9 /* MirrorRecordModel.m */,
-				4AC1FDBE2A03B05100CDCED9 /* MirrorChartModel.h */,
-				4AC1FDBF2A03B05100CDCED9 /* MirrorChartModel.m */,
+				4AC1FDBE2A03B05100CDCED9 /* MirrorDataModel.h */,
+				4AC1FDBF2A03B05100CDCED9 /* MirrorDataModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -626,7 +626,7 @@
 				4A37369A29E3AD8700187280 /* MirrorSettings.m in Sources */,
 				4A37369729E2BD3C00187280 /* SliceLayer.m in Sources */,
 				4A88212F29F671F7009E422C /* TimeTrackingViewController.m in Sources */,
-				4AC1FDC02A03B05100CDCED9 /* MirrorChartModel.m in Sources */,
+				4AC1FDC02A03B05100CDCED9 /* MirrorDataModel.m in Sources */,
 				4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */,
 				4AE5E8922A0253DA004228C1 /* SplitLineView.m in Sources */,
 				4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */,

@@ -18,7 +18,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 @interface SpanLegend () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) NSMutableArray<MirrorChartModel *> *data;
+@property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
 
 @property (nonatomic, assign) NSInteger spanType;
 @property (nonatomic, assign) NSInteger offset;
@@ -28,7 +28,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 @implementation SpanLegend
 
-- (instancetype)initWithData:(NSMutableArray<MirrorChartModel *> *)data
+- (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data
 {
     self = [super init];
     if (self) {
@@ -44,7 +44,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
     return self;
 }
 
-- (void)updateWithData:(NSMutableArray<MirrorChartModel *> *)data
+- (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data
 {
     self.data = data;
     [self.collectionView reloadData];

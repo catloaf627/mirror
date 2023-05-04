@@ -165,9 +165,9 @@ static CGFloat const kCellSpacing = 3;
         _selectedCellIndex = indexPath.item; // 选择
     }
     long timestamp = _startTimestamp + indexPath.item * 86400;
-    NSMutableArray<MirrorChartModel *> *data = [MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400];
+    NSMutableArray<MirrorDataModel *> *data = [MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400];
     long totaltime = 0;
-    for (MirrorChartModel* model in data) {
+    for (MirrorDataModel* model in data) {
         totaltime = totaltime + [MirrorTool getTotalTimeOfPeriods:model.records];
     }
     self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:timestamp]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totaltime]];

@@ -308,7 +308,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
 }
 
 // 取出一个任务从古至今的所有records
-+ (MirrorChartModel *)getAllTaskRecords:(NSString *)taskName
++ (MirrorDataModel *)getAllTaskRecords:(NSString *)taskName
 {
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
     NSMutableArray<MirrorRecordModel *> *taskRecord = [NSMutableArray new];
@@ -330,7 +330,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
         }
     }
     
-    return [[MirrorChartModel alloc] initWithTask:taskModel records:taskRecord];;
+    return [[MirrorDataModel alloc] initWithTask:taskModel records:taskRecord];;
 }
 
 // 取出从startTime到endTime的所有条record
@@ -372,8 +372,8 @@ static NSString *const kMirrorRecords = @"mirror_records";
     return targetRecords;
 }
 
-// 取出从startTime到endTime的所有条record，并按照MirrorChartModel的方式存储
-+ (NSMutableArray<MirrorChartModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime
+// 取出从startTime到endTime的所有条record，并按照MirrorDataModel的方式存储
++ (NSMutableArray<MirrorDataModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime
 {
     BOOL printDetailsToDebug = YES; // debug用
     NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> *dict = [NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> new];
@@ -417,12 +417,12 @@ static NSString *const kMirrorRecords = @"mirror_records";
         // starttime<=r.start<=endtime, endtime<=r.end ✔️跨越了end time，取前半段【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
         // r.start<=starttime && endtime<=r.end ✖️囊括了整个starttime到endtime【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
     }
-    NSMutableArray<MirrorChartModel *> *res = [NSMutableArray new];
+    NSMutableArray<MirrorDataModel *> *res = [NSMutableArray new];
     NSMutableArray<MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
     for (int i=0 ;i<tasks.count; i++) { // 按照任务在mirror_task里的顺序
         MirrorTaskModel *task = tasks[i];
         if ([dict.allKeys containsObject:task.taskName]) { // 这个task在时间段内有数据
-            MirrorChartModel *chartModel = [[MirrorChartModel alloc] initWithTask:task records:dict[task.taskName]];
+            MirrorDataModel *chartModel = [[MirrorDataModel alloc] initWithTask:task records:dict[task.taskName]];
             [res addObject:chartModel];
         }
     }
