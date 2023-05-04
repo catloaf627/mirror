@@ -17,15 +17,33 @@ static NSString *const kMirrorRecords = @"mirror_records";
 
 @implementation MirrorStorage
 
-#pragma mark - Public
+#pragma mark - Time VC需要的信息
 
-+ (NSMutableArray<MirrorTaskModel *> *)tasksWithAddNew
+
++ (NSString *)isGoingOnTask
+{
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    if (allRecords.count > 0 && allRecords[allRecords.count-1].endTime == 0) {
+        return allRecords[allRecords.count-1].taskName;
+    }
+    return @"";
+}
+
++ (NSMutableArray<MirrorTaskModel *> *)tasksWithoutArchiveWithAddNew
 {
     NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    NSMutableArray <MirrorTaskModel *> *tasksWithoutArchive = [NSMutableArray new];
+    for (int i=0; i<tasks.count; i++) {
+        if (!tasks[i].isArchived) {
+            [tasksWithoutArchive addObject:tasks[i]];
+        }
+    }
     MirrorTaskModel *fakemodel = [[MirrorTaskModel alloc] initWithTitle:@"" createdTime:0 colorType:0 isArchived:NO isAddTask:YES];
-    [tasks addObject:fakemodel];
-    return tasks;
+    [tasksWithoutArchive addObject:fakemodel];
+    return tasksWithoutArchive;
 }
+
+#pragma mark - Actions
 
 + (void)createTask:(MirrorTaskModel *)task
 {

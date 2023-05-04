@@ -18,9 +18,13 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 @interface MirrorStorage : NSObject
 
-// 业务用
+// TimeVC用
 
-+ (NSMutableArray<MirrorTaskModel *> *)tasksWithAddNew;
++ (NSString *)isGoingOnTask; // 返回为空意味着没有正在进行的task
+
++ (NSMutableArray<MirrorTaskModel *> *)tasksWithoutArchiveWithAddNew;
+
+// Actions
 
 + (void)createTask:(MirrorTaskModel *)task;
 

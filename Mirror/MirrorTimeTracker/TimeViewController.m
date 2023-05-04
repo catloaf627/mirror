@@ -138,7 +138,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
-    MirrorTaskModel *selectedModel = [MirrorStorage tasksWithAddNew][selectedIndexPath.item];
+    MirrorTaskModel *selectedModel = [MirrorStorage tasksWithoutArchiveWithAddNew][selectedIndexPath.item];
     // 点击了[+]
     if (selectedModel.isAddTaskModel) {
         AddTaskViewController *addVC = [AddTaskViewController new];
@@ -156,10 +156,9 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    MirrorTaskModel *taskModel = [MirrorStorage tasksWithAddNew][indexPath.item];
+    MirrorTaskModel *taskModel = [MirrorStorage tasksWithoutArchiveWithAddNew][indexPath.item];
     // 如果在计时中，先打开计时页面
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
-    if (allRecords.count > 0 && !taskModel.isAddTaskModel && [allRecords[allRecords.count-1].taskName isEqualToString:taskModel.taskName] && allRecords[allRecords.count-1].endTime == 0) { // this task is ongoing
+    if (!taskModel.isAddTaskModel && [[MirrorStorage isGoingOnTask] isEqualToString:taskModel.taskName]) { // this task is ongoing
         TimeTrackingViewController * timeTrackingVC = [[TimeTrackingViewController alloc] initWithTaskName:taskModel.taskName];
         timeTrackingVC.transitioningDelegate = self;
         timeTrackingVC.modalPresentationStyle = UIModalPresentationCustom;
@@ -180,7 +179,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [MirrorStorage tasksWithAddNew].count;
+    return [MirrorStorage tasksWithoutArchiveWithAddNew].count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
