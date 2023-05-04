@@ -27,7 +27,7 @@ static CGFloat const kPadding = 10;
 
 - (void)configCellWithTaskname:(NSString *)taskName
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:taskName];
     [self addSubview:self.coloredView];
     self.coloredView.backgroundColor = [UIColor mirrorColorNamed:task.color];
     self.coloredView.layer.borderColor = [UIColor mirrorColorNamed: [UIColor mirror_getPulseColorType:task.color]].CGColor;

@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MirrorDataModel.h"
+#import "MirrorTaskModel.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,9 +22,9 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 // 业务用
 
-+ (MirrorDataModel *)getTaskFromDB:(NSString *)taskName; //取出某个task
++ (MirrorTaskModel *)getTaskFromDB:(NSString *)taskName; //取出某个task
 
-+ (void)createTask:(MirrorDataModel *)task;
++ (void)createTask:(MirrorTaskModel *)task;
 
 + (void)deleteTask:(NSString *)taskName;
 
@@ -36,7 +36,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 + (void)editTask:(NSString *)taskName color:(MirrorColorType)color;
 
-+ (void)reorderTasks:(NSMutableArray <MirrorDataModel *> *)taskArray;
++ (void)reorderTasks:(NSMutableArray <MirrorTaskModel *> *)taskArray;
 
 + (void)savePeriodWithTaskname:(NSString *)taskName startAt:(NSDate *)startDate endAt:(NSDate *)endDate; // 跳过start->stop，直接保存
 
@@ -62,7 +62,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 // Log
 
-+ (void)printTask:(MirrorDataModel *)task info:(NSString *)info;
++ (void)printTask:(MirrorTaskModel *)task info:(NSString *)info;
 
 + (void)removeDirtyData;
 

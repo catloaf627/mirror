@@ -190,7 +190,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     
     NSArray *allTasks = [MirrorDataManager allTasks];
     for (int i=0; i<allTasks.count; i++) {
-        MirrorDataModel *task = allTasks[i];
+        MirrorTaskModel *task = allTasks[i];
         for (NSInteger periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
             NSArray *period = task.periods[periodIndex];
             if ([period[0] longValue] >= startTime && [period[0] longValue] <= endTime) { // 符合要求，可以展示在today页面

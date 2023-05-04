@@ -26,7 +26,7 @@ static const CGFloat kLabelHeight = 20;
     return NSStringFromClass(self.class);
 }
 
-- (void)configCellWithData:(NSMutableArray<MirrorDataModel *> *)data index:(NSInteger)index
+- (void)configCellWithData:(NSMutableArray<MirrorTaskModel *> *)data index:(NSInteger)index
 {
     float percentage = [self percentageFromData:data index:index];
     // 每次update都重新init coloredView以保证实时更新，先removeFromSuperview再设置为nil才是正确的顺序！
@@ -50,9 +50,9 @@ static const CGFloat kLabelHeight = 20;
     }];
 }
 
-- (float)percentageFromData:(NSMutableArray<MirrorDataModel *> *)data index:(NSInteger)index
+- (float)percentageFromData:(NSMutableArray<MirrorTaskModel *> *)data index:(NSInteger)index
 {
-    MirrorDataModel *task = data[index];
+    MirrorTaskModel *task = data[index];
     long maxTime = 0;
     for (int i=0; i<data.count; i++) {
         long taskiTime = [MirrorTool getTotalTimeOfPeriods:data[i].periods]; // 第i个task的总时间

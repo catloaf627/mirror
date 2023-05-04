@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MirrorMacro.h"
-#import "MirrorDataModel.h"
+#import "MirrorTaskModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) UIViewController<SpanHistogramDelegate> *delegate;
 
-- (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
-- (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;
+- (instancetype)initWithData:(NSMutableArray<MirrorTaskModel *> *)data;
+- (void)updateWithData:(NSMutableArray<MirrorTaskModel *> *)data;
 
 @end
 

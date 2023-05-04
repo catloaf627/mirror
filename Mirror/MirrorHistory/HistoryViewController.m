@@ -19,7 +19,7 @@
 #import "MirrorLanguage.h"
 #import "MirrorSettings.h"
 #import "MirrorPiechart.h"
-#import "MirrorDataModel.h"
+#import "MirrorTaskModel.h"
 #import "MirrorTool.h"
 #import "MirrorDataManager.h"
 #import "MirrorTimeText.h"
@@ -28,7 +28,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 @interface HistoryViewController () <SpanLegendDelegate, SpanHistogramDelegate, UIViewControllerTransitioningDelegate>
 
-@property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
+@property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -439,7 +439,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 #pragma mark - Data source
 
-- (NSMutableArray<MirrorDataModel *> *)data
+- (NSMutableArray<MirrorTaskModel *> *)data
 {
     if (!_data) {
         _data = [NSMutableArray new];

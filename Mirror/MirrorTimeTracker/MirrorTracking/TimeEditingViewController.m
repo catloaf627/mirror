@@ -342,7 +342,7 @@
 
 - (long)formmerPeriodEndTime
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     NSInteger periodsCnt = task.periods.count;
     if  (periodsCnt > 0) {
         NSArray *formerPeriod = task.periods[0];

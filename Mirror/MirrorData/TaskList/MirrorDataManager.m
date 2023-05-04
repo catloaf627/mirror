@@ -14,20 +14,20 @@
 
 #pragma mark - Get tasks
 
-+ (NSMutableArray<MirrorDataModel *> *)activatedTasksWithAddTask
++ (NSMutableArray<MirrorTaskModel *> *)activatedTasksWithAddTask
 {
-    NSMutableArray<MirrorDataModel *> *activatedTasksWithAddTask = [MirrorDataManager activatedTasks];
-    MirrorDataModel *fakeModel = [[MirrorDataModel alloc] initWithTitle:nil createdTime:nil order:nil colorType:nil isArchived:nil periods:nil isAddTask:YES];
+    NSMutableArray<MirrorTaskModel *> *activatedTasksWithAddTask = [MirrorDataManager activatedTasks];
+    MirrorTaskModel *fakeModel = [[MirrorTaskModel alloc] initWithTitle:nil createdTime:nil order:nil colorType:nil isArchived:nil periods:nil isAddTask:YES];
     [activatedTasksWithAddTask addObject:fakeModel];
     return activatedTasksWithAddTask;
 }
 
-+ (NSMutableArray<MirrorDataModel *> *)activatedTasks
++ (NSMutableArray<MirrorTaskModel *> *)activatedTasks
 {
-    NSMutableArray<MirrorDataModel *> *activatedTasks = [NSMutableArray new];
-    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+    NSMutableArray<MirrorTaskModel *> *activatedTasks = [NSMutableArray new];
+    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorDataManager allTasks];
     for (int i=0; i<allTasks.count; i++) {
-        MirrorDataModel *model = allTasks[i];
+        MirrorTaskModel *model = allTasks[i];
         if (!model.isArchived) {
             [activatedTasks addObject:model];
         }
@@ -35,12 +35,12 @@
     return activatedTasks;
 }
 
-+ (NSMutableArray<MirrorDataModel *> *)archivedTasks
++ (NSMutableArray<MirrorTaskModel *> *)archivedTasks
 {
-    NSMutableArray<MirrorDataModel *> *archivedTasks = [NSMutableArray new];
-    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+    NSMutableArray<MirrorTaskModel *> *archivedTasks = [NSMutableArray new];
+    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorDataManager allTasks];
     for (int i=0; i<allTasks.count; i++) {
-        MirrorDataModel *model = allTasks[i];
+        MirrorTaskModel *model = allTasks[i];
         if (model.isArchived) {
             [archivedTasks addObject:model];
         }
@@ -48,13 +48,13 @@
     return archivedTasks;
 }
 
-+ (NSMutableArray<MirrorDataModel *> *)allTasks // Dictionaries by definition are unordered. So I used an array to do the trick
++ (NSMutableArray<MirrorTaskModel *> *)allTasks // Dictionaries by definition are unordered. So I used an array to do the trick
 {
     // 把所有task加到一个array里
-    NSMutableArray<MirrorDataModel *> *allTasks = [NSMutableArray new];
+    NSMutableArray<MirrorTaskModel *> *allTasks = [NSMutableArray new];
     NSMutableDictionary *dict = [MirrorStorage retriveMirrorData];
     for (id taskName in dict.allKeys) {
-        MirrorDataModel *task = dict[taskName];
+        MirrorTaskModel *task = dict[taskName];
         [allTasks addObject:task];
     }
     // sort
@@ -63,7 +63,7 @@
     return allTasks;
 }
 
-+ (NSMutableArray<MirrorDataModel *> *)getDataWithStart:(long)startTime end:(long)endTime
++ (NSMutableArray<MirrorTaskModel *> *)getDataWithStart:(long)startTime end:(long)endTime
 {
     /* 所有的情况：
                         _________________________________
@@ -74,12 +74,12 @@
     
     */
     BOOL printDetailsToDebug = NO; // debug用
-    NSMutableArray<MirrorDataModel *> *targetTasks = [NSMutableArray<MirrorDataModel *> new];
-    NSMutableArray<MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
+    NSMutableArray<MirrorTaskModel *> *targetTasks = [NSMutableArray<MirrorTaskModel *> new];
+    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorDataManager allTasks];
     if (printDetailsToDebug) NSLog(@"数据库里的task个数 %@", @(allTasks.count));
     for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
-        MirrorDataModel *task = allTasks[taskIndex];
-        MirrorDataModel *targetTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime order:task.priority colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
+        MirrorTaskModel *task = allTasks[taskIndex];
+        MirrorTaskModel *targetTask = [[MirrorTaskModel alloc] initWithTitle:task.taskName createdTime:task.createdTime order:task.priority colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
         BOOL targetTaskIsEmpty = YES;
         for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
             NSMutableArray *period = task.periods[periodIndex];

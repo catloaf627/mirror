@@ -185,8 +185,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)collectionView:(UICollectionView *)collectionView moveItemAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    NSMutableArray <MirrorDataModel *> *allTasks = [MirrorDataManager allTasks];
-    MirrorDataModel *selectedTask = allTasks[sourceIndexPath.item];
+    NSMutableArray <MirrorTaskModel *> *allTasks = [MirrorDataManager allTasks];
+    MirrorTaskModel *selectedTask = allTasks[sourceIndexPath.item];
     [allTasks removeObjectAtIndex:sourceIndexPath.item];
     [allTasks insertObject:selectedTask atIndex:destinationIndexPath.item];
     [MirrorStorage reorderTasks:allTasks];

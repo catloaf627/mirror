@@ -12,7 +12,7 @@
 #import "GridCollectionViewCell.h"
 #import "MirrorMacro.h"
 #import "MirrorLanguage.h"
-#import "MirrorDataModel.h"
+#import "MirrorTaskModel.h"
 #import "MirrorDataManager.h"
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
@@ -166,9 +166,9 @@ static CGFloat const kCellSpacing = 3;
         _selectedCellIndex = indexPath.item; // 选择
     }
     long timestamp = _startTimestamp + indexPath.item * 86400;
-    NSMutableArray<MirrorDataModel *> *data = [MirrorDataManager getDataWithStart:timestamp end:timestamp+86400];
+    NSMutableArray<MirrorTaskModel *> *data = [MirrorDataManager getDataWithStart:timestamp end:timestamp+86400];
     long totaltime = 0;
-    for (MirrorDataModel* task in data) {
+    for (MirrorTaskModel* task in data) {
         totaltime = totaltime + [MirrorTool getTotalTimeOfPeriods:task.periods];
     }
     self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:timestamp]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totaltime]];
@@ -413,7 +413,7 @@ static CGFloat const kCellSpacing = 3;
         NSInteger minTimestamp = NSIntegerMax;
         NSInteger maxTimestamp = NSIntegerMin;
         for (id key in mirrorDict.allKeys) {
-            MirrorDataModel *task = mirrorDict[key];
+            MirrorTaskModel *task = mirrorDict[key];
             for (int i=0; i<task.periods.count; i++) {
                 NSInteger timestamp = [task.periods[i][0] integerValue];
                 if (task.periods[i].count == 2 && timestamp < minTimestamp) {

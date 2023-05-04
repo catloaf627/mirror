@@ -1,14 +1,14 @@
 //
-//  MirrorDataModel.m
+//  MirrorTaskModel.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/5.
 //
 
-#import "MirrorDataModel.h"
+#import "MirrorTaskModel.h"
 #import "MirrorLanguage.h"
 
-@implementation MirrorDataModel
+@implementation MirrorTaskModel
 
 - (instancetype)initWithTitle:(NSString *)taskName createdTime:(long)createTime order:(NSInteger)order colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived periods:(NSMutableArray<NSMutableArray *> *)periods isAddTask:(BOOL)isAddTaskModel
 {

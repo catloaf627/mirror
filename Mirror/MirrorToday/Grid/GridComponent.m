@@ -9,7 +9,7 @@
 
 @implementation GridComponent
 
-- (instancetype)initWithValid:(BOOL)isValid thatDayTasks:(NSMutableArray<MirrorDataModel *> *)thatDayTasks
+- (instancetype)initWithValid:(BOOL)isValid thatDayTasks:(NSMutableArray<MirrorTaskModel *> *)thatDayTasks
 {
     self = [super init];
     if (self) {

@@ -6,7 +6,7 @@
 //
 
 #import "TaskTotalHeader.h"
-#import "MirrorDataModel.h"
+#import "MirrorTaskModel.h"
 #import "MirrorStorage.h"
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
@@ -23,7 +23,7 @@
 - (void)configWithTaskname:(NSString *)taskname
 {
     NSInteger count = 0;
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:taskname];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:taskname];
     for (int i=0; i<task.periods.count; i++) {
         BOOL periodsIsFinished = task.periods[i].count == 2;
         if (periodsIsFinished) {

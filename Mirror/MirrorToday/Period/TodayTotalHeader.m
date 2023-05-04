@@ -6,7 +6,7 @@
 //
 
 #import "TodayTotalHeader.h"
-#import "MirrorDataModel.h"
+#import "MirrorTaskModel.h"
 #import "MirrorStorage.h"
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
@@ -35,7 +35,7 @@
     for (int i=0; i<taskNames.count; i++) {
         NSString *taskName = taskNames[i];
         NSInteger index = [indexes[i] integerValue];
-        MirrorDataModel *task = [MirrorStorage getTaskFromDB:taskName];
+        MirrorTaskModel *task = [MirrorStorage getTaskFromDB:taskName];
         BOOL periodsIsFinished = task.periods[index].count == 2;
         if (periodsIsFinished) {
             long start = [task.periods[index][0] longValue];

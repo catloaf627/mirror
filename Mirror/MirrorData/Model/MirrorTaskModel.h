@@ -1,5 +1,5 @@
 //
-//  MirrorDataModel.h
+//  MirrorTaskModel.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/5.
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MirrorDataModel : NSObject <NSCoding, NSSecureCoding>
+@interface MirrorTaskModel : NSObject <NSCoding, NSSecureCoding>
 
 // 存在本地
 @property (nonatomic, strong) NSString *taskName;

@@ -18,7 +18,7 @@ static CGFloat const kHeightRatio = 0.8;
 
 @interface AddTaskViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) MirrorDataModel *brandNewTaskModel; //新创建的task，由于OC不允许使用new作为property的前缀，这里使用了brand new
+@property (nonatomic, strong) MirrorTaskModel *brandNewTaskModel; //新创建的task，由于OC不允许使用new作为property的前缀，这里使用了brand new
 @property (nonatomic, strong) UITextField *editTaskNameTextField;
 @property (nonatomic, strong) UILabel *addTaskNameHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -181,12 +181,12 @@ static CGFloat const kHeightRatio = 0.8;
 
 #pragma mark - Getters
 
-- (MirrorDataModel *)brandNewTaskModel
+- (MirrorTaskModel *)brandNewTaskModel
 {
     if (!_brandNewTaskModel) {
         NSArray *allColorType = @[@(MirrorColorTypeCellPink), @(MirrorColorTypeCellOrange), @(MirrorColorTypeCellYellow), @(MirrorColorTypeCellGreen), @(MirrorColorTypeCellTeal), @(MirrorColorTypeCellBlue), @(MirrorColorTypeCellPurple),@(MirrorColorTypeCellGray)];
         MirrorColorType type = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色
-        _brandNewTaskModel = [[MirrorDataModel alloc] initWithTitle:[MirrorLanguage mirror_stringWithKey:@"untitled"] createdTime:nil order:nil colorType:type isArchived:NO periods:[NSMutableArray new] isAddTask:NO];
+        _brandNewTaskModel = [[MirrorTaskModel alloc] initWithTitle:[MirrorLanguage mirror_stringWithKey:@"untitled"] createdTime:nil order:nil colorType:type isArchived:NO periods:[NSMutableArray new] isAddTask:NO];
     }
     return _brandNewTaskModel;
 }

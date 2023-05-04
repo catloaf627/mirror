@@ -139,7 +139,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
-    MirrorDataModel *selectedModel = [MirrorDataManager activatedTasksWithAddTask][selectedIndexPath.item];
+    MirrorTaskModel *selectedModel = [MirrorDataManager activatedTasksWithAddTask][selectedIndexPath.item];
     // 点击了[+]
     if (selectedModel.isAddTaskModel) {
         AddTaskViewController *addVC = [AddTaskViewController new];
@@ -161,7 +161,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    MirrorDataModel *taskModel = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
+    MirrorTaskModel *taskModel = [MirrorDataManager activatedTasksWithAddTask][indexPath.item];
     if (taskModel.isOngoing) {
         TimeTrackingViewController * timeTrackingVC = [[TimeTrackingViewController alloc] initWithTaskName:taskModel.taskName];
         timeTrackingVC.transitioningDelegate = self;

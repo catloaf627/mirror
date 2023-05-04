@@ -6,7 +6,7 @@
 //
 
 #import "EditTaskCollectionViewCell.h"
-#import "MirrorDataModel.h"
+#import "MirrorTaskModel.h"
 #import "MirrorStorage.h"
 #import "MirrorDataManager.h"
 #import "MirrorTool.h"
@@ -49,7 +49,7 @@ static CGFloat const kPadding = 20;
 
 - (void)p_setupUI
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     UIColor *color = [UIColor mirrorColorNamed:task.color];
     long createdTime = task.createdTime;
     long totalTime = [MirrorTool getTotalTimeOfPeriods:task.periods];
@@ -142,7 +142,7 @@ static CGFloat const kPadding = 20;
 
 - (void)archiveAction
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     if (task.isArchived) {
         [MirrorStorage cancelArchiveTask:self.taskName];
         [self.archiveButton setImage:[[[[UIImage systemImageNamed:@"archivebox"] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];

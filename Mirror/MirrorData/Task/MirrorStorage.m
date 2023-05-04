@@ -18,7 +18,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 #pragma mark - Public
 
-+ (void)createTask:(MirrorDataModel *)task
++ (void)createTask:(MirrorTaskModel *)task
 {
     [MirrorStorage p_createTask:task];
     [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"Create"];
@@ -26,7 +26,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_createTask:(MirrorDataModel *)task
++ (void)p_createTask:(MirrorTaskModel *)task
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     [mirrorDict setValue:task forKey:task.taskName];
@@ -45,11 +45,11 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_deleteTask:(NSString *)taskName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    NSInteger order = ((MirrorDataModel *)mirrorDict[taskName]).priority;
+    NSInteger order = ((MirrorTaskModel *)mirrorDict[taskName]).priority;
     [mirrorDict removeObjectForKey:taskName];
     for (id key in mirrorDict) {
-        if (((MirrorDataModel *)mirrorDict[key]).priority > order) {
-            ((MirrorDataModel *)mirrorDict[key]).priority--;
+        if (((MirrorTaskModel *)mirrorDict[key]).priority > order) {
+            ((MirrorTaskModel *)mirrorDict[key]).priority--;
         }
     }
     [MirrorStorage saveMirrorData:mirrorDict];
@@ -66,7 +66,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_archiveTask:(NSString *)taskName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    ((MirrorDataModel *)mirrorDict[taskName]).isArchived = YES;
+    ((MirrorTaskModel *)mirrorDict[taskName]).isArchived = YES;
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
@@ -81,7 +81,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_cancelArchiveTask:(NSString *)taskName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    ((MirrorDataModel *)mirrorDict[taskName]).isArchived = NO;
+    ((MirrorTaskModel *)mirrorDict[taskName]).isArchived = NO;
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
@@ -96,7 +96,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_editTask:(NSString *)oldName name:(NSString *)newName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    MirrorDataModel *task = mirrorDict[oldName];
+    MirrorTaskModel *task = mirrorDict[oldName];
     [mirrorDict removeObjectForKey:oldName];
     task.taskName = newName;
     [mirrorDict setValue:task forKey:newName];
@@ -114,11 +114,11 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_editTask:(NSString *)taskName color:(MirrorColorType)color
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    ((MirrorDataModel *)mirrorDict[taskName]).color = color;
+    ((MirrorTaskModel *)mirrorDict[taskName]).color = color;
     [MirrorStorage saveMirrorData:mirrorDict];
 }
 
-+ (void)reorderTasks:(NSMutableArray <MirrorDataModel *> *)taskArray
++ (void)reorderTasks:(NSMutableArray <MirrorTaskModel *> *)taskArray
 {
     [MirrorStorage p_reorderTasks:taskArray];
     [MirrorStorage printTask:nil info:@"Edit order"];
@@ -126,11 +126,11 @@ static NSString *const kMirrorDict = @"mirror_dict";
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
-+ (void)p_reorderTasks:(NSMutableArray <MirrorDataModel *> *)taskArray
++ (void)p_reorderTasks:(NSMutableArray <MirrorTaskModel *> *)taskArray
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     for (int i=0; i<taskArray.count; i++) {
-        MirrorDataModel *task = taskArray[i];
+        MirrorTaskModel *task = taskArray[i];
         task.priority = i;
         [mirrorDict setValue:task forKey:task.taskName]; // 每一个order都要重置
     }
@@ -160,7 +160,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 在本地取出task
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
-    MirrorDataModel *task = mirrorDict[taskName];
+    MirrorTaskModel *task = mirrorDict[taskName];
     // 给task创建一个新的period，并给出这个period的起始时间
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
     NSMutableArray *newPeriod = [[NSMutableArray alloc] initWithArray:@[@(round([date timeIntervalSince1970]))]];
@@ -187,7 +187,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task以便作修改
-    MirrorDataModel *task = mirrorDict[taskName];
+    MirrorTaskModel *task = mirrorDict[taskName];
     // 将最后一个period取出来，给它一个结束时间
     NSMutableArray *allPeriods = [[NSMutableArray alloc] initWithArray:task.periods];
     if (allPeriods.count > index) {
@@ -244,7 +244,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     for (id taskName in mirrorDict.allKeys) {
         if ([taskName isEqualToString:newTaskName]) {
-            MirrorDataModel *task = mirrorDict[taskName];
+            MirrorTaskModel *task = mirrorDict[taskName];
             if (task.isArchived) {
                 return TaskNameExistsTypeExistsInArchivedTasks;
             } else {
@@ -266,7 +266,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_deletePeriodWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    MirrorDataModel *task = mirrorDict[taskName];
+    MirrorTaskModel *task = mirrorDict[taskName];
     [task.periods removeObjectAtIndex:index];
     [mirrorDict setValue:task forKey:taskName];
     [MirrorStorage saveMirrorData:mirrorDict];
@@ -285,7 +285,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     // 在本地取出mirror dict
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     // 取出这个task，直接使用start/stop task进行修改。
-    MirrorDataModel *task = mirrorDict[taskName];
+    MirrorTaskModel *task = mirrorDict[taskName];
     long oldStartTime = [task.periods[index][0] longValue];
     long oldEndTime = [task.periods[index][1] longValue];
     if (isStartTime) {
@@ -303,10 +303,10 @@ static NSString *const kMirrorDict = @"mirror_dict";
 
 
 
-+ (MirrorDataModel *)getTaskFromDB:(NSString *)taskName
++ (MirrorTaskModel *)getTaskFromDB:(NSString *)taskName
 {
     NSMutableDictionary *tasks = [MirrorStorage retriveMirrorData];
-    MirrorDataModel *task = tasks[taskName];
+    MirrorTaskModel *task = tasks[taskName];
 //    [MirrorStorage printTask:[MirrorStorage retriveMirrorData][task.taskName] info:@"-------Getting one task-------"];
     return task;
 }
@@ -317,7 +317,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSMutableDictionary *dict = [MirrorStorage retriveMirrorData];
     for (id taskname in dict.allKeys) {
-        MirrorDataModel *task = dict[taskname];
+        MirrorTaskModel *task = dict[taskname];
         NSMutableArray <NSMutableArray *> *cleanPeriods = [NSMutableArray new];
         for (int i=0; i<task.periods.count; i++) {
             NSMutableArray *period = task.periods[i];
@@ -345,7 +345,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     for (id key in mirrorDict.allKeys) {
-        MirrorDataModel *task = mirrorDict[key];
+        MirrorTaskModel *task = mirrorDict[key];
         NSMutableArray<NSMutableArray *> *periods = [NSMutableArray new];
         for (int i=0; i<task.periods.count; i++) {
             NSMutableArray *period = [NSMutableArray new];
@@ -369,13 +369,13 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (NSMutableDictionary *)retriveMirrorData // 解档
 {
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorDict];
-    NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorDataModel.class,NSMutableDictionary.class,NSArray.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
+    NSMutableDictionary *mirrorDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class,NSMutableDictionary.class,NSArray.class, NSMutableArray.class]] fromData:storedEncodedObject error:nil];
     return mirrorDict ?: [NSMutableDictionary new];
 }
 
 #pragma mark - Log
 
-+ (void)printTask:(MirrorDataModel *)task info:(NSString *)info
++ (void)printTask:(MirrorTaskModel *)task info:(NSString *)info
 {
     if (!task) NSLog(@"❗️❗️❗️❗️❗️❗️❗️❗️ACTION FAILED❗️❗️❗️❗️❗️❗️❗️❗️");
     if (info) NSLog(@"%@%@", info, [UIColor getLongEmoji:task.color]);

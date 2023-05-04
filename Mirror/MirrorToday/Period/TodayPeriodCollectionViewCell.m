@@ -49,7 +49,7 @@ static const CGFloat kVerticalPadding = 10;
 
 - (void)updateCellInfo
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     self.backgroundColor = [UIColor mirrorColorNamed:task.color];
     BOOL periodsIsFinished = task.periods[self.periodIndex].count == 2;
     self.taskNameLabel.text = self.taskName;
@@ -233,7 +233,7 @@ static const CGFloat kVerticalPadding = 10;
 
 - (NSDate *)startMaxDate
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     long maxTime = 0;
     // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
     maxTime = [task.periods[self.periodIndex][1] longValue] - kMinSeconds; // 至多比自己的结束时间小一分钟
@@ -242,7 +242,7 @@ static const CGFloat kVerticalPadding = 10;
 
 - (NSDate *)endMaxDate
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     long maxTime = 0;
     // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
     if (self.periodIndex-1 >= 0) { // 如果有下一个task的话
@@ -257,7 +257,7 @@ static const CGFloat kVerticalPadding = 10;
 
 - (NSDate *)startMinDate
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     long minTime = 0;
     // 对于一个开始时间来说，它最小不能小于上一个task的结束时间（如果有上一个task的话），最大不能大于自己的结束时间
     if (self.periodIndex+1 < task.periods.count) { //如果有上一个task的话
@@ -272,7 +272,7 @@ static const CGFloat kVerticalPadding = 10;
 
 - (NSDate *)endMinDate
 {
-    MirrorDataModel *task = [MirrorStorage getTaskFromDB:self.taskName];
+    MirrorTaskModel *task = [MirrorStorage getTaskFromDB:self.taskName];
     long minTime = 0;
     // 对于一个结束时间来说，它最小不能小于自己的开始时间，最大不能大于下一个task的开始时间（如果有下一个task的话）
     minTime = [task.periods[self.periodIndex][0] longValue] + kMinSeconds;// 至少比开始的时间多一分钟
