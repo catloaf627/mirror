@@ -16,7 +16,7 @@
     if (self) {
         _taskName = taskName;
         _createdTime = createTime;
-        _order = order;
+        _priority = order;
         _color = colorType;
         _isArchived = isArchived;
         _periods = periods;
@@ -49,7 +49,7 @@
     [encoder encodeInt:[@(self.color) intValue] forKey:@"color"];
     [encoder encodeObject:self.periods forKey:@"periods"];
     [encoder encodeInt64:self.createdTime forKey:@"created_time"];
-    [encoder encodeInt64:self.order forKey:@"order"];
+    [encoder encodeInt64:self.priority forKey:@"order"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -60,7 +60,7 @@
         self.color = [decoder decodeIntForKey:@"color"];
         self.periods = [decoder decodeObjectForKey:@"periods"];
         self.createdTime = [decoder decodeInt64ForKey:@"created_time"];
-        self.order = [decoder decodeInt64ForKey:@"order"];
+        self.priority = [decoder decodeInt64ForKey:@"order"];
     }
     return self;
 }

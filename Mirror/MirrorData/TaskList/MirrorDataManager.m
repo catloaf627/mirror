@@ -79,7 +79,7 @@
     if (printDetailsToDebug) NSLog(@"数据库里的task个数 %@", @(allTasks.count));
     for (int taskIndex=0; taskIndex<allTasks.count; taskIndex++) {
         MirrorDataModel *task = allTasks[taskIndex];
-        MirrorDataModel *targetTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime order:task.order colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
+        MirrorDataModel *targetTask = [[MirrorDataModel alloc] initWithTitle:task.taskName createdTime:task.createdTime order:task.priority colorType:task.color isArchived:task.isArchived periods:[NSMutableArray new] isAddTask:NO];
         BOOL targetTaskIsEmpty = YES;
         for (int periodIndex=0; periodIndex<task.periods.count; periodIndex++) {
             NSMutableArray *period = task.periods[periodIndex];

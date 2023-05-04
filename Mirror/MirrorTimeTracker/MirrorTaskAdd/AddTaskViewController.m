@@ -68,7 +68,7 @@ static CGFloat const kHeightRatio = 0.8;
         [self dismissViewControllerAnimated:YES completion:^{
             self.brandNewTaskModel.taskName = currentText; //taskname退出时更新
             self.brandNewTaskModel.createdTime = (long)[[NSDate now] timeIntervalSince1970]; //获取当前时间
-            self.brandNewTaskModel.order = [MirrorStorage retriveMirrorData].allKeys.count; //获取当前任务数量
+            self.brandNewTaskModel.priority = [MirrorStorage retriveMirrorData].allKeys.count; //获取当前任务数量
             [MirrorStorage createTask:self.brandNewTaskModel];
         }];
     }

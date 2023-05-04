@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) MirrorColorType color;
 @property (nonatomic, strong) NSMutableArray<NSMutableArray *> *periods;
 @property (nonatomic, assign) long createdTime;
-@property (nonatomic, assign) NSInteger order;
+@property (nonatomic, assign) NSInteger priority;
 // 通过本地计算
 @property (nonatomic, assign) BOOL isOngoing;
 // 外部赋值

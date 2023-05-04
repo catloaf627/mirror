@@ -45,11 +45,11 @@ static NSString *const kMirrorDict = @"mirror_dict";
 + (void)p_deleteTask:(NSString *)taskName
 {
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
-    NSInteger order = ((MirrorDataModel *)mirrorDict[taskName]).order;
+    NSInteger order = ((MirrorDataModel *)mirrorDict[taskName]).priority;
     [mirrorDict removeObjectForKey:taskName];
     for (id key in mirrorDict) {
-        if (((MirrorDataModel *)mirrorDict[key]).order > order) {
-            ((MirrorDataModel *)mirrorDict[key]).order--;
+        if (((MirrorDataModel *)mirrorDict[key]).priority > order) {
+            ((MirrorDataModel *)mirrorDict[key]).priority--;
         }
     }
     [MirrorStorage saveMirrorData:mirrorDict];
@@ -131,7 +131,7 @@ static NSString *const kMirrorDict = @"mirror_dict";
     NSMutableDictionary *mirrorDict = [MirrorStorage retriveMirrorData];
     for (int i=0; i<taskArray.count; i++) {
         MirrorDataModel *task = taskArray[i];
-        task.order = i;
+        task.priority = i;
         [mirrorDict setValue:task forKey:task.taskName]; // 每一个order都要重置
     }
     [MirrorStorage saveMirrorData:mirrorDict];
