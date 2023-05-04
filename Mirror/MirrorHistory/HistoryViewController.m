@@ -28,7 +28,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 @interface HistoryViewController () <SpanLegendDelegate, SpanHistogramDelegate, UIViewControllerTransitioningDelegate>
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> *data;
+@property (nonatomic, strong) NSMutableArray<MirrorDataModel *>  *data;
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -64,6 +64,7 @@ static CGFloat const kLeftRightSpacing = 20;
         // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchShowIndexNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchWeekStartsOnNotification object:nil]; // 比其他vc多监听一个week starts on通知
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动) 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
@@ -439,7 +440,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 #pragma mark - Data source
 
-- (NSMutableArray<MirrorTaskModel *> *)data
+- (NSMutableArray<MirrorDataModel *> *)data
 {
     if (!_data) {
         _data = [NSMutableArray new];

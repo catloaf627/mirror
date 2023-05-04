@@ -22,12 +22,11 @@
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
     // nickname
     [mirrorDict setValue:@[@"nickname", @"我的昵称"] forKey:@"nickname"];
-    // Profile cell - theme
+    // Settings
     [mirrorDict setValue:@[@"Apply darkmode", @"启用深色模式"] forKey:@"apply_darkmode"];
-    // Profile cell - language
     [mirrorDict setValue:@[@"Apply Chinese", @"使用中文"] forKey:@"apply_chinese"];
-    // Profile cell - week starts on Monday
     [mirrorDict setValue:@[@"Week starts on Monday", @"将周一作为一周的第一天"] forKey:@"week_starts_on_Monday"];
+    [mirrorDict setValue:@[@"Show record index", @"展示记录的序号"] forKey:@"show_record_index"];
     // Profile edit cell - hint
     [mirrorDict setValue:@[@"Click task name to edit (Your data won't be affected)", @"点击任务名称进行编辑（任务数据并不会受到影响）"] forKey:@"edit_taskname_hint"];
     // Profile edit cell

@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)identifier;
 - (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
-- (void)showOrHideOriginalIndex;
 
 @end
 

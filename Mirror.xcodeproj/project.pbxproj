@@ -43,6 +43,7 @@
 		4AC1FDBD2A0384A600CDCED9 /* MirrorRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBC2A0384A600CDCED9 /* MirrorRecordModel.m */; };
 		4AC1FDC02A03B05100CDCED9 /* MirrorDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBF2A03B05100CDCED9 /* MirrorDataModel.m */; };
 		4AC1FDC42A04122400CDCED9 /* AllRecordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDC32A04122400CDCED9 /* AllRecordsViewController.m */; };
+		4AC1FDC72A0418F000CDCED9 /* ShowIndexCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDC62A0418F000CDCED9 /* ShowIndexCollectionViewCell.m */; };
 		4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ACB422D29EEA411005EECC4 /* LeftAnimation.m */; };
 		4ADDC5B128E4704B006F02DE /* AvatarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B028E4704B006F02DE /* AvatarCollectionViewCell.m */; };
 		4ADDC5B428E4762E006F02DE /* ThemeCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ADDC5B328E4762E006F02DE /* ThemeCollectionViewCell.m */; };
@@ -135,6 +136,8 @@
 		4AC1FDBF2A03B05100CDCED9 /* MirrorDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorDataModel.m; sourceTree = "<group>"; };
 		4AC1FDC22A04122400CDCED9 /* AllRecordsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AllRecordsViewController.h; sourceTree = "<group>"; };
 		4AC1FDC32A04122400CDCED9 /* AllRecordsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AllRecordsViewController.m; sourceTree = "<group>"; };
+		4AC1FDC52A0418F000CDCED9 /* ShowIndexCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShowIndexCollectionViewCell.h; sourceTree = "<group>"; };
+		4AC1FDC62A0418F000CDCED9 /* ShowIndexCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShowIndexCollectionViewCell.m; sourceTree = "<group>"; };
 		4ACB422C29EEA411005EECC4 /* LeftAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeftAnimation.h; sourceTree = "<group>"; };
 		4ACB422D29EEA411005EECC4 /* LeftAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LeftAnimation.m; sourceTree = "<group>"; };
 		4ADDC5AF28E4704B006F02DE /* AvatarCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AvatarCollectionViewCell.h; sourceTree = "<group>"; };
@@ -459,6 +462,8 @@
 				4ADDC5B628E476A8006F02DE /* LanguageCollectionViewCell.m */,
 				4AFA3B7529E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.h */,
 				4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */,
+				4AC1FDC52A0418F000CDCED9 /* ShowIndexCollectionViewCell.h */,
+				4AC1FDC62A0418F000CDCED9 /* ShowIndexCollectionViewCell.m */,
 			);
 			path = SettingsCells;
 			sourceTree = "<group>";
@@ -664,6 +669,7 @@
 				4A099FAE29DD57AE002683A1 /* MirrorTool.m in Sources */,
 				4A099FAA29DCFE54002683A1 /* MirrorTaskModel.m in Sources */,
 				4AE5E88E2A013A1A004228C1 /* GridComponent.m in Sources */,
+				4AC1FDC72A0418F000CDCED9 /* ShowIndexCollectionViewCell.m in Sources */,
 				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,
 				4AE5E8952A02644E004228C1 /* TheEndFooterCollectionViewCell.m in Sources */,
 				4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */,

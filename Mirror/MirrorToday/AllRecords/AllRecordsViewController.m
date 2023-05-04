@@ -75,8 +75,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    TaskPeriodCollectionViewCell *cell = (TaskPeriodCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    [cell showOrHideOriginalIndex];
+    
 }
 
 #pragma mark - UICollectionViewDataSource

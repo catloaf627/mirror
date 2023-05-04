@@ -109,4 +109,18 @@
     [[NSUserDefaults standardUserDefaults] setInteger:color forKey:@"MirrorUserPreferredShadeColor"];
 }
 
++ (BOOL)appliedShowIndex
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredShowIndex"];
+}
++ (void)switchShowIndex
+{
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredShowIndex"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredShowIndex"];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredShowIndex"];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchShowIndexNotification object:nil];
+}
+
 @end

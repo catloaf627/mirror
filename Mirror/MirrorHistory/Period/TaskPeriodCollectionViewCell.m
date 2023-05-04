@@ -52,7 +52,8 @@ static const CGFloat kVerticalPadding = 10;
     MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:self.taskName];
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
     self.backgroundColor = [UIColor mirrorColorNamed:task.color];
-    self.dateLabel.text = [MirrorTimeText YYYYmmddWeekdayWithStart:allRecords[self.periodIndex].startTime];
+    NSString *prefix =  [MirrorSettings appliedShowIndex] ? [[@"No." stringByAppendingString:[@(self.periodIndex) stringValue]] stringByAppendingString:@" "] : @"";
+    self.dateLabel.text = [prefix stringByAppendingString:[MirrorTimeText YYYYmmddWeekdayWithStart:allRecords[self.periodIndex].startTime]];
     long start = allRecords[self.periodIndex].startTime;
     long end =  allRecords[self.periodIndex].endTime;
     self.totalLabel.text = [MirrorTimeText XdXhXmXsShortWithstart:start end:end];
@@ -109,17 +110,6 @@ static const CGFloat kVerticalPadding = 10;
 }
 
 #pragma mark - Actions
-
-- (void)showOrHideOriginalIndex
-{
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
-    if ([self.dateLabel.text containsString:@"No."]) {
-        self.dateLabel.text = [MirrorTimeText YYYYmmddWeekdayWithStart:allRecords[self.periodIndex].startTime];
-    } else {
-        NSString *indexStr =  [[@"No." stringByAppendingString:[@(self.periodIndex) stringValue]] stringByAppendingString:@" "];
-        self.dateLabel.text = [indexStr stringByAppendingString:[MirrorTimeText YYYYmmddWeekdayWithStart:allRecords[self.periodIndex].startTime]];
-    }
-}
 
 - (void)changeStartTime
 {

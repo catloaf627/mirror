@@ -47,19 +47,6 @@ static const CGFloat kVerticalPadding = 10;
     [self p_setupUI];
 }
 
-- (void)showOrHideOriginalIndex
-{
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
-    long start = allRecords[self.periodIndex].startTime;
-    long end = allRecords[self.periodIndex].endTime;
-    if ([self.totalLabel.text containsString:@"No."]) {
-        self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
-    } else {
-        NSString *indexStr =  [[@"No." stringByAppendingString:[@(self.periodIndex) stringValue]] stringByAppendingString:@" "];
-        self.totalLabel.text = [indexStr stringByAppendingString:[[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]]];
-    }
-}
-
 - (void)updateCellInfo
 {
     MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:self.taskName];
@@ -68,7 +55,8 @@ static const CGFloat kVerticalPadding = 10;
     self.taskNameLabel.text = self.taskName;
     long start = allRecords[self.periodIndex].startTime;
     long end = allRecords[self.periodIndex].endTime;
-    self.totalLabel.text = [[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]];
+    NSString *prefix =  [MirrorSettings appliedShowIndex] ? [[@"No." stringByAppendingString:[@(self.periodIndex) stringValue]] stringByAppendingString:@" "] : @"";
+    self.totalLabel.text = [prefix stringByAppendingString:[[MirrorLanguage mirror_stringWithKey:@"lasted"] stringByAppendingString:[MirrorTimeText XdXhXmXsShortWithstart:start end:end]]];
     self.startPicker.date = [NSDate dateWithTimeIntervalSince1970:start];
     self.startPicker.maximumDate = [self startMaxDate];
     self.startPicker.minimumDate = [self startMinDate];

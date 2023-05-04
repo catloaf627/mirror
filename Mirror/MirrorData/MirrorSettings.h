@@ -23,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)appliedWeekStarsOnMonday;
 + (void)switchWeekStartsOn;
 
+// Show or hide original index
++ (BOOL)appliedShowIndex;
++ (void)switchShowIndex;
+
 // Pie chart
 + (BOOL)appliedPieChart;
 + (void)switchChartType;
