@@ -11,7 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TaskTotalHeader : UICollectionViewCell
 
-- (void)configWithTaskname:(NSString *)taskname;
+- (void)config; // 所有record的header
+
+- (void)configWithTaskname:(NSString *)taskname; // 某一task所有record的header
 
 @end
 

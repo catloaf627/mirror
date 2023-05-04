@@ -117,6 +117,9 @@
     // Grid VC
     [mirrorDict setValue:@[@"Activities", @"活动记录"] forKey:@"activities"];
     
+    // All records
+    [mirrorDict setValue:@[@"All records", @"所有记录"] forKey:@"all_records"];
+    
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }

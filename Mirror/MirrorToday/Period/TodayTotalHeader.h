@@ -10,7 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol PushAllRecordDelegate <NSObject>
+
+@end
+
 @interface TodayTotalHeader : UICollectionViewCell
+
+@property (nonatomic, weak) UIViewController<PushAllRecordDelegate> *delegate;
 
 - (void)configWithRecords:(NSMutableArray<MirrorRecordModel *> *)todayRecords;
 
