@@ -234,7 +234,6 @@
 			children = (
 				4A0D40FA29EFE6BD00F13EAE /* HistoryViewController.h */,
 				4A0D40FB29EFE6BD00F13EAE /* HistoryViewController.m */,
-				4AE1153429ECF6F7003CBB39 /* Period */,
 				4A410A2A29EA5D750007003B /* Legend */,
 				4A410A2B29EA5D800007003B /* Histogram */,
 				4A410A2929EA5D650007003B /* PieChart */,
@@ -292,7 +291,6 @@
 				4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */,
 				4A3DC92D2A0106DD00679C11 /* Grid */,
 				4A88211029F26094009E422C /* Period */,
-				4AC1FDC12A0411EB00CDCED9 /* AllRecords */,
 			);
 			path = MirrorToday;
 			sourceTree = "<group>";
@@ -314,6 +312,7 @@
 		4A379B3E28E0379E00785CAE /* MirrorCustomize */ = {
 			isa = PBXGroup;
 			children = (
+				4AE1153429ECF6F7003CBB39 /* TaskRecords */,
 				4AE5E88F2A0253A3004228C1 /* View */,
 				4ACB422F29EECBC4005EECC4 /* Animations */,
 				4A099FAC29DD57AE002683A1 /* MirrorTool.h */,
@@ -398,15 +397,6 @@
 			path = Period;
 			sourceTree = "<group>";
 		};
-		4AC1FDC12A0411EB00CDCED9 /* AllRecords */ = {
-			isa = PBXGroup;
-			children = (
-				4AC1FDC22A04122400CDCED9 /* AllRecordsViewController.h */,
-				4AC1FDC32A04122400CDCED9 /* AllRecordsViewController.m */,
-			);
-			path = AllRecords;
-			sourceTree = "<group>";
-		};
 		4ACB422F29EECBC4005EECC4 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
@@ -431,9 +421,11 @@
 			path = MirrorTaskAdd;
 			sourceTree = "<group>";
 		};
-		4AE1153429ECF6F7003CBB39 /* Period */ = {
+		4AE1153429ECF6F7003CBB39 /* TaskRecords */ = {
 			isa = PBXGroup;
 			children = (
+				4AC1FDC22A04122400CDCED9 /* AllRecordsViewController.h */,
+				4AC1FDC32A04122400CDCED9 /* AllRecordsViewController.m */,
 				4A410A2F29EA68870007003B /* TaskRecordViewController.h */,
 				4A410A3029EA68870007003B /* TaskRecordViewController.m */,
 				4A410A3229EA6BB60007003B /* TaskPeriodCollectionViewCell.h */,
@@ -441,7 +433,7 @@
 				4A88211A29F4A08D009E422C /* TaskTotalHeader.h */,
 				4A88211B29F4A08D009E422C /* TaskTotalHeader.m */,
 			);
-			path = Period;
+			path = TaskRecords;
 			sourceTree = "<group>";
 		};
 		4AE5E88F2A0253A3004228C1 /* View */ = {
@@ -491,10 +483,10 @@
 			children = (
 				4AFB77B128DF4A3B0064CBCA /* Info.plist */,
 				4AFB77AC28DF4A3B0064CBCA /* Assets.xcassets */,
-				4A406C1B29073D1D001E83A1 /* MirrorData */,
-				4A379B3E28E0379E00785CAE /* MirrorCustomize */,
 				4A379B3928E0340600785CAE /* MirrorSetups */,
 				4A379B3D28E0372700785CAE /* MirrorSettings */,
+				4A406C1B29073D1D001E83A1 /* MirrorData */,
+				4A379B3E28E0379E00785CAE /* MirrorCustomize */,
 				4A379B3B28E0370400785CAE /* MirrorTimeTracker */,
 				4A379B3C28E0371700785CAE /* MirrorToday */,
 				4A0D40F929EFE28300F13EAE /* MirrorHistory */,
