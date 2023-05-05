@@ -6,14 +6,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GridComponent.h"
+#import "MirrorStorage.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GridCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
-- (void)configWithGridComponent:(GridComponent *)component isSelected:(BOOL)isSelected;
+- (void)configWithData:(NSMutableArray<MirrorDataModel *> *)data isSelected:(BOOL)isSelected;
 
 @end
 

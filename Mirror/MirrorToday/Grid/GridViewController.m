@@ -15,7 +15,6 @@
 #import "MirrorTaskModel.h"
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
-#import "GridComponent.h"
 #import "SpanLegend.h"
 #import "MirrorPiechart.h"
 #import "MirrorTimeText.h"
@@ -33,7 +32,8 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) UIView *weekdayView;
 @property (nonatomic, strong) SpanLegend *legendView;
 @property (nonatomic, strong) MirrorPiechart *piechartView;
-@property (nonatomic, strong) NSMutableDictionary *data;
+@property (nonatomic, strong) NSMutableArray<NSString *> *keys;
+@property (nonatomic, strong) NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData;
 @property (nonatomic, assign) NSInteger startTimestamp;
 @property (nonatomic, assign) NSInteger selectedCellIndex;
 @property (nonatomic, assign) MirrorColorType randomColorType;
@@ -198,16 +198,13 @@ static CGFloat const kCellSpacing = 3;
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return  self.data.count;
+    return  self.keys.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     GridCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[GridCollectionViewCell identifier] forIndexPath:indexPath];
-    NSInteger targetTimestamp = _startTimestamp + indexPath.item * 86400;
-    GridComponent *grid = self.data[[@(targetTimestamp) stringValue]];
-    BOOL isSelected = indexPath.item==_selectedCellIndex;
-    [cell configWithGridComponent:grid isSelected:isSelected];
+    [cell configWithData:self.gridData[self.keys[indexPath.item]] isSelected:indexPath.item==_selectedCellIndex];
     return cell;
 }
 
@@ -402,12 +399,10 @@ static CGFloat const kCellSpacing = 3;
     return _randomColorType;
 }
 
-
-// key是00:00的timestamp，value是GridComponent
-- (NSMutableDictionary *)data
+- (NSMutableArray<NSString *> *)keys
 {
-    if (!_data) {
-        _data = [NSMutableDictionary new];
+    if (!_keys) {
+        _keys = [NSMutableArray<NSString *> new];
         NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
         NSInteger minTimestamp = NSIntegerMax;
         NSInteger maxTimestamp = NSIntegerMin;
@@ -466,21 +461,27 @@ static CGFloat const kCellSpacing = 3;
             components.second = 0;
             long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970]; // 今天的timestamp
             _selectedCellIndex = (timestamp-_startTimestamp)/86400; // 今天cell的位置
-            // 添加前面的空cell
+            // 添加前面的补位的日期
             for (int i=0; i<numOfInvalidCell; i++) {
                 NSInteger invalidDateTimestamp = [minDate timeIntervalSince1970] - (numOfInvalidCell-i)*86400;
-                GridComponent *grid = [[GridComponent alloc] initWithValid:NO thatDayData:[NSMutableArray new]];
-                [_data setValue:grid forKey:[@(invalidDateTimestamp) stringValue]];
+                [_keys addObject:[@(invalidDateTimestamp) stringValue]];
             }
-            // 添加valid cell
+            // 添加第一个record和最后一个record之间的日期
             for (int i=0; i<dateNum; i++) {
                 NSInteger validDateTimestamp = [minDate timeIntervalSince1970] + i*86400;
-                GridComponent *grid = [[GridComponent alloc] initWithValid:YES thatDayData:[MirrorStorage getAllRecordsInTaskOrderWithStart:validDateTimestamp end:validDateTimestamp+86400]];
-                [_data setValue:grid forKey:[@(validDateTimestamp) stringValue]];
+                [_keys addObject:[@(validDateTimestamp) stringValue]];
             }
         }
     }
-    return _data;
+    return _keys;
+}
+
+- (NSMutableDictionary<NSString *, NSMutableArray<MirrorDataModel *> *> *)gridData
+{
+    if (!_gridData) {
+        _gridData = [MirrorStorage getGridData];
+    }
+    return _gridData;
 }
 
 #pragma mark - Privates

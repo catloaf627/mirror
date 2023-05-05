@@ -437,8 +437,78 @@ static NSString *const kMirrorRecords = @"mirror_records";
     return res;
 }
 
++ (NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *)getGridData
+{
+    NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData = [NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> new];
+    
+    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+     
+    if (allRecords.count == 0) return gridData;
+    
+    NSString *key = [self keyOfTime:allRecords[0].startTime];
+    NSMutableArray<MirrorRecordModel *> *recordsInTimeOrder = [NSMutableArray new];
+    for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
+        MirrorRecordModel *record = allRecords[recordIndex];
+        record.originalIndex = recordIndex;
+        if (![[self keyOfTime:record.startTime] isEqualToString:key]) { // 下一天了
+            // sort
+            NSMutableArray<MirrorDataModel *> *oneday = [NSMutableArray new];
+            for (int i=0; i<allTasks.count; i++) {
+                NSMutableArray<MirrorRecordModel *> *recordsInTaskOrder = [NSMutableArray new];
+                for (int j=0; j<recordsInTimeOrder.count; j++) {
+                    if ([recordsInTimeOrder[j].taskName isEqualToString:allTasks[i].taskName]) {
+                        [recordsInTaskOrder addObject:recordsInTimeOrder[j]];
+                    }
+                }
+                MirrorDataModel *oneDayOneTask = [[MirrorDataModel alloc] initWithTask:allTasks[i] records:recordsInTaskOrder];
+                [oneday addObject:oneDayOneTask];
+            }
+            // save
+            [gridData setValue:oneday forKey:key];
+            // next loop
+            key = [self keyOfTime:record.startTime];
+            recordsInTimeOrder = [NSMutableArray new];
+            [recordsInTimeOrder addObject:record];
+        } else { // 还在这一天
+            [recordsInTimeOrder addObject:record];
+        }
+    }
+    
+    // sort
+    NSMutableArray<MirrorDataModel *> *oneday = [NSMutableArray new];
+    for (int i=0; i<allTasks.count; i++) {
+        NSMutableArray<MirrorRecordModel *> *recordsInTaskOrder = [NSMutableArray new];
+        for (int j=0; j<recordsInTimeOrder.count; j++) {
+            if ([recordsInTimeOrder[j].taskName isEqualToString:allTasks[i].taskName]) {
+                [recordsInTaskOrder addObject:recordsInTimeOrder[j]];
+            }
+        }
+        MirrorDataModel *oneDayOneTask = [[MirrorDataModel alloc] initWithTask:allTasks[i] records:recordsInTaskOrder];
+        [oneday addObject:oneDayOneTask];
+    }
+    // save
+    [gridData setValue:oneday forKey:key];
+    
+    return gridData;
+}
+
 
 #pragma mark - Privates
+
++ (NSString *)keyOfTime:(long)timestamp
+{
+    NSDate *originalDate = [NSDate dateWithTimeIntervalSince1970:timestamp];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:originalDate];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    NSDate *zeroDate = [gregorian dateFromComponents:components];
+    
+    return [@([zeroDate timeIntervalSince1970]) stringValue];
+}
 
 + (NSDate *)dateWithoutSeconds:(NSDate *)date
 {

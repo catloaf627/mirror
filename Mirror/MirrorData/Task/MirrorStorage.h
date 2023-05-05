@@ -72,24 +72,36 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 /*
  取出【某任务】从古至今的所有records
- {[此record在总表中的index], 英语, 05:00, 06:00}, {[此record在总表中的index], 英语, 08:00, 09:00}, {[此record在总表中的index], 英语, 11:00, 12:00}...
+ {originalIndex, 🌸, 05:00, 06:00}, {originalIndex, 🌸, 08:00, 09:00}, {originalIndex, 🌸, 11:00, 12:00}...
  适用场景：某任务totaltime、某任务所有records页面
  */
 + (NSMutableArray<MirrorRecordModel *> *)getAllTaskRecords:(NSString *)taskName;
 
 /*
  取出【所有任务】从【某时间】到【某时间】的所有records
- {[此record在总表中的index], 英语, 05:00, 06:00}, {[此record在总表中的index], 数学, 06:00, 07:00}..
+ {originalIndex, 🌸, 05:00, 06:00}, {originalIndex, 🪀, 06:00, 07:00}, {originalIndex, 🌸, 07:00, 08:00}..
  适用场景：目前只有today的record展示用到这个方法
  */
 + (NSMutableArray<MirrorRecordModel *> *)getAllRecordsWithStart:(long)startTime end:(long)endTime;
 
 /*
- 取出【所有任务】从【某时间】到【某时间】的所有records，并按照优先级排序 （如顺序为数学、英语）
- {[此record在总表中的index], 数学, 06:00, 07:00}, {[此record在总表中的index], 英语, 05:00, 06:00}...
- 适用场景：grid，饼图，柱形图，legend
+ 取出【所有任务】从【某时间】到【某时间】的所有records，并按照优先级排序 （如顺序为🪀、🌸）
+ 【🪀, {originalIndex, 🪀, 06:00, 07:00}】  【🌸, {originalIndex, 🌸, 05:00, 06:00},
+                                                  {originalIndex, 🌸, 07:00, 08:00}..】
+ 适用场景：饼图，柱形图，legend
  */
 + (NSMutableArray<MirrorDataModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime;
+
+/*
+ 取出【所有任务】的所有records，并按照天来切割、并且在一天的范围内按照优先级排序（🪀、🌸、👾），切割好后通过零点的时间作为key来存储
+ dateString0 =  【🪀, {originalIndex, 🪀, 06:00, 07:00}】  【🌸, {originalIndex, 🌸, 05:00, 06:00},
+                                                                {originalIndex, 🌸, 07:00, 08:00}..】
+ dateString1 =  【🪀, {originalIndex, 🪀, 06:00, 07:00}】  【🌸, {originalIndex, 🌸, 05:00, 06:00},    【👾, {originalIndex, 👾, 05:00, 06:00}
+                                                                {originalIndex, 🌸, 07:00, 08:00}..】       {originalIndex, 👾, 09:00, 10:00}
+                                                                                                            {originalIndex, 👾, 11:00, 12:00}..】
+ 适用场景：Grid vc
+ */
++ (NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *)getGridData;
 
 @end
 
