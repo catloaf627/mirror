@@ -17,7 +17,7 @@
 #import "MirrorLanguage.h"
 #import "TodayPeriodCollectionViewCell.h"
 #import "TodayTotalHeader.h"
-#import "TaskRecordViewController.h"
+#import "TaskRecordsViewController.h"
 #import "GridViewController.h"
 #import "MirrorStorage.h"
 

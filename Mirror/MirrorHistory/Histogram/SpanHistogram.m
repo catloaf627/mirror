@@ -13,7 +13,7 @@
 #import <Masonry/Masonry.h>
 #import "MirrorSettings.h"
 #import "MirrorLanguage.h"
-#import "TaskRecordViewController.h"
+#import "TaskRecordsViewController.h"
 
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
@@ -134,7 +134,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.delegate.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.data[indexPath.item].taskModel.taskName] animated:YES];
+    [self.delegate.navigationController pushViewController:[[TaskRecordsViewController alloc] initWithTaskname:self.data[indexPath.item].taskModel.taskName] animated:YES];
 }
 
 #pragma mark - Getters

@@ -1,11 +1,11 @@
 //
-//  TaskRecordViewController.m
+//  TaskRecordsViewController.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/15.
 //
 
-#import "TaskRecordViewController.h"
+#import "TaskRecordsViewController.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorMacro.h"
@@ -17,14 +17,14 @@
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TaskRecordViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForPeriodCellProtocol>
+@interface TaskRecordsViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForPeriodCellProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSString *taskName;
 
 @end
 
-@implementation TaskRecordViewController
+@implementation TaskRecordsViewController
 
 - (instancetype)initWithTaskname:(NSString *)taskName
 {

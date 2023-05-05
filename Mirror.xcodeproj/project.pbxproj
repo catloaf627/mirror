@@ -30,7 +30,7 @@
 		4A406C112906FC00001E83A1 /* ToggleCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C102906FC00001E83A1 /* ToggleCollectionViewCell.m */; };
 		4A406C1A29071939001E83A1 /* MirrorStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A406C1929071939001E83A1 /* MirrorStorage.m */; };
 		4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A2729EA51750007003B /* LegendCollectionViewCell.m */; };
-		4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3029EA68870007003B /* TaskRecordViewController.m */; };
+		4A410A3129EA68870007003B /* TaskRecordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3029EA68870007003B /* TaskRecordsViewController.m */; };
 		4A410A3429EA6BB60007003B /* TaskPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */; };
 		4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */; };
 		4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */; };
@@ -110,8 +110,8 @@
 		4A406C1929071939001E83A1 /* MirrorStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorStorage.m; sourceTree = "<group>"; };
 		4A410A2629EA51750007003B /* LegendCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegendCollectionViewCell.h; sourceTree = "<group>"; };
 		4A410A2729EA51750007003B /* LegendCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LegendCollectionViewCell.m; sourceTree = "<group>"; };
-		4A410A2F29EA68870007003B /* TaskRecordViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskRecordViewController.h; sourceTree = "<group>"; };
-		4A410A3029EA68870007003B /* TaskRecordViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskRecordViewController.m; sourceTree = "<group>"; };
+		4A410A2F29EA68870007003B /* TaskRecordsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskRecordsViewController.h; sourceTree = "<group>"; };
+		4A410A3029EA68870007003B /* TaskRecordsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskRecordsViewController.m; sourceTree = "<group>"; };
 		4A410A3229EA6BB60007003B /* TaskPeriodCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TaskPeriodCollectionViewCell.h; sourceTree = "<group>"; };
 		4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TaskPeriodCollectionViewCell.m; sourceTree = "<group>"; };
 		4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
@@ -426,8 +426,8 @@
 			children = (
 				4AC1FDC22A04122400CDCED9 /* AllRecordsViewController.h */,
 				4AC1FDC32A04122400CDCED9 /* AllRecordsViewController.m */,
-				4A410A2F29EA68870007003B /* TaskRecordViewController.h */,
-				4A410A3029EA68870007003B /* TaskRecordViewController.m */,
+				4A410A2F29EA68870007003B /* TaskRecordsViewController.h */,
+				4A410A3029EA68870007003B /* TaskRecordsViewController.m */,
 				4A410A3229EA6BB60007003B /* TaskPeriodCollectionViewCell.h */,
 				4A410A3329EA6BB60007003B /* TaskPeriodCollectionViewCell.m */,
 				4A88211A29F4A08D009E422C /* TaskTotalHeader.h */,
@@ -616,7 +616,7 @@
 				4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */,
 				4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */,
 				4AE4171928DF613D008A6A18 /* TimeViewController.m in Sources */,
-				4A410A3129EA68870007003B /* TaskRecordViewController.m in Sources */,
+				4A410A3129EA68870007003B /* TaskRecordsViewController.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,

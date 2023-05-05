@@ -1,5 +1,5 @@
 //
-//  TaskRecordViewController.h
+//  TaskRecordsViewController.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/15.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TaskRecordViewController : UIViewController
+@interface TaskRecordsViewController : UIViewController
 
 - (instancetype)initWithTaskname:(NSString *)taskName;
 

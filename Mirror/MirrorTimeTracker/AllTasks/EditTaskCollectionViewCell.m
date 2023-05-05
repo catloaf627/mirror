@@ -16,7 +16,7 @@
 #import <Masonry/Masonry.h>
 #import "MirrorTimeText.h"
 #import "MirrorSettings.h"
-#import "TaskRecordViewController.h"
+#import "TaskRecordsViewController.h"
 
 static CGFloat const kPadding = 20;
 
@@ -170,7 +170,7 @@ static CGFloat const kPadding = 20;
 
 - (void)toToTaskPeriods
 {
-    [self.delegate.navigationController pushViewController:[[TaskRecordViewController alloc] initWithTaskname:self.taskName] animated:YES];
+    [self.delegate.navigationController pushViewController:[[TaskRecordsViewController alloc] initWithTaskname:self.taskName] animated:YES];
 }
 
 #pragma mark - Getters
