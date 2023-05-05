@@ -14,6 +14,7 @@
 #import "MirrorSettings.h"
 #import "MirrorLanguage.h"
 #import "TaskRecordsViewController.h"
+#import "AllRecordsViewController.h"
 
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 
@@ -134,7 +135,11 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.delegate.navigationController pushViewController:[[TaskRecordsViewController alloc] initWithTaskname:self.data[indexPath.item].taskModel.taskName] animated:YES];
+    if (self.data.count > indexPath.item && self.data[indexPath.item].records.count > 0) {
+        AllRecordsViewController *allRecordsVC = [AllRecordsViewController new];
+        allRecordsVC.scrollToIndex = ((MirrorRecordModel *)self.data[indexPath.item].records[0]).originalIndex;
+        [self.delegate.navigationController pushViewController:allRecordsVC animated:YES];
+    }
 }
 
 #pragma mark - Getters
