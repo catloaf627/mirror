@@ -20,6 +20,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 @interface AllRecordsViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForPeriodCellProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, assign) BOOL isStartedScroll;
+@property (nonatomic, assign) BOOL isFinishedScroll;
 
 @end
 
@@ -88,6 +90,31 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     return [MirrorStorage retriveMirrorRecords].count;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.item == 0 && !_isStartedScroll) { // 展示第0个的时候scroll（一次生命周期只走一次）
+        _isStartedScroll = YES;
+        [collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_scrollToIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:YES];
+    }
+    if (indexPath.item == _scrollToIndex && !_isFinishedScroll) { // 展示第selected个的时候闪烁（一次生命周期只走一次）
+        _isFinishedScroll = YES;
+        MirrorRecordModel *record = [MirrorStorage retriveMirrorRecords][_scrollToIndex];
+        MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:record.taskName];
+        UIColor *color = [UIColor mirrorColorNamed:task.color];
+        UIColor *pulseColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:task.color]];
+        [UIView animateWithDuration:0.5 animations:^{
+            cell.backgroundColor = pulseColor;
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.5 animations:^{
+                cell.backgroundColor = color;
+            } completion:^(BOOL finished) {
+                
+            }];
+        }];
+    }
+
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath

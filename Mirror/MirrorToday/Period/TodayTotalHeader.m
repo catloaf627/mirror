@@ -12,9 +12,8 @@
 #import "MirrorLanguage.h"
 #import "MirrorPiechart.h"
 #import "MirrorTimeText.h"
-#import "AllRecordsViewController.h"
 
-@interface TodayTotalHeader () <UIGestureRecognizerDelegate>
+@interface TodayTotalHeader ()
 
 @property (nonatomic, assign) long count;
 
@@ -96,20 +95,10 @@
     long endTime = startTime + 86400;
     NSMutableArray<MirrorDataModel *> *todayRecordsSortByTasks = [MirrorStorage getAllRecordsInTaskOrderWithStart:startTime end:endTime];
     [self.pieChart updateWithData:todayRecordsSortByTasks width:80 enableInteractive:NO];
-    
-    // 点击进入所有数据
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(viewGetsTapped)];
-    tapRecognizer.numberOfTapsRequired = 1;
-    tapRecognizer.delegate = self;
-    [self addGestureRecognizer:tapRecognizer];
+
 }
 
 #pragma mark - Actions
-
-- (void)viewGetsTapped
-{
-    [self.delegate.navigationController pushViewController:[AllRecordsViewController new] animated:YES];
-}
 
 - (void)crownAnimation
 {

@@ -20,11 +20,12 @@
 #import "TaskRecordsViewController.h"
 #import "GridViewController.h"
 #import "MirrorStorage.h"
+#import "AllRecordsViewController.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UIViewControllerTransitioningDelegate, PushAllRecordDelegate>
+@interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -128,7 +129,9 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    // gizmo
+    AllRecordsViewController *allRecordsVC = [AllRecordsViewController new];
+    allRecordsVC.scrollToIndex = self.todayRecords[indexPath.item].originalIndex;
+    [self.navigationController pushViewController:allRecordsVC animated:YES];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -163,7 +166,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
         TodayTotalHeader* todayHeader = (TodayTotalHeader *)header;
         [todayHeader configWithRecords:self.todayRecords];
-        todayHeader.delegate = self;
     }
     return header;
 }
