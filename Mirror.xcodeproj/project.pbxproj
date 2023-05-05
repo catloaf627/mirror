@@ -267,7 +267,7 @@
 			path = MirrorSetups;
 			sourceTree = "<group>";
 		};
-		4A379B3B28E0370400785CAE /* MirrorTimeTracker */ = {
+		4A379B3B28E0370400785CAE /* MirrorTime */ = {
 			isa = PBXGroup;
 			children = (
 				4AE4171728DF613D008A6A18 /* TimeViewController.h */,
@@ -278,7 +278,7 @@
 				4ADDC5BF28E6FB3D006F02DE /* MirrorTaskAdd */,
 				4A32A3FF29F8C88F00DCCF57 /* AllTasks */,
 			);
-			path = MirrorTimeTracker;
+			path = MirrorTime;
 			sourceTree = "<group>";
 		};
 		4A379B3C28E0371700785CAE /* MirrorToday */ = {
@@ -286,7 +286,6 @@
 			children = (
 				4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */,
 				4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */,
-				4A3DC92D2A0106DD00679C11 /* Grid */,
 				4A88211029F26094009E422C /* Period */,
 			);
 			path = MirrorToday;
@@ -324,17 +323,6 @@
 				4A379B5328E31BD200785CAE /* MirrorMacro.m */,
 			);
 			path = MirrorCustomize;
-			sourceTree = "<group>";
-		};
-		4A3DC92D2A0106DD00679C11 /* Grid */ = {
-			isa = PBXGroup;
-			children = (
-				4A3DC92E2A0106F600679C11 /* GridViewController.h */,
-				4A3DC92F2A0106F600679C11 /* GridViewController.m */,
-				4A3DC9312A0109DA00679C11 /* GridCollectionViewCell.h */,
-				4A3DC9322A0109DA00679C11 /* GridCollectionViewCell.m */,
-			);
-			path = Grid;
 			sourceTree = "<group>";
 		};
 		4A406C1B29073D1D001E83A1 /* MirrorData */ = {
@@ -390,6 +378,17 @@
 				4A88211829F2A2B8009E422C /* TodayTotalHeader.m */,
 			);
 			path = Period;
+			sourceTree = "<group>";
+		};
+		4ABE8D6D2A05C54900569A1C /* MirrorGrid */ = {
+			isa = PBXGroup;
+			children = (
+				4A3DC92E2A0106F600679C11 /* GridViewController.h */,
+				4A3DC92F2A0106F600679C11 /* GridViewController.m */,
+				4A3DC9312A0109DA00679C11 /* GridCollectionViewCell.h */,
+				4A3DC9322A0109DA00679C11 /* GridCollectionViewCell.m */,
+			);
+			path = MirrorGrid;
 			sourceTree = "<group>";
 		};
 		4ACB422F29EECBC4005EECC4 /* Animations */ = {
@@ -482,9 +481,10 @@
 				4A379B3D28E0372700785CAE /* MirrorSettings */,
 				4A406C1B29073D1D001E83A1 /* MirrorData */,
 				4A379B3E28E0379E00785CAE /* MirrorCustomize */,
-				4A379B3B28E0370400785CAE /* MirrorTimeTracker */,
+				4A379B3B28E0370400785CAE /* MirrorTime */,
 				4A379B3C28E0371700785CAE /* MirrorToday */,
 				4A0D40F929EFE28300F13EAE /* MirrorHistory */,
+				4ABE8D6D2A05C54900569A1C /* MirrorGrid */,
 			);
 			path = Mirror;
 			sourceTree = "<group>";
