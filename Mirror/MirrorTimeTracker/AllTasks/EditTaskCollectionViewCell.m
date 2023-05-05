@@ -51,7 +51,6 @@ static CGFloat const kPadding = 20;
     MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:self.taskName];
     UIColor *color = [UIColor mirrorColorNamed:task.color];
     long createdTime = task.createdTime;
-    long totalTime = [MirrorTool getTotalTimeOfPeriods:[MirrorStorage getAllTaskRecords:self.taskName]];
     BOOL isArchived = task.isArchived;
     
     self.backgroundColor = color;
@@ -100,7 +99,7 @@ static CGFloat const kPadding = 20;
     }];
     
     [self addSubview:self.totalTimeButton];
-    [self.totalTimeButton setTitle: [[[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totalTime]] stringByAppendingString:@">"] forState:UIControlStateNormal];
+    [self.totalTimeButton setTitle: [MirrorLanguage mirror_stringWithKey:@"check_all"] forState:UIControlStateNormal];
     [self.totalTimeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(10);
         make.right.offset(-kPadding);
