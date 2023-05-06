@@ -119,10 +119,6 @@ static CGFloat const kCellSpacing = 3;
     [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
     
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
-    GridCollectionViewCell *cell = (GridCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0]];
-    if (self.keys.count > _selectedCellIndex) {
-        _dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[_selectedCellIndex] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
-    }
     [self updateHints];
 }
 
@@ -415,7 +411,16 @@ static CGFloat const kCellSpacing = 3;
     NSMutableArray<MirrorDataModel *> *data = self.gridData[self.keys[_selectedCellIndex]];
     // date label
     GridCollectionViewCell *cell = (GridCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:_selectedCellIndex inSection:0]];
-    self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[_selectedCellIndex] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
+    if (cell) { // 从did selected调用
+        self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[_selectedCellIndex] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
+    } else { // 从setup ui调用
+        long totalTime = 0;
+        for (int i=0; i<data.count; i++) {
+            totalTime = totalTime + [MirrorTool getTotalTimeOfPeriods:data[i].records];
+        }
+        self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[_selectedCellIndex] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totalTime]];
+    }
+
     // legend
     [self.legendView updateWithData:data];
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
