@@ -99,7 +99,8 @@ static CGFloat const kPadding = 20;
     }];
     
     [self addSubview:self.totalTimeButton];
-    [self.totalTimeButton setTitle: [MirrorLanguage mirror_stringWithKey:@"check_all"] forState:UIControlStateNormal];
+    long totalTime = [MirrorTool getTotalTimeOfPeriods:[MirrorStorage getAllTaskRecords:self.taskName]];
+    [self.totalTimeButton setTitle:[[[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totalTime]] stringByAppendingString:@">"]forState:UIControlStateNormal];
     [self.totalTimeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(10);
         make.right.offset(-kPadding);
