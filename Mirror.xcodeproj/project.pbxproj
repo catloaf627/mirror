@@ -238,7 +238,7 @@
 			path = MirrorHistory;
 			sourceTree = "<group>";
 		};
-		4A32A3FF29F8C88F00DCCF57 /* AllTasks */ = {
+		4A32A3FF29F8C88F00DCCF57 /* EditTasks */ = {
 			isa = PBXGroup;
 			children = (
 				4A32A40029F8C93500DCCF57 /* EditTasksViewController.h */,
@@ -248,7 +248,7 @@
 				4AE5E8932A02644E004228C1 /* TheEndFooterCollectionViewCell.h */,
 				4AE5E8942A02644E004228C1 /* TheEndFooterCollectionViewCell.m */,
 			);
-			path = AllTasks;
+			path = EditTasks;
 			sourceTree = "<group>";
 		};
 		4A379B3928E0340600785CAE /* MirrorSetups */ = {
@@ -276,7 +276,7 @@
 				015564E328E1A78E008AB06C /* TimeTrackerTaskCollectionViewCell.m */,
 				4A083B8C2904AA69002B91EB /* MirrorTracking */,
 				4ADDC5BF28E6FB3D006F02DE /* MirrorTaskAdd */,
-				4A32A3FF29F8C88F00DCCF57 /* AllTasks */,
+				4A32A3FF29F8C88F00DCCF57 /* EditTasks */,
 			);
 			path = MirrorTime;
 			sourceTree = "<group>";
