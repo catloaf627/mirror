@@ -18,7 +18,6 @@
 #import "TodayPeriodCollectionViewCell.h"
 #import "TodayTotalHeader.h"
 #import "TaskRecordsViewController.h"
-#import "GridViewController.h"
 #import "MirrorStorage.h"
 #import "AllRecordsViewController.h"
 
@@ -29,7 +28,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
-@property (nonatomic, strong) UIButton *gridButton;
 
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -49,7 +47,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchShowIndexNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
@@ -78,7 +76,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     // 更新tabbar 和 navibar
     [[MirrorTabsManager sharedInstance] updateTodayTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 1) {
-        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.gridButton];
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
     }
     [self p_setupUI];
 }
@@ -91,7 +89,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.gridButton];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
 }
 
 - (void)reloadData
@@ -200,13 +198,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self presentViewController:settingsVC animated:YES completion:nil];
 }
 
-- (void)goToGrid
-{
-    GridViewController *gridVC = [[GridViewController alloc] init];
-    [self.navigationController pushViewController:gridVC animated:YES];
-}
-
-
 #pragma mark - Getters
 
 - (UICollectionView *)collectionView
@@ -254,17 +245,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
     }
     return _settingsButton;
-}
-
-- (UIButton *)gridButton
-{
-    if (!_gridButton) {
-        _gridButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"square.grid.2x2"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_gridButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        [_gridButton addTarget:self action:@selector(goToGrid) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _gridButton;
 }
 
 - (NSMutableArray<MirrorRecordModel *> *)todayRecords

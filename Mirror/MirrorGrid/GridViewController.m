@@ -16,24 +16,36 @@
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
 #import "SpanLegend.h"
+#import "SpanHistogram.h"
 #import "MirrorPiechart.h"
 #import "MirrorTimeText.h"
 #import "MirrorTool.h"
+#import "MirrorTabsManager.h"
+#import "SettingsViewController.h"
+#import "LeftAnimation.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellWidth = 30;
 static CGFloat const kCellSpacing = 3;
 
-@interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
 
+// Data source
+@property (nonatomic, strong) NSMutableArray<NSString *> *keys;
+@property (nonatomic, strong) NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData;
+// Navibar
+@property (nonatomic, strong) UIButton *settingsButton;
+@property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
+@property (nonatomic, strong) UIButton *typeButton;
+// UI
 @property (nonatomic, strong) UILabel *monthHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UIView *weekdayView;
 @property (nonatomic, strong) SpanLegend *legendView;
+@property (nonatomic, strong) SpanHistogram *histogramView;
 @property (nonatomic, strong) MirrorPiechart *piechartView;
-@property (nonatomic, strong) NSMutableArray<NSString *> *keys;
-@property (nonatomic, strong) NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData;
+// Mark
 @property (nonatomic, assign) NSInteger startTimestamp;
 @property (nonatomic, assign) NSInteger selectedCellIndex;
 @property (nonatomic, assign) MirrorColorType randomColorType;
@@ -42,21 +54,78 @@ static CGFloat const kCellSpacing = 3;
 
 @implementation GridViewController
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        // 系统通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSignificantTimeChangeNotification object:nil];
+        // 设置通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchWeekStartsOnNotification object:nil];
+        // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStartNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskEditNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskDeleteNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskCreateNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskChangeOrderNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)restartVC
+{
+    // 将vc.view里的所有subviews全部置为nil
+    self.typeButton = nil;
+    self.monthHint = nil;
+    self.collectionView = nil;
+    self.dateLabel = nil;
+    self.weekdayView = nil;
+    self.legendView = nil;
+    self.histogramView = nil;
+    self.piechartView = nil;
+    // 将vc.view里的所有subviews从父view上移除
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    // 更新tabbar 和 navibar
+    [[MirrorTabsManager sharedInstance] updateGridTabItemWithTabController:self.tabBarController];
+    if (self.tabBarController.selectedIndex == 3) {
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
+    }
+    [self p_setupUI];
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self p_setupUI];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"activities"] leftButton:nil rightButton:nil];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
+    // gizmo 每次点进来都滚到today会不会打扰用户？
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
+}
+
+- (void)reloadData
+{
+    [self updateWeekdayView];
+    // data source
+    [self updateKeys];
+    [self updateGridData];
+    
+    [self.collectionView reloadData];
 }
 
 
@@ -112,12 +181,11 @@ static CGFloat const kCellSpacing = 3;
             make.width.height.mas_equalTo(width);
         }
     }];
-    NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-    UIImage *image = [[UIImage systemImageNamed:iconName] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
-    UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UIBarButtonItem *shadeItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(switchShadeType)];
-    shadeItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-    [self.navigationItem setRightBarButtonItem:shadeItem];
+
+    UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
+    edgeRecognizer.edges = UIRectEdgeLeft;
+    [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
+    [self.view addGestureRecognizer:edgeRecognizer];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -213,6 +281,55 @@ static CGFloat const kCellSpacing = 3;
     return CGSizeMake(kCellWidth, kCellWidth);
 }
 
+#pragma mark - Actions
+
+- (void)goToSettings
+{
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
+    settingsVC.transitioningDelegate = self;
+    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
+    [self presentViewController:settingsVC animated:YES completion:nil];
+}
+
+// 从左边缘滑动唤起settings
+- (void)edgeGestureRecognizerAction:(UIScreenEdgePanGestureRecognizer *)pan
+{
+    //产生百分比
+    CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
+    
+    process = MIN(1.0,(MAX(0.0, process)));
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+        // 触发present转场动画
+        [self goToSettings];
+    }else if (pan.state == UIGestureRecognizerStateChanged){
+        [self.interactiveTransition updateInteractiveTransition:process];
+    }else if (pan.state == UIGestureRecognizerStateEnded
+              || pan.state == UIGestureRecognizerStateCancelled){
+        if (process > 0.3) {
+            [ self.interactiveTransition finishInteractiveTransition];
+        }else{
+            [ self.interactiveTransition cancelInteractiveTransition];
+        }
+        self.interactiveTransition = nil;
+    }
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    LeftAnimation *animation = [LeftAnimation new];
+    animation.isPresent = YES;
+    return animation;
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
+{
+    return self.interactiveTransition;
+}
+
 
 
 #pragma mark - Getters
@@ -275,89 +392,93 @@ static CGFloat const kCellSpacing = 3;
 - (UIView *)weekdayView
 {
     if (!_weekdayView) {
-        _weekdayView = [UIView new];
-        BOOL appliedWeekStarsOnMonday = [MirrorSettings appliedWeekStarsOnMonday];
-        UIColor *textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
-        UILabel *day0 = [UILabel new];
-        day0.adjustsFontSizeToFitWidth = YES;
-        day0.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"monday"] : [MirrorLanguage mirror_stringWithKey:@"sunday"];
-        day0.textColor = textColor;
-        day0.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        [_weekdayView addSubview:day0];
-        [day0 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.offset(0);
-            make.top.offset(0);
-            make.height.offset(kCellWidth);
-        }];
-        UILabel *day1 = [UILabel new];
-        day1.adjustsFontSizeToFitWidth = YES;
-        day1.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"tuesday"] : [MirrorLanguage mirror_stringWithKey:@"monday"];
-        day1.textColor = textColor;
-        day1.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        [_weekdayView addSubview:day1];
-        [day1 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.offset(0);
-            make.top.mas_equalTo(day0.mas_bottom).offset(kCellSpacing);
-            make.height.offset(kCellWidth);
-        }];
-        UILabel *day2 = [UILabel new];
-        day2.adjustsFontSizeToFitWidth = YES;
-        day2.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"wednesday"] : [MirrorLanguage mirror_stringWithKey:@"tuesday"];
-        day2.textColor = textColor;
-        day2.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        [_weekdayView addSubview:day2];
-        [day2 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.offset(0);
-            make.top.mas_equalTo(day1.mas_bottom).offset(kCellSpacing);
-            make.height.offset(kCellWidth);
-        }];
-        UILabel *day3 = [UILabel new];
-        day3.adjustsFontSizeToFitWidth = YES;
-        day3.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"thursday"] : [MirrorLanguage mirror_stringWithKey:@"wednesday"];
-        day3.textColor = textColor;
-        day3.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        [_weekdayView addSubview:day3];
-        [day3 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.offset(0);
-            make.top.mas_equalTo(day2.mas_bottom).offset(kCellSpacing);
-            make.height.offset(kCellWidth);
-        }];
-        UILabel *day4 = [UILabel new];
-        day4.adjustsFontSizeToFitWidth = YES;
-        day4.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"friday"] : [MirrorLanguage mirror_stringWithKey:@"thursday"];
-        day4.textColor = textColor;
-        day4.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        [_weekdayView addSubview:day4];
-        [day4 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.offset(0);
-            make.top.mas_equalTo(day3.mas_bottom).offset(kCellSpacing);
-            make.height.offset(kCellWidth);
-        }];
-        UILabel *day5 = [UILabel new];
-        day5.adjustsFontSizeToFitWidth = YES;
-        day5.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"saturday"] : [MirrorLanguage mirror_stringWithKey:@"friday"];
-        day5.textColor = textColor;
-        day5.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        [_weekdayView addSubview:day5];
-        [day5 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.offset(0);
-            make.top.mas_equalTo(day4.mas_bottom).offset(kCellSpacing);
-            make.height.offset(kCellWidth);
-        }];
-        UILabel *day6 = [UILabel new];
-        day6.adjustsFontSizeToFitWidth = YES;
-        day6.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"sunday"] : [MirrorLanguage mirror_stringWithKey:@"saturday"];
-        day6.textColor = textColor;
-        day6.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        [_weekdayView addSubview:day6];
-        [day6 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.offset(0);
-            make.top.mas_equalTo(day5.mas_bottom).offset(kCellSpacing);
-            make.height.offset(kCellWidth);
-        }];
-        
+        [self updateWeekdayView];
     }
     return _weekdayView;
+}
+
+- (void)updateWeekdayView
+{
+    _weekdayView = [UIView new];
+    BOOL appliedWeekStarsOnMonday = [MirrorSettings appliedWeekStarsOnMonday];
+    UIColor *textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+    UILabel *day0 = [UILabel new];
+    day0.adjustsFontSizeToFitWidth = YES;
+    day0.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"monday"] : [MirrorLanguage mirror_stringWithKey:@"sunday"];
+    day0.textColor = textColor;
+    day0.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+    [_weekdayView addSubview:day0];
+    [day0 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.top.offset(0);
+        make.height.offset(kCellWidth);
+    }];
+    UILabel *day1 = [UILabel new];
+    day1.adjustsFontSizeToFitWidth = YES;
+    day1.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"tuesday"] : [MirrorLanguage mirror_stringWithKey:@"monday"];
+    day1.textColor = textColor;
+    day1.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+    [_weekdayView addSubview:day1];
+    [day1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.top.mas_equalTo(day0.mas_bottom).offset(kCellSpacing);
+        make.height.offset(kCellWidth);
+    }];
+    UILabel *day2 = [UILabel new];
+    day2.adjustsFontSizeToFitWidth = YES;
+    day2.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"wednesday"] : [MirrorLanguage mirror_stringWithKey:@"tuesday"];
+    day2.textColor = textColor;
+    day2.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+    [_weekdayView addSubview:day2];
+    [day2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.top.mas_equalTo(day1.mas_bottom).offset(kCellSpacing);
+        make.height.offset(kCellWidth);
+    }];
+    UILabel *day3 = [UILabel new];
+    day3.adjustsFontSizeToFitWidth = YES;
+    day3.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"thursday"] : [MirrorLanguage mirror_stringWithKey:@"wednesday"];
+    day3.textColor = textColor;
+    day3.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+    [_weekdayView addSubview:day3];
+    [day3 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.top.mas_equalTo(day2.mas_bottom).offset(kCellSpacing);
+        make.height.offset(kCellWidth);
+    }];
+    UILabel *day4 = [UILabel new];
+    day4.adjustsFontSizeToFitWidth = YES;
+    day4.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"friday"] : [MirrorLanguage mirror_stringWithKey:@"thursday"];
+    day4.textColor = textColor;
+    day4.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+    [_weekdayView addSubview:day4];
+    [day4 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.top.mas_equalTo(day3.mas_bottom).offset(kCellSpacing);
+        make.height.offset(kCellWidth);
+    }];
+    UILabel *day5 = [UILabel new];
+    day5.adjustsFontSizeToFitWidth = YES;
+    day5.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"saturday"] : [MirrorLanguage mirror_stringWithKey:@"friday"];
+    day5.textColor = textColor;
+    day5.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+    [_weekdayView addSubview:day5];
+    [day5 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.top.mas_equalTo(day4.mas_bottom).offset(kCellSpacing);
+        make.height.offset(kCellWidth);
+    }];
+    UILabel *day6 = [UILabel new];
+    day6.adjustsFontSizeToFitWidth = YES;
+    day6.text = appliedWeekStarsOnMonday ? [MirrorLanguage mirror_stringWithKey:@"sunday"] : [MirrorLanguage mirror_stringWithKey:@"saturday"];
+    day6.textColor = textColor;
+    day6.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+    [_weekdayView addSubview:day6];
+    [day6 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.offset(0);
+        make.top.mas_equalTo(day5.mas_bottom).offset(kCellSpacing);
+        make.height.offset(kCellWidth);
+    }];
 }
 
 - (UICollectionView *)collectionView
@@ -399,89 +520,126 @@ static CGFloat const kCellSpacing = 3;
     return _randomColorType;
 }
 
+- (UIButton *)settingsButton
+{
+    if (!_settingsButton) {
+        _settingsButton = [UIButton new];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"line.horizontal.3"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_settingsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [_settingsButton addTarget:self action:@selector(goToSettings) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _settingsButton;
+}
+
+- (UIButton *)typeButton
+{
+    if (!_typeButton) {
+        _typeButton = [UIButton new];
+        NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
+        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [_typeButton addTarget:self action:@selector(switchShadeType) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _typeButton;
+}
+
+
 - (NSMutableArray<NSString *> *)keys
 {
     if (!_keys) {
         _keys = [NSMutableArray<NSString *> new];
-        NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
-        NSInteger minTimestamp = NSIntegerMax;
-        NSInteger maxTimestamp = NSIntegerMin;
-        for (int i=0; i<allRecords.count; i++) {
-            MirrorRecordModel *record = allRecords[i];
-                NSInteger timestamp = record.startTime;
-                if (record.endTime != 0 && timestamp < minTimestamp) {
-                    minTimestamp = timestamp;
-                }
-                if (record.endTime != 0 && timestamp > maxTimestamp) {
-                    maxTimestamp = timestamp;
-                }
-        }
-        // 2023.5.1 3:00 到 2023.5.3 19:00 算三天
-        if (maxTimestamp != NSIntegerMin && minTimestamp != NSIntegerMax) { // 有 有效数据
-            if (maxTimestamp < [[NSDate now] timeIntervalSince1970]) {
-                maxTimestamp = [[NSDate now] timeIntervalSince1970]; // 如果现存最晚任务也在今天之前，设置最大时间为今天。
-            }
-            NSDate *minDate = [NSDate dateWithTimeIntervalSince1970:minTimestamp];
-            NSDate *maxDate = [NSDate dateWithTimeIntervalSince1970:maxTimestamp];
-            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-            NSDateComponents *minComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:minDate];
-            minComponents.timeZone = [NSTimeZone systemTimeZone];
-            NSDateComponents *maxComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:maxDate];
-            maxComponents.timeZone = [NSTimeZone systemTimeZone];
-            
-            minComponents.hour = 0;
-            minComponents.minute = 0;
-            minComponents.second = 0;
-            maxComponents.hour = 0;
-            maxComponents.minute = 0;
-            maxComponents.second = 0;
-            
-            minDate = [gregorian dateFromComponents:minComponents];// 2023.5.1 00:00
-            maxDate = [gregorian dateFromComponents:maxComponents]; // 2023.5.3 00:00
-            NSTimeInterval time= [maxDate timeIntervalSinceDate:minDate];
-            NSInteger dateNum = (time / 86400) + 1; // time/86400 = 2天，因为都算了零点。所以后面还要加上一天
-            
-            
-            NSInteger numOfInvalidCell = 0;
-            if ([MirrorSettings appliedWeekStarsOnMonday]) {
-                if (minComponents.weekday > 1) {
-                    numOfInvalidCell = minComponents.weekday - 2;
-                } else {
-                    numOfInvalidCell = 6;
-                }
-            } else {
-                numOfInvalidCell = minComponents.weekday - 1;
-            }
-            _startTimestamp = [minDate timeIntervalSince1970] - numOfInvalidCell*86400; // 第一个cell(可能是invalid的)
-            // 今天的0点
-            NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-            components.timeZone = [NSTimeZone systemTimeZone];
-            components.hour = 0;
-            components.minute = 0;
-            components.second = 0;
-            long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970]; // 今天的timestamp
-            _selectedCellIndex = (timestamp-_startTimestamp)/86400; // 今天cell的位置
-            // 添加前面的补位的日期
-            for (int i=0; i<numOfInvalidCell; i++) {
-                NSInteger invalidDateTimestamp = [minDate timeIntervalSince1970] - (numOfInvalidCell-i)*86400;
-                [_keys addObject:[@(invalidDateTimestamp) stringValue]];
-            }
-            // 添加第一个record和最后一个record之间的日期
-            for (int i=0; i<dateNum; i++) {
-                NSInteger validDateTimestamp = [minDate timeIntervalSince1970] + i*86400;
-                [_keys addObject:[@(validDateTimestamp) stringValue]];
-            }
-        }
+        [self updateKeys];
     }
     return _keys;
+}
+
+- (void)updateKeys
+{
+    _keys = [NSMutableArray<NSString *> new];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    NSInteger minTimestamp = NSIntegerMax;
+    NSInteger maxTimestamp = NSIntegerMin;
+    for (int i=0; i<allRecords.count; i++) {
+        MirrorRecordModel *record = allRecords[i];
+            NSInteger timestamp = record.startTime;
+            if (record.endTime != 0 && timestamp < minTimestamp) {
+                minTimestamp = timestamp;
+            }
+            if (record.endTime != 0 && timestamp > maxTimestamp) {
+                maxTimestamp = timestamp;
+            }
+    }
+    // 2023.5.1 3:00 到 2023.5.3 19:00 算三天
+    if (maxTimestamp != NSIntegerMin && minTimestamp != NSIntegerMax) { // 有 有效数据
+        if (maxTimestamp < [[NSDate now] timeIntervalSince1970]) {
+            maxTimestamp = [[NSDate now] timeIntervalSince1970]; // 如果现存最晚任务也在今天之前，设置最大时间为今天。
+        }
+        NSDate *minDate = [NSDate dateWithTimeIntervalSince1970:minTimestamp];
+        NSDate *maxDate = [NSDate dateWithTimeIntervalSince1970:maxTimestamp];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *minComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:minDate];
+        minComponents.timeZone = [NSTimeZone systemTimeZone];
+        NSDateComponents *maxComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:maxDate];
+        maxComponents.timeZone = [NSTimeZone systemTimeZone];
+        
+        minComponents.hour = 0;
+        minComponents.minute = 0;
+        minComponents.second = 0;
+        maxComponents.hour = 0;
+        maxComponents.minute = 0;
+        maxComponents.second = 0;
+        
+        minDate = [gregorian dateFromComponents:minComponents];// 2023.5.1 00:00
+        maxDate = [gregorian dateFromComponents:maxComponents]; // 2023.5.3 00:00
+        NSTimeInterval time= [maxDate timeIntervalSinceDate:minDate];
+        NSInteger dateNum = (time / 86400) + 1; // time/86400 = 2天，因为都算了零点。所以后面还要加上一天
+        
+        
+        NSInteger numOfInvalidCell = 0;
+        if ([MirrorSettings appliedWeekStarsOnMonday]) {
+            if (minComponents.weekday > 1) {
+                numOfInvalidCell = minComponents.weekday - 2;
+            } else {
+                numOfInvalidCell = 6;
+            }
+        } else {
+            numOfInvalidCell = minComponents.weekday - 1;
+        }
+        _startTimestamp = [minDate timeIntervalSince1970] - numOfInvalidCell*86400; // 第一个cell(可能是invalid的)
+        // 今天的0点
+        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+        components.timeZone = [NSTimeZone systemTimeZone];
+        components.hour = 0;
+        components.minute = 0;
+        components.second = 0;
+        long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970]; // 今天的timestamp
+        _selectedCellIndex = (timestamp-_startTimestamp)/86400; // 今天cell的位置
+        
+        // 添加前面的补位的日期
+        for (int i=0; i<numOfInvalidCell; i++) {
+            NSInteger invalidDateTimestamp = [minDate timeIntervalSince1970] - (numOfInvalidCell-i)*86400;
+            [_keys addObject:[@(invalidDateTimestamp) stringValue]];
+        }
+        // 添加第一个record和最后一个record之间的日期
+        for (int i=0; i<dateNum; i++) {
+            NSInteger validDateTimestamp = [minDate timeIntervalSince1970] + i*86400;
+            [_keys addObject:[@(validDateTimestamp) stringValue]];
+        }
+    }
 }
 
 - (NSMutableDictionary<NSString *, NSMutableArray<MirrorDataModel *> *> *)gridData
 {
     if (!_gridData) {
-        _gridData = [MirrorStorage getGridData];
+        _gridData = [NSMutableDictionary<NSString *, NSMutableArray<MirrorDataModel *> *> new];
+        [self updateGridData];
     }
     return _gridData;
+}
+
+- (void)updateGridData
+{
+    _gridData = [MirrorStorage getGridData];
 }
 
 #pragma mark - Privates

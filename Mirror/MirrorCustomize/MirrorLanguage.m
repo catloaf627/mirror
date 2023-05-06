@@ -20,6 +20,7 @@
     [mirrorDict setValue:@[@"Start", @"计时"] forKey:@"start"];
     [mirrorDict setValue:@[@"Today", @"今天"] forKey:@"today"];
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
+    [mirrorDict setValue:@[@"Record", @"记录"] forKey:@"record"];
     // nickname
     [mirrorDict setValue:@[@"nickname", @"我的昵称"] forKey:@"nickname"];
     // Settings
