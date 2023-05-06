@@ -67,7 +67,7 @@
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredPiechart"];
     }
-    // 不需要通知，修改页面就是展示页面。
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchChartTypeNotification object:nil];
 }
 
 + (NSInteger)timeZoneGap:(NSInteger)newSecondsFromGMT
