@@ -38,7 +38,8 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 @property (nonatomic, strong) UIButton *typeButton;
 // UI
-@property (nonatomic, strong) UILabel *monthHint;
+@property (nonatomic, strong) UILabel *leftHint;
+@property (nonatomic, strong) UILabel *rightHint;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UIView *weekdayView;
@@ -87,7 +88,8 @@ static CGFloat const kCellSpacing = 3;
 {
     // 将vc.view里的所有subviews全部置为nil
     self.typeButton = nil;
-    self.monthHint = nil;
+    self.leftHint = nil;
+    self.rightHint = nil;
     self.collectionView = nil;
     self.dateLabel = nil;
     self.weekdayView = nil;
@@ -114,10 +116,13 @@ static CGFloat const kCellSpacing = 3;
 {
     [super viewDidAppear:animated];
     [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
-    // gizmo 每次点进来都滚到today会不会打扰用户？
+    
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
     GridCollectionViewCell *cell = (GridCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0]];
-    _dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[_selectedCellIndex] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
+    if (self.keys.count > _selectedCellIndex) {
+        _dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[_selectedCellIndex] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
+    }
+    [self updateHints];
 }
 
 - (void)reloadData
@@ -135,17 +140,24 @@ static CGFloat const kCellSpacing = 3;
 {
     // collection view
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-    [self.view addSubview:self.monthHint];
-    [self.monthHint mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+    [self.view addSubview:self.leftHint];
+    [self.leftHint mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing+kCellWidth+2);
+        make.width.mas_equalTo((kScreenWidth-2*kLeftRightSpacing-kCellWidth-2)/2);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.height.mas_equalTo(kCellWidth);
+    }];
+    [self.view addSubview:self.rightHint];
+    [self.rightHint mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.width.mas_equalTo((kScreenWidth-2*kLeftRightSpacing-kCellWidth-2)/2);
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.height.mas_equalTo(kCellWidth);
     }];
     [self.view addSubview:self.weekdayView];
     [self.weekdayView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.top.mas_equalTo(self.monthHint.mas_bottom).offset(2);
+        make.top.mas_equalTo(self.rightHint.mas_bottom).offset(2);
         make.height.mas_equalTo(kCellWidth*7 + kCellSpacing*6);
         make.width.mas_equalTo(kCellWidth);
     }];
@@ -153,7 +165,7 @@ static CGFloat const kCellSpacing = 3;
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.weekdayView.mas_right).offset(kCellSpacing);
         make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.monthHint.mas_bottom).offset(2);
+        make.top.mas_equalTo(self.rightHint.mas_bottom).offset(2);
         make.height.mas_equalTo(kCellWidth*7 + kCellSpacing*6);
     }];
     [self.view addSubview:self.dateLabel];
@@ -194,24 +206,43 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    NSString *text = self.monthHint.text;
-    NSIndexPath *rightSide0 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 0*(kCellWidth+kCellSpacing))]; // 右上角的cell indexpath
-    if (rightSide0) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide0.item * 86400]];
-    NSIndexPath *rightSide1 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 1*(kCellWidth+kCellSpacing))];
-    if (rightSide1) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide1.item * 86400]];
-    NSIndexPath *rightSide2 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 2*(kCellWidth+kCellSpacing))];
-    if (rightSide2) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide2.item * 86400]];
-    NSIndexPath *rightSide3 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 3*(kCellWidth+kCellSpacing))];
-    if (rightSide3) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide3.item * 86400]];
-    NSIndexPath *rightSide4 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 4*(kCellWidth+kCellSpacing))];
-    if (rightSide4) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide4.item * 86400]];
-    NSIndexPath *rightSide5 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 5*(kCellWidth+kCellSpacing))];
-    if (rightSide5) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide5.item * 86400]];
-    NSIndexPath *rightSide6 = [self.collectionView indexPathForItemAtPoint:CGPointMake(scrollView.frame.size.width + scrollView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 6*(kCellWidth+kCellSpacing))]; // 右下角的cell indexpath
-    if (rightSide6) text = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide6.item * 86400]];
-    if (![text isEqualToString:self.monthHint.text]) {
-        self.monthHint.text = text;
+    [self updateHints];
+}
+
+- (void)updateHints
+{
+    /*
+     最左侧一列正着数，找到这一列最后一个有日子的cell，取出它的月份作为hint，例如下面七个cell：
+     [4月29日]        循环到0，文案设置为"2023年4月"
+     [4月30日]        循环到1，文案设置为"2023年4月"
+     [5月1日]         循环到2，文案设置为"2023年5月"
+     [5月2日]         循环到3，文案设置为"2023年5月"
+     [5月3日]         循环到4，文案设置为"2023年5月"
+     [cell不存在]           循环到5，跳过
+     [cell不存在]           循环到6，跳过
+     最后文案取为"2023年5月"
+     */
+    NSString *leftText = self.leftHint.text;
+    NSIndexPath *leftSide0 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.contentOffset.x + kCellWidth/2, kCellWidth/2 + 0*(kCellWidth+kCellSpacing))]; // 左上角的cell indexpath
+    if (leftSide0) leftText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + leftSide0.item * 86400]];
+    NSIndexPath *leftSide1 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.contentOffset.x + kCellWidth/2, kCellWidth/2 + 1*(kCellWidth+kCellSpacing))];
+    if (leftSide1) leftText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + leftSide1.item * 86400]];
+    NSIndexPath *leftSide2 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.contentOffset.x + kCellWidth/2, kCellWidth/2 + 2*(kCellWidth+kCellSpacing))];
+    if (leftSide2) leftText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + leftSide2.item * 86400]];
+    NSIndexPath *leftSide3 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.contentOffset.x + kCellWidth/2, kCellWidth/2 + 3*(kCellWidth+kCellSpacing))];
+    if (leftSide3) leftText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + leftSide3.item * 86400]];
+    NSIndexPath *leftSide4 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.contentOffset.x + kCellWidth/2, kCellWidth/2 + 4*(kCellWidth+kCellSpacing))];
+    if (leftSide4) leftText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + leftSide4.item * 86400]];
+    NSIndexPath *leftSide5 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.contentOffset.x + kCellWidth/2, kCellWidth/2 + 5*(kCellWidth+kCellSpacing))];
+    if (leftSide5) leftText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + leftSide5.item * 86400]];
+    NSIndexPath *leftSide6 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.contentOffset.x + kCellWidth/2, kCellWidth/2 + 6*(kCellWidth+kCellSpacing))]; // 左下角的cell indexpath
+    if (leftSide6) leftText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + leftSide6.item * 86400]];
+    if (![leftText isEqualToString:self.leftHint.text]) {
+        self.leftHint.text = leftText;
     }
+    
+
+    
     /*
      最右侧一列正着数，找到这一列最后一个有日子的cell，取出它的月份作为hint，例如下面七个cell：
      [4月29日]        循环到0，文案设置为"2023年4月"
@@ -223,9 +254,32 @@ static CGFloat const kCellSpacing = 3;
      [cell不存在]           循环到6，跳过
      最后文案取为"2023年5月"
      */
+    NSString *rightText = self.rightHint.text;
+    NSIndexPath *rightSide0 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.frame.size.width + self.collectionView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 0*(kCellWidth+kCellSpacing))]; // 右上角的cell indexpath
+    if (rightSide0) rightText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide0.item * 86400]];
+    NSIndexPath *rightSide1 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.frame.size.width + self.collectionView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 1*(kCellWidth+kCellSpacing))];
+    if (rightSide1) rightText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide1.item * 86400]];
+    NSIndexPath *rightSide2 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.frame.size.width + self.collectionView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 2*(kCellWidth+kCellSpacing))];
+    if (rightSide2) rightText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide2.item * 86400]];
+    NSIndexPath *rightSide3 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.frame.size.width + self.collectionView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 3*(kCellWidth+kCellSpacing))];
+    if (rightSide3) rightText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide3.item * 86400]];
+    NSIndexPath *rightSide4 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.frame.size.width + self.collectionView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 4*(kCellWidth+kCellSpacing))];
+    if (rightSide4) rightText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide4.item * 86400]];
+    NSIndexPath *rightSide5 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.frame.size.width + self.collectionView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 5*(kCellWidth+kCellSpacing))];
+    if (rightSide5) rightText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide5.item * 86400]];
+    NSIndexPath *rightSide6 = [self.collectionView indexPathForItemAtPoint:CGPointMake(self.collectionView.frame.size.width + self.collectionView.contentOffset.x - kCellWidth/2, kCellWidth/2 + 6*(kCellWidth+kCellSpacing))]; // 右下角的cell indexpath
+    if (rightSide6) rightText = [MirrorTimeText YYYYmm:[NSDate dateWithTimeIntervalSince1970:_startTimestamp + rightSide6.item * 86400]];
+    if (![rightText isEqualToString:self.rightHint.text]) {
+        self.rightHint.text = rightText;
+    }
 }
 
 #pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -363,16 +417,26 @@ static CGFloat const kCellSpacing = 3;
     return _piechartView;
 }
 
-
-- (UILabel *)monthHint
+- (UILabel *)leftHint
 {
-    if (!_monthHint) {
-        _monthHint = [UILabel new];
-        _monthHint.textAlignment = NSTextAlignmentRight;
-        _monthHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _monthHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+    if (!_leftHint) {
+        _leftHint = [UILabel new];
+        _leftHint.textAlignment = NSTextAlignmentLeft;
+        _leftHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _leftHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
     }
-    return _monthHint;
+    return _leftHint;
+}
+
+- (UILabel *)rightHint
+{
+    if (!_rightHint) {
+        _rightHint = [UILabel new];
+        _rightHint.textAlignment = NSTextAlignmentRight;
+        _rightHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _rightHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+    }
+    return _rightHint;
 }
 
 - (UILabel *)dateLabel
