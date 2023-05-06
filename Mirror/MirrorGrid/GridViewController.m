@@ -591,11 +591,8 @@ static CGFloat const kCellSpacing = 3;
 {
     [MirrorSettings switchShowShade];
     NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-    UIImage *image = [[UIImage systemImageNamed:iconName] imageWithTintColor:[UIColor mirrorColorNamed:MirrorColorTypeText]];
-    UIImage *imageWithRightColor = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UIBarButtonItem *shadeItem = [[UIBarButtonItem alloc]  initWithImage:imageWithRightColor style:UIBarButtonItemStylePlain target:self action:@selector(switchShadeType)];
-    shadeItem.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-    [self.navigationItem setRightBarButtonItem:shadeItem];
+    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
     self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
     [MirrorSettings changePreferredShadeColor:self.randomColorType];
