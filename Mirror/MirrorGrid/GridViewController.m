@@ -488,6 +488,7 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)updateWeekdayView
 {
+    if (!_weekdayView) return;  //security
     [_weekdayView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     BOOL appliedWeekStarsOnMonday = [MirrorSettings appliedWeekStarsOnMonday];
     UIColor *textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];

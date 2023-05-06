@@ -239,7 +239,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)switchChartType
 {
     [MirrorSettings switchChartType];
-    NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.bar" : @"chart.pie";
+    NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.pie.fill" : @"chart.pie";
     UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     self.histogramView.hidden = [MirrorSettings appliedPieChart];
@@ -397,7 +397,7 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     if (!_typeButton) {
         _typeButton = [UIButton new];
-        NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.bar" : @"chart.pie";
+        NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.pie.fill" : @"chart.pie";
         UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [_typeButton addTarget:self action:@selector(switchChartType) forControlEvents:UIControlEventTouchUpInside];
