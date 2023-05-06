@@ -461,8 +461,10 @@ static NSString *const kMirrorRecords = @"mirror_records";
                         [recordsInTaskOrder addObject:recordsInTimeOrder[j]];
                     }
                 }
-                MirrorDataModel *oneDayOneTask = [[MirrorDataModel alloc] initWithTask:allTasks[i] records:recordsInTaskOrder];
-                [oneday addObject:oneDayOneTask];
+                if (recordsInTaskOrder.count != 0) {
+                    MirrorDataModel *oneDayOneTask = [[MirrorDataModel alloc] initWithTask:allTasks[i] records:recordsInTaskOrder];
+                    [oneday addObject:oneDayOneTask];
+                }
             }
             // save
             [gridData setValue:oneday forKey:key];
