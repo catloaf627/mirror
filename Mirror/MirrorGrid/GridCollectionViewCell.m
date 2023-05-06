@@ -20,8 +20,8 @@
 - (void)configWithData:(NSMutableArray<MirrorDataModel *> *)data isSelected:(BOOL)isSelected
 {
     long maxTime = 0;
-    long totalTime = 0;
     CGFloat alpha = 0;
+    _totalTime = 0;
     MirrorColorType winnerColor = MirrorColorTypeAddTaskCellBG;
     for (int i=0; i<data.count; i++) {
         long taskTime = [MirrorTool getTotalTimeOfPeriods:data[i].records];
@@ -29,13 +29,13 @@
             maxTime = taskTime;
             winnerColor = data[i].taskModel.color;
         }
-        totalTime = totalTime + taskTime;
+        _totalTime = _totalTime + taskTime;
     }
-    if (totalTime>0*3600) alpha = 0.5;
-    if (totalTime>3*3600) alpha = 0.8;
-    if (totalTime>7*3600) alpha = 1.0;
+    if (_totalTime>0*3600) alpha = 0.5;
+    if (_totalTime>3*3600) alpha = 0.8;
+    if (_totalTime>7*3600) alpha = 1.0;
     
-    if (totalTime == 0) { // 无数据
+    if (_totalTime == 0) { // 无数据
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
     } else if (![MirrorSettings appliedShowShade] && alpha != 0) {  // 彩色模式 & 有数据
         self.backgroundColor = [UIColor mirrorColorNamed:winnerColor];

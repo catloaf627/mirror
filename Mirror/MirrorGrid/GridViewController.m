@@ -116,6 +116,8 @@ static CGFloat const kCellSpacing = 3;
     [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
     // gizmo 每次点进来都滚到today会不会打扰用户？
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
+    GridCollectionViewCell *cell = (GridCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0]];
+    _dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[_selectedCellIndex] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
 }
 
 - (void)reloadData
@@ -232,13 +234,9 @@ static CGFloat const kCellSpacing = 3;
     } else {
         _selectedCellIndex = indexPath.item; // 选择
     }
-    long timestamp = _startTimestamp + indexPath.item * 86400;
-    NSMutableArray<MirrorDataModel *> *data = [MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400];
-    long totaltime = 0;
-    for (MirrorDataModel* model in data) {
-        totaltime = totaltime + [MirrorTool getTotalTimeOfPeriods:model.records];
-    }
-    self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:timestamp]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totaltime]];
+    NSMutableArray<MirrorDataModel *> *data = self.gridData[self.keys[indexPath.item]];
+    GridCollectionViewCell *cell = (GridCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[indexPath.item] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
     [self.legendView updateWithData:data];
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.legendView legendViewHeight]);
@@ -382,7 +380,6 @@ static CGFloat const kCellSpacing = 3;
     if (!_dateLabel) {
         _dateLabel = [UILabel new];
         _dateLabel.textAlignment = NSTextAlignmentCenter;
-        _dateLabel.text = [MirrorTimeText YYYYmmddWeekday:[NSDate now]];
         _dateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
         _dateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
     }
