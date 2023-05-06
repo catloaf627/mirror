@@ -128,7 +128,6 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)reloadData
 {
-    [self updateWeekdayView];
     if ([MirrorSettings appliedPieChart]) {
         self.piechartView.hidden = NO;
         self.histogramView.hidden = YES;
@@ -137,6 +136,7 @@ static CGFloat const kCellSpacing = 3;
         self.piechartView.hidden = YES;
     }
     // data source
+    [self updateWeekdayView];
     [self updateKeys];
     [self updateGridData];
     
@@ -217,6 +217,8 @@ static CGFloat const kCellSpacing = 3;
     edgeRecognizer.edges = UIRectEdgeLeft;
     [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
     [self.view addGestureRecognizer:edgeRecognizer];
+    
+    [self updateCharts];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -300,37 +302,8 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.item == _selectedCellIndex) {
-        _selectedCellIndex = NSIntegerMin; // 取消选择
-    } else {
-        _selectedCellIndex = indexPath.item; // 选择
-    }
-    // data source
-    NSMutableArray<MirrorDataModel *> *data = self.gridData[self.keys[indexPath.item]];
-    GridCollectionViewCell *cell = (GridCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[indexPath.item] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
-    // legend
-    [self.legendView updateWithData:data];
-    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo([self.legendView legendViewHeight]);
-    }];
-    // histogram
-    [self.histogramView updateWithData:data];
-    CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
-    [self.piechartView updateWithData:data width:width enableInteractive:YES];
-    // piechart
-    if (self.piechartView.superview) { //security
-        [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
-            if (width == [[self leftWidthLeftHeight][0] floatValue]) { // 宽度小于高度
-                make.top.mas_equalTo(self.legendView.mas_bottom).offset(10 + ([[self leftWidthLeftHeight][1] floatValue]-[[self leftWidthLeftHeight][0] floatValue])/2);
-                make.width.height.mas_equalTo(width);
-            } else {
-                make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
-                make.width.height.mas_equalTo(width);
-            }
-        }];
-    }
-
+    _selectedCellIndex = indexPath.item; // 选择
+    [self updateCharts];
     [collectionView reloadData];
 }
 
@@ -414,14 +387,7 @@ static CGFloat const kCellSpacing = 3;
 - (SpanLegend *)legendView
 {
     if (!_legendView) {
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-        components.timeZone = [NSTimeZone systemTimeZone];
-        components.hour = 0;
-        components.minute = 0;
-        components.second = 0;
-        long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        _legendView = [[SpanLegend alloc] initWithData:[MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400]];
+        _legendView = [[SpanLegend alloc] initWithData:[NSMutableArray new]];
         _legendView.delegate = self;
     }
     return _legendView;
@@ -429,14 +395,7 @@ static CGFloat const kCellSpacing = 3;
 - (SpanHistogram *)histogramView
 {
     if (!_histogramView) {
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-        components.timeZone = [NSTimeZone systemTimeZone];
-        components.hour = 0;
-        components.minute = 0;
-        components.second = 0;
-        long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        _histogramView = [[SpanHistogram alloc] initWithData:[MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400]];
+        _histogramView = [[SpanHistogram alloc] initWithData:[NSMutableArray new]];
         _histogramView.delegate = self;
     }
     return _histogramView;
@@ -445,17 +404,39 @@ static CGFloat const kCellSpacing = 3;
 - (MirrorPiechart *)piechartView
 {
     if (!_piechartView) {
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-        components.timeZone = [NSTimeZone systemTimeZone];
-        components.hour = 0;
-        components.minute = 0;
-        components.second = 0;
-        long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
-        _piechartView = [[MirrorPiechart alloc] initWithData:[MirrorStorage getAllRecordsInTaskOrderWithStart:timestamp end:timestamp+86400] width:width enableInteractive:YES];
+        _piechartView = [[MirrorPiechart alloc] initWithData:[NSMutableArray new] width:0 enableInteractive:NO];
     }
     return _piechartView;
+}
+
+- (void)updateCharts
+{
+    // data source
+    NSMutableArray<MirrorDataModel *> *data = self.gridData[self.keys[_selectedCellIndex]];
+    // date label
+    GridCollectionViewCell *cell = (GridCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:_selectedCellIndex inSection:0]];
+    self.dateLabel.text = [[[MirrorTimeText YYYYmmddWeekday:[NSDate dateWithTimeIntervalSince1970:[self.keys[_selectedCellIndex] integerValue]]] stringByAppendingString:@". "] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:cell.totalTime]];
+    // legend
+    [self.legendView updateWithData:data];
+    [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([self.legendView legendViewHeight]);
+    }];
+    // histogram
+    [self.histogramView updateWithData:data];
+    CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
+    [self.piechartView updateWithData:data width:width enableInteractive:YES];
+    // piechart
+    if (self.piechartView.superview) { //security
+        [self.piechartView mas_updateConstraints:^(MASConstraintMaker *make) {
+            if (width == [[self leftWidthLeftHeight][0] floatValue]) { // 宽度小于高度
+                make.top.mas_equalTo(self.legendView.mas_bottom).offset(10 + ([[self leftWidthLeftHeight][1] floatValue]-[[self leftWidthLeftHeight][0] floatValue])/2);
+                make.width.height.mas_equalTo(width);
+            } else {
+                make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
+                make.width.height.mas_equalTo(width);
+            }
+        }];
+    }
 }
 
 - (UILabel *)leftHint
@@ -494,6 +475,7 @@ static CGFloat const kCellSpacing = 3;
 - (UIView *)weekdayView
 {
     if (!_weekdayView) {
+        _weekdayView = [UIView new];
         [self updateWeekdayView];
     }
     return _weekdayView;
@@ -501,7 +483,7 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)updateWeekdayView
 {
-    _weekdayView = [UIView new];
+    [_weekdayView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     BOOL appliedWeekStarsOnMonday = [MirrorSettings appliedWeekStarsOnMonday];
     UIColor *textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
     UILabel *day0 = [UILabel new];
