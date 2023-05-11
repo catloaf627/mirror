@@ -78,11 +78,11 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 + (NSMutableArray<MirrorRecordModel *> *)getAllTaskRecords:(NSString *)taskName;
 
 /*
- 取出【所有任务】从【某时间】到【某时间】的所有records
+ 取出今天【所有任务】所有records，按照时间顺序
  {originalIndex, 🌸, 05:00, 06:00}, {originalIndex, 🪀, 06:00, 07:00}, {originalIndex, 🌸, 07:00, 08:00}..
  适用场景：目前只有today的record展示用到这个方法
  */
-+ (NSMutableArray<MirrorRecordModel *> *)getAllRecordsWithStart:(long)startTime end:(long)endTime;
++ (NSMutableArray<MirrorRecordModel *> *)getTodayData;
 
 /*
  取出【所有任务】从【某时间】到【某时间】的所有records，并按照优先级排序 （如顺序为🪀、🌸）

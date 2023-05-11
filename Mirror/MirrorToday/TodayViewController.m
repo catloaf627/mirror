@@ -30,7 +30,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 // Data source
-@property (nonatomic, strong) NSMutableArray<MirrorRecordModel *> *todayRecords;
+@property (nonatomic, strong) NSMutableArray<MirrorRecordModel *> *todayData;
 // UI
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
@@ -95,7 +95,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)reloadData
 {
-    [self updateDataSource];
+    self.todayData = [MirrorStorage getTodayData];
     [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     [self.collectionView reloadData];
 }
@@ -105,7 +105,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
 
     [self.view addSubview:self.collectionView];
-    [self updateDataSource];
     [self.collectionView reloadData];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
@@ -129,7 +128,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     AllRecordsViewController *allRecordsVC = [AllRecordsViewController new];
-    allRecordsVC.scrollToIndex = self.todayRecords[indexPath.item].originalIndex;
+    allRecordsVC.scrollToIndex = self.todayData[indexPath.item].originalIndex;
     [self.navigationController pushViewController:allRecordsVC animated:YES];
 }
 
@@ -142,13 +141,13 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.todayRecords.count;
+    return self.todayData.count;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TodayPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TodayPeriodCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithTaskname:self.todayRecords[indexPath.item].taskName periodIndex:self.todayRecords[indexPath.item].originalIndex];
+    [cell configWithTaskname:self.todayData[indexPath.item].taskName periodIndex:self.todayData[indexPath.item].originalIndex];
     cell.delegate = self;
     return cell;
 }
@@ -164,7 +163,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     if (kind == UICollectionElementKindSectionHeader) {
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
         TodayTotalHeader* todayHeader = (TodayTotalHeader *)header;
-        [todayHeader configWithRecords:self.todayRecords];
+        [todayHeader configWithRecords:self.todayData];
     }
     return header;
 }
@@ -175,20 +174,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 }
 
 #pragma mark - Actions
-
-- (void)updateDataSource
-{
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-    components.timeZone = [NSTimeZone systemTimeZone];
-    components.hour = 0;
-    components.minute = 0;
-    components.second = 0;
-    long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-    long endTime = startTime + 86400;
-    
-    self.todayRecords = [MirrorStorage getAllRecordsWithStart:startTime end:endTime];
-}
 
 - (void)goToSettings
 {
@@ -225,7 +210,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _emptyHintLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
         _emptyHintLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeCellGrayPulse]; // 和nickname的文字颜色保持一致
         _emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_today"];
-        _emptyHintLabel.hidden = self.todayRecords.count > 0;
+        _emptyHintLabel.hidden = self.todayData.count > 0;
     }
     return _emptyHintLabel;
 }
@@ -233,7 +218,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)updateHint
 {
     self.emptyHintLabel.text = [MirrorLanguage mirror_stringWithKey:@"no_data_today"];
-    self.emptyHintLabel.hidden = self.todayRecords.count > 0;
+    self.emptyHintLabel.hidden = self.todayData.count > 0;
 }
 
 
@@ -248,20 +233,12 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return _settingsButton;
 }
 
-- (NSMutableArray<MirrorRecordModel *> *)todayRecords
+- (NSMutableArray<MirrorRecordModel *> *)todayData
 {
-    if (!_todayRecords) {
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-        components.timeZone = [NSTimeZone systemTimeZone];
-        components.hour = 0;
-        components.minute = 0;
-        components.second = 0;
-        long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
-        long endTime = startTime + 86400;
-        _todayRecords = [MirrorStorage getAllRecordsWithStart:startTime end:endTime];
+    if (!_todayData) {
+        _todayData = [MirrorStorage getTodayData];
     }
-    return _todayRecords;
+    return _todayData;
 }
 #pragma mark - Animations
 
