@@ -72,6 +72,20 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self p_setupUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.editTasksButton];
+    [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+    }];
+}
+
 - (void)restartVC
 {
     // update navibar
@@ -83,20 +97,6 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     self.collectionView = nil;
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self p_setupUI];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self  p_setupUI];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.editTasksButton];
-    [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
-    }];
 }
 
 - (void)reloadData

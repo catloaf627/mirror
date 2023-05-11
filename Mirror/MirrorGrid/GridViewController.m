@@ -84,6 +84,20 @@ static CGFloat const kCellSpacing = 3;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self p_setupUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
+    
+    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    [self updateHints];
+}
+
 - (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
@@ -104,21 +118,6 @@ static CGFloat const kCellSpacing = 3;
         [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
     }
     [self p_setupUI];
-}
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self p_setupUI];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
-    
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
-    [self updateHints];
 }
 
 - (void)reloadData
@@ -216,12 +215,30 @@ static CGFloat const kCellSpacing = 3;
     [self updateCharts];
 }
 
-#pragma mark - UIScrollViewDelegate
+#pragma mark - Actions
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)goToSettings
 {
-    [self updateHints];
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
+    settingsVC.transitioningDelegate = self;
+    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
+    [self presentViewController:settingsVC animated:YES completion:nil];
 }
+
+- (void)switchShadeType
+{
+    [MirrorSettings switchShowShade];
+    NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
+    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
+    self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
+    [MirrorSettings changePreferredShadeColor:self.randomColorType];
+    [self.collectionView reloadData];
+}
+
+#pragma mark - update data
 
 - (void)updateHints
 {
@@ -288,120 +305,84 @@ static CGFloat const kCellSpacing = 3;
     }
 }
 
-#pragma mark - UICollectionViewDelegate
-
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)updateKeys
 {
-    
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    _selectedCellIndex = indexPath.item; // 选择
-    [self updateCharts];
-    [collectionView reloadData];
-}
-
-#pragma mark - UICollectionViewDataSource
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return  self.keys.count;
-}
-
-- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    GridCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[GridCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithData:self.gridData[self.keys[indexPath.item]] isSelected:indexPath.item==_selectedCellIndex];
-    return cell;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake(kCellWidth, kCellWidth);
-}
-
-#pragma mark - Actions
-
-- (void)goToSettings
-{
-    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
-    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
-    settingsVC.transitioningDelegate = self;
-    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
-    [self presentViewController:settingsVC animated:YES completion:nil];
-}
-
-// 从左边缘滑动唤起settings
-- (void)edgeGestureRecognizerAction:(UIScreenEdgePanGestureRecognizer *)pan
-{
-    //产生百分比
-    CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
-    
-    process = MIN(1.0,(MAX(0.0, process)));
-    if (pan.state == UIGestureRecognizerStateBegan) {
-        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
-        // 触发present转场动画
-        [self goToSettings];
-    }else if (pan.state == UIGestureRecognizerStateChanged){
-        [self.interactiveTransition updateInteractiveTransition:process];
-    }else if (pan.state == UIGestureRecognizerStateEnded
-              || pan.state == UIGestureRecognizerStateCancelled){
-        if (process > 0.3) {
-            [ self.interactiveTransition finishInteractiveTransition];
-        }else{
-            [ self.interactiveTransition cancelInteractiveTransition];
+    _keys = [NSMutableArray<NSString *> new];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    NSInteger minTimestamp = NSIntegerMax;
+    NSInteger maxTimestamp = NSIntegerMin;
+    for (int i=0; i<allRecords.count; i++) {
+        MirrorRecordModel *record = allRecords[i];
+            NSInteger timestamp = record.startTime;
+            if (record.endTime != 0 && timestamp < minTimestamp) {
+                minTimestamp = timestamp;
+            }
+            if (record.endTime != 0 && timestamp > maxTimestamp) {
+                maxTimestamp = timestamp;
+            }
+    }
+    // 2023.5.1 3:00 到 2023.5.3 19:00 算三天
+    if (maxTimestamp != NSIntegerMin && minTimestamp != NSIntegerMax) { // 有 有效数据
+        if (maxTimestamp < [[NSDate now] timeIntervalSince1970]) {
+            maxTimestamp = [[NSDate now] timeIntervalSince1970]; // 如果现存最晚任务也在今天之前，设置最大时间为今天。
         }
-        self.interactiveTransition = nil;
+        NSDate *minDate = [NSDate dateWithTimeIntervalSince1970:minTimestamp];
+        NSDate *maxDate = [NSDate dateWithTimeIntervalSince1970:maxTimestamp];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *minComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:minDate];
+        minComponents.timeZone = [NSTimeZone systemTimeZone];
+        NSDateComponents *maxComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:maxDate];
+        maxComponents.timeZone = [NSTimeZone systemTimeZone];
+        
+        minComponents.hour = 0;
+        minComponents.minute = 0;
+        minComponents.second = 0;
+        maxComponents.hour = 0;
+        maxComponents.minute = 0;
+        maxComponents.second = 0;
+        
+        minDate = [gregorian dateFromComponents:minComponents];// 2023.5.1 00:00
+        maxDate = [gregorian dateFromComponents:maxComponents]; // 2023.5.3 00:00
+        NSTimeInterval time= [maxDate timeIntervalSinceDate:minDate];
+        NSInteger dateNum = (time / 86400) + 1; // time/86400 = 2天，因为都算了零点。所以后面还要加上一天
+        
+        
+        NSInteger numOfInvalidCell = 0;
+        if ([MirrorSettings appliedWeekStarsOnMonday]) {
+            if (minComponents.weekday > 1) {
+                numOfInvalidCell = minComponents.weekday - 2;
+            } else {
+                numOfInvalidCell = 6;
+            }
+        } else {
+            numOfInvalidCell = minComponents.weekday - 1;
+        }
+        _startTimestamp = [minDate timeIntervalSince1970] - numOfInvalidCell*86400; // 第一个cell(可能是invalid的)
+        // 今天的0点
+        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
+        components.timeZone = [NSTimeZone systemTimeZone];
+        components.hour = 0;
+        components.minute = 0;
+        components.second = 0;
+        long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970]; // 今天的timestamp
+        _selectedCellIndex = (timestamp-_startTimestamp)/86400; // 今天cell的位置
+        
+        // 添加前面的补位的日期
+        for (int i=0; i<numOfInvalidCell; i++) {
+            NSInteger invalidDateTimestamp = [minDate timeIntervalSince1970] - (numOfInvalidCell-i)*86400;
+            [_keys addObject:[@(invalidDateTimestamp) stringValue]];
+        }
+        // 添加第一个record和最后一个record之间的日期
+        for (int i=0; i<dateNum; i++) {
+            NSInteger validDateTimestamp = [minDate timeIntervalSince1970] + i*86400;
+            [_keys addObject:[@(validDateTimestamp) stringValue]];
+        }
     }
 }
 
-#pragma mark - UIViewControllerTransitioningDelegate
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+- (void)updateGridData
 {
-    LeftAnimation *animation = [LeftAnimation new];
-    animation.isPresent = YES;
-    return animation;
-}
-
-- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
-{
-    return self.interactiveTransition;
-}
-
-
-
-#pragma mark - Getters
-
-- (SpanLegend *)legendView
-{
-    if (!_legendView) {
-        _legendView = [[SpanLegend alloc] initWithData:[NSMutableArray new]];
-        _legendView.delegate = self;
-    }
-    return _legendView;
-}
-- (SpanHistogram *)histogramView
-{
-    if (!_histogramView) {
-        _histogramView = [[SpanHistogram alloc] initWithData:[NSMutableArray new]];
-        _histogramView.delegate = self;
-    }
-    return _histogramView;
-}
-
-- (MirrorPiechart *)piechartView
-{
-    if (!_piechartView) {
-        _piechartView = [[MirrorPiechart alloc] initWithData:[NSMutableArray new] width:0 enableInteractive:NO];
-    }
-    return _piechartView;
+    _gridData = [MirrorStorage getGridData];
 }
 
 - (void)updateCharts
@@ -441,48 +422,6 @@ static CGFloat const kCellSpacing = 3;
             }
         }];
     }
-}
-
-- (UILabel *)leftHint
-{
-    if (!_leftHint) {
-        _leftHint = [UILabel new];
-        _leftHint.textAlignment = NSTextAlignmentLeft;
-        _leftHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _leftHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
-    }
-    return _leftHint;
-}
-
-- (UILabel *)rightHint
-{
-    if (!_rightHint) {
-        _rightHint = [UILabel new];
-        _rightHint.textAlignment = NSTextAlignmentRight;
-        _rightHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _rightHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
-    }
-    return _rightHint;
-}
-
-- (UILabel *)dateLabel
-{
-    if (!_dateLabel) {
-        _dateLabel = [UILabel new];
-        _dateLabel.textAlignment = NSTextAlignmentCenter;
-        _dateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _dateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-    }
-    return _dateLabel;
-}
-
-- (UIView *)weekdayView
-{
-    if (!_weekdayView) {
-        _weekdayView = [UIView new];
-        [self updateWeekdayView];
-    }
-    return _weekdayView;
 }
 
 - (void)updateWeekdayView
@@ -570,6 +509,118 @@ static CGFloat const kCellSpacing = 3;
     }];
 }
 
+
+#pragma mark - Collection view delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self updateHints];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    _selectedCellIndex = indexPath.item; // 选择
+    [self updateCharts];
+    [collectionView reloadData];
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return  self.keys.count;
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    GridCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[GridCollectionViewCell identifier] forIndexPath:indexPath];
+    [cell configWithData:self.gridData[self.keys[indexPath.item]] isSelected:indexPath.item==_selectedCellIndex];
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(kCellWidth, kCellWidth);
+}
+
+#pragma mark - Getters
+
+- (SpanLegend *)legendView
+{
+    if (!_legendView) {
+        _legendView = [[SpanLegend alloc] initWithData:[NSMutableArray new]];
+        _legendView.delegate = self;
+    }
+    return _legendView;
+}
+
+- (SpanHistogram *)histogramView
+{
+    if (!_histogramView) {
+        _histogramView = [[SpanHistogram alloc] initWithData:[NSMutableArray new]];
+        _histogramView.delegate = self;
+    }
+    return _histogramView;
+}
+
+- (MirrorPiechart *)piechartView
+{
+    if (!_piechartView) {
+        _piechartView = [[MirrorPiechart alloc] initWithData:[NSMutableArray new] width:0 enableInteractive:NO];
+    }
+    return _piechartView;
+}
+
+- (UILabel *)leftHint
+{
+    if (!_leftHint) {
+        _leftHint = [UILabel new];
+        _leftHint.textAlignment = NSTextAlignmentLeft;
+        _leftHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _leftHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+    }
+    return _leftHint;
+}
+
+- (UILabel *)rightHint
+{
+    if (!_rightHint) {
+        _rightHint = [UILabel new];
+        _rightHint.textAlignment = NSTextAlignmentRight;
+        _rightHint.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _rightHint.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+    }
+    return _rightHint;
+}
+
+- (UILabel *)dateLabel
+{
+    if (!_dateLabel) {
+        _dateLabel = [UILabel new];
+        _dateLabel.textAlignment = NSTextAlignmentCenter;
+        _dateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _dateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+    }
+    return _dateLabel;
+}
+
+- (UIView *)weekdayView
+{
+    if (!_weekdayView) {
+        _weekdayView = [UIView new];
+        [self updateWeekdayView];
+    }
+    return _weekdayView;
+}
+
 - (UICollectionView *)collectionView
 {
     if (!_collectionView) {
@@ -584,18 +635,6 @@ static CGFloat const kCellSpacing = 3;
         [_collectionView registerClass:[GridCollectionViewCell class] forCellWithReuseIdentifier:[GridCollectionViewCell identifier]];
     }
     return _collectionView;
-}
-
-- (void)switchShadeType
-{
-    [MirrorSettings switchShowShade];
-    NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
-    self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
-    [MirrorSettings changePreferredShadeColor:self.randomColorType];
-    [self.collectionView reloadData];
 }
 
 - (MirrorColorType)randomColorType
@@ -639,81 +678,6 @@ static CGFloat const kCellSpacing = 3;
     return _keys;
 }
 
-- (void)updateKeys
-{
-    _keys = [NSMutableArray<NSString *> new];
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
-    NSInteger minTimestamp = NSIntegerMax;
-    NSInteger maxTimestamp = NSIntegerMin;
-    for (int i=0; i<allRecords.count; i++) {
-        MirrorRecordModel *record = allRecords[i];
-            NSInteger timestamp = record.startTime;
-            if (record.endTime != 0 && timestamp < minTimestamp) {
-                minTimestamp = timestamp;
-            }
-            if (record.endTime != 0 && timestamp > maxTimestamp) {
-                maxTimestamp = timestamp;
-            }
-    }
-    // 2023.5.1 3:00 到 2023.5.3 19:00 算三天
-    if (maxTimestamp != NSIntegerMin && minTimestamp != NSIntegerMax) { // 有 有效数据
-        if (maxTimestamp < [[NSDate now] timeIntervalSince1970]) {
-            maxTimestamp = [[NSDate now] timeIntervalSince1970]; // 如果现存最晚任务也在今天之前，设置最大时间为今天。
-        }
-        NSDate *minDate = [NSDate dateWithTimeIntervalSince1970:minTimestamp];
-        NSDate *maxDate = [NSDate dateWithTimeIntervalSince1970:maxTimestamp];
-        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        NSDateComponents *minComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:minDate];
-        minComponents.timeZone = [NSTimeZone systemTimeZone];
-        NSDateComponents *maxComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:maxDate];
-        maxComponents.timeZone = [NSTimeZone systemTimeZone];
-        
-        minComponents.hour = 0;
-        minComponents.minute = 0;
-        minComponents.second = 0;
-        maxComponents.hour = 0;
-        maxComponents.minute = 0;
-        maxComponents.second = 0;
-        
-        minDate = [gregorian dateFromComponents:minComponents];// 2023.5.1 00:00
-        maxDate = [gregorian dateFromComponents:maxComponents]; // 2023.5.3 00:00
-        NSTimeInterval time= [maxDate timeIntervalSinceDate:minDate];
-        NSInteger dateNum = (time / 86400) + 1; // time/86400 = 2天，因为都算了零点。所以后面还要加上一天
-        
-        
-        NSInteger numOfInvalidCell = 0;
-        if ([MirrorSettings appliedWeekStarsOnMonday]) {
-            if (minComponents.weekday > 1) {
-                numOfInvalidCell = minComponents.weekday - 2;
-            } else {
-                numOfInvalidCell = 6;
-            }
-        } else {
-            numOfInvalidCell = minComponents.weekday - 1;
-        }
-        _startTimestamp = [minDate timeIntervalSince1970] - numOfInvalidCell*86400; // 第一个cell(可能是invalid的)
-        // 今天的0点
-        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekday | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate now]];
-        components.timeZone = [NSTimeZone systemTimeZone];
-        components.hour = 0;
-        components.minute = 0;
-        components.second = 0;
-        long timestamp = [[gregorian dateFromComponents:components] timeIntervalSince1970]; // 今天的timestamp
-        _selectedCellIndex = (timestamp-_startTimestamp)/86400; // 今天cell的位置
-        
-        // 添加前面的补位的日期
-        for (int i=0; i<numOfInvalidCell; i++) {
-            NSInteger invalidDateTimestamp = [minDate timeIntervalSince1970] - (numOfInvalidCell-i)*86400;
-            [_keys addObject:[@(invalidDateTimestamp) stringValue]];
-        }
-        // 添加第一个record和最后一个record之间的日期
-        for (int i=0; i<dateNum; i++) {
-            NSInteger validDateTimestamp = [minDate timeIntervalSince1970] + i*86400;
-            [_keys addObject:[@(validDateTimestamp) stringValue]];
-        }
-    }
-}
-
 - (NSMutableDictionary<NSString *, NSMutableArray<MirrorDataModel *> *> *)gridData
 {
     if (!_gridData) {
@@ -723,10 +687,44 @@ static CGFloat const kCellSpacing = 3;
     return _gridData;
 }
 
-- (void)updateGridData
+#pragma mark - Animation
+
+// 从左边缘滑动唤起settings
+- (void)edgeGestureRecognizerAction:(UIScreenEdgePanGestureRecognizer *)pan
 {
-    _gridData = [MirrorStorage getGridData];
+    //产生百分比
+    CGFloat process = [pan translationInView:self.view].x / (self.view.frame.size.width);
+    
+    process = MIN(1.0,(MAX(0.0, process)));
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+        // 触发present转场动画
+        [self goToSettings];
+    }else if (pan.state == UIGestureRecognizerStateChanged){
+        [self.interactiveTransition updateInteractiveTransition:process];
+    }else if (pan.state == UIGestureRecognizerStateEnded
+              || pan.state == UIGestureRecognizerStateCancelled){
+        if (process > 0.3) {
+            [ self.interactiveTransition finishInteractiveTransition];
+        }else{
+            [ self.interactiveTransition cancelInteractiveTransition];
+        }
+        self.interactiveTransition = nil;
+    }
 }
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+    LeftAnimation *animation = [LeftAnimation new];
+    animation.isPresent = YES;
+    return animation;
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
+{
+    return self.interactiveTransition;
+}
+
 
 #pragma mark - Privates
 

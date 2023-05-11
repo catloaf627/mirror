@@ -67,6 +67,17 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self p_setupUI];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
+}
+
 - (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
@@ -80,17 +91,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
     }
     [self p_setupUI];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self p_setupUI];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
 }
 
 - (void)reloadData
@@ -123,7 +123,20 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self.view addGestureRecognizer:edgeRecognizer];
 }
 
-#pragma mark - UICollectionViewDelegate
+
+#pragma mark - Actions
+
+- (void)goToSettings
+{
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
+    settingsVC.transitioningDelegate = self;
+    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
+    [self presentViewController:settingsVC animated:YES completion:nil];
+}
+
+#pragma mark - Collection view delegate
+
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -131,8 +144,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     allRecordsVC.scrollToIndex = self.todayData[indexPath.item].originalIndex;
     [self.navigationController pushViewController:allRecordsVC animated:YES];
 }
-
-#pragma mark - UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -171,17 +182,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
     return CGSizeMake(kScreenWidth, 130);
-}
-
-#pragma mark - Actions
-
-- (void)goToSettings
-{
-    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
-    SettingsViewController * settingsVC = [[SettingsViewController alloc] init];
-    settingsVC.transitioningDelegate = self;
-    settingsVC.modalPresentationStyle = UIModalPresentationCustom;
-    [self presentViewController:settingsVC animated:YES completion:nil];
 }
 
 #pragma mark - Getters
@@ -240,6 +240,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     }
     return _todayData;
 }
+
 #pragma mark - Animations
 
 // 从左边缘滑动唤起settings

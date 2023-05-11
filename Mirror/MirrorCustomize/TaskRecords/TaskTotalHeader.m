@@ -24,7 +24,6 @@
 - (void)config
 {
     NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX];
-    MirrorDataModel *chartModel = nil;
     long count = 0;
     for (int i=0; i<chartModels.count; i++) {
         count = count + [MirrorTool getTotalTimeOfPeriods:chartModels[i].records];
