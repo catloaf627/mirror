@@ -26,13 +26,14 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 @interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UIViewControllerTransitioningDelegate>
 
+// Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
-
-@property (nonatomic, strong) UILabel *emptyHintLabel;
-@property (nonatomic, strong) UICollectionView *collectionView;
-// 下面两个都是数据源，同步更新
+// Data source
 @property (nonatomic, strong) NSMutableArray<MirrorRecordModel *> *todayRecords;
+// UI
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UILabel *emptyHintLabel;
 
 @end
 

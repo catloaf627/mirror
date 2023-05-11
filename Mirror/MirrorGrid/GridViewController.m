@@ -30,26 +30,25 @@ static CGFloat const kCellSpacing = 3;
 
 @interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SpanLegendDelegate, SpanHistogramDelegate, UIViewControllerTransitioningDelegate>
 
-// Data source
-@property (nonatomic, strong) NSMutableArray<NSString *> *keys;
-@property (nonatomic, strong) NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData;
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 @property (nonatomic, strong) UIButton *typeButton;
-// UI
-@property (nonatomic, strong) UILabel *leftHint;
-@property (nonatomic, strong) UILabel *rightHint;
-@property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) UILabel *dateLabel;
-@property (nonatomic, strong) UIView *weekdayView;
-@property (nonatomic, strong) SpanLegend *legendView;
-@property (nonatomic, strong) SpanHistogram *histogramView;
-@property (nonatomic, strong) MirrorPiechart *piechartView;
-// Mark
+// Data source
+@property (nonatomic, strong) NSMutableArray<NSString *> *keys;
+@property (nonatomic, strong) NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData;
 @property (nonatomic, assign) NSInteger startTimestamp;
 @property (nonatomic, assign) NSInteger selectedCellIndex;
 @property (nonatomic, assign) MirrorColorType randomColorType;
+// UI
+@property (nonatomic, strong) UILabel *leftHint;
+@property (nonatomic, strong) UILabel *rightHint;
+@property (nonatomic, strong) UIView *weekdayView;
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UILabel *dateLabel;
+@property (nonatomic, strong) SpanLegend *legendView;
+@property (nonatomic, strong) SpanHistogram *histogramView;
+@property (nonatomic, strong) MirrorPiechart *piechartView;
 
 @end
 

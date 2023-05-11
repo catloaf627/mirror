@@ -28,29 +28,23 @@ static CGFloat const kLeftRightSpacing = 20;
 
 @interface HistoryViewController () <SpanLegendDelegate, SpanHistogramDelegate, UIViewControllerTransitioningDelegate>
 
-// Data source
-@property (nonatomic, strong) NSMutableArray<MirrorDataModel *>  *data;
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 @property (nonatomic, strong) UIButton *typeButton;
+// Data source
+@property (nonatomic, strong) NSMutableArray<MirrorDataModel *>  *data;
+@property (nonatomic, assign) NSInteger offset;
 // UI
 @property (nonatomic, strong) UISegmentedControl *typeSwitch;
+@property (nonatomic, strong) UIView *interactionView; //在这个view的范围内，点左侧offset-1,点右侧offset+1
+@property (nonatomic, strong) UIImageView *leftArrow;
+@property (nonatomic, strong) UIImageView *rightArrow;
+@property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) SpanLegend *legendView;
 @property (nonatomic, strong) SpanHistogram *histogramView;
 @property (nonatomic, strong) MirrorPiechart *piechartView;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
-
-/*
- offset和type一起使用，每次切type的时候置为0。
- offset = n means往右（往未来）拉n周/月/年；offset = -n means往左（往过去）拉n周/月/年；
- */
-@property (nonatomic, assign) NSInteger offset;
-@property (nonatomic, strong) UIView *interactionView; //在这个view的范围内，点左侧offset-1,点右侧offset+1
-@property (nonatomic, strong) UIImageView *leftArrow;
-@property (nonatomic, strong) UIImageView *rightArrow;
-@property (nonatomic, strong) UILabel *titleLabel;
-
 
 @end
 
@@ -92,7 +86,7 @@ static CGFloat const kLeftRightSpacing = 20;
     self.interactionView = nil;
     self.leftArrow = nil;
     self.rightArrow = nil;
-    self.titleLabel = nil;
+    self.dateLabel = nil;
     self.legendView = nil;
     self.histogramView = nil;
     self.piechartView = nil;
@@ -171,21 +165,21 @@ static CGFloat const kLeftRightSpacing = 20;
         make.top.mas_equalTo(self.typeSwitch.mas_bottom).offset(10);
         make.height.mas_equalTo(60);
     }];
-    [self.interactionView addSubview:self.titleLabel];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.interactionView addSubview:self.dateLabel];
+    [self.dateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.centerY.offset(0);
         make.width.mas_equalTo(2*self.view.frame.size.width/3);
         make.height.mas_equalTo(40);
     }];
     [self.interactionView addSubview:self.leftArrow];
     [self.leftArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.titleLabel.mas_left).offset(-10);
+        make.centerY.mas_equalTo(self.dateLabel);
+        make.right.mas_equalTo(self.dateLabel.mas_left).offset(-10);
     }];
     [self.interactionView addSubview:self.rightArrow];
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.titleLabel);
-        make.left.mas_equalTo(self.titleLabel.mas_right).offset(10);
+        make.centerY.mas_equalTo(self.dateLabel);
+        make.left.mas_equalTo(self.dateLabel.mas_right).offset(10);
     }];
     [self.view addSubview:self.legendView];
     [self.legendView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -300,7 +294,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)updateSpanText:(NSString *)text
 {
-    self.titleLabel.text = text;
+    self.dateLabel.text = text;
 }
 
 #pragma mark - Getters
@@ -324,16 +318,16 @@ static CGFloat const kLeftRightSpacing = 20;
     return _interactionView;
 }
 
-- (UILabel *)titleLabel
+- (UILabel *)dateLabel
 {
-    if (!_titleLabel) {
-        _titleLabel = [UILabel new];
-        _titleLabel.textAlignment = NSTextAlignmentCenter;
-        _titleLabel.text = @"";
-        _titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
-        _titleLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 和nickname的文字颜色保持一致
+    if (!_dateLabel) {
+        _dateLabel = [UILabel new];
+        _dateLabel.textAlignment = NSTextAlignmentCenter;
+        _dateLabel.text = @"";
+        _dateLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:16];
+        _dateLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText]; // 和nickname的文字颜色保持一致
     }
-    return _titleLabel;
+    return _dateLabel;
 }
 
 - (UIImageView *)leftArrow

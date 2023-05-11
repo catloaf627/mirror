@@ -30,11 +30,15 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 @interface TimeViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
 
+// Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 @property (nonatomic, strong) UIButton *editTasksButton;
+// Data source
+@property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
+// Mark
 @property (nonatomic, assign) CGRect selectedCellFrame; // cell.x, cell.y, cell.width, cell.height
-
+// UI
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
@@ -70,15 +74,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)restartVC
 {
-    // 将vc.view里的所有subviews全部置为nil
-    self.collectionView = nil;
-    // 将vc.view里的所有subviews从父view上移除
-    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新tabbar 和 navibar
+    // update navibar
     [[MirrorTabsManager sharedInstance] updateTimeTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 0) {
         [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.editTasksButton];
     }
+    // reset ui
+    self.collectionView = nil;
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self p_setupUI];
 }
 
@@ -98,6 +101,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)reloadData
 {
+    self.data = [MirrorStorage tasksWithoutArchiveWithAddNew];
     [self.collectionView reloadData];
 }
 
@@ -108,7 +112,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height); // viewdidload时机过早，navi信息还没ready，需要在viewdidappear里再reset下
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
     }];
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
@@ -138,7 +142,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)selectedIndexPath
 {
-    MirrorTaskModel *selectedModel = [MirrorStorage tasksWithoutArchiveWithAddNew][selectedIndexPath.item];
+    MirrorTaskModel *selectedModel = self.data[selectedIndexPath.item];
     // 点击了[+]
     if (selectedModel.isAddTaskModel) {
         AddTaskViewController *addVC = [AddTaskViewController new];
@@ -156,7 +160,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    MirrorTaskModel *taskModel = [MirrorStorage tasksWithoutArchiveWithAddNew][indexPath.item];
+    MirrorTaskModel *taskModel = self.data[indexPath.item];
     // 如果在计时中，先打开计时页面
     if (!taskModel.isAddTaskModel && [[MirrorStorage isGoingOnTask] isEqualToString:taskModel.taskName]) { // this task is ongoing
         TimeTrackingViewController * timeTrackingVC = [[TimeTrackingViewController alloc] initWithTaskName:taskModel.taskName];
@@ -179,7 +183,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [MirrorStorage tasksWithoutArchiveWithAddNew].count;
+    return self.data.count;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -249,6 +253,14 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
         [_editTasksButton addTarget:self action:@selector(goToAllTasks) forControlEvents:UIControlEventTouchUpInside];
     }
     return _editTasksButton;
+}
+
+- (NSMutableArray<MirrorTaskModel *> *)data
+{
+    if (!_data) {
+        _data = [MirrorStorage tasksWithoutArchiveWithAddNew];
+    }
+    return _data;
 }
 
 #pragma mark - UIViewControllerTransitioningDelegate
