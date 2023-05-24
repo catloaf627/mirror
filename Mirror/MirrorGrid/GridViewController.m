@@ -387,6 +387,9 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)updateCharts
 {
+    if (self.keys.count <= _selectedCellIndex) { // 空数据保护
+        return;
+    }
     // data source
     NSMutableArray<MirrorDataModel *> *data = self.gridData[self.keys[_selectedCellIndex]];
     // date label
