@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HiddenViewController : UIViewController
 
+@property (nonatomic, assign) BOOL showShadeButton;
 @property (nonatomic, assign) CGRect buttonFrame;
 
 @end

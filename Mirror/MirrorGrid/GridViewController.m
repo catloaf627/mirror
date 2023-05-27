@@ -244,6 +244,7 @@ static CGFloat const kCellSpacing = 3;
 {
     [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
     HiddenViewController *hiddenVC = [HiddenViewController new];
+    hiddenVC.showShadeButton = YES;
     hiddenVC.transitioningDelegate = self;
     hiddenVC.modalPresentationStyle = UIModalPresentationCustom;
     hiddenVC.buttonFrame = [self.typeButton convertRect:self.typeButton.bounds toView:[[[UIApplication sharedApplication] delegate] window]];

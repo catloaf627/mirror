@@ -50,9 +50,10 @@
 {
     [self.view addSubview:self.singleColorButton];
     [self.singleColorButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(20);
+        make.left.offset(self.showShadeButton ? 20:10);
         make.top.offset(20);
-        make.width.height.mas_equalTo(30);
+        make.width.mas_equalTo(self.showShadeButton ? 30:0);
+        make.height.mas_equalTo(30);
     }];
     [self.view addSubview:self.pieChartButton];
     [self.pieChartButton mas_makeConstraints:^(MASConstraintMaker *make) {

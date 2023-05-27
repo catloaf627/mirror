@@ -23,6 +23,8 @@
 #import "MirrorTool.h"
 #import "MirrorStorage.h"
 #import "MirrorTimeText.h"
+#import "HiddenViewController.h"
+#import "HiddenAnimation.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 
@@ -61,6 +63,7 @@ static CGFloat const kLeftRightSpacing = 20;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchWeekStartsOnNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchChartTypeNotification object:nil];
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskHiddenNotification object:nil];// 比其他vc多监听一个hidden通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
@@ -125,9 +128,10 @@ static CGFloat const kLeftRightSpacing = 20;
     [self.legendView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.legendView legendViewHeight]);
     }];
-
+    
     // histogram
     [self.histogramView updateWithData:self.data];
+    self.histogramView.hidden = [MirrorSettings appliedPieChart];
     
     // piechart
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
@@ -143,6 +147,7 @@ static CGFloat const kLeftRightSpacing = 20;
             }
         }];
     }
+    self.piechartView.hidden = ![MirrorSettings appliedPieChart];
 
 }
 
@@ -229,14 +234,15 @@ static CGFloat const kLeftRightSpacing = 20;
 
 #pragma mark - Actions
 
-- (void)switchChartType
+- (void)goToHiddenVC
 {
-    [MirrorSettings switchChartType];
-    NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.pie.fill" : @"chart.pie";
-    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    self.histogramView.hidden = [MirrorSettings appliedPieChart];
-    self.piechartView.hidden = ![MirrorSettings appliedPieChart];
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+    HiddenViewController *hiddenVC = [HiddenViewController new];
+    hiddenVC.showShadeButton = NO;
+    hiddenVC.transitioningDelegate = self;
+    hiddenVC.modalPresentationStyle = UIModalPresentationCustom;
+    hiddenVC.buttonFrame = [self.typeButton convertRect:self.typeButton.bounds toView:[[[UIApplication sharedApplication] delegate] window]];
+    [self presentViewController:hiddenVC animated:YES completion:nil];
 }
 
 - (void)tapGestureRecognizerAction:(UITapGestureRecognizer *)tap // 热区范围为左右1/3
@@ -459,10 +465,9 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     if (!_typeButton) {
         _typeButton = [UIButton new];
-        NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.pie.fill" : @"chart.pie";
-        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"chart.pie"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        [_typeButton addTarget:self action:@selector(switchChartType) forControlEvents:UIControlEventTouchUpInside];
+        [_typeButton addTarget:self action:@selector(goToHiddenVC) forControlEvents:UIControlEventTouchUpInside];
     }
     return _typeButton;
 }
@@ -514,9 +519,16 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-    LeftAnimation *animation = [LeftAnimation new];
-    animation.isPresent = YES;
-    return animation;
+    if ([presented isKindOfClass:SettingsViewController.class]) { // Settings
+        LeftAnimation *animation = [LeftAnimation new];
+        animation.isPresent = YES;
+        return animation;
+    } else { // Hidden VC
+        HiddenAnimation *animation = [HiddenAnimation new];
+        animation.isPresent = YES;
+        animation.buttonFrame = [self.typeButton convertRect:self.typeButton.bounds toView:[[[UIApplication sharedApplication] delegate] window]];
+        return animation;
+    }
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
