@@ -30,6 +30,8 @@ static CGFloat const kCellSpacing = 3;
 
 @interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SpanLegendDelegate, SpanHistogramDelegate, UIViewControllerTransitioningDelegate>
 
+@property (nonatomic, assign) BOOL needReload;
+
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -93,9 +95,13 @@ static CGFloat const kCellSpacing = 3;
 {
     [super viewDidAppear:animated];
     [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
-    
+    // scroll to today
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     [self updateHints];
+    if (_needReload) {
+        [self reloadData];
+        _needReload = NO;
+    }
 }
 
 - (void)restartVC
@@ -122,19 +128,23 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)reloadData
 {
-    if ([MirrorSettings appliedPieChart]) {
-        self.piechartView.hidden = NO;
-        self.histogramView.hidden = YES;
-    } else {
-        self.histogramView.hidden = NO;
-        self.piechartView.hidden = YES;
+    if (self.tabBarController.selectedIndex == 3) { // 接收通知的时候在本tab上，直接reload
+        if ([MirrorSettings appliedPieChart]) {
+            self.piechartView.hidden = NO;
+            self.histogramView.hidden = YES;
+        } else {
+            self.histogramView.hidden = NO;
+            self.piechartView.hidden = YES;
+        }
+        // data source
+        [self updateWeekdayView];
+        [self updateKeys];
+        [self updateGridData];
+        [self updateCharts];
+        [self.collectionView reloadData];
+    } else { // 接收通知的时候不在本tab上，用needReload hold到viewDidAppear再reload
+        _needReload = YES;
     }
-    // data source
-    [self updateWeekdayView];
-    [self updateKeys];
-    [self updateGridData];
-    
-    [self.collectionView reloadData];
 }
 
 
@@ -385,7 +395,7 @@ static CGFloat const kCellSpacing = 3;
     _gridData = [MirrorStorage getGridData];
 }
 
-- (void)updateCharts
+- (void)updateCharts // legend & histogram & piechart
 {
     if (self.keys.count <= _selectedCellIndex) { // 空数据保护
         return;
