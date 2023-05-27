@@ -15,6 +15,7 @@ static CGFloat const kPadding = 10;
 
 @interface HiddenCollectionViewCell ()
 
+@property (nonatomic, strong) UIImageView *checkMark;
 @property (nonatomic, strong) UIView *coloredView;
 @property (nonatomic, strong) UILabel *label;
 
@@ -40,6 +41,12 @@ static CGFloat const kPadding = 10;
         make.left.offset(kPadding);
     }];
     
+    [self.coloredView addSubview:self.checkMark];
+    self.checkMark.tintColor = [UIColor mirrorColorNamed: [UIColor mirror_getPulseColorType:task.color]];
+    [self.checkMark mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.offset(0);
+    }];
+    
     [self addSubview:self.label];
     self.label.textColor = [UIColor mirrorColorNamed: [UIColor mirror_getPulseColorType:task.color]];
     self.label.text = task.taskName;
@@ -49,6 +56,15 @@ static CGFloat const kPadding = 10;
         make.left.mas_equalTo(self.coloredView.mas_right).offset(kPadding);
         make.right.offset(-kPadding);
     }];
+}
+
+- (UIImageView *)checkMark
+{
+    if (!_checkMark) {
+        UIImage *image = [[UIImage systemImageNamed:@"checkmark"]  imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        _checkMark = [[UIImageView alloc] initWithImage:image];
+    }
+    return _checkMark;
 }
 
 - (UIView *)coloredView
