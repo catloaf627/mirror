@@ -10,6 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, BottomRightType) {
+    BottomRightTypeTotal, // 右下角展示任务总时长
+    BottomRightTypeName, // 右下角展示任务名称
+};
+
 @protocol VCForPeriodCellProtocol <NSObject>
 
 @end
@@ -19,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) UIViewController<VCForPeriodCellProtocol> *delegate;
 
 + (NSString *)identifier;
-- (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index;
+- (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index type:(BottomRightType)type;
 
 
 @end

@@ -21,10 +21,11 @@ static const CGFloat kVerticalPadding = 10;
 
 @property (nonatomic, strong) NSString *taskName;
 @property (nonatomic, assign) NSInteger periodIndex;
+@property (nonatomic, assign) BottomRightType type;
 
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) UIButton *deleteButton;
-@property (nonatomic, strong) UILabel *totalLabel; // 总时长
+@property (nonatomic, strong) UILabel *bottomRightLabel; // 总时长
 @property (nonatomic, strong) UIDatePicker *startPicker;
 @property (nonatomic, strong) UILabel *dashLabel;
 @property (nonatomic, strong) UIDatePicker *endPicker;
@@ -38,10 +39,11 @@ static const CGFloat kVerticalPadding = 10;
     return NSStringFromClass(self.class);
 }
 
-- (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index
+- (void)configWithTaskname:(NSString *)taskName periodIndex:(NSInteger)index type:(BottomRightType)type
 {
     self.taskName = taskName;
     self.periodIndex = index;
+    self.type = type;
     [self updateCellInfo];
     self.layer.cornerRadius = 14;
     [self p_setupUI];
@@ -56,7 +58,12 @@ static const CGFloat kVerticalPadding = 10;
     self.dateLabel.text = [prefix stringByAppendingString:[MirrorTimeText YYYYmmddWeekdayWithStart:allRecords[self.periodIndex].startTime]];
     long start = allRecords[self.periodIndex].startTime;
     long end =  allRecords[self.periodIndex].endTime;
-    self.totalLabel.text = [MirrorTimeText XdXhXmXsShortWithstart:start end:end];
+    if (self.type == BottomRightTypeTotal) {
+        self.bottomRightLabel.text = [MirrorTimeText XdXhXmXsShortWithstart:start end:end];
+    } else {
+        self.bottomRightLabel.text = self.taskName;
+    }
+
     self.startPicker.date = [NSDate dateWithTimeIntervalSince1970:start];
     self.startPicker.maximumDate = [self startMaxDate];
     self.startPicker.minimumDate = [self startMinDate];
@@ -100,8 +107,8 @@ static const CGFloat kVerticalPadding = 10;
         make.left.mas_equalTo(self.dashLabel.mas_right);
         make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
     }];
-    [self addSubview:self.totalLabel];
-    [self.totalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self addSubview:self.bottomRightLabel];
+    [self.bottomRightLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.offset(-kVerticalPadding);
         make.right.offset(-kHorizontalPadding);
         make.height.mas_equalTo((self.bounds.size.height - 2*kVerticalPadding)/2);
@@ -141,15 +148,15 @@ static const CGFloat kVerticalPadding = 10;
 
 #pragma mark - Getters
 
-- (UILabel *)totalLabel
+- (UILabel *)bottomRightLabel
 {
-    if (!_totalLabel) {
-        _totalLabel = [UILabel new];
-        _totalLabel.adjustsFontSizeToFitWidth = YES;
-        _totalLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
-        _totalLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:12];
+    if (!_bottomRightLabel) {
+        _bottomRightLabel = [UILabel new];
+        _bottomRightLabel.adjustsFontSizeToFitWidth = YES;
+        _bottomRightLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        _bottomRightLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:12];
     }
-    return _totalLabel;
+    return _bottomRightLabel;
 }
 
 

@@ -129,7 +129,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithTaskname:self.taskName periodIndex:[MirrorStorage getAllTaskRecords:self.taskName][indexPath.item].originalIndex];
+    [cell configWithTaskname:self.taskName periodIndex:[MirrorStorage getAllTaskRecords:self.taskName][indexPath.item].originalIndex type:BottomRightTypeTotal];
     cell.delegate = self;
     return cell;
 }

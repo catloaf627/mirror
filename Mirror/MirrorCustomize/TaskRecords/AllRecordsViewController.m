@@ -121,7 +121,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
     MirrorRecordModel *record = [MirrorStorage retriveMirrorRecords][indexPath.item];
-    [cell configWithTaskname:record.taskName periodIndex:indexPath.item];
+    [cell configWithTaskname:record.taskName periodIndex:indexPath.item type:BottomRightTypeName];
     cell.delegate = self;
     return cell;
 }
