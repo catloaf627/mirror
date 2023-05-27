@@ -72,6 +72,12 @@
 
 + (NSInteger)timeZoneGap:(NSInteger)newSecondsFromGMT
 {
+    // 如果之前没存过本地timezone，存本地timezone，并将时差返回为0
+    if (![[[NSUserDefaults standardUserDefaults] dictionaryRepresentation].allKeys containsObject:@"MirrorUserTimeZone"]) {
+        [[NSUserDefaults standardUserDefaults] setInteger:newSecondsFromGMT forKey:@"MirrorUserTimeZone"];
+        return 0;
+    }
+    // 如果之前存过本地timezone，返回时差本次检测出来的时差
     NSInteger oldSecondsFromGMT = [[NSUserDefaults standardUserDefaults] integerForKey:@"MirrorUserTimeZone"];
     [[NSUserDefaults standardUserDefaults] setInteger:newSecondsFromGMT forKey:@"MirrorUserTimeZone"];
     return oldSecondsFromGMT - newSecondsFromGMT;
