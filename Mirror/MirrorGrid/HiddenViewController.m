@@ -9,12 +9,11 @@
 #import "HiddenAnimation.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
-
+#import "MirrorSettings.h"
 @interface HiddenViewController () <UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) UILabel *singleColorLabel;
-@property (nonatomic, strong) UISwitch *toggle;
-@property (nonatomic, strong) UIColor *selectedColor;
+@property (nonatomic, strong) UIButton *singleColorButton;
+@property (nonatomic, strong) UIButton *pieChartButton;
 
 @end
 
@@ -44,41 +43,72 @@
 
 - (void)p_setupUI
 {
-    [self.view addSubview:self.singleColorLabel];
-    [self.singleColorLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.singleColorButton];
+    [self.singleColorButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(20);
         make.top.offset(20);
-        make.height.mas_equalTo(30);
+        make.width.height.mas_equalTo(30);
     }];
-    [self.view addSubview:self.toggle];
-    [self.toggle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.singleColorLabel.mas_right).offset(10);
+    [self.view addSubview:self.pieChartButton];
+    [self.pieChartButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.singleColorButton.mas_right).offset(10);
         make.top.offset(20);
-        make.height.mas_equalTo(30);
+        make.width.height.mas_equalTo(30);
     }];
+    
+}
+
+#pragma mark - Actions
+
+- (void)singleColorSwitchChanged
+{
+    // 本地保存
+    [MirrorSettings switchShowShade];
+    NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
+    NSInteger randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
+    [MirrorSettings changePreferredShadeColor:randomColorType];
+    // update button
+    NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
+    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [_singleColorButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+}
+
+- (void)usePieChartSwitchChanged
+{
+    // 本地保存
+    [MirrorSettings switchChartType];
+    // update button
+    NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.pie.fill" : @"chart.pie";
+    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [_pieChartButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 }
 
 #pragma mark - Getters
 
-- (UILabel *)singleColorLabel
+- (UIButton *)singleColorButton
 {
-    if (!_singleColorLabel) {
-        _singleColorLabel = [UILabel new];
-        _singleColorLabel.text = @"使用单一颜色";
-        _singleColorLabel.textAlignment = NSTextAlignmentCenter;
-        _singleColorLabel.textColor = self.selectedColor;
-        _singleColorLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:15];
+    if (!_singleColorButton) {
+        _singleColorButton = [UIButton new];
+        NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
+        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_singleColorButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _singleColorButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_singleColorButton addTarget:self action:@selector(singleColorSwitchChanged) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _singleColorLabel;
+    return _singleColorButton;
 }
 
-- (UISwitch *)toggle
+- (UIButton *)pieChartButton
 {
-    if (!_toggle) {
-        _toggle = [UISwitch new];
-        _toggle.onTintColor = self.selectedColor; // toggle颜色使用pulse
+    if (!_pieChartButton) {
+        _pieChartButton = [UIButton new];
+        NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.pie.fill" : @"chart.pie";
+        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [_pieChartButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        _pieChartButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        [_pieChartButton addTarget:self action:@selector(usePieChartSwitchChanged) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _toggle;
+    return _pieChartButton;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -87,7 +117,7 @@
 {
     if ([gestureRecognizer isKindOfClass:UITapGestureRecognizer.class]) {
         CGPoint touchPoint = [touch locationInView:self.view];
-        if (touchPoint.x < self.view.frame.origin.x || touchPoint.y > self.view.frame.origin.y + self.view.frame.size.height) {
+        if (touchPoint.x<0 || touchPoint.y>self.view.frame.origin.y + self.view.frame.size.height) {
             [self dismissViewControllerAnimated:YES completion:nil];// 点了view外面
         } else {
             // 点了view里面

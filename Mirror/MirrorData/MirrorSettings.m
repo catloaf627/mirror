@@ -102,7 +102,7 @@
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredShade"];
     }
-    // 不需要通知，修改页面就是展示页面。
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchShowShadeNotification object:nil];
 }
 
 + (NSInteger)preferredShadeColor
