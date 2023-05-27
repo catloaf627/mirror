@@ -83,6 +83,7 @@
     NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
     UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [_singleColorButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    _singleColorButton.tintColor = [UIColor mirrorColorNamed:[MirrorSettings preferredShadeColor]];
 }
 
 - (void)usePieChartSwitchChanged
