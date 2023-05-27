@@ -17,7 +17,7 @@
 static const CGFloat kHorizontalPadding = 20;
 static const CGFloat kVerticalPadding = 10;
 
-@interface TodayPeriodCollectionViewCell () <UIGestureRecognizerDelegate>
+@interface TodayPeriodCollectionViewCell ()
 
 @property (nonatomic, strong) NSString *taskName;
 @property (nonatomic, assign) NSInteger periodIndex;

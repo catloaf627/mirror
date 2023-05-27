@@ -23,6 +23,8 @@
 #import "MirrorTabsManager.h"
 #import "SettingsViewController.h"
 #import "LeftAnimation.h"
+#import "HiddenViewController.h"
+#import "HiddenAnimation.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellWidth = 30;
@@ -246,6 +248,16 @@ static CGFloat const kCellSpacing = 3;
     self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
     [MirrorSettings changePreferredShadeColor:self.randomColorType];
     [self.collectionView reloadData];
+}
+
+- (void)goToHiddenVC
+{
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+    HiddenViewController *hiddenVC = [HiddenViewController new];
+    hiddenVC.transitioningDelegate = self;
+    hiddenVC.modalPresentationStyle = UIModalPresentationCustom;
+    hiddenVC.buttonFrame = [self.typeButton convertRect:self.typeButton.bounds toView:[[[UIApplication sharedApplication] delegate] window]];
+    [self presentViewController:hiddenVC animated:YES completion:nil];
 }
 
 #pragma mark - update data
@@ -676,7 +688,7 @@ static CGFloat const kCellSpacing = 3;
         NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
         UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        [_typeButton addTarget:self action:@selector(switchShadeType) forControlEvents:UIControlEventTouchUpInside];
+        [_typeButton addTarget:self action:@selector(goToHiddenVC) forControlEvents:UIControlEventTouchUpInside];
     }
     return _typeButton;
 }
@@ -728,9 +740,16 @@ static CGFloat const kCellSpacing = 3;
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-    LeftAnimation *animation = [LeftAnimation new];
-    animation.isPresent = YES;
-    return animation;
+    if ([presented isKindOfClass:SettingsViewController.class]) { // Settings
+        LeftAnimation *animation = [LeftAnimation new];
+        animation.isPresent = YES;
+        return animation;
+    } else { // Hidden VC
+        HiddenAnimation *animation = [HiddenAnimation new];
+        animation.isPresent = YES;
+        animation.buttonFrame = [self.typeButton convertRect:self.typeButton.bounds toView:[[[UIApplication sharedApplication] delegate] window]];
+        return animation;
+    }
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
