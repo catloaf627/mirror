@@ -329,6 +329,9 @@ static NSString *const kMirrorRecords = @"mirror_records";
 {
     NSData *storedEncodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:kMirrorRecords];
     NSMutableArray<MirrorRecordModel *> *records = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class]] fromData:storedEncodedObject error:nil];
+    for (int i=0; i<records.count; i++) {
+        records[i].originalIndex = i;
+    }
     return records ?: [NSMutableArray new];
 }
 
@@ -382,7 +385,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
         MirrorRecordModel *record = allRecords[recordIndex];
         if ([record.taskName isEqualToString:taskName]) {
             MirrorRecordModel *recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
-            recordCopy.originalIndex = recordIndex;
+            recordCopy.originalIndex = record.originalIndex;
             [taskRecords addObject:recordCopy];
         }
     }
@@ -422,7 +425,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
         else if (startTime <= record.startTime && record.endTime <= endTime) {
             if (printDetailsToDebug) NSLog(@"✔️完整地发生在start time和end time中间");
             MirrorRecordModel* recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
-            recordCopy.originalIndex = recordIndex;
+            recordCopy.originalIndex = record.originalIndex;
             [targetRecords addObject:recordCopy];
             
         }
@@ -463,13 +466,13 @@ static NSString *const kMirrorRecords = @"mirror_records";
             if (dict[record.taskName]) {
                 NSMutableArray<MirrorRecordModel *> *value = dict[record.taskName];
                 MirrorRecordModel *recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
-                recordCopy.originalIndex = recordIndex;
+                recordCopy.originalIndex = record.originalIndex;
                 [value addObject:recordCopy];
                 [dict setValue:value forKey:recordCopy.taskName];
             } else {
                 NSMutableArray<MirrorRecordModel *> *value = [NSMutableArray<MirrorRecordModel *> new];
                 MirrorRecordModel *recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
-                recordCopy.originalIndex = recordIndex;
+                recordCopy.originalIndex = record.originalIndex;
                 [value addObject:recordCopy];
                 [dict setValue:value forKey:record.taskName];
             }
@@ -507,7 +510,6 @@ static NSString *const kMirrorRecords = @"mirror_records";
     NSMutableArray<MirrorRecordModel *> *recordsInTimeOrder = [NSMutableArray new];
     for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
         MirrorRecordModel *record = allRecords[recordIndex];
-        record.originalIndex = recordIndex;
         if (![[self keyOfTime:record.startTime] isEqualToString:key]) { // 下一天了
             // sort
             NSMutableArray<MirrorDataModel *> *oneday = [NSMutableArray new];
