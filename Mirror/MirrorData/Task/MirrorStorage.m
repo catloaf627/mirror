@@ -38,7 +38,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
             [tasksWithoutArchive addObject:tasks[i]];
         }
     }
-    MirrorTaskModel *fakemodel = [[MirrorTaskModel alloc] initWithTitle:@"" createdTime:0 colorType:0 isArchived:NO isAddTask:YES];
+    MirrorTaskModel *fakemodel = [[MirrorTaskModel alloc] initWithTitle:@"" createdTime:0 colorType:0 isArchived:NO isHidden:NO isAddTask:YES];
     [tasksWithoutArchive addObject:fakemodel];
     return tasksWithoutArchive;
 }
@@ -99,6 +99,26 @@ static NSString *const kMirrorRecords = @"mirror_records";
     }
     [MirrorStorage saveMirrorTasks:tasks];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskArchiveNotification object:nil userInfo:nil];
+    AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
+}
+
++ (void)switchHiddenTask:(NSString *)taskName
+{
+    NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+    for (int i=0; i<tasks.count; i++) {
+        if ([tasks[i].taskName isEqualToString:taskName]) {
+            if (tasks[i].isHidden == NO) {
+                NSLog(@"Hide");
+                tasks[i].isHidden = YES;
+            } else {
+                NSLog(@"Cancel Hide");
+                tasks[i].isHidden = NO;
+            }
+            break;
+        }
+    }
+    [MirrorStorage saveMirrorTasks:tasks];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskHiddenNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
 
@@ -288,9 +308,6 @@ static NSString *const kMirrorRecords = @"mirror_records";
 
 + (void)saveMirrorTasks:(NSMutableArray<MirrorTaskModel *> *)tasks // 归档
 {
-    for (int i=0; i<tasks.count; i++) {
-        NSLog(@"name %@, color %ld, createdtime %ld, isArchived %@", tasks[i].taskName, tasks[i].color, tasks[i].createdTime, tasks[i].isArchived ? @"Y":@"N");
-    }
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:tasks requiringSecureCoding:YES error:nil];
     [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorTasks];
 }
@@ -304,9 +321,6 @@ static NSString *const kMirrorRecords = @"mirror_records";
 
 + (void)saveMirrorRecords:(NSMutableArray<MirrorRecordModel *> *)records // 归档
 {
-    for (int i=0; i<records.count; i++) {
-        NSLog(@"name %@, [%ld, %ld]", records[i].taskName, records[i].startTime, records[i].endTime);
-    }
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:records requiringSecureCoding:YES error:nil];
     [[NSUserDefaults standardUserDefaults] setValue:data forKey:kMirrorRecords];
 }
@@ -317,6 +331,32 @@ static NSString *const kMirrorRecords = @"mirror_records";
     NSMutableArray<MirrorRecordModel *> *records = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class]] fromData:storedEncodedObject error:nil];
     return records ?: [NSMutableArray new];
 }
+
++ (NSMutableArray<MirrorRecordModel *> *)retriveMirrorRecordsWithoutHidden // 解档
+{
+    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
+    NSMutableDictionary *taskHiddenState = [NSMutableDictionary new];
+    for (int i=0; i<allTasks.count; i++) {
+        MirrorTaskModel *task = allTasks[i];
+        if (task.isHidden) {
+            [taskHiddenState setValue:@(YES) forKey:task.taskName];
+        } else {
+            [taskHiddenState setValue:@(NO) forKey:task.taskName];
+        }
+    }
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    NSMutableArray<MirrorRecordModel *> *allRecordsWithoutHidden = [NSMutableArray new];
+    for (int i=0; i<allRecords.count; i++) {
+        MirrorRecordModel *record = allRecords[i];
+        if ([taskHiddenState[record.taskName] boolValue]) {
+            // 这条record被隐藏
+        } else {
+            [allRecordsWithoutHidden addObject:record];
+        }
+    }
+    return allRecordsWithoutHidden;
+}
+
 #pragma mark - 取出部分数据
 
 + (MirrorTaskModel *)getTaskModelFromDB:(NSString *)taskName
@@ -402,7 +442,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
 {
     BOOL printDetailsToDebug = NO; // debug用
     NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> *dict = [NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> new];
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecordsWithoutHidden];
 
     for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
         MirrorRecordModel *record = allRecords[recordIndex];
@@ -459,7 +499,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
     NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData = [NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> new];
     
     NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecordsWithoutHidden];
      
     if (allRecords.count == 0) return gridData;
     

@@ -119,6 +119,13 @@
     return cell;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [MirrorStorage switchHiddenTask:self.data[indexPath.item].taskName];
+    self.data = [MirrorStorage retriveMirrorTasks];
+    [self.collectionView reloadData];
+}
+
 #pragma mark - Getters
 
 - (NSMutableArray<MirrorTaskModel *> *)data

@@ -46,6 +46,7 @@ static CGFloat const kPadding = 10;
     [self.checkMark mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.offset(0);
     }];
+    self.checkMark.hidden = task.isHidden;
     
     [self addSubview:self.label];
     self.label.textColor = [UIColor mirrorColorNamed: [UIColor mirror_getPulseColorType:task.color]];

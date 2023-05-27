@@ -9,7 +9,7 @@
 
 @implementation MirrorTaskModel
 
-- (instancetype)initWithTitle:(NSString *)taskName createdTime:(long)createTime colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived isAddTask:(BOOL)isAddTaskModel
+- (instancetype)initWithTitle:(NSString *)taskName createdTime:(long)createTime colorType:(MirrorColorType)colorType isArchived:(BOOL)isArchived isHidden:(BOOL)isHidden isAddTask:(BOOL)isAddTaskModel
 {
     self = [super init];
     if (self) {
@@ -17,6 +17,7 @@
         _createdTime = createTime;
         _color = colorType;
         _isArchived = isArchived;
+        _isHidden = isHidden;
         _isAddTaskModel = isAddTaskModel;
     }
     return self;
@@ -33,6 +34,7 @@
     //Encode properties, other class variables, etc
     [encoder encodeObject:self.taskName forKey:@"task_name"];
     [encoder encodeBool:self.isArchived forKey:@"is_archived"];
+    [encoder encodeBool:self.isHidden forKey:@"is_hidden"];
     [encoder encodeInt:[@(self.color) intValue] forKey:@"color"];
     [encoder encodeInt64:self.createdTime forKey:@"created_time"];
 }
@@ -42,6 +44,7 @@
         //decode properties, other class vars
         self.taskName = [decoder decodeObjectForKey:@"task_name"];
         self.isArchived = [decoder decodeBoolForKey:@"is_archived"];
+        self.isHidden = [decoder decodeBoolForKey:@"is_hidden"];
         self.color = [decoder decodeIntForKey:@"color"];
         self.createdTime = [decoder decodeInt64ForKey:@"created_time"];
     }
