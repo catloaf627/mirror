@@ -113,6 +113,14 @@ static NSString *const kMirrorRecords = @"mirror_records";
         }
     }
     [MirrorStorage saveMirrorTasks:tasks];
+    NSMutableArray <MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+    for (int i=0; i<records.count; i++) {
+        if ([records[i].taskName isEqualToString:oldName]) {
+            NSLog(@"Edit record name");
+            records[i].taskName = newName;
+        }
+    }
+    [MirrorStorage saveMirrorRecords:records];
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskEditNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
@@ -353,7 +361,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
     long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     long endTime = startTime + 86400;
     
-    BOOL printDetailsToDebug = YES; // debug用
+    BOOL printDetailsToDebug = NO; // debug用
     NSMutableArray<MirrorRecordModel *> *targetRecords = [NSMutableArray<MirrorRecordModel *> new];
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
 
@@ -392,7 +400,7 @@ static NSString *const kMirrorRecords = @"mirror_records";
 // 取出从startTime到endTime的所有条record，并按照MirrorDataModel的方式存储
 + (NSMutableArray<MirrorDataModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime
 {
-    BOOL printDetailsToDebug = YES; // debug用
+    BOOL printDetailsToDebug = NO; // debug用
     NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> *dict = [NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> new];
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
 
