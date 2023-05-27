@@ -1,15 +1,15 @@
 //
-//  LegendCollectionViewCell.h
+//  HiddenCollectionViewCell.h
 //  Mirror
 //
-//  Created by Yuqing Wang on 2023/4/15.
+//  Created by Yuqing Wang on 2023/5/27.
 //
 
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LegendCollectionViewCell : UICollectionViewCell
+@interface HiddenCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
 

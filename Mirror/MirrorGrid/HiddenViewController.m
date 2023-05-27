@@ -10,10 +10,15 @@
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorSettings.h"
-@interface HiddenViewController () <UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate>
+#import "HiddenCollectionViewCell.h"
+#import "MirrorStorage.h"
+
+@interface HiddenViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIButton *singleColorButton;
 @property (nonatomic, strong) UIButton *pieChartButton;
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
 
 @end
 
@@ -55,6 +60,13 @@
         make.top.offset(20);
         make.width.height.mas_equalTo(30);
     }];
+    [self.view addSubview:self.collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.singleColorButton.mas_bottom).offset(10);
+        make.bottom.equalTo(self.view.mas_bottom).offset(-20);
+        make.left.offset(20);
+        make.right.offset(-20);
+    }];
     
 }
 
@@ -83,7 +95,39 @@
     [_pieChartButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 }
 
+#pragma mark - CollectionView
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return self.data.count;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(self.collectionView.frame.size.width, 40);
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    HiddenCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[HiddenCollectionViewCell identifier] forIndexPath:indexPath];
+    [cell configCellWithTaskname:self.data[indexPath.item].taskName];
+    return cell;
+}
+
 #pragma mark - Getters
+
+- (NSMutableArray<MirrorTaskModel *> *)data
+{
+    if (!_data) {
+        _data = [MirrorStorage retriveMirrorTasks];
+    }
+    return _data;
+}
 
 - (UIButton *)singleColorButton
 {
@@ -109,6 +153,21 @@
         [_pieChartButton addTarget:self action:@selector(usePieChartSwitchChanged) forControlEvents:UIControlEventTouchUpInside];
     }
     return _pieChartButton;
+}
+
+- (UICollectionView *)collectionView
+{
+    if (!_collectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        layout.minimumLineSpacing = 0;
+        layout.minimumInteritemSpacing = 0;
+        _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.backgroundColor = self.view.backgroundColor;
+        [_collectionView registerClass:[HiddenCollectionViewCell class] forCellWithReuseIdentifier:[HiddenCollectionViewCell identifier]];
+    }
+    return _collectionView;
 }
 
 #pragma mark - UIGestureRecognizerDelegate

@@ -1,25 +1,26 @@
 //
-//  LegendCollectionViewCell.m
+//  HiddenCollectionViewCell.m
 //  Mirror
 //
-//  Created by Yuqing Wang on 2023/4/15.
+//  Created by Yuqing Wang on 2023/5/27.
 //
 
-#import "LegendCollectionViewCell.h"
+#import "HiddenCollectionViewCell.h"
+#import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
 #import "MirrorStorage.h"
 #import "MirrorTaskModel.h"
 
 static CGFloat const kPadding = 10;
 
-@interface LegendCollectionViewCell ()
+@interface HiddenCollectionViewCell ()
 
 @property (nonatomic, strong) UIView *coloredView;
 @property (nonatomic, strong) UILabel *label;
 
 @end
 
-@implementation LegendCollectionViewCell
+@implementation HiddenCollectionViewCell
 
 + (NSString *)identifier
 {

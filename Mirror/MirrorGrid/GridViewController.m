@@ -239,18 +239,6 @@ static CGFloat const kCellSpacing = 3;
     [self presentViewController:settingsVC animated:YES completion:nil];
 }
 
-- (void)switchShadeType
-{
-    [MirrorSettings switchShowShade];
-    NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
-    self.randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
-    [MirrorSettings changePreferredShadeColor:self.randomColorType];
-    [self.collectionView reloadData];
-}
-
 - (void)goToHiddenVC
 {
     [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
@@ -686,8 +674,7 @@ static CGFloat const kCellSpacing = 3;
 {
     if (!_typeButton) {
         _typeButton = [UIButton new];
-        NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"square.grid.2x2"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [_typeButton addTarget:self action:@selector(goToHiddenVC) forControlEvents:UIControlEventTouchUpInside];
     }

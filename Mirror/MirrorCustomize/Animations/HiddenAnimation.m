@@ -6,7 +6,7 @@
 //
 
 #import "HiddenAnimation.h"
-
+#import "MirrorStorage.h"
 @implementation HiddenAnimation
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext{
@@ -40,7 +40,7 @@
         [[transitionContext containerView] insertSubview:toView belowSubview:fromView];
     }
     CGFloat width = 2*[UIScreen mainScreen].bounds.size.width/3;
-    CGFloat height = [UIScreen mainScreen].bounds.size.height/2;
+    CGFloat height = MIN(20 + 30 + 10 + 40 *[MirrorStorage retriveMirrorTasks].count + 20,[UIScreen mainScreen].bounds.size.height/2);
     if (_isPresent) { // present
         transView.frame = self.buttonFrame;
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
