@@ -678,7 +678,7 @@ static CGFloat const kCellSpacing = 3;
 {
     if (!_typeButton) {
         _typeButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"square.grid.2x2"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"checkmark.square"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [_typeButton addTarget:self action:@selector(goToHiddenVC) forControlEvents:UIControlEventTouchUpInside];
     }

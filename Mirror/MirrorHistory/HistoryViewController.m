@@ -465,7 +465,7 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     if (!_typeButton) {
         _typeButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"chart.pie"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        UIImage *iconImage = [[UIImage systemImageNamed:@"checkmark.square"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_typeButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [_typeButton addTarget:self action:@selector(goToHiddenVC) forControlEvents:UIControlEventTouchUpInside];
     }

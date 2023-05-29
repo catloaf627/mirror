@@ -92,7 +92,7 @@
     // 本地保存
     [MirrorSettings switchChartType];
     // update button
-    NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.pie.fill" : @"chart.pie";
+    NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.bar" : @"chart.pie";
     UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [_pieChartButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 }
@@ -155,7 +155,7 @@
 {
     if (!_pieChartButton) {
         _pieChartButton = [UIButton new];
-        NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.pie.fill" : @"chart.pie";
+        NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.bar" : @"chart.pie";
         UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
         [_pieChartButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         _pieChartButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
