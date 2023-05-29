@@ -100,7 +100,9 @@ static CGFloat const kCellSpacing = 3;
     [super viewDidAppear:animated];
     [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
     // scroll to today
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    if (_selectedCellIndex < [self.collectionView numberOfItemsInSection:0]) { // safty
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    }
     [self updateHints];
     if (_needReload) {
         [self reloadData];
