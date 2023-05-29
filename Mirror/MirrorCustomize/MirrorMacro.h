@@ -52,6 +52,9 @@ typedef NS_ENUM(NSInteger, SpanType) {
 // System Notifications
 #define MirrorSignificantTimeChangeNotification @"MirrorSignificantTimeChangeNotification"
 
+// Import data Notification
+#define MirrorImportDataNotificaiton @"MirrorImportDataNotificaiton"
+
 // Settings Notifications
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"
 #define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"

@@ -168,8 +168,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
             } else {
                 NSArray *biArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:data error:nil];
                 if (biArr.count == 2 && [biArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [biArr[0] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]]) {
-                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"确认导入该数据？" message:@"导入后当前的数据将被覆盖" preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction* importAction = [UIAlertAction actionWithTitle:@"导入" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"import_data_?"] message:[MirrorLanguage mirror_stringWithKey:@"import_data_?_message"] preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* importAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"import"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                         // 解析
                         NSMutableArray<MirrorTaskModel *> *tasks = biArr[0];
                         NSMutableArray<MirrorRecordModel *> *records = biArr[1];
@@ -179,6 +179,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
                         NSString *path = [paths objectAtIndex:0];
                         NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
                         [data writeToFile:filePath atomically:YES];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:MirrorImportDataNotificaiton object:nil];
                     }];
                     UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:nil];
                     [alert addAction:cancelAction];

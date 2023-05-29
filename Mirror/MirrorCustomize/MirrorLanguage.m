@@ -30,6 +30,11 @@
     [mirrorDict setValue:@[@"Show record index", @"展示记录的序号"] forKey:@"show_record_index"];
     [mirrorDict setValue:@[@"Export data", @"导出数据"] forKey:@"export_data"];
     [mirrorDict setValue:@[@"Import data", @"导入数据"] forKey:@"import_data"];
+    [mirrorDict setValue:@[@"Import data?", @"确认导入该数据？"] forKey:@"import_data_?"];
+    [mirrorDict setValue:@[@"Current data will be replaced by the imported data", @"导入后当前的数据将被覆盖"] forKey:@"import_data_?_message"];
+    [mirrorDict setValue:@[@"Import", @"导入"] forKey:@"import"];
+    
+    
     // Profile edit cell - hint
     [mirrorDict setValue:@[@"Click task name to edit (Your data won't be affected)", @"点击任务名称进行编辑（任务数据并不会受到影响）"] forKey:@"edit_taskname_hint"];
     // Profile edit cell
