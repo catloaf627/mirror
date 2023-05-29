@@ -28,6 +28,8 @@
     [mirrorDict setValue:@[@"Apply Chinese", @"使用中文"] forKey:@"apply_chinese"];
     [mirrorDict setValue:@[@"Week starts on Monday", @"将周一作为一周的第一天"] forKey:@"week_starts_on_Monday"];
     [mirrorDict setValue:@[@"Show record index", @"展示记录的序号"] forKey:@"show_record_index"];
+    [mirrorDict setValue:@[@"Export data", @"导出数据"] forKey:@"export_data"];
+    [mirrorDict setValue:@[@"Import data", @"导入数据"] forKey:@"import_data"];
     // Profile edit cell - hint
     [mirrorDict setValue:@[@"Click task name to edit (Your data won't be affected)", @"点击任务名称进行编辑（任务数据并不会受到影响）"] forKey:@"edit_taskname_hint"];
     // Profile edit cell

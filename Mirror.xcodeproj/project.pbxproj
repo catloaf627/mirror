@@ -36,6 +36,7 @@
 		4A6848C52A22003200C8D439 /* HiddenAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848C42A22003200C8D439 /* HiddenAnimation.m */; };
 		4A6848C82A22249A00C8D439 /* HiddenCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848C72A22249A00C8D439 /* HiddenCollectionViewCell.m */; };
 		4A6848CB2A2477E000C8D439 /* ExportDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */; };
+		4A6848CE2A2485F700C8D439 /* ImportDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848CD2A2485F700C8D439 /* ImportDataCollectionViewCell.m */; };
 		4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */; };
 		4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */; };
 		4A88211929F2A2B8009E422C /* TodayTotalHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211829F2A2B8009E422C /* TodayTotalHeader.m */; };
@@ -125,6 +126,8 @@
 		4A6848C72A22249A00C8D439 /* HiddenCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HiddenCollectionViewCell.m; sourceTree = "<group>"; };
 		4A6848C92A2477DF00C8D439 /* ExportDataCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExportDataCollectionViewCell.h; sourceTree = "<group>"; };
 		4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExportDataCollectionViewCell.m; sourceTree = "<group>"; };
+		4A6848CC2A2485F700C8D439 /* ImportDataCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportDataCollectionViewCell.h; sourceTree = "<group>"; };
+		4A6848CD2A2485F700C8D439 /* ImportDataCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportDataCollectionViewCell.m; sourceTree = "<group>"; };
 		4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
 		4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
 		4A88211429F26104009E422C /* TodayPeriodCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayPeriodCollectionViewCell.h; sourceTree = "<group>"; };
@@ -470,6 +473,8 @@
 				4AC1FDC62A0418F000CDCED9 /* ShowIndexCollectionViewCell.m */,
 				4A6848C92A2477DF00C8D439 /* ExportDataCollectionViewCell.h */,
 				4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */,
+				4A6848CC2A2485F700C8D439 /* ImportDataCollectionViewCell.h */,
+				4A6848CD2A2485F700C8D439 /* ImportDataCollectionViewCell.m */,
 			);
 			path = SettingsCells;
 			sourceTree = "<group>";
@@ -633,6 +638,7 @@
 				4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */,
 				4AE4171928DF613D008A6A18 /* TimeViewController.m in Sources */,
 				4A410A3129EA68870007003B /* TaskRecordsViewController.m in Sources */,
+				4A6848CE2A2485F700C8D439 /* ImportDataCollectionViewCell.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,

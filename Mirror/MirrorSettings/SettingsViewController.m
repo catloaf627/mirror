@@ -16,9 +16,11 @@
 #import "WeekStartsOnCollectionViewCell.h"
 #import "ShowIndexCollectionViewCell.h"
 #import "ExportDataCollectionViewCell.h"
+#import "ImportDataCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
 #import "LeftAnimation.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -30,9 +32,10 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeWeekStartsOn,
     MirrorSettingTypeShowIndex,
     MirrorSettingTypeExport,
+    MirrorSettingTypeImport,
 };
 
-@interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate>
+@interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate, UIDocumentPickerDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray *dataSource;
@@ -140,6 +143,36 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     }
 }
 
+#pragma mark - UIDocumentPickerDelegate
+
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls
+{
+    // 获取授权
+    BOOL fileUrlAuthozied = [urls.firstObject startAccessingSecurityScopedResource];
+    if (fileUrlAuthozied) {
+        // 通过文件协调工具来得到新的文件地址，以此得到文件保护功能
+        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] init];
+        NSError *error;
+        
+        [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
+            // 读取文件
+            NSString *fileName = [newURL lastPathComponent];
+            NSError *error = nil;
+            NSData *fileData = [NSData dataWithContentsOfURL:newURL options:NSDataReadingMappedIfSafe error:&error];
+            NSLog(@"fileData.bytes : %dKB \n bytes : %ldKB",1024*1024*10,fileData.length);
+            if (error) {
+                // 读取出错
+            } else {
+                // 上传
+                NSLog(@"fileName : %@", fileName);
+            }
+        }];
+        [urls.firstObject stopAccessingSecurityScopedResource];
+    } else {
+        // 授权失败
+    }
+}
+
 
 # pragma mark - Collection view delegate
 
@@ -165,6 +198,11 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         activityViewControntroller.popoverPresentationController.sourceView = self.view;
         activityViewControntroller.popoverPresentationController.sourceRect = CGRectMake(self.view.bounds.size.width/2, self.view.bounds.size.height/4, 0, 0);
         [self presentViewController:activityViewControntroller animated:true completion:nil];
+    } else if (indexPath.item == MirrorSettingTypeImport) {
+        UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[UTTypeData]]; // allow any file type
+            documentPicker.delegate = self;
+            documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:documentPicker animated:YES completion:nil];
     }
 }
 
@@ -194,6 +232,10 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         return cell;
     } else if (indexPath.item == MirrorSettingTypeExport) {
         ExportDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
+    } else if (indexPath.item == MirrorSettingTypeImport) {
+        ImportDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ImportDataCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
     }
@@ -243,6 +285,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[WeekStartsOnCollectionViewCell class] forCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier]];
         [_collectionView registerClass:[ShowIndexCollectionViewCell class] forCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier]];
         [_collectionView registerClass:[ExportDataCollectionViewCell class] forCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier]];
+        [_collectionView registerClass:[ImportDataCollectionViewCell class] forCellWithReuseIdentifier:[ImportDataCollectionViewCell identifier]];
     }
     return _collectionView;
 }
@@ -250,7 +293,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeExport)];
+        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
     }
     return _dataSource;
 }

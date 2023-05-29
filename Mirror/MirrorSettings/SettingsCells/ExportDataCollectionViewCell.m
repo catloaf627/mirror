@@ -18,7 +18,7 @@ static MirrorColorType const exportcellColorType = MirrorColorTypeCellTeal;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"show_record_index" color:exportcellColorType];
+    [super configCellWithTitle:@"export_data" color:exportcellColorType];
     self.toggle.hidden = YES;
 }
 
