@@ -41,6 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSInteger)preferredShadeColor;
 + (void)changePreferredShadeColor:(NSInteger)color;
 
+// 座右铭
++ (NSString *)userMotto;
++ (void)saveUserMotto:(NSString *)motto;
+
 @end
 
 NS_ASSUME_NONNULL_END

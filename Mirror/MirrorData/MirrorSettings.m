@@ -129,4 +129,19 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchShowIndexNotification object:nil];
 }
 
++ (NSString *)userMotto
+{
+    NSString *motto = [[NSUserDefaults standardUserDefaults] stringForKey:@"MirrorUserMotto"];
+    if (motto) {
+        return motto;
+    } else {
+        return @"Mirror, mirror on the wall, who is the fairest of them all?";
+    }
+}
+
++ (void)saveUserMotto:(NSString *)motto
+{
+    [[NSUserDefaults standardUserDefaults] setObject:motto forKey:@"MirrorUserMotto"];
+}
+
 @end

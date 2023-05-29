@@ -10,7 +10,6 @@
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
 
-#import "AvatarCollectionViewCell.h"
 #import "ThemeCollectionViewCell.h"
 #import "LanguageCollectionViewCell.h"
 #import "WeekStartsOnCollectionViewCell.h"
@@ -23,12 +22,12 @@
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import "MirrorTaskModel.h"
 #import "MirrorRecordModel.h"
+#import "MirrorSettings.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 typedef NS_ENUM(NSInteger, MirrorSettingType) {
-    MirrorSettingTypeAvatar,
     MirrorSettingTypeTheme,
     MirrorSettingTypeLanguage,
     MirrorSettingTypeWeekStartsOn,
@@ -37,8 +36,9 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeImport,
 };
 
-@interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate, UIDocumentPickerDelegate>
+@interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate, UIDocumentPickerDelegate, UITextViewDelegate>
 
+@property (nonatomic, strong) UITextView *mottoField;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSArray *dataSource;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -95,11 +95,18 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (void)p_setupUI
 {
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
+    [self.view addSubview:self.mottoField];
+    [self.mottoField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
+        make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
+        make.top.mas_equalTo(self.view).offset(80);
+        make.height.mas_equalTo(40);
+    }];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
-        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.top.mas_equalTo(self.mottoField.mas_bottom).offset(20);
         make.bottom.mas_equalTo(self.view);
     }];
 }
@@ -199,6 +206,13 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     }
 }
 
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    [MirrorSettings saveUserMotto:textView.text];
+}
+
 
 # pragma mark - Collection view delegate
 
@@ -206,8 +220,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     if (indexPath.item >= self.dataSource.count) {
         return;
-    } else if (indexPath.item == MirrorSettingTypeAvatar) {
-        // glick avatar cell
     } else if (indexPath.item == MirrorSettingTypeTheme) {
         // Do nothing (use toggle to switch theme)
     } else if (indexPath.item == MirrorSettingTypeLanguage) {
@@ -236,10 +248,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     if (indexPath.item >= self.dataSource.count) {
         return [UICollectionViewCell new];
-    } else if (indexPath.item == MirrorSettingTypeAvatar) {
-        AvatarCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[AvatarCollectionViewCell identifier] forIndexPath:indexPath];
-        [cell configCell];
-        return cell;
     } else if (indexPath.item == MirrorSettingTypeTheme){
         ThemeCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ThemeCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
@@ -272,13 +280,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.item) {
-        case MirrorSettingTypeAvatar:
-            return CGSizeMake(collectionView.frame.size.width, 140*kLeftSheetRatio);
-        default:
-            return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
-    }
-    return CGSizeMake(collectionView.frame.size.width, 0);
+    return CGSizeMake(collectionView.frame.size.width, 52*kLeftSheetRatio);
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -297,6 +299,21 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 }
 
 #pragma mark - Getters
+
+- (UITextView *)mottoField
+{
+    if (!_mottoField) {
+        _mottoField = [UITextView new];
+        _mottoField.text = [MirrorSettings userMotto];
+        _mottoField.backgroundColor = [UIColor clearColor];
+        _mottoField.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        _mottoField.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
+        _mottoField.delegate = self;
+        _mottoField.textAlignment = NSTextAlignmentLeft;
+    }
+    return _mottoField;
+}
+
 - (UICollectionView *)collectionView
 {
     if (!_collectionView) {
@@ -305,7 +322,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = self.view.backgroundColor;
-        [_collectionView registerClass:[AvatarCollectionViewCell class] forCellWithReuseIdentifier:[AvatarCollectionViewCell identifier]];
         [_collectionView registerClass:[ThemeCollectionViewCell class] forCellWithReuseIdentifier:[ThemeCollectionViewCell identifier]];
         [_collectionView registerClass:[LanguageCollectionViewCell class] forCellWithReuseIdentifier:[LanguageCollectionViewCell identifier]];
         [_collectionView registerClass:[WeekStartsOnCollectionViewCell class] forCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier]];
@@ -319,7 +335,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
+        _dataSource = @[ @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
     }
     return _dataSource;
 }
