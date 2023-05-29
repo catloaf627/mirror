@@ -167,16 +167,28 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
                 // 读取出错
             } else {
                 NSArray *biArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:data error:nil];
-                if (biArr.count == 2) {
-                    // 解析
-                    NSMutableArray<MirrorTaskModel *> *tasks = biArr[0];
-                    NSMutableArray<MirrorRecordModel *> *records = biArr[1];
-                    // 覆盖本地数据
-                    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, records] requiringSecureCoding:YES error:nil];
-                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-                    NSString *path = [paths objectAtIndex:0];
-                    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
-                    [data writeToFile:filePath atomically:YES];
+                if (biArr.count == 2 && [biArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [biArr[0] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]]) {
+                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"确认导入该数据？" message:@"导入后当前的数据将被覆盖" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* importAction = [UIAlertAction actionWithTitle:@"导入" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                        // 解析
+                        NSMutableArray<MirrorTaskModel *> *tasks = biArr[0];
+                        NSMutableArray<MirrorRecordModel *> *records = biArr[1];
+                        // 覆盖本地数据
+                        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, records] requiringSecureCoding:YES error:nil];
+                        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+                        NSString *path = [paths objectAtIndex:0];
+                        NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
+                        [data writeToFile:filePath atomically:YES];
+                    }];
+                    UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:nil];
+                    [alert addAction:cancelAction];
+                    [alert addAction:importAction];
+                    [self presentViewController:alert animated:YES completion:nil];
+                } else {
+                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"数据格式错误" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                    [alert addAction:okAction];
+                    [self presentViewController:alert animated:YES completion:nil];
                 }
             }
         }];
