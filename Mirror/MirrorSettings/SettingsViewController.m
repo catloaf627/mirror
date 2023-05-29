@@ -158,9 +158,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     } else if (indexPath.item == MirrorSettingTypeExport) {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSString *path = [paths objectAtIndex:0];
-        NSData *tasksData = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"tasks.mirror"] options:0 error:nil];
-        NSData *recordsData = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"records.mirror"] options:0 error:nil];
-        NSArray *activityItems = @[tasksData ?: [NSData new], recordsData ?: [NSData new]];
+        NSData *tasksData = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
+        NSArray *activityItems = @[tasksData ?: [NSData new]];
         UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
         activityViewControntroller.excludedActivityTypes = @[];
         activityViewControntroller.popoverPresentationController.sourceView = self.view;

@@ -305,10 +305,10 @@
 
 + (void)saveMirrorTasks:(NSMutableArray<MirrorTaskModel *> *)tasks // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:tasks requiringSecureCoding:YES error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, [MirrorStorage retriveMirrorRecords]] requiringSecureCoding:YES error:nil];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
-    NSString *filePath = [path stringByAppendingPathComponent:@"tasks.mirror"];
+    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     [data writeToFile:filePath atomically:YES];
 }
 
@@ -316,18 +316,19 @@
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
-    NSString *filePath = [path stringByAppendingPathComponent:@"tasks.mirror"];
+    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
-    NSMutableArray<MirrorTaskModel *> *tasks = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
+    NSArray *biArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
+    NSMutableArray<MirrorTaskModel *> *tasks = biArr[0];
     return tasks ?: [NSMutableArray new];
 }
 
 + (void)saveMirrorRecords:(NSMutableArray<MirrorRecordModel *> *)records // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:records requiringSecureCoding:YES error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[[MirrorStorage retriveMirrorTasks], records] requiringSecureCoding:YES error:nil];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
-    NSString *filePath = [path stringByAppendingPathComponent:@"records.mirror"];
+    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     [data writeToFile:filePath atomically:YES];
 }
 
@@ -335,9 +336,10 @@
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
-    NSString *filePath = [path stringByAppendingPathComponent:@"records.mirror"];
+    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
-    NSMutableArray<MirrorRecordModel *> *records = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class]] fromData:storedEncodedObject error:nil];
+    NSArray *biArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
+    NSMutableArray<MirrorRecordModel *> *records = biArr[1];
     for (int i=0; i<records.count; i++) {
         records[i].originalIndex = i;
     }
