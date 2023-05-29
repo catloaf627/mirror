@@ -20,6 +20,7 @@ static MirrorColorType const indexcellColorType = MirrorColorTypeCellGreen;
 - (void)configCell
 {
     [super configCellWithTitle:@"show_record_index" color:indexcellColorType];
+    self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedShowIndex]) {
         [self.toggle setOn:YES animated:YES];

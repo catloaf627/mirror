@@ -20,6 +20,7 @@ static MirrorColorType const weekcellColorType = MirrorColorTypeCellYellow;
 - (void)configCell
 {
     [super configCellWithTitle:@"week_starts_on_Monday" color:weekcellColorType];
+    self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedWeekStarsOnMonday]) {
         [self.toggle setOn:YES animated:YES];

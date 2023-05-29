@@ -22,6 +22,7 @@ static MirrorColorType const languageColorType = MirrorColorTypeCellOrange;
 - (void)configCell
 {
     [super configCellWithTitle:@"apply_chinese" color:languageColorType];
+    self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedChinese]) {
         [self.toggle setOn:YES animated:YES];

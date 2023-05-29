@@ -15,6 +15,7 @@
 #import "LanguageCollectionViewCell.h"
 #import "WeekStartsOnCollectionViewCell.h"
 #import "ShowIndexCollectionViewCell.h"
+#import "ExportDataCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
 #import "LeftAnimation.h"
@@ -28,6 +29,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeLanguage,
     MirrorSettingTypeWeekStartsOn,
     MirrorSettingTypeShowIndex,
+    MirrorSettingTypeExport,
 };
 
 @interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate>
@@ -153,6 +155,17 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         // Do nothing (use toggle to switch language)
     } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
         // Do nothing (use toggle to switch weekStartsOn)
+    } else if (indexPath.item == MirrorSettingTypeExport) {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        NSString *path = [paths objectAtIndex:0];
+        NSData *tasksData = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"tasks.mirror"] options:0 error:nil];
+        NSData *recordsData = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"records.mirror"] options:0 error:nil];
+        NSArray *activityItems = @[tasksData ?: [NSData new], recordsData ?: [NSData new]];
+        UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+        activityViewControntroller.excludedActivityTypes = @[];
+        activityViewControntroller.popoverPresentationController.sourceView = self.view;
+        activityViewControntroller.popoverPresentationController.sourceRect = CGRectMake(self.view.bounds.size.width/2, self.view.bounds.size.height/4, 0, 0);
+        [self presentViewController:activityViewControntroller animated:true completion:nil];
     }
 }
 
@@ -178,6 +191,10 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         return cell;
     } else if (indexPath.item == MirrorSettingTypeShowIndex) {
         ShowIndexCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
+    } else if (indexPath.item == MirrorSettingTypeExport) {
+        ExportDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
     }
@@ -226,7 +243,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[LanguageCollectionViewCell class] forCellWithReuseIdentifier:[LanguageCollectionViewCell identifier]];
         [_collectionView registerClass:[WeekStartsOnCollectionViewCell class] forCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier]];
         [_collectionView registerClass:[ShowIndexCollectionViewCell class] forCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier]];
-        
+        [_collectionView registerClass:[ExportDataCollectionViewCell class] forCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier]];
     }
     return _collectionView;
 }
@@ -234,7 +251,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex)];
+        _dataSource = @[@(MirrorSettingTypeAvatar), @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeExport)];
     }
     return _dataSource;
 }

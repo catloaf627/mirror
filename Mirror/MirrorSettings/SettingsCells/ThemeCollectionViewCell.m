@@ -22,6 +22,7 @@ static MirrorColorType const themeColorType = MirrorColorTypeCellPink;
 - (void)configCell
 {
     [super configCellWithTitle:@"apply_darkmode" color:themeColorType];
+    self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedDarkMode]) {
         [self.toggle setOn:YES animated:YES];

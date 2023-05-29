@@ -35,6 +35,7 @@
 		4A6848C22A21FEB200C8D439 /* HiddenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848C12A21FEB200C8D439 /* HiddenViewController.m */; };
 		4A6848C52A22003200C8D439 /* HiddenAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848C42A22003200C8D439 /* HiddenAnimation.m */; };
 		4A6848C82A22249A00C8D439 /* HiddenCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848C72A22249A00C8D439 /* HiddenCollectionViewCell.m */; };
+		4A6848CB2A2477E000C8D439 /* ExportDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */; };
 		4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */; };
 		4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */; };
 		4A88211929F2A2B8009E422C /* TodayTotalHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211829F2A2B8009E422C /* TodayTotalHeader.m */; };
@@ -122,6 +123,8 @@
 		4A6848C42A22003200C8D439 /* HiddenAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HiddenAnimation.m; sourceTree = "<group>"; };
 		4A6848C62A22249A00C8D439 /* HiddenCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HiddenCollectionViewCell.h; sourceTree = "<group>"; };
 		4A6848C72A22249A00C8D439 /* HiddenCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HiddenCollectionViewCell.m; sourceTree = "<group>"; };
+		4A6848C92A2477DF00C8D439 /* ExportDataCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExportDataCollectionViewCell.h; sourceTree = "<group>"; };
+		4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExportDataCollectionViewCell.m; sourceTree = "<group>"; };
 		4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
 		4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
 		4A88211429F26104009E422C /* TodayPeriodCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayPeriodCollectionViewCell.h; sourceTree = "<group>"; };
@@ -465,6 +468,8 @@
 				4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */,
 				4AC1FDC52A0418F000CDCED9 /* ShowIndexCollectionViewCell.h */,
 				4AC1FDC62A0418F000CDCED9 /* ShowIndexCollectionViewCell.m */,
+				4A6848C92A2477DF00C8D439 /* ExportDataCollectionViewCell.h */,
+				4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */,
 			);
 			path = SettingsCells;
 			sourceTree = "<group>";
@@ -676,6 +681,7 @@
 				4AC1FDC72A0418F000CDCED9 /* ShowIndexCollectionViewCell.m in Sources */,
 				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,
 				4AE5E8952A02644E004228C1 /* TheEndFooterCollectionViewCell.m in Sources */,
+				4A6848CB2A2477E000C8D439 /* ExportDataCollectionViewCell.m in Sources */,
 				4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
