@@ -21,6 +21,8 @@
 #import "MirrorLanguage.h"
 #import "LeftAnimation.h"
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
+#import "MirrorTaskModel.h"
+#import "MirrorRecordModel.h"
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -158,13 +160,24 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
             // 读取文件
             NSString *fileName = [newURL lastPathComponent];
             NSError *error = nil;
-            NSData *fileData = [NSData dataWithContentsOfURL:newURL options:NSDataReadingMappedIfSafe error:&error];
-            NSLog(@"fileData.bytes : %dKB \n bytes : %ldKB",1024*1024*10,fileData.length);
+            NSData *data = [NSData dataWithContentsOfURL:newURL options:NSDataReadingMappedIfSafe error:&error];
+            NSLog(@"fileName : %@", fileName);
+            NSLog(@"fileData.bytes : %dKB \n bytes : %ldKB",1024*1024*10,data.length);
             if (error) {
                 // 读取出错
             } else {
-                // 上传
-                NSLog(@"fileName : %@", fileName);
+                NSArray *biArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:data error:nil];
+                if (biArr.count == 2) {
+                    // 解析
+                    NSMutableArray<MirrorTaskModel *> *tasks = biArr[0];
+                    NSMutableArray<MirrorRecordModel *> *records = biArr[1];
+                    // 覆盖本地数据
+                    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, records] requiringSecureCoding:YES error:nil];
+                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+                    NSString *path = [paths objectAtIndex:0];
+                    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
+                    [data writeToFile:filePath atomically:YES];
+                }
             }
         }];
         [urls.firstObject stopAccessingSecurityScopedResource];
