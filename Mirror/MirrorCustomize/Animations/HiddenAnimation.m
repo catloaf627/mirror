@@ -40,7 +40,12 @@
         [[transitionContext containerView] insertSubview:toView belowSubview:fromView];
     }
     CGFloat width = [UIScreen mainScreen].bounds.size.width/2;
-    CGFloat height = MIN(20 + 30 + 10 + 40 *[MirrorStorage retriveMirrorTasks].count + 20,[UIScreen mainScreen].bounds.size.height/2);
+    CGFloat height = [UIScreen mainScreen].bounds.size.height/2;
+    if ([MirrorStorage retriveMirrorTasks].count <= 8) { // 有n个task，n<=8
+        height = 20 + 30 + 10 + (40 * [MirrorStorage retriveMirrorTasks].count) + 20; // 全展示出来，无需滚动
+    } else {
+        height = 20 + 30 + 10 + (40 * 8 + 20) + 20; // 展示八个半，可以滚动（露出半个提示用户这里可滚动）
+    }
     if (_isPresent) { // present
         transView.frame = self.buttonFrame;
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
