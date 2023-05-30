@@ -50,7 +50,7 @@
 
 - (void)sceneDidBecomeActive:(UIScene *)scene {
     BOOL appIsDark = [MirrorSettings appliedDarkMode];
-    BOOL systemIsDark = UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark;
+    BOOL systemIsDark = [UIScreen mainScreen].traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark;
     if (appIsDark == systemIsDark) {
         return;
     } else {
