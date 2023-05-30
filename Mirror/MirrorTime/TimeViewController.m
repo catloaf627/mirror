@@ -33,7 +33,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
-@property (nonatomic, strong) UIButton *editTasksButton;
+@property (nonatomic, strong) UIButton *allTasksButton;
 // Data source
 @property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
 // Mark
@@ -81,7 +81,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.editTasksButton];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.allTasksButton];
     [self.collectionView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
     }];
@@ -92,7 +92,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     // update navibar
     [[MirrorTabsManager sharedInstance] updateTimeTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 0) {
-        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.editTasksButton];
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.allTasksButton];
     }
     // reset ui
     self.collectionView = nil;
@@ -245,15 +245,15 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
     return _settingsButton;
 }
 
-- (UIButton *)editTasksButton
+- (UIButton *)allTasksButton
 {
-    if (!_editTasksButton) {
-        _editTasksButton = [UIButton new];
+    if (!_allTasksButton) {
+        _allTasksButton = [UIButton new];
         UIImage *iconImage = [[UIImage systemImageNamed:@"tray.full"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_editTasksButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        [_editTasksButton addTarget:self action:@selector(goToAllTasks) forControlEvents:UIControlEventTouchUpInside];
+        [_allTasksButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [_allTasksButton addTarget:self action:@selector(goToAllTasks) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _editTasksButton;
+    return _allTasksButton;
 }
 
 - (NSMutableArray<MirrorTaskModel *> *)data
