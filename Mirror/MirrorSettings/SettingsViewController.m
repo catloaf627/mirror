@@ -253,8 +253,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
                     [alert addAction:importAction];
                     [self presentViewController:alert animated:YES completion:nil];
                 } else {
-                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"数据格式错误" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"wrong_data_format"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction* okAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"ok"] style:UIAlertActionStyleDefault handler:nil];
                     [alert addAction:okAction];
                     [self presentViewController:alert animated:YES completion:nil];
                 }
@@ -276,26 +276,34 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"export_or_import"]
                                                                                  message:nil
                                                                           preferredStyle:UIAlertControllerStyleAlert];
+        // Export
         [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"export_data"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
             NSString *path = [paths objectAtIndex:0];
             NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
-            NSArray *activityItems = @[data ?: [NSData new]];
-            UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
-            activityViewControntroller.excludedActivityTypes = @[];
-            activityViewControntroller.popoverPresentationController.sourceView = self.view;
-            activityViewControntroller.popoverPresentationController.sourceRect = CGRectMake(self.view.bounds.size.width/2, self.view.bounds.size.height/4, 0, 0);
-            [self presentViewController:activityViewControntroller animated:true completion:nil];
+            if (data==nil) { // 本地没有数据
+                UIAlertController *nodataController = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"no_data"]
+                                                                                         message:nil
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                [nodataController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}]];
+                [self presentViewController:nodataController animated:YES completion:nil];
+            } else { // 唤起路径
+                NSArray *activityItems = @[data];
+                UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+                activityViewControntroller.excludedActivityTypes = @[];
+                activityViewControntroller.popoverPresentationController.sourceView = self.view;
+                activityViewControntroller.popoverPresentationController.sourceRect = CGRectMake(self.view.bounds.size.width/2, self.view.bounds.size.height/4, 0, 0);
+                [self presentViewController:activityViewControntroller animated:true completion:nil];
+            }
         }]];
+        // Import 唤起路径
         [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"import_data"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[UTTypeData]]; // allow any file type
                 documentPicker.delegate = self;
                 documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
                 [self presentViewController:documentPicker animated:YES completion:nil];
         }]];
-        [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-
-        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}]];
         [self presentViewController:alertController animated:YES completion:nil];
     } else if (indexPath.item == MirrorSettingTypeReportBug) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"copy_email_address_to_clipboard"]

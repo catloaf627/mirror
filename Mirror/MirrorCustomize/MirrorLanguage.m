@@ -37,6 +37,8 @@
     [mirrorDict setValue:@[@"Import data?", @"确认导入该数据？"] forKey:@"import_data_?"];
     [mirrorDict setValue:@[@"Current data will be replaced by the imported data", @"导入后当前的数据将被覆盖"] forKey:@"import_data_?_message"];
     [mirrorDict setValue:@[@"Import", @"导入"] forKey:@"import"];
+    [mirrorDict setValue:@[@"Wrong data format", @"数据格式错误"] forKey:@"wrong_data_format"];
+    [mirrorDict setValue:@[@"OK", @"好的"] forKey:@"ok"];
     [mirrorDict setValue:@[@"Contact me", @"联系作者"] forKey:@"contact_me"];
     [mirrorDict setValue:@[@"Copy author's email address to clipboard", @"拷贝作者邮箱地址到剪切板"] forKey:@"copy_email_address_to_clipboard"];
     [mirrorDict setValue:@[@"Copy", @"拷贝"] forKey:@"copy"];
