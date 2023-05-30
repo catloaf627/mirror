@@ -14,7 +14,7 @@
 #import "TaskRecordsViewController.h"
 #import "MirrorLanguage.h"
 #import "MirrorNaviManager.h"
-#import "TheEndFooterCollectionViewCell.h"
+#import "HeartFooter.h"
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 @interface EditTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol>
@@ -172,7 +172,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
         return header;
     } else {
-        TheEndFooterCollectionViewCell *footer;
+        HeartFooter *footer;
         footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer" forIndexPath:indexPath];
         [footer config];
         return footer;
@@ -216,7 +216,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.backgroundColor = self.view.backgroundColor;
         [_collectionView registerClass:[EditTaskCollectionViewCell class] forCellWithReuseIdentifier:[EditTaskCollectionViewCell identifier]];
         [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
-        [_collectionView registerClass:[TheEndFooterCollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
+        [_collectionView registerClass:[HeartFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         [_collectionView addGestureRecognizer:longPress];
     }

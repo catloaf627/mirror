@@ -1,23 +1,23 @@
 //
-//  TheEndFooterCollectionViewCell.m
+//  HeartFooter.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/5/3.
 //
 
-#import "TheEndFooterCollectionViewCell.h"
+#import "HeartFooter.h"
 #import <Masonry/Masonry.h>
 #import "SplitLineView.h"
 #import "MirrorMacro.h"
 #import "UIColor+MirrorColor.h"
 
-@interface TheEndFooterCollectionViewCell ()
+@interface HeartFooter ()
 
 @property (nonatomic, strong) SplitLineView *splitView;
 
 @end
 
-@implementation TheEndFooterCollectionViewCell
+@implementation HeartFooter
 
 - (void)config
 {

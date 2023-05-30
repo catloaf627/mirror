@@ -1,5 +1,5 @@
 //
-//  TheEndFooterCollectionViewCell.h
+//  HeartFooter.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/5/3.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TheEndFooterCollectionViewCell : UICollectionViewCell
+@interface HeartFooter : UICollectionViewCell
 
 - (void)config;
 

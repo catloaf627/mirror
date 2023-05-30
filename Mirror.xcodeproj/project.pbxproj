@@ -59,7 +59,7 @@
 		4AE4171928DF613D008A6A18 /* TimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171828DF613D008A6A18 /* TimeViewController.m */; };
 		4AE4171F28DF6155008A6A18 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4171E28DF6155008A6A18 /* SettingsViewController.m */; };
 		4AE5E8922A0253DA004228C1 /* SplitLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5E8912A0253DA004228C1 /* SplitLineView.m */; };
-		4AE5E8952A02644E004228C1 /* TheEndFooterCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5E8942A02644E004228C1 /* TheEndFooterCollectionViewCell.m */; };
+		4AE5E8952A02644E004228C1 /* HeartFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5E8942A02644E004228C1 /* HeartFooter.m */; };
 		4AFA3B7729E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */; };
 		4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A128DF4A380064CBCA /* AppDelegate.m */; };
 		4AFB77A528DF4A380064CBCA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB77A428DF4A380064CBCA /* SceneDelegate.m */; };
@@ -173,8 +173,8 @@
 		4AE4171E28DF6155008A6A18 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		4AE5E8902A0253DA004228C1 /* SplitLineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitLineView.h; sourceTree = "<group>"; };
 		4AE5E8912A0253DA004228C1 /* SplitLineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplitLineView.m; sourceTree = "<group>"; };
-		4AE5E8932A02644E004228C1 /* TheEndFooterCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TheEndFooterCollectionViewCell.h; sourceTree = "<group>"; };
-		4AE5E8942A02644E004228C1 /* TheEndFooterCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TheEndFooterCollectionViewCell.m; sourceTree = "<group>"; };
+		4AE5E8932A02644E004228C1 /* HeartFooter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeartFooter.h; sourceTree = "<group>"; };
+		4AE5E8942A02644E004228C1 /* HeartFooter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeartFooter.m; sourceTree = "<group>"; };
 		4AFA3B7529E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeekStartsOnCollectionViewCell.h; sourceTree = "<group>"; };
 		4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeekStartsOnCollectionViewCell.m; sourceTree = "<group>"; };
 		4AFB779D28DF4A380064CBCA /* Mirror.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mirror.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,8 +263,8 @@
 				4A32A40129F8C93500DCCF57 /* EditTasksViewController.m */,
 				4A32A40329F8CAC500DCCF57 /* EditTaskCollectionViewCell.h */,
 				4A32A40429F8CAC500DCCF57 /* EditTaskCollectionViewCell.m */,
-				4AE5E8932A02644E004228C1 /* TheEndFooterCollectionViewCell.h */,
-				4AE5E8942A02644E004228C1 /* TheEndFooterCollectionViewCell.m */,
+				4AE5E8932A02644E004228C1 /* HeartFooter.h */,
+				4AE5E8942A02644E004228C1 /* HeartFooter.m */,
 			);
 			path = EditTasks;
 			sourceTree = "<group>";
@@ -693,7 +693,7 @@
 				4AA3533B2A25DBDA00920404 /* ReportBugCollectionViewCell.m in Sources */,
 				4AC1FDC72A0418F000CDCED9 /* ShowIndexCollectionViewCell.m in Sources */,
 				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,
-				4AE5E8952A02644E004228C1 /* TheEndFooterCollectionViewCell.m in Sources */,
+				4AE5E8952A02644E004228C1 /* HeartFooter.m in Sources */,
 				4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
