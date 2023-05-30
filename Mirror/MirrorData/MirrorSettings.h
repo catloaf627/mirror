@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MirrorMacro.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,6 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 座右铭
 + (NSString *)userMotto;
 + (void)saveUserMotto:(NSString *)motto;
+
+// Span type: Day, week, month, year
++ (SpanType)spanType;
++ (void)changeSpanType:(SpanType)spanType;
 
 @end
 

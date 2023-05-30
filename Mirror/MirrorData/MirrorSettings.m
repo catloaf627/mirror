@@ -6,7 +6,6 @@
 //
 
 #import "MirrorSettings.h"
-#import "MirrorMacro.h"
 
 @implementation MirrorSettings
 
@@ -150,16 +149,32 @@
 + (NSString *)userMotto
 {
     NSString *motto = [[NSUserDefaults standardUserDefaults] stringForKey:@"MirrorUserMotto"];
-    if (motto) {
-        return motto;
-    } else {
+    if (motto==nil) {
         return @"Mirror, mirror on the wall, who is the fairest of them all?";
+    } else {
+        return motto;
     }
 }
 
 + (void)saveUserMotto:(NSString *)motto
 {
     [[NSUserDefaults standardUserDefaults] setObject:motto forKey:@"MirrorUserMotto"];
+}
+
++ (SpanType)spanType
+{
+    NSNumber *spanType = [[NSUserDefaults standardUserDefaults] objectForKey:@"MirrorUserPreferredSpanType"];
+    if (spanType==nil) {
+        [[NSUserDefaults standardUserDefaults] setInteger:SpanTypeWeek forKey:@"MirrorUserPreferredSpanType"];
+        return SpanTypeWeek; // 如果用户没有点过，默认展示week
+    } else {
+        return [spanType integerValue];
+    }
+}
+
++ (void)changeSpanType:(SpanType)spanType
+{
+    [[NSUserDefaults standardUserDefaults] setInteger:spanType forKey:@"MirrorUserPreferredSpanType"];
 }
 
 @end
