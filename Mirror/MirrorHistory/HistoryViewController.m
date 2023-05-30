@@ -252,9 +252,11 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     CGPoint touchPoint = [tap locationInView:self.view];
     if (touchPoint.x < self.interactionView.frame.size.width/3) { // 左侧
+        [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
         self.offset = self.offset - 1;
         [self reloadData];
     } else if (touchPoint.x > 2 * self.interactionView.frame.size.width/3) { // 右侧
+        [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
         self.offset = self.offset + 1;
         [self reloadData];
     }
@@ -263,6 +265,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)spanTypeChanged
 {
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
     [MirrorSettings changeSpanType:self.typeSwitch.selectedSegmentIndex];
     self.offset = 0;
     [self reloadData];
