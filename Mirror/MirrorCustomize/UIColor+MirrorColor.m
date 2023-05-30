@@ -147,12 +147,12 @@
 
 + (UIColor *)mirror_darkPink
 {
-    return [UIColor colorWithRed:177/255.0 green:122/255.0 blue:125/255.0 alpha:1]; // 莫兰迪深粉
+    return [UIColor colorWithRed:170/255.0 green:117/255.0 blue:120/255.0 alpha:1]; // 莫兰迪深粉
 }
 
 + (UIColor *)mirror_lightOrange
 {
-    return [UIColor colorWithRed:248/255.0 green:235/255.0 blue:216/255.0 alpha:1]; // 莫兰迪橘
+    return [UIColor colorWithRed:233/255.0 green:217/255.0 blue:209/255.0 alpha:1]; // 莫兰迪橘
 }
 
 + (UIColor *)mirror_darkOrange
@@ -162,12 +162,12 @@
 
 + (UIColor *)mirror_lightYellow
 {
-    return [UIColor colorWithRed:243/255.0 green:239/255.0 blue:228/255.0 alpha:1]; // 莫兰迪黄
+    return [UIColor colorWithRed:243/255.0 green:230/255.0 blue:211/255.0 alpha:1]; // 莫兰迪黄
 }
 
 + (UIColor *)mirror_darkYellow
 {
-    return [UIColor colorWithRed:166/255.0 green:142/255.0 blue:118/255.0 alpha:1]; // 莫兰迪深黄（棕）
+    return [UIColor colorWithRed:168/255.0 green:132/255.0 blue:98/255.0 alpha:1]; // 莫兰迪深黄（棕）
 }
 
 + (UIColor *)mirror_lightGreen
@@ -177,7 +177,7 @@
 
 + (UIColor *)mirror_darkGreen
 {
-    return [UIColor colorWithRed:122/255.0 green:103/255.0 blue:71/255.0 alpha:1]; // 莫兰迪深绿
+    return [UIColor colorWithRed:103/255.0 green:119/255.0 blue:91/255.0 alpha:1]; // 莫兰迪深绿
 }
 
 + (UIColor *)mirror_lightTeal
@@ -187,12 +187,12 @@
 
 + (UIColor *)mirror_darkTeal
 {
-    return [UIColor colorWithRed:69/255.0 green:137/255.0 blue:148/255.0 alpha:1]; // 莫兰迪深青
+    return [UIColor colorWithRed:62/255.0 green:130/255.0 blue:141/255.0 alpha:1]; // 莫兰迪深青
 }
 
 + (UIColor *)mirror_lightBlue
 {
-    return [UIColor colorWithRed:193/255.0 green:203/255.0 blue:215/255.0 alpha:1]; // 莫兰迪蓝
+    return [UIColor colorWithRed:198/255.0 green:208/255.0 blue:220/255.0 alpha:1]; // 莫兰迪蓝
 }
 
 + (UIColor *)mirror_darkBlue
@@ -217,7 +217,7 @@
 
 + (UIColor *)mirror_darkGray
 {
-    return [UIColor colorWithRed:147/255.0 green:147/255.0 blue:145/255.0 alpha:1]; // 莫兰迪深灰
+    return [UIColor colorWithRed:104/255.0 green:104/255.0 blue:104/255.0 alpha:1]; // 莫兰迪深灰
 }
 
 @end
