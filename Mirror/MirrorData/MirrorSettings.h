@@ -36,12 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
 // Timezone
 + (NSInteger)timeZoneGap:(NSInteger)newSecondsFromGMT;
 
-// 按照时间长短更新颜色深浅
-+ (BOOL)appliedShowShade;
-+ (void)switchShowShade;
+// 按照时间长短更新颜色深浅(heatmap)
++ (BOOL)appliedHeatmap;
++ (void)switchHeatmap;
 
-+ (NSInteger)preferredShadeColor;
-+ (void)changePreferredShadeColor:(NSInteger)color;
++ (NSInteger)preferredHeatmapColor;
++ (void)changePreferredHeatmapColor:(NSInteger)color;
 
 // 座右铭
 + (NSString *)userMotto;

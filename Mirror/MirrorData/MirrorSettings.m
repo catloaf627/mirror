@@ -106,29 +106,32 @@
 }
 
 // 按照时间长短更新颜色深浅
-+ (BOOL)appliedShowShade
++ (BOOL)appliedHeatmap
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredShade"];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredHeatmap"];
 }
-+ (void)switchShowShade
+
++ (void)switchHeatmap
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredShade"]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredShade"];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredHeatmap"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredHeatmap"];
     } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredShade"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredHeatmap"];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchShowShadeNotification object:nil];
 }
 
-+ (NSInteger)preferredShadeColor
++ (NSInteger)preferredHeatmapColor
 {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:@"MirrorUserPreferredShadeColor"];
+    return [[NSUserDefaults standardUserDefaults] integerForKey:@"MirrorUserPreferredHeatmapColor"];
 }
 
-+ (void)changePreferredShadeColor:(NSInteger)color
++ (void)changePreferredHeatmapColor:(NSInteger)color
 {
-    [[NSUserDefaults standardUserDefaults] setInteger:color forKey:@"MirrorUserPreferredShadeColor"];
+    [[NSUserDefaults standardUserDefaults] setInteger:color forKey:@"MirrorUserPreferredHeatmapColor"];
 }
+
+// Show original index
 
 + (BOOL)appliedShowIndex
 {

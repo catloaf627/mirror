@@ -43,7 +43,6 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData;
 @property (nonatomic, assign) NSInteger startTimestamp;
 @property (nonatomic, assign) NSInteger selectedCellIndex;
-@property (nonatomic, assign) MirrorColorType randomColorType;
 // UI
 @property (nonatomic, strong) UILabel *leftHint;
 @property (nonatomic, strong) UILabel *rightHint;
@@ -654,14 +653,6 @@ static CGFloat const kCellSpacing = 3;
         [_collectionView registerClass:[GridCollectionViewCell class] forCellWithReuseIdentifier:[GridCollectionViewCell identifier]];
     }
     return _collectionView;
-}
-
-- (MirrorColorType)randomColorType
-{
-    if (!_randomColorType) {
-        _randomColorType = [MirrorSettings preferredShadeColor];
-    }
-    return _randomColorType;
 }
 
 - (UIButton *)settingsButton

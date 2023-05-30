@@ -15,6 +15,7 @@
 #import "ShowIndexCollectionViewCell.h"
 #import "PiechartDataCollectionViewCell.h"
 #import "PiechartRecordCollectionViewCell.h"
+#import "HeatmapCollectionViewCell.h"
 #import "ExportDataCollectionViewCell.h"
 #import "ImportDataCollectionViewCell.h"
 #import "MirrorTabsManager.h"
@@ -32,8 +33,9 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeLanguage,
     MirrorSettingTypeWeekStartsOn,
     MirrorSettingTypeShowIndex,
-    MirrorSettingsTypePiechartData,
-    MirrorSettingsTypePiechartRecord,
+    MirrorSettingTypePiechartData,
+    MirrorSettingTypePiechartRecord,
+    MirrorSettingTypeHeatmap,
     MirrorSettingTypeExport,
     MirrorSettingTypeImport,
 };
@@ -270,10 +272,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     if (indexPath.item >= self.dataSource.count) {
         return;
-    } else if (indexPath.item == MirrorSettingTypeLanguage) {
-        // Do nothing (use toggle to switch language)
-    } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
-        // Do nothing (use toggle to switch weekStartsOn)
     } else if (indexPath.item == MirrorSettingTypeExport) {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSString *path = [paths objectAtIndex:0];
@@ -308,12 +306,16 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         ShowIndexCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
-    } else if (indexPath.item == MirrorSettingsTypePiechartData) {
+    } else if (indexPath.item == MirrorSettingTypePiechartData) {
         PiechartDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[PiechartDataCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
-    } else if (indexPath.item == MirrorSettingsTypePiechartRecord) {
+    } else if (indexPath.item == MirrorSettingTypePiechartRecord) {
         PiechartRecordCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[PiechartRecordCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
+    } else if (indexPath.item == MirrorSettingTypeHeatmap) {
+        HeatmapCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[HeatmapCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
     } else if (indexPath.item == MirrorSettingTypeExport) {
@@ -377,6 +379,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[ShowIndexCollectionViewCell class] forCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier]];
         [_collectionView registerClass:[PiechartDataCollectionViewCell class] forCellWithReuseIdentifier:[PiechartDataCollectionViewCell identifier]];
         [_collectionView registerClass:[PiechartRecordCollectionViewCell class] forCellWithReuseIdentifier:[PiechartRecordCollectionViewCell identifier]];
+        [_collectionView registerClass:[HeatmapCollectionViewCell class] forCellWithReuseIdentifier:[HeatmapCollectionViewCell identifier]];
         [_collectionView registerClass:[ExportDataCollectionViewCell class] forCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier]];
         [_collectionView registerClass:[ImportDataCollectionViewCell class] forCellWithReuseIdentifier:[ImportDataCollectionViewCell identifier]];
     }
@@ -442,7 +445,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingsTypePiechartData), @(MirrorSettingsTypePiechartRecord), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
+        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypePiechartData), @(MirrorSettingTypePiechartRecord), @(MirrorSettingTypeHeatmap), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
     }
     return _dataSource;
 }

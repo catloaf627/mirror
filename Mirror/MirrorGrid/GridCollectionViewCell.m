@@ -43,10 +43,10 @@
     
     if (_totalTime == 0) { // 无数据
         self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
-    } else if (![MirrorSettings appliedShowShade] && alpha != 0) {  // 彩色模式 & 有数据
+    } else if (![MirrorSettings appliedHeatmap] && alpha != 0) {  // 彩色模式 & 有数据
         self.backgroundColor = [UIColor mirrorColorNamed:winnerColor];
-    } else if ([MirrorSettings appliedShowShade] && alpha != 0) {  // 深浅模式 & 有数据
-        self.backgroundColor = [[UIColor mirrorColorNamed:[MirrorSettings preferredShadeColor]] colorWithAlphaComponent:alpha];
+    } else if ([MirrorSettings appliedHeatmap] && alpha != 0) {  // 深浅模式 & 有数据
+        self.backgroundColor = [[UIColor mirrorColorNamed:[MirrorSettings preferredHeatmapColor]] colorWithAlphaComponent:alpha];
     }
     if (isSelected) {
         self.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeText].CGColor;

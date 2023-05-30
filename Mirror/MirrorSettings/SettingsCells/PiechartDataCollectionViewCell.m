@@ -8,7 +8,7 @@
 #import "PiechartDataCollectionViewCell.h"
 #import "MirrorSettings.h"
 
-static MirrorColorType const indexcellColorType = MirrorColorTypeCellGreen;
+static MirrorColorType const piechartColorType = MirrorColorTypeCellGreen;
 
 @implementation PiechartDataCollectionViewCell
 
@@ -19,7 +19,7 @@ static MirrorColorType const indexcellColorType = MirrorColorTypeCellGreen;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"show_piechart_on_data" color:indexcellColorType];
+    [super configCellWithTitle:@"show_piechart_on_data" color:piechartColorType];
     self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedPieChartData]) {

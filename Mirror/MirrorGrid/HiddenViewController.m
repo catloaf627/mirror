@@ -15,7 +15,6 @@
 
 @interface HiddenViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) UIButton *singleColorButton;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
 
@@ -47,37 +46,14 @@
 
 - (void)p_setupUI
 {
-    [self.view addSubview:self.singleColorButton];
-    [self.singleColorButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(self.showShadeButton ? 20:10);
-        make.top.offset(20);
-        make.width.mas_equalTo(self.showShadeButton ? 30:0);
-        make.height.mas_equalTo(30);
-    }];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.singleColorButton.mas_bottom).offset(10);
+        make.top.offset(20);
         make.bottom.equalTo(self.view.mas_bottom).offset(-20);
         make.left.offset(20);
         make.right.offset(-20);
     }];
     
-}
-
-#pragma mark - Actions
-
-- (void)singleColorSwitchChanged
-{
-    // 本地保存
-    [MirrorSettings switchShowShade];
-    NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
-    NSInteger randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
-    [MirrorSettings changePreferredShadeColor:randomColorType];
-    // update button
-    NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [_singleColorButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    _singleColorButton.tintColor = [UIColor mirrorColorNamed:[MirrorSettings preferredShadeColor]];
 }
 
 #pragma mark - CollectionView
@@ -119,19 +95,6 @@
         _data = [MirrorStorage retriveMirrorTasks];
     }
     return _data;
-}
-
-- (UIButton *)singleColorButton
-{
-    if (!_singleColorButton) {
-        _singleColorButton = [UIButton new];
-        NSString *iconName = [MirrorSettings appliedShowShade] ? @"square.grid.2x2.fill" : @"square.grid.2x2";
-        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_singleColorButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _singleColorButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_singleColorButton addTarget:self action:@selector(singleColorSwitchChanged) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _singleColorButton;
 }
 
 - (UICollectionView *)collectionView

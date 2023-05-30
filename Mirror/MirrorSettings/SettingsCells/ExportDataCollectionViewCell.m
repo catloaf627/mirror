@@ -7,7 +7,7 @@
 
 #import "ExportDataCollectionViewCell.h"
 
-static MirrorColorType const exportcellColorType = MirrorColorTypeCellBlue;
+static MirrorColorType const exportcellColorType = MirrorColorTypeCellPurple;
 
 @implementation ExportDataCollectionViewCell
 
