@@ -542,6 +542,7 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
     _selectedCellIndex = indexPath.item; // 选择
     [self updateCharts];
     [collectionView reloadData];
