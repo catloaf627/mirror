@@ -28,7 +28,7 @@
 
 static CGFloat const kLeftRightSpacing = 20;
 
-@interface HistoryViewController () <SpanLegendDelegate, SpanHistogramDelegate, UIViewControllerTransitioningDelegate>
+@interface HistoryViewController () <UIViewControllerTransitioningDelegate>
 
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
@@ -430,7 +430,7 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     if (!_histogramView) {
         _histogramView = [[SpanHistogram alloc] initWithData:self.data];
-        _histogramView.delegate = self;
+        _histogramView.delegate = self.legendView;
     }
     return _histogramView;
 }
@@ -439,7 +439,6 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     if (!_legendView) {
         _legendView = [[SpanLegend alloc] initWithData:self.data];
-        _legendView.delegate = self;
     }
     return _legendView;
 }

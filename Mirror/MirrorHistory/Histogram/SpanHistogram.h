@@ -11,13 +11,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SpanHistogramDelegate <NSObject>  // push viewcontroller用
+@protocol SpanHistogramDelegate <NSObject>  // 让对应的legend闪一下
+
+- (void)twinkleTaskname:(NSString *)taskname;
 
 @end
 
 @interface SpanHistogram : UIView
 
-@property (nonatomic, weak) UIViewController<SpanHistogramDelegate> *delegate;
+@property (nonatomic, weak) UIView<SpanHistogramDelegate> *delegate;
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;

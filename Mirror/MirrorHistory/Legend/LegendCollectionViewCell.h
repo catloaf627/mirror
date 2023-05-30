@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LegendCollectionViewCell : UICollectionViewCell
 
 + (NSString *)identifier;
-
 - (void)configCellWithTaskname:(NSString *)taskName;
 
 @end

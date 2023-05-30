@@ -135,11 +135,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.data.count > indexPath.item && self.data[indexPath.item].records.count > 0) {
-        AllRecordsViewController *allRecordsVC = [AllRecordsViewController new];
-        allRecordsVC.scrollToIndex = ((MirrorRecordModel *)self.data[indexPath.item].records[0]).originalIndex;
-        [self.delegate.navigationController pushViewController:allRecordsVC animated:YES];
-    }
+    [self.delegate twinkleTaskname:self.data[indexPath.item].taskModel.taskName];
 }
 
 #pragma mark - Getters

@@ -86,7 +86,34 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.delegate.navigationController pushViewController:[[TaskRecordsViewController alloc] initWithTaskname:self.data[indexPath.item].taskModel.taskName] animated:YES];
+
+}
+
+#pragma mark - SpanHistogramDelegate
+
+- (void)twinkleTaskname:(NSString *)taskname
+{
+    NSInteger index = NSNotFound;
+    for (int i=0; i<self.data.count; i++) {
+        if ([self.data[i].taskModel.taskName isEqualToString:taskname]) {
+            index = i;
+            break;
+        }
+    }
+    if (index == NSNotFound) return;
+    LegendCollectionViewCell *targetCell = (LegendCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+    MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:taskname];
+    UIColor *pulseColor = [UIColor mirrorColorNamed:task.color]; // pulse color 展示原色即可（因为cell本身是没有颜色的）
+    UIColor *color = [UIColor clearColor];
+    [UIView animateWithDuration:0.5 animations:^{
+        targetCell.backgroundColor = pulseColor;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.5 animations:^{
+            targetCell.backgroundColor = color;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }];
 }
 
 

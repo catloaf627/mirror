@@ -30,7 +30,7 @@ static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellWidth = 30;
 static CGFloat const kCellSpacing = 3;
 
-@interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SpanLegendDelegate, SpanHistogramDelegate, UIViewControllerTransitioningDelegate>
+@interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, assign) BOOL needReload;
 
@@ -575,7 +575,6 @@ static CGFloat const kCellSpacing = 3;
 {
     if (!_legendView) {
         _legendView = [[SpanLegend alloc] initWithData:[NSMutableArray new]];
-        _legendView.delegate = self;
     }
     return _legendView;
 }
@@ -584,7 +583,7 @@ static CGFloat const kCellSpacing = 3;
 {
     if (!_histogramView) {
         _histogramView = [[SpanHistogram alloc] initWithData:[NSMutableArray new]];
-        _histogramView.delegate = self;
+        _histogramView.delegate = self.legendView;
     }
     return _histogramView;
 }

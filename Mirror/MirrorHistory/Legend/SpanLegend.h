@@ -8,16 +8,11 @@
 #import <UIKit/UIKit.h>
 #import "MirrorMacro.h"
 #import "MirrorDataModel.h"
+#import "SpanHistogram.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SpanLegendDelegate <NSObject> // push viewcontroller用
-
-@end
-
-@interface SpanLegend : UIView
-
-@property (nonatomic, weak) UIViewController<SpanLegendDelegate> *delegate;
+@interface SpanLegend : UIView <SpanHistogramDelegate>
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;
