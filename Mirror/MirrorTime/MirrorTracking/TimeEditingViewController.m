@@ -313,7 +313,7 @@
 - (UIView *)splitView
 {
     if (!_splitView) {
-        _splitView = [[SplitLineView alloc] initWithColor:[UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:[MirrorStorage getTaskModelFromDB:self.taskName].color]]];
+        _splitView = [[SplitLineView alloc] initWithText:@"or" color:[UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:[MirrorStorage getTaskModelFromDB:self.taskName].color]]];
     }
     return _splitView;
 }

@@ -9,6 +9,7 @@
 #import <Masonry/Masonry.h>
 #import "SplitLineView.h"
 #import "MirrorMacro.h"
+#import "UIColor+MirrorColor.h"
 
 @interface TheEndFooterCollectionViewCell ()
 
@@ -33,7 +34,7 @@
 - (SplitLineView *)splitView
 {
     if (!_splitView) {
-        _splitView = [[SplitLineView alloc] initWithText:@"The end"];
+        _splitView = [[SplitLineView alloc] initWithImage:@"heart.fill" color:[UIColor mirrorColorNamed:MirrorColorTypeTextHint]];
     }
     return _splitView;
 }

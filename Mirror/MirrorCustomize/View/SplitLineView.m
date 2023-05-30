@@ -11,14 +11,15 @@
 #import "UIColor+MirrorColor.h"
 
 static CGFloat const kIconWidth = 10;
-static CGFloat const kIconPadding = 3;
+static CGFloat const kTextWidth = 15;
+static CGFloat const kCenterPadding = 3;
 static CGFloat const kLeftRightPadding = 50;
 static CGFloat const kLineHeight = 1;
 
 @interface SplitLineView ()
 
 @property (nonatomic, strong) UIView *leftLine;
-@property (nonatomic, strong) UIImageView *heartView;
+@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *textLabel;
 @property (nonatomic, strong) UIView *rightLine;
 
@@ -26,13 +27,15 @@ static CGFloat const kLineHeight = 1;
 
 @implementation SplitLineView
 
-- (instancetype)initWithColor:(UIColor *)color
+- (instancetype)initWithImage:(NSString *)imageName color:(UIColor *)color
 {
     self = [super init];
     if (self) {
-        [self addSubview:self.heartView];
-        [self.heartView setTintColor:color];
-        [self.heartView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self addSubview:self.imageView];
+        UIImage *image = [[UIImage systemImageNamed:imageName]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        self.imageView.image = image;
+        [self.imageView setTintColor:color];
+        [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.centerY.offset(0);
             make.width.height.mas_equalTo(kIconWidth);
         }];
@@ -41,7 +44,7 @@ static CGFloat const kLineHeight = 1;
         self.leftLine.backgroundColor = color;
         [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.offset(kLeftRightPadding);
-            make.right.mas_equalTo(self.heartView.mas_left).offset(-kIconPadding);
+            make.right.mas_equalTo(self.imageView.mas_left).offset(-kCenterPadding);
             make.centerY.offset(0);
             make.height.mas_equalTo(kLineHeight);
         }];
@@ -50,9 +53,9 @@ static CGFloat const kLineHeight = 1;
         self.rightLine.backgroundColor = color;
         [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.offset(-kLeftRightPadding);
-            make.left.mas_equalTo(self.heartView.mas_right).offset(kIconPadding);
+            make.left.mas_equalTo(self.imageView.mas_right).offset(kCenterPadding);
             make.centerY.offset(0);
-            make.width.mas_equalTo((kScreenWidth - 2*kLeftRightPadding - 2*kIconPadding - kIconWidth)/2);
+            make.width.mas_equalTo((kScreenWidth - 2*kLeftRightPadding - 2*kCenterPadding - kIconWidth)/2);
             make.height.mas_equalTo(kLineHeight);
         }];
         
@@ -60,35 +63,34 @@ static CGFloat const kLineHeight = 1;
     return self;
 }
 
-- (instancetype)initWithText:(NSString *)text
+- (instancetype)initWithText:(NSString *)text color:(UIColor *)color
 {
     self = [super init];
     if (self) {
         [self addSubview:self.textLabel];
-        self.textLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        self.textLabel.textColor = color;
         self.textLabel.text =  text;
         [self.textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.centerY.offset(0);
-            make.width.mas_equalTo(100);
-            make.width.mas_equalTo(50);
+            make.width.height.mas_equalTo(kTextWidth);
         }];
         
         [self addSubview:self.leftLine];
-        self.leftLine.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        self.leftLine.backgroundColor = color;
         [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.offset(kLeftRightPadding);
-            make.right.mas_equalTo(self.textLabel.mas_left).offset(-kIconPadding);
+            make.right.mas_equalTo(self.textLabel.mas_left).offset(-kCenterPadding);
             make.centerY.offset(0);
             make.height.mas_equalTo(kLineHeight);
         }];
         
         [self addSubview:self.rightLine];
-        self.rightLine.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        self.rightLine.backgroundColor = color;
         [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.offset(-kLeftRightPadding);
-            make.left.mas_equalTo(self.textLabel.mas_right).offset(kIconPadding);
+            make.left.mas_equalTo(self.textLabel.mas_right).offset(kCenterPadding);
             make.centerY.offset(0);
-            make.width.mas_equalTo((kScreenWidth - 2*kLeftRightPadding - 2*kIconPadding - kIconWidth)/2);
+            make.width.mas_equalTo((kScreenWidth - 2*kLeftRightPadding - 2*kCenterPadding - kIconWidth)/2);
             make.height.mas_equalTo(kLineHeight);
         }];
         
@@ -114,14 +116,12 @@ static CGFloat const kLineHeight = 1;
     return _textLabel;
 }
 
-- (UIImageView *)heartView
+- (UIImageView *)imageView
 {
-    if (!_heartView) {
-        _heartView = [UIImageView new];
-        UIImage *image = [[UIImage systemImageNamed:@"heart.fill"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        _heartView.image = image;
+    if (!_imageView) {
+        _imageView = [UIImageView new];
     }
-    return _heartView;
+    return _imageView;
 }
 
 - (UIView *)rightLine

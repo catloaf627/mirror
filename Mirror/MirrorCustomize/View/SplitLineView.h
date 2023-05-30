@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SplitLineView : UIView
 
-- (instancetype)initWithColor:(UIColor *)color;
+- (instancetype)initWithImage:(NSString *)imageName color:(UIColor *)color;
 
-- (instancetype)initWithText:(NSString *)text;
+- (instancetype)initWithText:(NSString *)text color:(UIColor *)color;
 
 @end
 
