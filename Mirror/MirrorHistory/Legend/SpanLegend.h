@@ -9,7 +9,7 @@
 #import "MirrorMacro.h"
 #import "MirrorDataModel.h"
 #import "SpanHistogram.h"
-#import "MirrorPiechart.h"
+#import "PiechartView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -18,7 +18,7 @@
 #import "SpanLegend.h"
 #import "MirrorLanguage.h"
 #import "MirrorSettings.h"
-#import "MirrorPiechart.h"
+#import "PiechartView.h"
 #import "MirrorTaskModel.h"
 #import "MirrorTool.h"
 #import "MirrorStorage.h"
@@ -45,7 +45,7 @@ static CGFloat const kLeftRightSpacing = 20;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) SpanLegend *legendView;
 @property (nonatomic, strong) SpanHistogram *histogramView;
-@property (nonatomic, strong) MirrorPiechart *piechartView;
+@property (nonatomic, strong) PiechartView *piechartView;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 
 @end
@@ -443,10 +443,10 @@ static CGFloat const kLeftRightSpacing = 20;
     return _legendView;
 }
 
-- (MirrorPiechart *)piechartView
+- (PiechartView *)piechartView
 {
     if (!_piechartView) {
-        _piechartView = [[MirrorPiechart alloc] initWithData:self.data width:MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]) enableInteractive:YES];
+        _piechartView = [[PiechartView alloc] initWithData:self.data width:MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]) enableInteractive:YES];
     }
     return _piechartView;
 }

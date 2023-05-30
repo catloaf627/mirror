@@ -1,5 +1,5 @@
 //
-//  MirrorPiechart.h
+//  PiechartView.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/9.
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface MirrorPiechart : UIView
+@interface PiechartView : UIView
 
 @property (nonatomic, weak) UIView<PiechartDelegate> *delegate;
 

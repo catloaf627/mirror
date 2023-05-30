@@ -16,7 +16,7 @@
 		4A32A3FE29F7782200DCCF57 /* MirrorTimeText.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A32A3FD29F7782200DCCF57 /* MirrorTimeText.m */; };
 		4A32A40229F8C93500DCCF57 /* EditTasksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A32A40129F8C93500DCCF57 /* EditTasksViewController.m */; };
 		4A32A40529F8CAC500DCCF57 /* EditTaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A32A40429F8CAC500DCCF57 /* EditTaskCollectionViewCell.m */; };
-		4A37369429E2AEE900187280 /* MirrorPiechart.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A37369329E2AEE900187280 /* MirrorPiechart.m */; };
+		4A37369429E2AEE900187280 /* PiechartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A37369329E2AEE900187280 /* PiechartView.m */; };
 		4A37369729E2BD3C00187280 /* SliceLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A37369629E2BD3C00187280 /* SliceLayer.m */; };
 		4A37369A29E3AD8700187280 /* MirrorSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A37369929E3AD8700187280 /* MirrorSettings.m */; };
 		4A379B4128E0381A00785CAE /* UIColor+MirrorColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A379B4028E0381A00785CAE /* UIColor+MirrorColor.m */; };
@@ -88,8 +88,8 @@
 		4A32A40129F8C93500DCCF57 /* EditTasksViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditTasksViewController.m; sourceTree = "<group>"; };
 		4A32A40329F8CAC500DCCF57 /* EditTaskCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditTaskCollectionViewCell.h; sourceTree = "<group>"; };
 		4A32A40429F8CAC500DCCF57 /* EditTaskCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditTaskCollectionViewCell.m; sourceTree = "<group>"; };
-		4A37369229E2AEE900187280 /* MirrorPiechart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorPiechart.h; sourceTree = "<group>"; };
-		4A37369329E2AEE900187280 /* MirrorPiechart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorPiechart.m; sourceTree = "<group>"; };
+		4A37369229E2AEE900187280 /* PiechartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PiechartView.h; sourceTree = "<group>"; };
+		4A37369329E2AEE900187280 /* PiechartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PiechartView.m; sourceTree = "<group>"; };
 		4A37369529E2BD3C00187280 /* SliceLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SliceLayer.h; sourceTree = "<group>"; };
 		4A37369629E2BD3C00187280 /* SliceLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SliceLayer.m; sourceTree = "<group>"; };
 		4A37369829E3AD8700187280 /* MirrorSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorSettings.h; sourceTree = "<group>"; };
@@ -360,8 +360,8 @@
 		4A410A2929EA5D650007003B /* PieChart */ = {
 			isa = PBXGroup;
 			children = (
-				4A37369229E2AEE900187280 /* MirrorPiechart.h */,
-				4A37369329E2AEE900187280 /* MirrorPiechart.m */,
+				4A37369229E2AEE900187280 /* PiechartView.h */,
+				4A37369329E2AEE900187280 /* PiechartView.m */,
 				4A37369529E2BD3C00187280 /* SliceLayer.h */,
 				4A37369629E2BD3C00187280 /* SliceLayer.m */,
 			);
@@ -675,7 +675,7 @@
 				4ADDC5C828E73935006F02DE /* AddTaskViewController.m in Sources */,
 				4AE5E8922A0253DA004228C1 /* SplitLineView.m in Sources */,
 				4A0D40FF29F1269700F13EAE /* SpanHistogram.m in Sources */,
-				4A37369429E2AEE900187280 /* MirrorPiechart.m in Sources */,
+				4A37369429E2AEE900187280 /* PiechartView.m in Sources */,
 				4A0D40FC29EFE6BD00F13EAE /* HistoryViewController.m in Sources */,
 				4A406C112906FC00001E83A1 /* ToggleCollectionViewCell.m in Sources */,
 				4AE4171F28DF6155008A6A18 /* SettingsViewController.m in Sources */,

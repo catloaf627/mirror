@@ -10,7 +10,7 @@
 #import "MirrorStorage.h"
 #import <Masonry/Masonry.h>
 #import "MirrorLanguage.h"
-#import "MirrorPiechart.h"
+#import "PiechartView.h"
 #import "MirrorTimeText.h"
 
 @interface TodayTotalHeader ()
@@ -20,7 +20,7 @@
 @property (nonatomic, strong) UIView *todayView;
 @property (nonatomic, strong) UILabel *todayLabel;
 @property (nonatomic, strong) UILabel *todayDateLabel;
-@property (nonatomic, strong) MirrorPiechart *pieChart;
+@property (nonatomic, strong) PiechartView *pieChart;
 @property (nonatomic, strong) UIButton *crownButton;
 @property (nonatomic, strong) UILabel *countLabel;
 
@@ -155,7 +155,7 @@
     return _todayDateLabel;
 }
 
-- (MirrorPiechart *)pieChart
+- (PiechartView *)pieChart
 {
     if (!_pieChart) {
         NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -167,7 +167,7 @@
         long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
         long endTime = startTime + 86400;
         NSMutableArray<MirrorDataModel *> *todayRecordsSortByTasks = [MirrorStorage getAllRecordsInTaskOrderWithStart:startTime end:endTime];
-        _pieChart = [[MirrorPiechart alloc] initWithData:todayRecordsSortByTasks width:80 enableInteractive:NO];
+        _pieChart = [[PiechartView alloc] initWithData:todayRecordsSortByTasks width:80 enableInteractive:NO];
     }
     return _pieChart;
 }

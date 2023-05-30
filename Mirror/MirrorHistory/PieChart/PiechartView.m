@@ -1,11 +1,11 @@
 //
-//  MirrorPiechart.m
+//  PiechartView.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/9.
 //
 
-#import "MirrorPiechart.h"
+#import "PiechartView.h"
 #import "MirrorTaskModel.h"
 #import "MirrorStorage.h"
 #import "SliceLayer.h"
@@ -17,7 +17,7 @@
 
 // https://blog.csdn.net/lerryteng/article/details/51564197
 
-@interface MirrorPiechart ()
+@interface PiechartView ()
 
 @property (nonatomic, strong) NSMutableArray *sliceLayerArray;
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation MirrorPiechart
+@implementation PiechartView
 
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data width:(CGFloat)width enableInteractive:(BOOL)enableInteractive
