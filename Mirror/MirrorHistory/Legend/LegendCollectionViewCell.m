@@ -32,7 +32,7 @@ static CGFloat const kPadding = 10;
     self.layer.cornerRadius = 4; // 背景色twinkle的时候有点弧度好看
     [self addSubview:self.coloredView];
     self.coloredView.backgroundColor = [UIColor mirrorColorNamed:task.color];
-    self.coloredView.layer.borderColor = [UIColor mirrorColorNamed: [UIColor mirror_getPulseColorType:task.color]].CGColor;
+    self.coloredView.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground].CGColor;
     self.coloredView.layer.borderWidth = 2;
     [self.coloredView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.equalTo(@20);
