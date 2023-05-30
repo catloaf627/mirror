@@ -75,6 +75,10 @@
     [mirrorDict setValue:@[@"Delete this time period? ", @"确定删除这个时间段？"] forKey:@"delete_period_?"];
     
     // All tasks
+    [mirrorDict setValue:@[@"Long press to reorder tasks" , @"长按拖动可以编辑顺序"] forKey:@"hint0"];
+    [mirrorDict setValue:@[@"The order here is the display order of histograms and piecharts" , @"这里的顺序即柱状图、饼状图的展示顺序"] forKey:@"hint1"];
+    [mirrorDict setValue:@[@"Tap task name to edit" , @"轻点任务名可编辑"] forKey:@"hint2"];
+    [mirrorDict setValue:@[@"Archived tasks will not be displayed on the main page" , @"已经归档的任务将不会展示在主页面"] forKey:@"hint3"];
     [mirrorDict setValue:@[@"Delete this task? ", @"确定删除这个任务？"] forKey:@"delete_task_?"];
     [mirrorDict setValue:@[@"Created at " , @"创建于 "] forKey:@"created_at"];
     [mirrorDict setValue:@[@"Edit tasks" , @"编辑任务"] forKey:@"edit_tasks"];

@@ -14,7 +14,9 @@
 #import "TaskRecordsViewController.h"
 #import "MirrorLanguage.h"
 #import "MirrorNaviManager.h"
+#import "HintHeader.h"
 #import "HeartFooter.h"
+
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 @interface EditTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol>
@@ -168,8 +170,9 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     
     if (kind == UICollectionElementKindSectionHeader) {
-        UICollectionViewCell *header;
+        HintHeader *header;
         header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
+        [header config];
         return header;
     } else {
         HeartFooter *footer;
@@ -181,7 +184,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
-    return CGSizeMake(kScreenWidth, 5); // 给collectionview一个小小的header，让第一行cell的shadow的过度更自然（没有截断的效果）
+    return CGSizeMake(kScreenWidth, 30); // 给collectionview一个小小的header，让第一行cell的shadow的过度更自然（没有截断的效果）+ 起到提示效果
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
@@ -215,7 +218,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = self.view.backgroundColor;
         [_collectionView registerClass:[EditTaskCollectionViewCell class] forCellWithReuseIdentifier:[EditTaskCollectionViewCell identifier]];
-        [_collectionView registerClass:[UICollectionViewCell class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+        [_collectionView registerClass:[HintHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
         [_collectionView registerClass:[HeartFooter class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer"];
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         [_collectionView addGestureRecognizer:longPress];
