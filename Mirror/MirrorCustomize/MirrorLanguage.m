@@ -13,20 +13,17 @@
 + (NSString *)mirror_stringWithKey:(NSString *)key
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
-    // general
-    [mirrorDict setValue:@[@"Something went wrong", @"出错了"] forKey:@"something_went_wrong"];
     
     // tabs
     [mirrorDict setValue:@[@"Start", @"计时"] forKey:@"start"];
     [mirrorDict setValue:@[@"Today", @"今天"] forKey:@"today"];
     [mirrorDict setValue:@[@"Data", @"数据"] forKey:@"data"];
     [mirrorDict setValue:@[@"Record", @"记录"] forKey:@"record"];
-    // nickname
-    [mirrorDict setValue:@[@"nickname", @"我的昵称"] forKey:@"nickname"];
+    
     // Settings
     [mirrorDict setValue:@[@"Apply Chinese", @"使用中文"] forKey:@"apply_chinese"];
     [mirrorDict setValue:@[@"Week starts on Monday", @"将周一作为一周的第一天"] forKey:@"week_starts_on_Monday"];
-    [mirrorDict setValue:@[@"Show record index", @"展示记录的序号"] forKey:@"show_record_index"];
+    [mirrorDict setValue:@[@"Show record indexes", @"展示记录的序号"] forKey:@"show_record_indexes"];
     [mirrorDict setValue:@[@"Show histogram on Data", @"数据页使用柱状图"] forKey:@"show_histogram_on_data"];
     [mirrorDict setValue:@[@"Show piechart on Record", @"记录页使用饼状图"] forKey:@"show_piechart_on_record"];
     [mirrorDict setValue:@[@"Apply heatmap", @"展示热力图"] forKey:@"heatmap"];
@@ -43,10 +40,7 @@
     [mirrorDict setValue:@[@"Copy author's email address to clipboard", @"拷贝作者邮箱地址到剪切板"] forKey:@"copy_email_address_to_clipboard"];
     [mirrorDict setValue:@[@"Copy", @"拷贝"] forKey:@"copy"];
     
-    // Profile edit cell - hint
-    [mirrorDict setValue:@[@"Click task name to edit (Your data won't be affected)", @"点击任务名称进行编辑（任务数据并不会受到影响）"] forKey:@"edit_taskname_hint"];
     // Profile edit cell
-    [mirrorDict setValue:@[@"Delete or archive this task", @"删除或归档此任务"] forKey:@"delete_or_archive"];
     [mirrorDict setValue:@[@"Save", @"保存"] forKey:@"save"];
     [mirrorDict setValue:@[@"Remove", @"移掉"] forKey:@"remove"];
     [mirrorDict setValue:@[@"Delete", @"删除"] forKey:@"delete"];
@@ -60,7 +54,7 @@
     [mirrorDict setValue:@[@"Name field cannot be empty", @"任务名不能为空"] forKey:@"name_field_cannot_be_empty"];
     [mirrorDict setValue:@[@"Gotcha", @"知道啦"] forKey:@"gotcha"];
     [mirrorDict setValue:@[@"Task cannot be duplicated", @"任务不可重复"] forKey:@"task_cannot_be_duplicated"];
-    [mirrorDict setValue:@[@"This task exists in current task list", @"这个任务已经存在于当前任务列表中"] forKey:@"this_task_exists_in_current_task_list"];
+    [mirrorDict setValue:@[@"This task exists in the current task list", @"这个任务已经存在于当前任务列表中"] forKey:@"this_task_exists_in_current_task_list"];
     [mirrorDict setValue:@[@"This task exists in the archived task list. You can activate it in [Data]", @"这个任务已经存在于归档任务列表中。你可以在【数据】中重新激活此任务。"] forKey:@"this_task_exists_in_the_archived_task_list"];
     
     // 全屏
@@ -78,9 +72,8 @@
     
     // All tasks
     [mirrorDict setValue:@[@"Long press to reorder tasks" , @"长按拖动可以编辑顺序"] forKey:@"hint0"];
-    [mirrorDict setValue:@[@"The order here is the display order of histograms and piecharts" , @"这里的顺序即柱状图、饼状图的展示顺序"] forKey:@"hint1"];
-    [mirrorDict setValue:@[@"Tap task name to edit" , @"轻点任务名可编辑"] forKey:@"hint2"];
-    [mirrorDict setValue:@[@"Archived tasks will not be displayed on the main page" , @"已经归档的任务将不会展示在主页面"] forKey:@"hint3"];
+    [mirrorDict setValue:@[@"Tap task name to edit" , @"轻点任务名可编辑"] forKey:@"hint1"];
+    [mirrorDict setValue:@[@"Archived tasks will not be displayed on the main page" , @"已经归档的任务将不会展示在主页面"] forKey:@"hint2"];
     [mirrorDict setValue:@[@"Delete this task? ", @"确定删除这个任务？"] forKey:@"delete_task_?"];
     [mirrorDict setValue:@[@"Created at " , @"创建于 "] forKey:@"created_at"];
     [mirrorDict setValue:@[@"Edit tasks" , @"编辑任务"] forKey:@"edit_tasks"];
@@ -119,7 +112,7 @@
     // Span histogram empty hint
     [mirrorDict setValue:@[@"No data", @"暂无数据"] forKey:@"no_data"];
     // Today empty hint
-    [mirrorDict setValue:@[@"No tasks today", @"今天暂无任务"] forKey:@"no_data_today"];
+    [mirrorDict setValue:@[@"No task today", @"今天暂无任务"] forKey:@"no_data_today"];
     
     // today total
     [mirrorDict setValue:@[@"Total: ", @"总时长："] forKey:@"total"];
@@ -152,14 +145,7 @@
                   with1Placeholder:(NSString *)placeholder
 {
     NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
-    
-    // MUXToast
-    [mirrorDict setValue:@[@"[%@] not saved", @"【%@】未保存"] forKey:@"too_short_to_save"];
-    
-    // Edit period
-    [mirrorDict setValue:@[@"The start time of No.%@ task: No later than the end time of this task, nor earlier than the end time of the previous task", @"第%@次任务的开始时间：不得晚于本次任务的结束时间，不得早于上一个任务的结束时间"] forKey:@"start_time_for_period"];
-    [mirrorDict setValue:@[@"The end time of No.%@ task: No earlier than the start time of this task, nor later than the start time of the next task", @"第%@次任务的结束时间：不得早于本次任务的开始时间，不得晚于下一个任务的开始时间"] forKey:@"end_time_for_period"];
-    
+
     // 时间
     [mirrorDict setValue:@[@"%@h ", @"%@时"] forKey:@"h"];
     [mirrorDict setValue:@[@"%@m ", @"%@分"] forKey:@"m"];
@@ -176,19 +162,5 @@
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder];
 }
-
-+ (NSString *)mirror_stringWithKey:(NSString *)key
-                  with1Placeholder:(NSString *)placeholder1
-                  with2Placeholder:(NSString *)placeholder2
-{
-    NSMutableDictionary *mirrorDict = [NSMutableDictionary new];
-    [mirrorDict setValue:@[@"[%@] has been done!\nlasted: %@", @"【%@】已完成！\n持续时间：%@"] forKey:@"task_has_been_done"];
-    
-    
-    NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
-    return [NSString stringWithFormat:[mirrorDict valueForKey:key][index], placeholder1, placeholder2];
-}
-
-
 
 @end
