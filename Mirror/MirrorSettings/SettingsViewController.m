@@ -279,8 +279,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"export_data"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
             NSString *path = [paths objectAtIndex:0];
-            NSData *tasksData = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
-            NSArray *activityItems = @[tasksData ?: [NSData new]];
+            NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
+            NSArray *activityItems = @[data ?: [NSData new]];
             UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
             activityViewControntroller.excludedActivityTypes = @[];
             activityViewControntroller.popoverPresentationController.sourceView = self.view;
