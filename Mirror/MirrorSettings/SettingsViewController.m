@@ -36,9 +36,9 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeImport,
 };
 
-@interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate, UIDocumentPickerDelegate, UITextViewDelegate>
+@interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate, UIDocumentPickerDelegate>
 
-@property (nonatomic, strong) UITextView *mottoField;
+@property (nonatomic, strong) UIButton *motto;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *versionLabel;
 @property (nonatomic, strong) UIView *loveView;
@@ -67,7 +67,10 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (void)restartVC
 {
     // 将vc.view里的所有subviews全部置为nil
+    self.motto = nil;
     self.collectionView = nil;
+    self.versionLabel = nil;
+    self.loveView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [self  p_setupUI];
@@ -80,8 +83,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    // 手势(点击外部dismiss)
     [super viewDidAppear:animated];
+    // 手势(点击外部dismiss)
     UITapGestureRecognizer *tapRecognizer = [UITapGestureRecognizer new];
     tapRecognizer.delegate = self;
     [self.view.superview addGestureRecognizer:tapRecognizer];
@@ -103,18 +106,18 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (void)p_setupUI
 {
     self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeAddTaskCellBG];
-    [self.view addSubview:self.mottoField];
-    [self.mottoField mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.motto];
+    [self.motto mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
         make.top.mas_equalTo(self.view).offset(80);
-        make.height.mas_equalTo(40);
+        make.height.mas_equalTo(50);
     }];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
-        make.top.mas_equalTo(self.mottoField.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.motto.mas_bottom).offset(20);
         make.height.mas_equalTo((52*kLeftSheetRatio+kCellSpacing)*self.dataSource.count);
     }];
     [self.view addSubview:self.versionLabel];
@@ -137,6 +140,27 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 #pragma mark - Actions
 
+- (void)tapMotto
+{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"motto"]
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.borderStyle = UITextBorderStyleRoundedRect;
+    }];
+    [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"save"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSString *motto = alertController.textFields[0].text;
+        [MirrorSettings saveUserMotto:motto];
+        [self.motto setTitle:[MirrorSettings userMotto] forState:UIControlStateNormal];
+    }]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
 - (void)showLove
 {
     self.versionLabel.hidden = YES;
@@ -150,7 +174,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     if ([gestureRecognizer isKindOfClass:UITapGestureRecognizer.class]) {
         CGPoint touchPoint = [touch locationInView:self.view];
         if (touchPoint.x <= self.view.frame.size.width) {
-            [self.mottoField resignFirstResponder]; // 点了view里面
+            // 点了view里面
         } else {
             [self dismiss];// 点了view外面
         }
@@ -238,14 +262,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     }
 }
 
-#pragma mark - UITextViewDelegate
-
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
-    [MirrorSettings saveUserMotto:textView.text];
-}
-
-
 # pragma mark - Collection view delegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -327,18 +343,20 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 #pragma mark - Getters
 
-- (UITextView *)mottoField
+- (UIButton *)motto
 {
-    if (!_mottoField) {
-        _mottoField = [UITextView new];
-        _mottoField.text = [MirrorSettings userMotto];
-        _mottoField.backgroundColor = [UIColor clearColor];
-        _mottoField.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
-        _mottoField.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
-        _mottoField.delegate = self;
-        _mottoField.textAlignment = NSTextAlignmentLeft;
+    if (!_motto) {
+        _motto = [UIButton new];
+        [_motto setTitle:[MirrorSettings userMotto] forState:UIControlStateNormal];
+        [_motto setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeTextHint] forState:UIControlStateNormal];
+        _motto.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
+        _motto.titleLabel.textAlignment = NSTextAlignmentLeft;
+        _motto.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [_motto setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+        _motto.titleLabel.numberOfLines = 2;
+        [_motto addTarget:self action:@selector(tapMotto) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _mottoField;
+    return _motto;
 }
 
 - (UICollectionView *)collectionView

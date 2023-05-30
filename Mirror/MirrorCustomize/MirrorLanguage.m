@@ -127,6 +127,10 @@
     // All records
     [mirrorDict setValue:@[@"All records", @"所有记录"] forKey:@"all_records"];
     
+    // Motto
+    [mirrorDict setValue:@[@"Something you want to keep in mind?", @"想记下来什么？"] forKey:@"motto"];
+    
+    
     NSInteger index = [MirrorSettings appliedChinese] ? 1 : 0;
     return [mirrorDict valueForKey:key][index];
 }
