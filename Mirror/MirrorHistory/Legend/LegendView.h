@@ -8,12 +8,12 @@
 #import <UIKit/UIKit.h>
 #import "MirrorMacro.h"
 #import "MirrorDataModel.h"
-#import "SpanHistogram.h"
+#import "HistogramView.h"
 #import "PiechartView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LegendView : UIView <SpanHistogramDelegate, PiechartDelegate>
+@interface LegendView : UIView <HistogramDelegate, PiechartDelegate>
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;

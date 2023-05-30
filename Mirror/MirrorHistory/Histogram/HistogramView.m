@@ -1,11 +1,11 @@
 //
-//  SpanHistogram.m
+//  HistogramView.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/20.
 //
 
-#import "SpanHistogram.h"
+#import "HistogramView.h"
 #import "MirrorStorage.h"
 #import "HistogramCollectionViewCell.h"
 #import "MirrorMacro.h"
@@ -23,7 +23,7 @@ static NSInteger const kPrettyCountMin = 5;
 static NSInteger const kPrettyCountMax = 6;
 static CGFloat const kPrettyCountShowHalf = 5.5;
 
-@interface SpanHistogram () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface HistogramView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -34,7 +34,7 @@ static CGFloat const kPrettyCountShowHalf = 5.5;
 
 @end
 
-@implementation SpanHistogram
+@implementation HistogramView
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data
 {

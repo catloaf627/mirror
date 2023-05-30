@@ -16,7 +16,7 @@
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
 #import "LegendView.h"
-#import "SpanHistogram.h"
+#import "HistogramView.h"
 #import "PiechartView.h"
 #import "MirrorTimeText.h"
 #import "MirrorTool.h"
@@ -50,7 +50,7 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) LegendView *legendView;
-@property (nonatomic, strong) SpanHistogram *histogramView;
+@property (nonatomic, strong) HistogramView *histogramView;
 @property (nonatomic, strong) PiechartView *piechartView;
 
 @end
@@ -579,10 +579,10 @@ static CGFloat const kCellSpacing = 3;
     return _legendView;
 }
 
-- (SpanHistogram *)histogramView
+- (HistogramView *)histogramView
 {
     if (!_histogramView) {
-        _histogramView = [[SpanHistogram alloc] initWithData:[NSMutableArray new]];
+        _histogramView = [[HistogramView alloc] initWithData:[NSMutableArray new]];
         _histogramView.delegate = self.legendView;
     }
     return _histogramView;

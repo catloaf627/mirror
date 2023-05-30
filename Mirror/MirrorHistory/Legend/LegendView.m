@@ -89,7 +89,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 }
 
-#pragma mark - SpanHistogramDelegate
+#pragma mark - HistogramDelegate
 
 - (void)twinkleTaskname:(NSString *)taskname
 {

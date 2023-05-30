@@ -14,7 +14,7 @@
 #import <Masonry/Masonry.h>
 #import "LeftAnimation.h"
 #import "SettingsViewController.h"
-#import "SpanHistogram.h"
+#import "HistogramView.h"
 #import "LegendView.h"
 #import "MirrorLanguage.h"
 #import "MirrorSettings.h"
@@ -44,7 +44,7 @@ static CGFloat const kLeftRightSpacing = 20;
 @property (nonatomic, strong) UIImageView *rightArrow;
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) LegendView *legendView;
-@property (nonatomic, strong) SpanHistogram *histogramView;
+@property (nonatomic, strong) HistogramView *histogramView;
 @property (nonatomic, strong) PiechartView *piechartView;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
 
@@ -426,10 +426,10 @@ static CGFloat const kLeftRightSpacing = 20;
     return _rightArrow;
 }
 
-- (SpanHistogram *)histogramView
+- (HistogramView *)histogramView
 {
     if (!_histogramView) {
-        _histogramView = [[SpanHistogram alloc] initWithData:self.data];
+        _histogramView = [[HistogramView alloc] initWithData:self.data];
         _histogramView.delegate = self.legendView;
     }
     return _histogramView;

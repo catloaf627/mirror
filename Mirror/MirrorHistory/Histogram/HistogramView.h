@@ -1,5 +1,5 @@
 //
-//  SpanHistogram.h
+//  HistogramView.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/20.
@@ -11,15 +11,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SpanHistogramDelegate <NSObject>  // 让对应的legend闪一下
+@protocol HistogramDelegate <NSObject>  // 让对应的legend闪一下
 
 - (void)twinkleTaskname:(NSString *)taskname;
 
 @end
 
-@interface SpanHistogram : UIView
+@interface HistogramView : UIView
 
-@property (nonatomic, weak) UIView<SpanHistogramDelegate> *delegate;
+@property (nonatomic, weak) UIView<HistogramDelegate> *delegate;
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;
