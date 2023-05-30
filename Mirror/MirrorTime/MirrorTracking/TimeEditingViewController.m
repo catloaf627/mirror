@@ -38,11 +38,31 @@
 {
     self = [super init];
     if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         self.taskName = taskName;
-        self.tasknameLabel.text = taskName;
-        
     }
     return self;
+}
+
+- (void)restartVC
+{
+    // 将vc.view里的所有subviews全部置为nil
+    self.dismissButton = nil;
+    self.tasknameLabel = nil;
+    self.startLabel = nil;
+    self.startPicker = nil;
+    self.lastedPicker = nil;
+    self.saveButton = nil;
+    self.splitView = nil;
+    self.startButton = nil;
+    // 将vc.view里的所有subviews从父view上移除
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self  p_setupUI];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad
@@ -70,6 +90,7 @@
     self.view.clipsToBounds = YES;
     self.view.backgroundColor = [UIColor mirrorColorNamed:[MirrorStorage getTaskModelFromDB:self.taskName].color];
     [self.view addSubview:self.tasknameLabel];
+    self.tasknameLabel.text = self.taskName;
     [self.tasknameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.offset(0);
         make.top.offset(100);
