@@ -105,8 +105,10 @@
         SliceLayer *slice = self.sliceLayerArray[i];
         if (CGPathContainsPoint(slice.path, 0, touchPoint, YES) && !slice.selected) {
             slice.selected = YES;
+            [self.delegate highlightTaskname:self.data[slice.tag].taskModel.taskName];
         } else {
             slice.selected = NO;
+            [self.delegate cancelHighlightTaskname:self.data[slice.tag].taskModel.taskName];
             [slice.textLayer removeFromSuperlayer];
         }
     }

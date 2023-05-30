@@ -592,6 +592,7 @@ static CGFloat const kCellSpacing = 3;
 {
     if (!_piechartView) {
         _piechartView = [[MirrorPiechart alloc] initWithData:[NSMutableArray new] width:0 enableInteractive:NO];
+        _piechartView.delegate = self.legendView;
     }
     return _piechartView;
 }

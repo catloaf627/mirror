@@ -9,10 +9,11 @@
 #import "MirrorMacro.h"
 #import "MirrorDataModel.h"
 #import "SpanHistogram.h"
+#import "MirrorPiechart.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SpanLegend : UIView <SpanHistogramDelegate>
+@interface SpanLegend : UIView <SpanHistogramDelegate, PiechartDelegate>
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;
