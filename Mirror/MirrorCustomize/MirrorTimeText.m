@@ -11,6 +11,22 @@
 
 @implementation MirrorTimeText
 
++ (NSString *)getPreciseTimeString
+{
+    NSDate *now = [NSDate now];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:now];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    NSString *timeString = @"";
+    timeString = [[timeString stringByAppendingString:[@(components.year) stringValue]] stringByAppendingString:@"-"];
+    timeString = [[timeString stringByAppendingString:[@(components.month) stringValue]] stringByAppendingString:@"-"];
+    timeString = [[timeString stringByAppendingString:[@(components.day) stringValue]] stringByAppendingString:@"-"];
+    timeString = [[timeString stringByAppendingString:[@(components.hour) stringValue]] stringByAppendingString:@"-"];
+    timeString = [[timeString stringByAppendingString:[@(components.minute) stringValue]] stringByAppendingString:@"-"];
+    timeString = [timeString stringByAppendingString:[@(components.second) stringValue]];
+    return timeString;
+}
+
 + (NSString *)Xh:(long)timeInterval
 {
     NSInteger numOfHours = timeInterval / 3600;

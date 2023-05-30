@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MirrorTimeText : NSObject
 
+// 此时此刻的精准时间字符串（export用）
++ (NSString *)getPreciseTimeString;
+
 // 584 hours | 584 小时 —> 主页面cell上的标记
 + (NSString *)Xh:(long)timeInterval;
 

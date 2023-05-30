@@ -25,6 +25,7 @@
 #import "MirrorTaskModel.h"
 #import "MirrorRecordModel.h"
 #import "MirrorSettings.h"
+#import "MirrorTimeText.h"
 
 static CGFloat const kCellSpacing = 10; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -288,7 +289,11 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
                 [nodataController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"ok"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}]];
                 [self presentViewController:nodataController animated:YES completion:nil];
             } else { // 唤起路径
-                NSArray *activityItems = @[data];
+                // create url
+                NSString *filename = [@"Mirror" stringByAppendingString:[MirrorTimeText getPreciseTimeString]];
+                NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:filename]];
+                [data writeToURL:url atomically:NO]; // 给data创建一个url：为了起名字
+                NSArray *activityItems = @[url];
                 UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
                 activityViewControntroller.excludedActivityTypes = @[];
                 activityViewControntroller.popoverPresentationController.sourceView = self.view;
