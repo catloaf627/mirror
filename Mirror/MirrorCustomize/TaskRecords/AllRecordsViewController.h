@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AllRecordsViewController : UIViewController
 
-@property (nonatomic, assign) NSInteger scrollToIndex;
+@property (nonatomic, assign) NSNumber *scrollToIndex;
 
 @end
 

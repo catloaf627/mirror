@@ -106,13 +106,13 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.item == 0 && !_isStartedScroll) { // 展示第0个的时候scroll（一次生命周期只走一次）
+    if (_scrollToIndex && indexPath.item == 0 && !_isStartedScroll) { // 展示第0个的时候scroll（一次生命周期只走一次）
         _isStartedScroll = YES;
-        [collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_scrollToIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:YES];
+        [collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[_scrollToIndex integerValue] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:YES];
     }
-    if (indexPath.item == _scrollToIndex && !_isFinishedScroll) { // 展示第selected个的时候闪烁（一次生命周期只走一次）
+    if (_scrollToIndex && indexPath.item == [_scrollToIndex integerValue] && !_isFinishedScroll) { // 展示第selected个的时候闪烁（一次生命周期只走一次）
         _isFinishedScroll = YES;
-        MirrorRecordModel *record = [MirrorStorage retriveMirrorRecords][_scrollToIndex];
+        MirrorRecordModel *record = [MirrorStorage retriveMirrorRecords][[_scrollToIndex integerValue]];
         MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:record.taskName];
         UIColor *color = [UIColor mirrorColorNamed:task.color];
         UIColor *pulseColor = [UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:task.color]];
@@ -121,9 +121,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:0.5 animations:^{
                 cell.backgroundColor = color;
-            } completion:^(BOOL finished) {
-                
-            }];
+            } completion:^(BOOL finished) {}];
         }];
     }
 
