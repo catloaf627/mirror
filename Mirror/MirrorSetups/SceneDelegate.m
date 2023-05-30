@@ -8,6 +8,10 @@
 #import "SceneDelegate.h"
 #import "MirrorTabsManager.h"
 #import "MirrorNaviManager.h"
+#import "MirrorSettings.h"
+#import <UIKit/UIKit.h>
+
+
 @interface SceneDelegate ()<UITabBarControllerDelegate>
 
 @end
@@ -45,8 +49,13 @@
 
 
 - (void)sceneDidBecomeActive:(UIScene *)scene {
-    // Called when the scene has moved from an inactive state to an active state.
-    // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+    BOOL appIsDark = [MirrorSettings appliedDarkMode];
+    BOOL systemIsDark = UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark;
+    if (appIsDark == systemIsDark) {
+        return;
+    } else {
+        [MirrorSettings switchTheme];
+    }
 }
 
 

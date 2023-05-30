@@ -71,10 +71,35 @@ static CGFloat const kDashSpacing = 10;
 {
     self = [super init];
     if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         self.taskName = taskName;
     }
     return self;
 }
+
+- (void)restartVC
+{
+    // 将vc.view里的所有subviews全部置为nil
+    self.taskNameLabel = nil;
+    self.timeIntervalLabel = nil;
+    self.startTimeLabelHH = nil;
+    self.startTimeColonLabelA = nil;
+    self.startTimeLabelmm = nil;
+    self.startTimeColonLabelB = nil;
+    self.startTimeLabelss = nil;
+    self.dashLabel = nil;
+    self.nowTimeLabelHH = nil;
+    self.nowTimeColonLabelA = nil;
+    self.nowTimeLabelmm = nil;
+    self.nowTimeColonLabelB = nil;
+    self.nowTimeLabelss = nil;
+    self.differentDayLabel = nil;
+    self.stopButton = nil;
+    // 将vc.view里的所有subviews从父view上移除
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self  p_setupUI];
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -83,6 +108,7 @@ static CGFloat const kDashSpacing = 10;
 
 - (void)dealloc // 页面被销毁，销毁timer
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.timer invalidate];
     self.timer = nil;
 }

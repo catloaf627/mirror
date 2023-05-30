@@ -31,6 +31,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     self = [super init];
     if (self) {
         self.taskName = taskName;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTitleAndArchive) name:MirrorTaskArchiveNotification object:nil];
@@ -46,6 +47,17 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)reloadData
 {
     [self.collectionView reloadData];
+}
+
+- (void)restartVC
+{
+    // update navibar
+    [self updateTitle];
+    // 将vc.view里的所有subviews全部置为nil
+    self.collectionView = nil;
+    // 将vc.view里的所有subviews从父view上移除
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self  p_setupUI];
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -10,7 +10,6 @@
 #import <Masonry/Masonry.h>
 #import "MirrorMacro.h"
 
-#import "ThemeCollectionViewCell.h"
 #import "LanguageCollectionViewCell.h"
 #import "WeekStartsOnCollectionViewCell.h"
 #import "ShowIndexCollectionViewCell.h"
@@ -28,7 +27,6 @@ static CGFloat const kCellSpacing = 10; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 typedef NS_ENUM(NSInteger, MirrorSettingType) {
-    MirrorSettingTypeTheme,
     MirrorSettingTypeLanguage,
     MirrorSettingTypeWeekStartsOn,
     MirrorSettingTypeShowIndex,
@@ -268,8 +266,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     if (indexPath.item >= self.dataSource.count) {
         return;
-    } else if (indexPath.item == MirrorSettingTypeTheme) {
-        // Do nothing (use toggle to switch theme)
     } else if (indexPath.item == MirrorSettingTypeLanguage) {
         // Do nothing (use toggle to switch language)
     } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
@@ -296,10 +292,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     if (indexPath.item >= self.dataSource.count) {
         return [UICollectionViewCell new];
-    } else if (indexPath.item == MirrorSettingTypeTheme){
-        ThemeCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ThemeCollectionViewCell identifier] forIndexPath:indexPath];
-        [cell configCell];
-        return cell;
     } else if (indexPath.item == MirrorSettingTypeLanguage) {
         LanguageCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[LanguageCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
@@ -368,7 +360,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         _collectionView.dataSource = self;
         layout.minimumLineSpacing = kCellSpacing;
         _collectionView.backgroundColor = self.view.backgroundColor;
-        [_collectionView registerClass:[ThemeCollectionViewCell class] forCellWithReuseIdentifier:[ThemeCollectionViewCell identifier]];
         [_collectionView registerClass:[LanguageCollectionViewCell class] forCellWithReuseIdentifier:[LanguageCollectionViewCell identifier]];
         [_collectionView registerClass:[WeekStartsOnCollectionViewCell class] forCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier]];
         [_collectionView registerClass:[ShowIndexCollectionViewCell class] forCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier]];
@@ -437,7 +428,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[ @(MirrorSettingTypeTheme), @(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
+        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
     }
     return _dataSource;
 }
