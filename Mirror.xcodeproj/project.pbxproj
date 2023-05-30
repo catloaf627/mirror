@@ -12,7 +12,7 @@
 		4A099FAE29DD57AE002683A1 /* MirrorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A099FAD29DD57AE002683A1 /* MirrorTool.m */; };
 		4A0D40FC29EFE6BD00F13EAE /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A0D40FB29EFE6BD00F13EAE /* HistoryViewController.m */; };
 		4A0D40FF29F1269700F13EAE /* SpanHistogram.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A0D40FE29F1269600F13EAE /* SpanHistogram.m */; };
-		4A0D410229F13C5300F13EAE /* SpanLegend.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A0D410129F13C5300F13EAE /* SpanLegend.m */; };
+		4A0D410229F13C5300F13EAE /* LegendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A0D410129F13C5300F13EAE /* LegendView.m */; };
 		4A32A3FE29F7782200DCCF57 /* MirrorTimeText.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A32A3FD29F7782200DCCF57 /* MirrorTimeText.m */; };
 		4A32A40229F8C93500DCCF57 /* EditTasksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A32A40129F8C93500DCCF57 /* EditTasksViewController.m */; };
 		4A32A40529F8CAC500DCCF57 /* EditTaskCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A32A40429F8CAC500DCCF57 /* EditTaskCollectionViewCell.m */; };
@@ -80,8 +80,8 @@
 		4A0D40FB29EFE6BD00F13EAE /* HistoryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
 		4A0D40FD29F1269600F13EAE /* SpanHistogram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpanHistogram.h; sourceTree = "<group>"; };
 		4A0D40FE29F1269600F13EAE /* SpanHistogram.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpanHistogram.m; sourceTree = "<group>"; };
-		4A0D410029F13C5300F13EAE /* SpanLegend.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpanLegend.h; sourceTree = "<group>"; };
-		4A0D410129F13C5300F13EAE /* SpanLegend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpanLegend.m; sourceTree = "<group>"; };
+		4A0D410029F13C5300F13EAE /* LegendView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LegendView.h; sourceTree = "<group>"; };
+		4A0D410129F13C5300F13EAE /* LegendView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LegendView.m; sourceTree = "<group>"; };
 		4A32A3FC29F7782200DCCF57 /* MirrorTimeText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorTimeText.h; sourceTree = "<group>"; };
 		4A32A3FD29F7782200DCCF57 /* MirrorTimeText.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MirrorTimeText.m; sourceTree = "<group>"; };
 		4A32A40029F8C93500DCCF57 /* EditTasksViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditTasksViewController.h; sourceTree = "<group>"; };
@@ -371,8 +371,8 @@
 		4A410A2A29EA5D750007003B /* Legend */ = {
 			isa = PBXGroup;
 			children = (
-				4A0D410029F13C5300F13EAE /* SpanLegend.h */,
-				4A0D410129F13C5300F13EAE /* SpanLegend.m */,
+				4A0D410029F13C5300F13EAE /* LegendView.h */,
+				4A0D410129F13C5300F13EAE /* LegendView.m */,
 				4A410A2629EA51750007003B /* LegendCollectionViewCell.h */,
 				4A410A2729EA51750007003B /* LegendCollectionViewCell.m */,
 			);
@@ -665,7 +665,7 @@
 				4AFB77B328DF4A3B0064CBCA /* main.m in Sources */,
 				4AA353352A25D59400920404 /* HeatmapCollectionViewCell.m in Sources */,
 				4A88212C29F6066A009E422C /* TimeEditingViewController.m in Sources */,
-				4A0D410229F13C5300F13EAE /* SpanLegend.m in Sources */,
+				4A0D410229F13C5300F13EAE /* LegendView.m in Sources */,
 				4A6848C52A22003200C8D439 /* HiddenAnimation.m in Sources */,
 				4A37369A29E3AD8700187280 /* MirrorSettings.m in Sources */,
 				4A37369729E2BD3C00187280 /* SliceLayer.m in Sources */,

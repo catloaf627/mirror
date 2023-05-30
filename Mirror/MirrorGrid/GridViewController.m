@@ -15,7 +15,7 @@
 #import "MirrorTaskModel.h"
 #import "MirrorStorage.h"
 #import "MirrorSettings.h"
-#import "SpanLegend.h"
+#import "LegendView.h"
 #import "SpanHistogram.h"
 #import "PiechartView.h"
 #import "MirrorTimeText.h"
@@ -49,7 +49,7 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) UIView *weekdayView;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UILabel *dateLabel;
-@property (nonatomic, strong) SpanLegend *legendView;
+@property (nonatomic, strong) LegendView *legendView;
 @property (nonatomic, strong) SpanHistogram *histogramView;
 @property (nonatomic, strong) PiechartView *piechartView;
 
@@ -571,10 +571,10 @@ static CGFloat const kCellSpacing = 3;
 
 #pragma mark - Getters
 
-- (SpanLegend *)legendView
+- (LegendView *)legendView
 {
     if (!_legendView) {
-        _legendView = [[SpanLegend alloc] initWithData:[NSMutableArray new]];
+        _legendView = [[LegendView alloc] initWithData:[NSMutableArray new]];
     }
     return _legendView;
 }

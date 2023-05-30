@@ -1,11 +1,11 @@
 //
-//  SpanLegend.m
+//  LegendView.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/20.
 //
 
-#import "SpanLegend.h"
+#import "LegendView.h"
 #import <Masonry/Masonry.h>
 #import "MirrorSettings.h"
 #import "MirrorStorage.h"
@@ -15,7 +15,7 @@
 static CGFloat const kCellHeight = 30; // 一个legend的高度
 static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
-@interface SpanLegend () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface LegendView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray<MirrorDataModel *> *data;
@@ -26,7 +26,7 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 @end
 
 
-@implementation SpanLegend
+@implementation LegendView
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data
 {

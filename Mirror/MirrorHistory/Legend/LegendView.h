@@ -1,5 +1,5 @@
 //
-//  SpanLegend.h
+//  LegendView.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/20.
@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface SpanLegend : UIView <SpanHistogramDelegate, PiechartDelegate>
+@interface LegendView : UIView <SpanHistogramDelegate, PiechartDelegate>
 
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;

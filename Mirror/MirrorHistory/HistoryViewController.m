@@ -15,7 +15,7 @@
 #import "LeftAnimation.h"
 #import "SettingsViewController.h"
 #import "SpanHistogram.h"
-#import "SpanLegend.h"
+#import "LegendView.h"
 #import "MirrorLanguage.h"
 #import "MirrorSettings.h"
 #import "PiechartView.h"
@@ -43,7 +43,7 @@ static CGFloat const kLeftRightSpacing = 20;
 @property (nonatomic, strong) UIImageView *leftArrow;
 @property (nonatomic, strong) UIImageView *rightArrow;
 @property (nonatomic, strong) UILabel *dateLabel;
-@property (nonatomic, strong) SpanLegend *legendView;
+@property (nonatomic, strong) LegendView *legendView;
 @property (nonatomic, strong) SpanHistogram *histogramView;
 @property (nonatomic, strong) PiechartView *piechartView;
 @property (nonatomic, strong) UILabel *emptyHintLabel;
@@ -435,10 +435,10 @@ static CGFloat const kLeftRightSpacing = 20;
     return _histogramView;
 }
 
-- (SpanLegend *)legendView
+- (LegendView *)legendView
 {
     if (!_legendView) {
-        _legendView = [[SpanLegend alloc] initWithData:self.data];
+        _legendView = [[LegendView alloc] initWithData:self.data];
     }
     return _legendView;
 }
