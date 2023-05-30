@@ -16,7 +16,6 @@
 @interface HiddenViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIButton *singleColorButton;
-@property (nonatomic, strong) UIButton *pieChartButton;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray<MirrorTaskModel *> *data;
 
@@ -55,12 +54,6 @@
         make.width.mas_equalTo(self.showShadeButton ? 30:0);
         make.height.mas_equalTo(30);
     }];
-    [self.view addSubview:self.pieChartButton];
-    [self.pieChartButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.singleColorButton.mas_right).offset(10);
-        make.top.offset(20);
-        make.width.height.mas_equalTo(30);
-    }];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.singleColorButton.mas_bottom).offset(10);
@@ -85,16 +78,6 @@
     UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [_singleColorButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     _singleColorButton.tintColor = [UIColor mirrorColorNamed:[MirrorSettings preferredShadeColor]];
-}
-
-- (void)usePieChartSwitchChanged
-{
-    // 本地保存
-    [MirrorSettings switchChartType];
-    // update button
-    NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.bar" : @"chart.pie";
-    UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [_pieChartButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 }
 
 #pragma mark - CollectionView
@@ -149,19 +132,6 @@
         [_singleColorButton addTarget:self action:@selector(singleColorSwitchChanged) forControlEvents:UIControlEventTouchUpInside];
     }
     return _singleColorButton;
-}
-
-- (UIButton *)pieChartButton
-{
-    if (!_pieChartButton) {
-        _pieChartButton = [UIButton new];
-        NSString *iconName = [MirrorSettings appliedPieChart] ? @"chart.bar" : @"chart.pie";
-        UIImage *iconImage = [[UIImage systemImageNamed:iconName]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_pieChartButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        _pieChartButton.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
-        [_pieChartButton addTarget:self action:@selector(usePieChartSwitchChanged) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _pieChartButton;
 }
 
 - (UICollectionView *)collectionView

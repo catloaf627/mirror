@@ -69,7 +69,7 @@ static CGFloat const kCellSpacing = 3;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchWeekStartsOnNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchChartTypeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchChartTypeRecordNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowShadeNotification object:nil];
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorImportDataNotificaiton object:nil];
@@ -136,7 +136,7 @@ static CGFloat const kCellSpacing = 3;
 - (void)reloadData
 {
     if (self.tabBarController.selectedIndex == 3) { // 接收通知的时候在本tab上，直接reload
-        if ([MirrorSettings appliedPieChart]) {
+        if ([MirrorSettings appliedPieChartRecord]) {
             self.piechartView.hidden = NO;
             self.histogramView.hidden = YES;
         } else {
@@ -208,7 +208,7 @@ static CGFloat const kCellSpacing = 3;
         make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
-    self.histogramView.hidden = [MirrorSettings appliedPieChart];
+    self.histogramView.hidden = [MirrorSettings appliedPieChartRecord];
     [self.view addSubview:self.piechartView];
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
     [self.piechartView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -222,7 +222,7 @@ static CGFloat const kCellSpacing = 3;
             make.width.height.mas_equalTo(width);
         }
     }];
-    self.piechartView.hidden = ![MirrorSettings appliedPieChart];
+    self.piechartView.hidden = ![MirrorSettings appliedPieChartRecord];
 
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
     edgeRecognizer.edges = UIRectEdgeLeft;

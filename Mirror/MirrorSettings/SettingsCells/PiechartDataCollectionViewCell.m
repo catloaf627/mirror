@@ -1,16 +1,16 @@
 //
-//  ShowIndexCollectionViewCell.m
+//  PiechartDataCollectionViewCell.m
 //  Mirror
 //
-//  Created by Yuqing Wang on 2023/5/5.
+//  Created by Yuqing Wang on 2023/5/30.
 //
 
-#import "ShowIndexCollectionViewCell.h"
+#import "PiechartDataCollectionViewCell.h"
 #import "MirrorSettings.h"
 
-static MirrorColorType const indexcellColorType = MirrorColorTypeCellYellow;
+static MirrorColorType const indexcellColorType = MirrorColorTypeCellGreen;
 
-@implementation ShowIndexCollectionViewCell
+@implementation PiechartDataCollectionViewCell
 
 + (NSString *)identifier
 {
@@ -19,10 +19,10 @@ static MirrorColorType const indexcellColorType = MirrorColorTypeCellYellow;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"show_record_index" color:indexcellColorType];
+    [super configCellWithTitle:@"show_piechart_on_data" color:indexcellColorType];
     self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-    if ([MirrorSettings appliedShowIndex]) {
+    if ([MirrorSettings appliedPieChartData]) {
         [self.toggle setOn:YES animated:YES];
     } else {
         [self.toggle setOn:NO animated:YES];
@@ -30,8 +30,7 @@ static MirrorColorType const indexcellColorType = MirrorColorTypeCellYellow;
 }
 
 - (void)switchChanged:(UISwitch *)sender {
-    [MirrorSettings switchShowIndex];
+    [MirrorSettings switchChartTypeData];
 }
-
 
 @end

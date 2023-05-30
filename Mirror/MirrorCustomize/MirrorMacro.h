@@ -59,7 +59,8 @@ typedef NS_ENUM(NSInteger, SpanType) {
 #define MirrorSwitchThemeNotification @"MirrorSwitchThemeNotification"
 #define MirrorSwitchLanguageNotification @"MirrorSwitchLanguageNotification"
 #define MirrorSwitchWeekStartsOnNotification @"MirrorSwitchWeekStartsOnNotification"
-#define MirrorSwitchChartTypeNotification @"MirrorSwitchChartTypeNotification"
+#define MirrorSwitchChartTypeDataNotification @"MirrorSwitchChartTypeDataNotification"
+#define MirrorSwitchChartTypeRecordNotification @"MirrorSwitchChartTypeRecordNotification"
 #define MirrorSwitchShowIndexNotification @"MirrorSwitchShowIndexNotification"
 #define MirrorSwitchShowShadeNotification @"MirrorSwitchShowShadeNotification"
 // Data Notifications (MirrorStorage统一来发)

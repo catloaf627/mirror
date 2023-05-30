@@ -28,8 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)switchShowIndex;
 
 // Pie chart
-+ (BOOL)appliedPieChart;
-+ (void)switchChartType;
++ (BOOL)appliedPieChartData;
++ (void)switchChartTypeData;
++ (BOOL)appliedPieChartRecord;
++ (void)switchChartTypeRecord;
 
 // Timezone
 + (NSInteger)timeZoneGap:(NSInteger)newSecondsFromGMT;

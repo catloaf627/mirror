@@ -13,6 +13,8 @@
 #import "LanguageCollectionViewCell.h"
 #import "WeekStartsOnCollectionViewCell.h"
 #import "ShowIndexCollectionViewCell.h"
+#import "PiechartDataCollectionViewCell.h"
+#import "PiechartRecordCollectionViewCell.h"
 #import "ExportDataCollectionViewCell.h"
 #import "ImportDataCollectionViewCell.h"
 #import "MirrorTabsManager.h"
@@ -30,6 +32,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeLanguage,
     MirrorSettingTypeWeekStartsOn,
     MirrorSettingTypeShowIndex,
+    MirrorSettingsTypePiechartData,
+    MirrorSettingsTypePiechartRecord,
     MirrorSettingTypeExport,
     MirrorSettingTypeImport,
 };
@@ -304,6 +308,14 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         ShowIndexCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
+    } else if (indexPath.item == MirrorSettingsTypePiechartData) {
+        PiechartDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[PiechartDataCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
+    } else if (indexPath.item == MirrorSettingsTypePiechartRecord) {
+        PiechartRecordCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[PiechartRecordCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
     } else if (indexPath.item == MirrorSettingTypeExport) {
         ExportDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
@@ -363,6 +375,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[LanguageCollectionViewCell class] forCellWithReuseIdentifier:[LanguageCollectionViewCell identifier]];
         [_collectionView registerClass:[WeekStartsOnCollectionViewCell class] forCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier]];
         [_collectionView registerClass:[ShowIndexCollectionViewCell class] forCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier]];
+        [_collectionView registerClass:[PiechartDataCollectionViewCell class] forCellWithReuseIdentifier:[PiechartDataCollectionViewCell identifier]];
+        [_collectionView registerClass:[PiechartRecordCollectionViewCell class] forCellWithReuseIdentifier:[PiechartRecordCollectionViewCell identifier]];
         [_collectionView registerClass:[ExportDataCollectionViewCell class] forCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier]];
         [_collectionView registerClass:[ImportDataCollectionViewCell class] forCellWithReuseIdentifier:[ImportDataCollectionViewCell identifier]];
     }
@@ -428,7 +442,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
+        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingsTypePiechartData), @(MirrorSettingsTypePiechartRecord), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
     }
     return _dataSource;
 }

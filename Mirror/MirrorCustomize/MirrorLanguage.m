@@ -24,8 +24,9 @@
     // nickname
     [mirrorDict setValue:@[@"nickname", @"我的昵称"] forKey:@"nickname"];
     // Settings
-    [mirrorDict setValue:@[@"Apply darkmode", @"启用深色模式"] forKey:@"apply_darkmode"];
     [mirrorDict setValue:@[@"Apply Chinese", @"使用中文"] forKey:@"apply_chinese"];
+    [mirrorDict setValue:@[@"Show piechart on Data", @"数据页使用饼状图"] forKey:@"show_piechart_on_data"];
+    [mirrorDict setValue:@[@"Show piechart on Record", @"记录页使用饼状图"] forKey:@"show_piechart_on_record"];
     [mirrorDict setValue:@[@"Week starts on Monday", @"将周一作为一周的第一天"] forKey:@"week_starts_on_Monday"];
     [mirrorDict setValue:@[@"Show record index", @"展示记录的序号"] forKey:@"show_record_index"];
     [mirrorDict setValue:@[@"Export data", @"导出数据"] forKey:@"export_data"];

@@ -8,7 +8,7 @@
 #import "WeekStartsOnCollectionViewCell.h"
 #import "MirrorSettings.h"
 
-static MirrorColorType const weekcellColorType = MirrorColorTypeCellYellow;
+static MirrorColorType const weekcellColorType = MirrorColorTypeCellOrange;
 
 @implementation WeekStartsOnCollectionViewCell
 

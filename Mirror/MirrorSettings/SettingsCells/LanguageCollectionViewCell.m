@@ -10,7 +10,7 @@
 #import "MirrorSettings.h"
 #import "MirrorLanguage.h"
 
-static MirrorColorType const languageColorType = MirrorColorTypeCellOrange;
+static MirrorColorType const languageColorType = MirrorColorTypeCellPink;
 
 @implementation LanguageCollectionViewCell
 

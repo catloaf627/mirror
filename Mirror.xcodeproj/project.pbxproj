@@ -44,6 +44,8 @@
 		4A88212929F6035E009E422C /* CellAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88212829F6035E009E422C /* CellAnimation.m */; };
 		4A88212C29F6066A009E422C /* TimeEditingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88212B29F6066A009E422C /* TimeEditingViewController.m */; };
 		4A88212F29F671F7009E422C /* TimeTrackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88212E29F671F7009E422C /* TimeTrackingViewController.m */; };
+		4AA3532F2A25CF8300920404 /* PiechartDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA3532E2A25CF8300920404 /* PiechartDataCollectionViewCell.m */; };
+		4AA353322A25CF9B00920404 /* PiechartRecordCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA353312A25CF9B00920404 /* PiechartRecordCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4AC1FDBD2A0384A600CDCED9 /* MirrorRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBC2A0384A600CDCED9 /* MirrorRecordModel.m */; };
 		4AC1FDC02A03B05100CDCED9 /* MirrorDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBF2A03B05100CDCED9 /* MirrorDataModel.m */; };
@@ -140,6 +142,10 @@
 		4A88212B29F6066A009E422C /* TimeEditingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeEditingViewController.m; sourceTree = "<group>"; };
 		4A88212D29F671F7009E422C /* TimeTrackingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TimeTrackingViewController.h; sourceTree = "<group>"; };
 		4A88212E29F671F7009E422C /* TimeTrackingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeTrackingViewController.m; sourceTree = "<group>"; };
+		4AA3532D2A25CF8300920404 /* PiechartDataCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PiechartDataCollectionViewCell.h; sourceTree = "<group>"; };
+		4AA3532E2A25CF8300920404 /* PiechartDataCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PiechartDataCollectionViewCell.m; sourceTree = "<group>"; };
+		4AA353302A25CF9B00920404 /* PiechartRecordCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PiechartRecordCollectionViewCell.h; sourceTree = "<group>"; };
+		4AA353312A25CF9B00920404 /* PiechartRecordCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PiechartRecordCollectionViewCell.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4AC1FDBB2A0384A600CDCED9 /* MirrorRecordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorRecordModel.h; sourceTree = "<group>"; };
@@ -461,6 +467,10 @@
 				4AFA3B7629E4EF2A004D5BE4 /* WeekStartsOnCollectionViewCell.m */,
 				4AC1FDC52A0418F000CDCED9 /* ShowIndexCollectionViewCell.h */,
 				4AC1FDC62A0418F000CDCED9 /* ShowIndexCollectionViewCell.m */,
+				4AA3532D2A25CF8300920404 /* PiechartDataCollectionViewCell.h */,
+				4AA3532E2A25CF8300920404 /* PiechartDataCollectionViewCell.m */,
+				4AA353302A25CF9B00920404 /* PiechartRecordCollectionViewCell.h */,
+				4AA353312A25CF9B00920404 /* PiechartRecordCollectionViewCell.m */,
 				4A6848C92A2477DF00C8D439 /* ExportDataCollectionViewCell.h */,
 				4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */,
 				4A6848CC2A2485F700C8D439 /* ImportDataCollectionViewCell.h */,
@@ -630,6 +640,7 @@
 				4A410A3129EA68870007003B /* TaskRecordsViewController.m in Sources */,
 				4A6848CE2A2485F700C8D439 /* ImportDataCollectionViewCell.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
+				4AA353322A25CF9B00920404 /* PiechartRecordCollectionViewCell.m in Sources */,
 				4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */,
 				4ADDC5BD28E6DF8B006F02DE /* ColorCollectionViewCell.m in Sources */,
 				4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */,
@@ -671,6 +682,7 @@
 				4A3DC92C29FCE3D200679C11 /* MirrorNaviManager.m in Sources */,
 				4A410A3429EA6BB60007003B /* TaskPeriodCollectionViewCell.m in Sources */,
 				4A099FAE29DD57AE002683A1 /* MirrorTool.m in Sources */,
+				4AA3532F2A25CF8300920404 /* PiechartDataCollectionViewCell.m in Sources */,
 				4A099FAA29DCFE54002683A1 /* MirrorTaskModel.m in Sources */,
 				4AC1FDC72A0418F000CDCED9 /* ShowIndexCollectionViewCell.m in Sources */,
 				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,

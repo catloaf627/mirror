@@ -63,7 +63,7 @@ static CGFloat const kLeftRightSpacing = 20;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchWeekStartsOnNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchChartTypeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchChartTypeDataNotification object:nil];
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorImportDataNotificaiton object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskHiddenNotification object:nil];// 比其他vc多监听一个hidden通知
@@ -132,7 +132,7 @@ static CGFloat const kLeftRightSpacing = 20;
     
     // histogram
     [self.histogramView updateWithData:self.data];
-    self.histogramView.hidden = [MirrorSettings appliedPieChart];
+    self.histogramView.hidden = [MirrorSettings appliedPieChartData];
     
     // piechart
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
@@ -148,7 +148,7 @@ static CGFloat const kLeftRightSpacing = 20;
             }
         }];
     }
-    self.piechartView.hidden = ![MirrorSettings appliedPieChart];
+    self.piechartView.hidden = ![MirrorSettings appliedPieChartData];
 
 }
 
@@ -201,7 +201,7 @@ static CGFloat const kLeftRightSpacing = 20;
         make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
-    self.histogramView.hidden = [MirrorSettings appliedPieChart];
+    self.histogramView.hidden = [MirrorSettings appliedPieChartData];
 
     [self.view addSubview:self.piechartView];
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
@@ -216,7 +216,7 @@ static CGFloat const kLeftRightSpacing = 20;
             make.width.height.mas_equalTo(width);
         }
     }];
-    self.piechartView.hidden = ![MirrorSettings appliedPieChart];
+    self.piechartView.hidden = ![MirrorSettings appliedPieChartData];
     // empty hint
     [self.view addSubview:self.emptyHintLabel];
     [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {

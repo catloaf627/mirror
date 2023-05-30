@@ -55,19 +55,34 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchWeekStartsOnNotification object:nil];
 }
 
-+ (BOOL)appliedPieChart
++ (BOOL)appliedPieChartData
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechart"];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechartData"];
 }
 
-+ (void)switchChartType
++ (void)switchChartTypeData
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechart"]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredPiechart"];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechartData"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredPiechartData"];
     } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredPiechart"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredPiechartData"];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchChartTypeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchChartTypeDataNotification object:nil];
+}
+
++ (BOOL)appliedPieChartRecord
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechartRecord"];
+}
+
++ (void)switchChartTypeRecord
+{
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechartRecord"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredPiechartRecord"];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredPiechartRecord"];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchChartTypeRecordNotification object:nil];
 }
 
 + (NSInteger)timeZoneGap:(NSInteger)newSecondsFromGMT
