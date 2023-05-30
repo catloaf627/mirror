@@ -24,7 +24,7 @@
 #import "MirrorRecordModel.h"
 #import "MirrorSettings.h"
 
-static CGFloat const kCellSpacing = 20; // cell之间的上下间距
+static CGFloat const kCellSpacing = 10; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 typedef NS_ENUM(NSInteger, MirrorSettingType) {
@@ -40,6 +40,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 
 @property (nonatomic, strong) UITextView *mottoField;
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) UILabel *versionLabel;
+@property (nonatomic, strong) UIView *loveView;
 @property (nonatomic, strong) NSArray *dataSource;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
@@ -87,6 +89,12 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     UIPanGestureRecognizer *panRecognizer = [UIPanGestureRecognizer new];
     [panRecognizer addTarget:self action:@selector(panGestureRecognizerAction:)];
     [self.view addGestureRecognizer:panRecognizer];
+    // Love
+    UITapGestureRecognizer *loveRecognizer = [UITapGestureRecognizer new];
+    loveRecognizer.numberOfTouchesRequired = 2;
+    loveRecognizer.numberOfTapsRequired = 11;
+    [loveRecognizer addTarget:self action:@selector(showLove)];
+    [self.view addGestureRecognizer:loveRecognizer];
     
     // 动画
     self.transitioningDelegate = self;
@@ -107,8 +115,32 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
         make.top.mas_equalTo(self.mottoField.mas_bottom).offset(20);
-        make.bottom.mas_equalTo(self.view);
+        make.height.mas_equalTo((52*kLeftSheetRatio+kCellSpacing)*self.dataSource.count);
     }];
+    [self.view addSubview:self.versionLabel];
+    [self.versionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
+        make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
+        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
+        make.height.mas_equalTo(20);
+    }];
+    
+    [self.view addSubview:self.loveView];
+    [self.loveView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
+        make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
+        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight);
+        make.height.mas_equalTo(20);
+    }];
+    self.loveView.hidden = YES;
+}
+
+#pragma mark - Actions
+
+- (void)showLove
+{
+    self.versionLabel.hidden = YES;
+    self.loveView.hidden = NO;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -118,7 +150,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     if ([gestureRecognizer isKindOfClass:UITapGestureRecognizer.class]) {
         CGPoint touchPoint = [touch locationInView:self.view];
         if (touchPoint.x <= self.view.frame.size.width) {
-            // 点了view里面
+            [self.mottoField resignFirstResponder]; // 点了view里面
         } else {
             [self dismiss];// 点了view外面
         }
@@ -293,11 +325,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     return 1;
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
-{
-    return kCellSpacing;
-}
-
 #pragma mark - Getters
 
 - (UITextView *)mottoField
@@ -321,6 +348,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
+        layout.minimumLineSpacing = kCellSpacing;
         _collectionView.backgroundColor = self.view.backgroundColor;
         [_collectionView registerClass:[ThemeCollectionViewCell class] forCellWithReuseIdentifier:[ThemeCollectionViewCell identifier]];
         [_collectionView registerClass:[LanguageCollectionViewCell class] forCellWithReuseIdentifier:[LanguageCollectionViewCell identifier]];
@@ -330,6 +358,62 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[ImportDataCollectionViewCell class] forCellWithReuseIdentifier:[ImportDataCollectionViewCell identifier]];
     }
     return _collectionView;
+}
+
+- (UILabel *)versionLabel
+{
+    if (!_versionLabel) {
+        _versionLabel = [UILabel new];
+        _versionLabel.text = @"Version.0";
+        _versionLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        _versionLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
+        _versionLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _versionLabel;
+}
+
+- (UIView *)loveView
+{
+    if (!_loveView) {
+        _loveView = [UIView new];
+        
+        UIImageView *heartView = [UIImageView new];
+        heartView.image = [[UIImage systemImageNamed:@"heart.fill"]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [heartView setTintColor:[UIColor mirrorColorNamed:MirrorColorTypeTextHint]];
+        
+        UILabel *yuqing = [UILabel new];
+        yuqing.text = @"Yuqing Wang";
+        yuqing.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        yuqing.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
+        yuqing.textAlignment = NSTextAlignmentRight;
+        
+        UILabel *chunshu = [UILabel new];
+        chunshu.text = @"Chunshu Wu";
+        chunshu.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
+        chunshu.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
+        chunshu.textAlignment = NSTextAlignmentLeft;
+        
+        [_loveView addSubview:heartView];
+        [heartView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.centerY.offset(0);
+            make.height.width.mas_equalTo(10);
+        }];
+        [_loveView addSubview:yuqing];
+        [yuqing mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.offset(0);
+            make.right.mas_equalTo(heartView.mas_left).offset(-10);
+            make.height.mas_equalTo(20);
+            make.left.mas_equalTo(_loveView.mas_left);
+        }];
+        [_loveView addSubview:chunshu];
+        [chunshu mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.offset(0);
+            make.left.mas_equalTo(heartView.mas_right).offset(10);
+            make.height.mas_equalTo(20);
+            make.right.mas_equalTo(_loveView.mas_right);
+        }];
+    }
+    return _loveView;
 }
 
 - (NSArray *)dataSource
