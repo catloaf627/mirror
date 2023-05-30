@@ -54,17 +54,30 @@
 
 + (void)deleteTask:(NSString *)taskName
 {
+    // 删掉task
     NSMutableArray <MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
     NSInteger deletedIndex = NSNotFound;
     for (int i=0; i<tasks.count; i++) {
         if ([tasks[i].taskName isEqualToString:taskName]) {
-            NSLog(@"Delete");
+            NSLog(@"Delete task");
             deletedIndex = i;
             break;
         }
     }
     if (deletedIndex != NSNotFound) [tasks removeObjectAtIndex:deletedIndex];
     [MirrorStorage saveMirrorTasks:tasks];
+    // 删掉这个task的所有records
+    NSMutableArray <MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+    NSMutableArray <MirrorRecordModel *> *validRecords = [NSMutableArray new];
+    for (int i=0; i<records.count; i++) {
+        if (![records[i].taskName isEqualToString:taskName]) {
+            [validRecords addObject:records[i]];
+        } else {
+            NSLog(@"Delete record");
+        }
+    }
+    [MirrorStorage saveMirrorRecords:validRecords];
+    // 通知
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorTaskDeleteNotification object:nil userInfo:nil];
     AudioServicesPlaySystemSound((SystemSoundID)kAudioClick);
 }
