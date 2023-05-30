@@ -35,8 +35,6 @@
 		4A6848C22A21FEB200C8D439 /* HiddenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848C12A21FEB200C8D439 /* HiddenViewController.m */; };
 		4A6848C52A22003200C8D439 /* HiddenAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848C42A22003200C8D439 /* HiddenAnimation.m */; };
 		4A6848C82A22249A00C8D439 /* HiddenCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848C72A22249A00C8D439 /* HiddenCollectionViewCell.m */; };
-		4A6848CB2A2477E000C8D439 /* ExportDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */; };
-		4A6848CE2A2485F700C8D439 /* ImportDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A6848CD2A2485F700C8D439 /* ImportDataCollectionViewCell.m */; };
 		4A7CCD2629DBC7CF00879D9C /* TodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */; };
 		4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211529F26104009E422C /* TodayPeriodCollectionViewCell.m */; };
 		4A88211929F2A2B8009E422C /* TodayTotalHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A88211829F2A2B8009E422C /* TodayTotalHeader.m */; };
@@ -47,6 +45,7 @@
 		4AA3532F2A25CF8300920404 /* PiechartDataCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA3532E2A25CF8300920404 /* PiechartDataCollectionViewCell.m */; };
 		4AA353322A25CF9B00920404 /* PiechartRecordCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA353312A25CF9B00920404 /* PiechartRecordCollectionViewCell.m */; };
 		4AA353352A25D59400920404 /* HeatmapCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA353342A25D59400920404 /* HeatmapCollectionViewCell.m */; };
+		4AA353382A25D9BB00920404 /* ExportImportCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA353372A25D9BB00920404 /* ExportImportCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4AC1FDBD2A0384A600CDCED9 /* MirrorRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBC2A0384A600CDCED9 /* MirrorRecordModel.m */; };
 		4AC1FDC02A03B05100CDCED9 /* MirrorDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBF2A03B05100CDCED9 /* MirrorDataModel.m */; };
@@ -125,10 +124,6 @@
 		4A6848C42A22003200C8D439 /* HiddenAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HiddenAnimation.m; sourceTree = "<group>"; };
 		4A6848C62A22249A00C8D439 /* HiddenCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HiddenCollectionViewCell.h; sourceTree = "<group>"; };
 		4A6848C72A22249A00C8D439 /* HiddenCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HiddenCollectionViewCell.m; sourceTree = "<group>"; };
-		4A6848C92A2477DF00C8D439 /* ExportDataCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExportDataCollectionViewCell.h; sourceTree = "<group>"; };
-		4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExportDataCollectionViewCell.m; sourceTree = "<group>"; };
-		4A6848CC2A2485F700C8D439 /* ImportDataCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImportDataCollectionViewCell.h; sourceTree = "<group>"; };
-		4A6848CD2A2485F700C8D439 /* ImportDataCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImportDataCollectionViewCell.m; sourceTree = "<group>"; };
 		4A7CCD2429DBC7CF00879D9C /* TodayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayViewController.h; sourceTree = "<group>"; };
 		4A7CCD2529DBC7CF00879D9C /* TodayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TodayViewController.m; sourceTree = "<group>"; };
 		4A88211429F26104009E422C /* TodayPeriodCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TodayPeriodCollectionViewCell.h; sourceTree = "<group>"; };
@@ -149,6 +144,8 @@
 		4AA353312A25CF9B00920404 /* PiechartRecordCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PiechartRecordCollectionViewCell.m; sourceTree = "<group>"; };
 		4AA353332A25D59400920404 /* HeatmapCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeatmapCollectionViewCell.h; sourceTree = "<group>"; };
 		4AA353342A25D59400920404 /* HeatmapCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeatmapCollectionViewCell.m; sourceTree = "<group>"; };
+		4AA353362A25D9BB00920404 /* ExportImportCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExportImportCollectionViewCell.h; sourceTree = "<group>"; };
+		4AA353372A25D9BB00920404 /* ExportImportCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExportImportCollectionViewCell.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4AC1FDBB2A0384A600CDCED9 /* MirrorRecordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorRecordModel.h; sourceTree = "<group>"; };
@@ -476,10 +473,8 @@
 				4AA353312A25CF9B00920404 /* PiechartRecordCollectionViewCell.m */,
 				4AA353332A25D59400920404 /* HeatmapCollectionViewCell.h */,
 				4AA353342A25D59400920404 /* HeatmapCollectionViewCell.m */,
-				4A6848C92A2477DF00C8D439 /* ExportDataCollectionViewCell.h */,
-				4A6848CA2A2477DF00C8D439 /* ExportDataCollectionViewCell.m */,
-				4A6848CC2A2485F700C8D439 /* ImportDataCollectionViewCell.h */,
-				4A6848CD2A2485F700C8D439 /* ImportDataCollectionViewCell.m */,
+				4AA353362A25D9BB00920404 /* ExportImportCollectionViewCell.h */,
+				4AA353372A25D9BB00920404 /* ExportImportCollectionViewCell.m */,
 			);
 			path = SettingsCells;
 			sourceTree = "<group>";
@@ -643,7 +638,6 @@
 				4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */,
 				4AE4171928DF613D008A6A18 /* TimeViewController.m in Sources */,
 				4A410A3129EA68870007003B /* TaskRecordsViewController.m in Sources */,
-				4A6848CE2A2485F700C8D439 /* ImportDataCollectionViewCell.m in Sources */,
 				4AFB77A228DF4A380064CBCA /* AppDelegate.m in Sources */,
 				4AA353322A25CF9B00920404 /* PiechartRecordCollectionViewCell.m in Sources */,
 				4ACB422E29EEA411005EECC4 /* LeftAnimation.m in Sources */,
@@ -690,10 +684,10 @@
 				4A099FAE29DD57AE002683A1 /* MirrorTool.m in Sources */,
 				4AA3532F2A25CF8300920404 /* PiechartDataCollectionViewCell.m in Sources */,
 				4A099FAA29DCFE54002683A1 /* MirrorTaskModel.m in Sources */,
+				4AA353382A25D9BB00920404 /* ExportImportCollectionViewCell.m in Sources */,
 				4AC1FDC72A0418F000CDCED9 /* ShowIndexCollectionViewCell.m in Sources */,
 				4A379B5428E31BD200785CAE /* MirrorMacro.m in Sources */,
 				4AE5E8952A02644E004228C1 /* TheEndFooterCollectionViewCell.m in Sources */,
-				4A6848CB2A2477E000C8D439 /* ExportDataCollectionViewCell.m in Sources */,
 				4A379B4728E2F33C00785CAE /* MirrorLanguage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

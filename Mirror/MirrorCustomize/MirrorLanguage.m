@@ -30,6 +30,7 @@
     [mirrorDict setValue:@[@"Show piechart on Data", @"数据页使用饼状图"] forKey:@"show_piechart_on_data"];
     [mirrorDict setValue:@[@"Show piechart on Record", @"记录页使用饼状图"] forKey:@"show_piechart_on_record"];
     [mirrorDict setValue:@[@"Apply heatmap", @"展示热力图"] forKey:@"heatmap"];
+    [mirrorDict setValue:@[@"Export/Import data", @"导出/导入数据"] forKey:@"export_import_data"];
     [mirrorDict setValue:@[@"Export data", @"导出数据"] forKey:@"export_data"];
     [mirrorDict setValue:@[@"Import data", @"导入数据"] forKey:@"import_data"];
     [mirrorDict setValue:@[@"Import data?", @"确认导入该数据？"] forKey:@"import_data_?"];

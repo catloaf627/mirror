@@ -1,15 +1,15 @@
 //
-//  ExportDataCollectionViewCell.h
+//  ExportImportCollectionViewCell.h
 //  Mirror
 //
-//  Created by Yuqing Wang on 2023/5/29.
+//  Created by Yuqing Wang on 2023/5/30.
 //
 
 #import "ToggleCollectionViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ExportDataCollectionViewCell : ToggleCollectionViewCell
+@interface ExportImportCollectionViewCell : ToggleCollectionViewCell
 
 + (NSString *)identifier;
 - (void)configCell;

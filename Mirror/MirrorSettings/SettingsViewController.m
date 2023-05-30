@@ -16,8 +16,7 @@
 #import "PiechartDataCollectionViewCell.h"
 #import "PiechartRecordCollectionViewCell.h"
 #import "HeatmapCollectionViewCell.h"
-#import "ExportDataCollectionViewCell.h"
-#import "ImportDataCollectionViewCell.h"
+#import "ExportImportCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
 #import "LeftAnimation.h"
@@ -36,8 +35,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypePiechartData,
     MirrorSettingTypePiechartRecord,
     MirrorSettingTypeHeatmap,
-    MirrorSettingTypeExport,
-    MirrorSettingTypeImport,
+    MirrorSettingTypeExportImport,
 };
 
 @interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate, UIDocumentPickerDelegate>
@@ -272,21 +270,31 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     if (indexPath.item >= self.dataSource.count) {
         return;
-    } else if (indexPath.item == MirrorSettingTypeExport) {
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        NSString *path = [paths objectAtIndex:0];
-        NSData *tasksData = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
-        NSArray *activityItems = @[tasksData ?: [NSData new]];
-        UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
-        activityViewControntroller.excludedActivityTypes = @[];
-        activityViewControntroller.popoverPresentationController.sourceView = self.view;
-        activityViewControntroller.popoverPresentationController.sourceRect = CGRectMake(self.view.bounds.size.width/2, self.view.bounds.size.height/4, 0, 0);
-        [self presentViewController:activityViewControntroller animated:true completion:nil];
-    } else if (indexPath.item == MirrorSettingTypeImport) {
-        UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[UTTypeData]]; // allow any file type
-            documentPicker.delegate = self;
-            documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self presentViewController:documentPicker animated:YES completion:nil];
+    } else if (indexPath.item == MirrorSettingTypeExportImport) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"选择导入或是导出"
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"export_data"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+            NSString *path = [paths objectAtIndex:0];
+            NSData *tasksData = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
+            NSArray *activityItems = @[tasksData ?: [NSData new]];
+            UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+            activityViewControntroller.excludedActivityTypes = @[];
+            activityViewControntroller.popoverPresentationController.sourceView = self.view;
+            activityViewControntroller.popoverPresentationController.sourceRect = CGRectMake(self.view.bounds.size.width/2, self.view.bounds.size.height/4, 0, 0);
+            [self presentViewController:activityViewControntroller animated:true completion:nil];
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"import_data"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            UIDocumentPickerViewController *documentPicker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[UTTypeData]]; // allow any file type
+                documentPicker.delegate = self;
+                documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+                [self presentViewController:documentPicker animated:YES completion:nil];
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
 }
 
@@ -318,12 +326,8 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         HeatmapCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[HeatmapCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
-    } else if (indexPath.item == MirrorSettingTypeExport) {
-        ExportDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier] forIndexPath:indexPath];
-        [cell configCell];
-        return cell;
-    } else if (indexPath.item == MirrorSettingTypeImport) {
-        ImportDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ImportDataCollectionViewCell identifier] forIndexPath:indexPath];
+    } else if (indexPath.item == MirrorSettingTypeExportImport) {
+        ExportImportCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ExportImportCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
     }
@@ -380,8 +384,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[PiechartDataCollectionViewCell class] forCellWithReuseIdentifier:[PiechartDataCollectionViewCell identifier]];
         [_collectionView registerClass:[PiechartRecordCollectionViewCell class] forCellWithReuseIdentifier:[PiechartRecordCollectionViewCell identifier]];
         [_collectionView registerClass:[HeatmapCollectionViewCell class] forCellWithReuseIdentifier:[HeatmapCollectionViewCell identifier]];
-        [_collectionView registerClass:[ExportDataCollectionViewCell class] forCellWithReuseIdentifier:[ExportDataCollectionViewCell identifier]];
-        [_collectionView registerClass:[ImportDataCollectionViewCell class] forCellWithReuseIdentifier:[ImportDataCollectionViewCell identifier]];
+        [_collectionView registerClass:[ExportImportCollectionViewCell class] forCellWithReuseIdentifier:[ExportImportCollectionViewCell identifier]];
     }
     return _collectionView;
 }
@@ -445,7 +448,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypePiechartData), @(MirrorSettingTypePiechartRecord), @(MirrorSettingTypeHeatmap), @(MirrorSettingTypeExport), @(MirrorSettingTypeImport)];
+        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypePiechartData), @(MirrorSettingTypePiechartRecord), @(MirrorSettingTypeHeatmap), @(MirrorSettingTypeExportImport)];
     }
     return _dataSource;
 }
