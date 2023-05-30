@@ -29,6 +29,7 @@ static CGFloat const kPadding = 10;
 - (void)configCellWithTaskname:(NSString *)taskName
 {
     MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:taskName];
+    self.backgroundColor = [UIColor clearColor];
     self.layer.cornerRadius = 4; // 背景色twinkle的时候有点弧度好看
     [self addSubview:self.coloredView];
     self.coloredView.backgroundColor = [UIColor mirrorColorNamed:task.color];
