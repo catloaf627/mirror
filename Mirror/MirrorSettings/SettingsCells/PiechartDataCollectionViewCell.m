@@ -19,10 +19,10 @@ static MirrorColorType const piechartColorType = MirrorColorTypeCellGreen;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"show_piechart_on_data" color:piechartColorType];
+    [super configCellWithTitle:@"show_histogram_on_data" color:piechartColorType];
     self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-    if ([MirrorSettings appliedPieChartData]) {
+    if ([MirrorSettings appliedHistogramData]) {
         [self.toggle setOn:YES animated:YES];
     } else {
         [self.toggle setOn:NO animated:YES];

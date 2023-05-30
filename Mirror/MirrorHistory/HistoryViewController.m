@@ -118,6 +118,8 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)reloadData
 {
+    // 如果是chart type变了顺便更新一下tab的图标
+    [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
     // data source
     [self updateData];
     
@@ -132,7 +134,7 @@ static CGFloat const kLeftRightSpacing = 20;
     
     // histogram
     [self.histogramView updateWithData:self.data];
-    self.histogramView.hidden = [MirrorSettings appliedPieChartData];
+    self.histogramView.hidden = ![MirrorSettings appliedHistogramData];
     
     // piechart
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
@@ -148,7 +150,7 @@ static CGFloat const kLeftRightSpacing = 20;
             }
         }];
     }
-    self.piechartView.hidden = ![MirrorSettings appliedPieChartData];
+    self.piechartView.hidden = [MirrorSettings appliedHistogramData];
 
 }
 
@@ -201,7 +203,7 @@ static CGFloat const kLeftRightSpacing = 20;
         make.top.mas_equalTo(self.legendView.mas_bottom).offset(10);
         make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
     }];
-    self.histogramView.hidden = [MirrorSettings appliedPieChartData];
+    self.histogramView.hidden = ![MirrorSettings appliedHistogramData];
 
     [self.view addSubview:self.piechartView];
     CGFloat width = MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]);
@@ -216,7 +218,7 @@ static CGFloat const kLeftRightSpacing = 20;
             make.width.height.mas_equalTo(width);
         }
     }];
-    self.piechartView.hidden = ![MirrorSettings appliedPieChartData];
+    self.piechartView.hidden = [MirrorSettings appliedHistogramData];
     // empty hint
     [self.view addSubview:self.emptyHintLabel];
     [self.emptyHintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -426,6 +428,14 @@ static CGFloat const kLeftRightSpacing = 20;
     return _rightArrow;
 }
 
+- (LegendView *)legendView
+{
+    if (!_legendView) {
+        _legendView = [[LegendView alloc] initWithData:self.data];
+    }
+    return _legendView;
+}
+
 - (HistogramView *)histogramView
 {
     if (!_histogramView) {
@@ -435,18 +445,11 @@ static CGFloat const kLeftRightSpacing = 20;
     return _histogramView;
 }
 
-- (LegendView *)legendView
-{
-    if (!_legendView) {
-        _legendView = [[LegendView alloc] initWithData:self.data];
-    }
-    return _legendView;
-}
-
 - (PiechartView *)piechartView
 {
     if (!_piechartView) {
         _piechartView = [[PiechartView alloc] initWithData:self.data width:MIN([[self leftWidthLeftHeight][0] floatValue], [[self leftWidthLeftHeight][1] floatValue]) enableInteractive:YES];
+        _piechartView.delegate = self.legendView;
     }
     return _piechartView;
 }

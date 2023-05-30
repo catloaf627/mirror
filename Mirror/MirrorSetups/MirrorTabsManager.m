@@ -15,6 +15,7 @@
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 #import "MirrorSettings.h"
+#import "MirrorMacro.h"
 
 @interface MirrorTabsManager ()
 
@@ -66,12 +67,13 @@
 
 - (void)updateTodayTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self updateTabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"today"] imageName:@"chart.pie" selectedImageName:@"chart.pie.fill"];
+    [self updateTabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"today"] imageName:@"doc.plaintext" selectedImageName:@"doc.plaintext.fill"];
 }
 
 - (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:@"chart.bar" selectedImageName:@"chart.bar.fill"];
+    BOOL isHistogram = [MirrorSettings appliedHistogramData];
+    [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:isHistogram? @"chart.bar":@"chart.pie" selectedImageName:isHistogram?@"chart.bar.fill":@"chart.pie.fill"];
 }
 
 - (void)updateGridTabItemWithTabController:(UITabBarController *)tabbarController

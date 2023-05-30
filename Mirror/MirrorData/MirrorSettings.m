@@ -54,17 +54,17 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchWeekStartsOnNotification object:nil];
 }
 
-+ (BOOL)appliedPieChartData
++ (BOOL)appliedHistogramData
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechartData"];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredHistogramData"];
 }
 
 + (void)switchChartTypeData
 {
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredPiechartData"]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredPiechartData"];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredHistogramData"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredHistogramData"];
     } else {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredPiechartData"];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredHistogramData"];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchChartTypeDataNotification object:nil];
 }
