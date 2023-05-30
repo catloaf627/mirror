@@ -17,6 +17,7 @@
 #import "PiechartRecordCollectionViewCell.h"
 #import "HeatmapCollectionViewCell.h"
 #import "ExportImportCollectionViewCell.h"
+#import "ReportBugCollectionViewCell.h"
 #import "MirrorTabsManager.h"
 #import "MirrorLanguage.h"
 #import "LeftAnimation.h"
@@ -36,6 +37,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypePiechartRecord,
     MirrorSettingTypeHeatmap,
     MirrorSettingTypeExportImport,
+    MirrorSettingTypeReportBug,
 };
 
 @interface SettingsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, UIGestureRecognizerDelegate, UIDocumentPickerDelegate>
@@ -271,7 +273,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     if (indexPath.item >= self.dataSource.count) {
         return;
     } else if (indexPath.item == MirrorSettingTypeExportImport) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"选择导入或是导出"
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"export_or_import"]
                                                                                  message:nil
                                                                           preferredStyle:UIAlertControllerStyleAlert];
         [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"export_data"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
@@ -293,6 +295,18 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
 
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
+    } else if (indexPath.item == MirrorSettingTypeReportBug) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"copy_email_address_to_clipboard"]
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"copy"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            pasteboard.string = @"wangyuqing.rachel@gmail.com";
         }]];
         [self presentViewController:alertController animated:YES completion:nil];
     }
@@ -328,6 +342,10 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         return cell;
     } else if (indexPath.item == MirrorSettingTypeExportImport) {
         ExportImportCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ExportImportCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
+    } else if (indexPath.item == MirrorSettingTypeReportBug) {
+        ReportBugCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ReportBugCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
     }
@@ -385,6 +403,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         [_collectionView registerClass:[PiechartRecordCollectionViewCell class] forCellWithReuseIdentifier:[PiechartRecordCollectionViewCell identifier]];
         [_collectionView registerClass:[HeatmapCollectionViewCell class] forCellWithReuseIdentifier:[HeatmapCollectionViewCell identifier]];
         [_collectionView registerClass:[ExportImportCollectionViewCell class] forCellWithReuseIdentifier:[ExportImportCollectionViewCell identifier]];
+        [_collectionView registerClass:[ReportBugCollectionViewCell class] forCellWithReuseIdentifier:[ReportBugCollectionViewCell identifier]];
     }
     return _collectionView;
 }
@@ -448,7 +467,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypePiechartData), @(MirrorSettingTypePiechartRecord), @(MirrorSettingTypeHeatmap), @(MirrorSettingTypeExportImport)];
+        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypePiechartData), @(MirrorSettingTypePiechartRecord), @(MirrorSettingTypeHeatmap), @(MirrorSettingTypeExportImport), @(MirrorSettingTypeReportBug)];
     }
     return _dataSource;
 }

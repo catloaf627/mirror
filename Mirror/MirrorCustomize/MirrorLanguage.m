@@ -31,12 +31,15 @@
     [mirrorDict setValue:@[@"Show piechart on Record", @"记录页使用饼状图"] forKey:@"show_piechart_on_record"];
     [mirrorDict setValue:@[@"Apply heatmap", @"展示热力图"] forKey:@"heatmap"];
     [mirrorDict setValue:@[@"Export/Import data", @"导出/导入数据"] forKey:@"export_import_data"];
+    [mirrorDict setValue:@[@"Export or import data?", @"选择导入或是导出"] forKey:@"export_or_import"];
     [mirrorDict setValue:@[@"Export data", @"导出数据"] forKey:@"export_data"];
     [mirrorDict setValue:@[@"Import data", @"导入数据"] forKey:@"import_data"];
     [mirrorDict setValue:@[@"Import data?", @"确认导入该数据？"] forKey:@"import_data_?"];
     [mirrorDict setValue:@[@"Current data will be replaced by the imported data", @"导入后当前的数据将被覆盖"] forKey:@"import_data_?_message"];
     [mirrorDict setValue:@[@"Import", @"导入"] forKey:@"import"];
-    
+    [mirrorDict setValue:@[@"Contact me", @"联系作者"] forKey:@"contact_me"];
+    [mirrorDict setValue:@[@"Copy author's email address to clipboard", @"拷贝作者邮箱地址到剪切板"] forKey:@"copy_email_address_to_clipboard"];
+    [mirrorDict setValue:@[@"Copy", @"拷贝"] forKey:@"copy"];
     
     // Profile edit cell - hint
     [mirrorDict setValue:@[@"Click task name to edit (Your data won't be affected)", @"点击任务名称进行编辑（任务数据并不会受到影响）"] forKey:@"edit_taskname_hint"];
