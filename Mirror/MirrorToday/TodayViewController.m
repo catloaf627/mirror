@@ -97,11 +97,12 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)reloadData
 {
-    self.todayData = [MirrorStorage getTodayData];
     [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
-    for (int i=0; i<self.todayData.count; i++) {
-        [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:i inSection:0]]];
-    }
+    [self.collectionView performBatchUpdates:^{
+        self.todayData = [MirrorStorage getTodayData];
+    } completion:^(BOOL finished) {
+        [self.collectionView reloadData];
+    }];
 }
 
 - (void)p_setupUI

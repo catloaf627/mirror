@@ -135,14 +135,15 @@ static CGFloat const kCellSpacing = 3;
         self.histogramView.hidden = NO;
         self.piechartView.hidden = YES;
     }
-    // data source
-    [self updateWeekdayView];
-    [self updateKeys];
-    [self updateGridData];
-    [self updateCharts];
-    for (int i=0; i<self.keys.count; i++) {
-        [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:i inSection:0]]];
-    }
+
+    [self.collectionView performBatchUpdates:^{
+        [self updateWeekdayView];
+        [self updateKeys];
+        [self updateGridData];
+        [self updateCharts];
+    } completion:^(BOOL finished) {
+        [self.collectionView reloadData];
+    }];
 }
 
 
