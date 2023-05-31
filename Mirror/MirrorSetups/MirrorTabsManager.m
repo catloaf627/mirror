@@ -72,13 +72,13 @@
 
 - (void)updateGridTabItemWithTabController:(UITabBarController *)tabbarController
 {
-    [self updateTabbar:tabbarController.tabBar index:3 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"record"] imageName:@"square.grid.2x2" selectedImageName:@"square.grid.2x2.fill"];
+    [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"record"] imageName:@"square.grid.2x2" selectedImageName:@"square.grid.2x2.fill"];
 }
 
 - (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
 {
     BOOL isHistogram = [MirrorSettings appliedHistogramData];
-    [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:isHistogram? @"chart.bar":@"chart.pie" selectedImageName:isHistogram?@"chart.bar.fill":@"chart.pie.fill"];
+    [self updateTabbar:tabbarController.tabBar index:3 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:isHistogram? @"chart.bar":@"chart.pie" selectedImageName:isHistogram?@"chart.bar.fill":@"chart.pie.fill"];
 }
 
 - (void)updateTabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName
