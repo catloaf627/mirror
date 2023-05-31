@@ -116,7 +116,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         make.left.mas_equalTo(self.view).offset(kCollectionViewPadding);
         make.right.mas_equalTo(self.view).offset(-kCollectionViewPadding);
         make.top.mas_equalTo(self.view).offset(80);
-        make.height.mas_equalTo(50);
+        make.height.mas_equalTo([self mottoHeight]);
     }];
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -162,6 +162,9 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         NSString *motto = alertController.textFields[0].text;
         [MirrorSettings saveUserMotto:motto];
         [self.motto setTitle:[MirrorSettings userMotto] forState:UIControlStateNormal];
+        [self.motto mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo([self mottoHeight]);
+        }];
     }]];
     [self presentViewController:alertController animated:YES completion:nil];
 }
@@ -394,7 +397,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         _motto.titleLabel.textAlignment = NSTextAlignmentLeft;
         _motto.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [_motto setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-        _motto.titleLabel.numberOfLines = 2;
+        _motto.titleLabel.numberOfLines = 0;
         [_motto addTarget:self action:@selector(tapMotto) forControlEvents:UIControlEventTouchUpInside];
     }
     return _motto;
@@ -504,5 +507,20 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
     return self.interactiveTransition;
 }
 
+#pragma mark - Privates
+
+- (CGFloat)mottoHeight
+{
+    // label自适应的height
+    UILabel *label = [UILabel new];
+    CGFloat width  = kScreenWidth*kLeftSheetRatio - 2*kCollectionViewPadding - 2*10;
+    NSDictionary *textAttrs = @{NSFontAttributeName : [UIFont fontWithName:@"TrebuchetMS-Italic" size:14]};
+    CGFloat height = [[MirrorSettings userMotto] boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:textAttrs context:nil].size.height;
+    // 考虑到collectionView和version，这个label高度也要有极限的
+    CGFloat collectionViewHeight = (52*kLeftSheetRatio+kCellSpacing)*self.dataSource.count; // collection view height (包含最后一个小的padding)
+    CGFloat versionHeight = 20;
+    CGFloat maxHeight = kScreenHeight - 80 - 20 - collectionViewHeight - versionHeight - kTabBarHeight;
+    return MIN(height, maxHeight);
+}
 
 @end
