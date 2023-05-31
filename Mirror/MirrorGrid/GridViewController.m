@@ -120,7 +120,7 @@ static CGFloat const kCellSpacing = 3;
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新tabbar 和 navibar
     [[MirrorTabsManager sharedInstance] updateGridTabItemWithTabController:self.tabBarController];
-    if (self.tabBarController.selectedIndex == 3) {
+    if (self.tabBarController.selectedIndex == 2) {
         [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
     }
     [self p_setupUI];

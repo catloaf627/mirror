@@ -40,13 +40,13 @@
     if (!_mirrorTabVC) {
         TimeViewController *timeTrackerVC = [[TimeViewController alloc]init];
         TodayViewController *todayVC = [[TodayViewController alloc]init];
-        HistoryViewController *historyVC = [[HistoryViewController alloc] init];
         GridViewController *gridVC = [[GridViewController alloc] init];
+        HistoryViewController *historyVC = [[HistoryViewController alloc] init];
         //create a tabbar controller
         _mirrorTabVC  = [[UITabBarController alloc] init];
         
         //add 4 view controllers to tabbar controller
-        [_mirrorTabVC setViewControllers:@[timeTrackerVC, todayVC, historyVC, gridVC]];
+        [_mirrorTabVC setViewControllers:@[timeTrackerVC, todayVC, gridVC, historyVC]];
         _mirrorTabVC.selectedIndex = 0;
         _mirrorTabVC.tabBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         _mirrorTabVC.tabBar.backgroundImage = [UIImage new];
@@ -54,8 +54,8 @@
 
         [self updateTimeTabItemWithTabController:_mirrorTabVC];
         [self updateTodayTabItemWithTabController:_mirrorTabVC];
-        [self updateHistoryTabItemWithTabController:_mirrorTabVC];
         [self updateGridTabItemWithTabController:_mirrorTabVC];
+        [self updateHistoryTabItemWithTabController:_mirrorTabVC];
     }
     return _mirrorTabVC;
 }
@@ -70,15 +70,15 @@
     [self updateTabbar:tabbarController.tabBar index:1 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"today"] imageName:@"doc.plaintext" selectedImageName:@"doc.plaintext.fill"];
 }
 
+- (void)updateGridTabItemWithTabController:(UITabBarController *)tabbarController
+{
+    [self updateTabbar:tabbarController.tabBar index:3 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"record"] imageName:@"square.grid.2x2" selectedImageName:@"square.grid.2x2.fill"];
+}
+
 - (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController
 {
     BOOL isHistogram = [MirrorSettings appliedHistogramData];
     [self updateTabbar:tabbarController.tabBar index:2 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"data"] imageName:isHistogram? @"chart.bar":@"chart.pie" selectedImageName:isHistogram?@"chart.bar.fill":@"chart.pie.fill"];
-}
-
-- (void)updateGridTabItemWithTabController:(UITabBarController *)tabbarController
-{
-    [self updateTabbar:tabbarController.tabBar index:3 tabbarItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"record"] imageName:@"square.grid.2x2" selectedImageName:@"square.grid.2x2.fill"];
 }
 
 - (void)updateTabbar:(UITabBar *)tabbar index:(NSInteger)index tabbarItemWithTitle:(NSString *)title imageName:(NSString *)imageName selectedImageName:(NSString *)selectedImageName

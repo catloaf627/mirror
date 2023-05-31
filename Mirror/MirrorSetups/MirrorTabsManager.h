@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (UITabBarController *)mirrorTabController;
 - (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController;
 - (void)updateTodayTabItemWithTabController:(UITabBarController *)tabbarController;
-- (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController;
 - (void)updateGridTabItemWithTabController:(UITabBarController *)tabbarController;
+- (void)updateHistoryTabItemWithTabController:(UITabBarController *)tabbarController;
 
 @end
 
