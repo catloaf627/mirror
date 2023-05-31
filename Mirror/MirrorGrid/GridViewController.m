@@ -140,7 +140,9 @@ static CGFloat const kCellSpacing = 3;
     [self updateKeys];
     [self updateGridData];
     [self updateCharts];
-    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]]; // 直接使用[self.collectionView reloadData]有时候不生效，原因不明
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        [self.collectionView reloadData];
+    });
 }
 
 

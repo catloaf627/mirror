@@ -45,7 +45,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)reloadData
 {
-    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]]; // 只reload一个section可以解决点出来的picker收起来的时候，位置不变（之前使用[self.collectionView reloadData]这个位置因为cell的复用会乱跑，不知道为什么只reload一个section就能解决这个问题了）
+    [self.collectionView reloadData];
 }
 
 - (void)restartVC
