@@ -6,6 +6,7 @@
 //
 
 #import "MirrorSettings.h"
+#import "UIColor+MirrorColor.h"
 
 @implementation MirrorSettings
 
@@ -113,8 +114,13 @@
 + (void)switchHeatmap
 {
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"MirrorUserPreferredHeatmap"]) {
+        // 打开热力图
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"MirrorUserPreferredHeatmap"];
+        NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
+        NSInteger randomColorType = [allColorType[arc4random() % allColorType.count] integerValue];
+        [[NSUserDefaults standardUserDefaults] setInteger:randomColorType forKey:@"MirrorUserPreferredHeatmapColor"]; // 随机保存一个颜色（都是pulse色！不然叠上透明度就看不清了）
     } else {
+        // 关闭热力图
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MirrorUserPreferredHeatmap"];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:MirrorSwitchShowShadeNotification object:nil];
@@ -123,11 +129,6 @@
 + (NSInteger)preferredHeatmapColor
 {
     return [[NSUserDefaults standardUserDefaults] integerForKey:@"MirrorUserPreferredHeatmapColor"];
-}
-
-+ (void)changePreferredHeatmapColor:(NSInteger)color
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:color forKey:@"MirrorUserPreferredHeatmapColor"];
 }
 
 // Show original index

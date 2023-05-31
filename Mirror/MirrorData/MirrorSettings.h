@@ -40,9 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 按照时间长短更新颜色深浅(heatmap)
 + (BOOL)appliedHeatmap;
 + (void)switchHeatmap;
-
 + (NSInteger)preferredHeatmapColor;
-+ (void)changePreferredHeatmapColor:(NSInteger)color;
 
 // 座右铭
 + (NSString *)userMotto;

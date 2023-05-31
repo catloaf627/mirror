@@ -31,9 +31,6 @@ static MirrorColorType const gridcellColorType = MirrorColorTypeCellBlue;
 
 - (void)switchChanged:(UISwitch *)sender {
     [MirrorSettings switchHeatmap];
-    NSArray *allColorType = @[@(MirrorColorTypeCellPinkPulse), @(MirrorColorTypeCellOrangePulse), @(MirrorColorTypeCellYellowPulse), @(MirrorColorTypeCellGreenPulse), @(MirrorColorTypeCellTealPulse), @(MirrorColorTypeCellBluePulse), @(MirrorColorTypeCellPurplePulse),@(MirrorColorTypeCellGrayPulse)];
-    NSInteger randomColorType = [allColorType[arc4random() % allColorType.count] integerValue]; // 随机生成一个颜色（都是pulse色！不然叠上透明度就看不清了）
-    [MirrorSettings changePreferredHeatmapColor:randomColorType];
 }
 
 @end
