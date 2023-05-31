@@ -518,8 +518,8 @@
 				4A379B3E28E0379E00785CAE /* MirrorCustomize */,
 				4A379B3B28E0370400785CAE /* MirrorTime */,
 				4A379B3C28E0371700785CAE /* MirrorToday */,
-				4A0D40F929EFE28300F13EAE /* MirrorHistory */,
 				4ABE8D6D2A05C54900569A1C /* MirrorGrid */,
+				4A0D40F929EFE28300F13EAE /* MirrorHistory */,
 			);
 			path = Mirror;
 			sourceTree = "<group>";
