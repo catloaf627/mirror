@@ -6,11 +6,7 @@
 //
 
 #import "LanguageCollectionViewCell.h"
-#import "UIColor+MirrorColor.h"
 #import "MirrorSettings.h"
-#import "MirrorLanguage.h"
-
-static MirrorColorType const languageColorType = MirrorColorTypeCellPink;
 
 @implementation LanguageCollectionViewCell
 
@@ -21,7 +17,7 @@ static MirrorColorType const languageColorType = MirrorColorTypeCellPink;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"apply_chinese" color:languageColorType];
+    [super configCellWithTitle:@"apply_chinese" color:MirrorColorTypeCellPink];
     self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedChinese]) {

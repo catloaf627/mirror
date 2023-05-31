@@ -5,7 +5,6 @@
 //  Created by Yuqing Wang on 2022/9/28.
 //
 
-#import <UIKit/UIKit.h>
 #import "ToggleCollectionViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN

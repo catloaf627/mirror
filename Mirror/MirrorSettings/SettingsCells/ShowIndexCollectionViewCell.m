@@ -8,8 +8,6 @@
 #import "ShowIndexCollectionViewCell.h"
 #import "MirrorSettings.h"
 
-static MirrorColorType const indexcellColorType = MirrorColorTypeCellYellow;
-
 @implementation ShowIndexCollectionViewCell
 
 + (NSString *)identifier
@@ -19,7 +17,7 @@ static MirrorColorType const indexcellColorType = MirrorColorTypeCellYellow;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"show_record_indexes" color:indexcellColorType];
+    [super configCellWithTitle:@"show_record_indexes" color:MirrorColorTypeCellOrange];
     self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedShowIndex]) {

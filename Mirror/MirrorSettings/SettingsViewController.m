@@ -32,11 +32,11 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 typedef NS_ENUM(NSInteger, MirrorSettingType) {
     MirrorSettingTypeLanguage,
-    MirrorSettingTypeWeekStartsOn,
     MirrorSettingTypeShowIndex,
-    MirrorSettingTypePiechartData,
-    MirrorSettingTypePiechartRecord,
+    MirrorSettingTypeWeekStartsOn,
     MirrorSettingTypeHeatmap,
+    MirrorSettingTypePiechartRecord,
+    MirrorSettingTypePiechartData,
     MirrorSettingTypeExportImport,
     MirrorSettingTypeReportBug,
 };
@@ -336,24 +336,24 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         LanguageCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[LanguageCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
-    } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
-        WeekStartsOnCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier] forIndexPath:indexPath];
-        [cell configCell];
-        return cell;
     } else if (indexPath.item == MirrorSettingTypeShowIndex) {
         ShowIndexCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[ShowIndexCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
-    } else if (indexPath.item == MirrorSettingTypePiechartData) {
-        PiechartDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[PiechartDataCollectionViewCell identifier] forIndexPath:indexPath];
+    } else if (indexPath.item == MirrorSettingTypeWeekStartsOn) {
+        WeekStartsOnCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[WeekStartsOnCollectionViewCell identifier] forIndexPath:indexPath];
+        [cell configCell];
+        return cell;
+    } else if (indexPath.item == MirrorSettingTypeHeatmap) {
+        HeatmapCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[HeatmapCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
     } else if (indexPath.item == MirrorSettingTypePiechartRecord) {
         PiechartRecordCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[PiechartRecordCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
-    } else if (indexPath.item == MirrorSettingTypeHeatmap) {
-        HeatmapCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[HeatmapCollectionViewCell identifier] forIndexPath:indexPath];
+    } else if (indexPath.item == MirrorSettingTypePiechartData) {
+        PiechartDataCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[PiechartDataCollectionViewCell identifier] forIndexPath:indexPath];
         [cell configCell];
         return cell;
     } else if (indexPath.item == MirrorSettingTypeExportImport) {
@@ -483,7 +483,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (NSArray *)dataSource
 {
     if (!_dataSource) {
-        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypePiechartData), @(MirrorSettingTypePiechartRecord), @(MirrorSettingTypeHeatmap), @(MirrorSettingTypeExportImport), @(MirrorSettingTypeReportBug)];
+        _dataSource = @[@(MirrorSettingTypeLanguage), @(MirrorSettingTypeShowIndex), @(MirrorSettingTypeWeekStartsOn), @(MirrorSettingTypeHeatmap), @(MirrorSettingTypePiechartRecord), @(MirrorSettingTypePiechartData), @(MirrorSettingTypeExportImport), @(MirrorSettingTypeReportBug)];
     }
     return _dataSource;
 }
@@ -512,7 +512,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 - (CGFloat)mottoHeight
 {
     // label自适应的height
-    UILabel *label = [UILabel new];
     CGFloat width  = kScreenWidth*kLeftSheetRatio - 2*kCollectionViewPadding - 2*10;
     NSDictionary *textAttrs = @{NSFontAttributeName : [UIFont fontWithName:@"TrebuchetMS-Italic" size:14]};
     CGFloat height = [[MirrorSettings userMotto] boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:textAttrs context:nil].size.height;

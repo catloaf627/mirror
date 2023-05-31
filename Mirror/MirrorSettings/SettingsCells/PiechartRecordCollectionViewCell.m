@@ -8,8 +8,6 @@
 #import "PiechartRecordCollectionViewCell.h"
 #import "MirrorSettings.h"
 
-static MirrorColorType const piechartColorType = MirrorColorTypeCellTeal;
-
 @implementation PiechartRecordCollectionViewCell
 
 + (NSString *)identifier
@@ -19,7 +17,7 @@ static MirrorColorType const piechartColorType = MirrorColorTypeCellTeal;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"show_piechart_on_record" color:piechartColorType];
+    [super configCellWithTitle:@"show_piechart_on_record" color:MirrorColorTypeCellTeal];
     self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedPieChartRecord]) {

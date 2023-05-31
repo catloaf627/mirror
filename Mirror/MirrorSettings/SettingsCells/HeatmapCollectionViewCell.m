@@ -8,8 +8,6 @@
 #import "HeatmapCollectionViewCell.h"
 #import "MirrorSettings.h"
 
-static MirrorColorType const gridcellColorType = MirrorColorTypeCellBlue;
-
 @implementation HeatmapCollectionViewCell
 
 + (NSString *)identifier
@@ -19,7 +17,7 @@ static MirrorColorType const gridcellColorType = MirrorColorTypeCellBlue;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"heatmap" color:gridcellColorType];
+    [super configCellWithTitle:@"heatmap" color:MirrorColorTypeCellGreen];
     self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedHeatmap]) {

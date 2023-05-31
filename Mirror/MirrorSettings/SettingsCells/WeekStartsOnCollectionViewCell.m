@@ -8,8 +8,6 @@
 #import "WeekStartsOnCollectionViewCell.h"
 #import "MirrorSettings.h"
 
-static MirrorColorType const weekcellColorType = MirrorColorTypeCellOrange;
-
 @implementation WeekStartsOnCollectionViewCell
 
 + (NSString *)identifier
@@ -19,7 +17,7 @@ static MirrorColorType const weekcellColorType = MirrorColorTypeCellOrange;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"week_starts_on_Monday" color:weekcellColorType];
+    [super configCellWithTitle:@"week_starts_on_Monday" color:MirrorColorTypeCellYellow];
     self.toggle.hidden = NO;
     [self.toggle addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
     if ([MirrorSettings appliedWeekStarsOnMonday]) {
