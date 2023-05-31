@@ -172,7 +172,7 @@
 
 + (UIColor *)mirror_lightGreen
 {
-    return [UIColor colorWithRed:224/255.0 green:229/255.0 blue:223/255.0 alpha:1]; // 莫兰迪绿
+    return [UIColor colorWithRed:224/255.0 green:235/255.0 blue:223/255.0 alpha:1]; // 莫兰迪绿
 }
 
 + (UIColor *)mirror_darkGreen
