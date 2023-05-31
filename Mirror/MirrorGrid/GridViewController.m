@@ -32,8 +32,6 @@ static CGFloat const kCellSpacing = 3;
 
 @interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
 
-@property (nonatomic, assign) BOOL needReload;
-
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -104,10 +102,6 @@ static CGFloat const kCellSpacing = 3;
         [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_selectedCellIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     }
     [self updateHints];
-    if (_needReload) {
-        [self reloadData];
-        _needReload = NO;
-    }
 }
 
 - (void)restartVC
@@ -134,23 +128,19 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)reloadData
 {
-    if (self.tabBarController.selectedIndex == 3) { // 接收通知的时候在本tab上，直接reload
-        if ([MirrorSettings appliedPieChartRecord]) {
-            self.piechartView.hidden = NO;
-            self.histogramView.hidden = YES;
-        } else {
-            self.histogramView.hidden = NO;
-            self.piechartView.hidden = YES;
-        }
-        // data source
-        [self updateWeekdayView];
-        [self updateKeys];
-        [self updateGridData];
-        [self updateCharts];
-        [self.collectionView reloadData];
-    } else { // 接收通知的时候不在本tab上，用needReload hold到viewDidAppear再reload
-        _needReload = YES;
+    if ([MirrorSettings appliedPieChartRecord]) {
+        self.piechartView.hidden = NO;
+        self.histogramView.hidden = YES;
+    } else {
+        self.histogramView.hidden = NO;
+        self.piechartView.hidden = YES;
     }
+    // data source
+    [self updateWeekdayView];
+    [self updateKeys];
+    [self updateGridData];
+    [self updateCharts];
+    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]]; // 直接使用[self.collectionView reloadData]有时候不生效，原因不明
 }
 
 

@@ -103,7 +103,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (void)reloadData
 {
     self.data = [MirrorStorage tasksWithoutArchiveWithAddNew];
-    [self.collectionView reloadData];
+    [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]]; // 直接使用[self.collectionView reloadData]有时候不生效，原因不明
 }
 
 - (void)p_setupUI
