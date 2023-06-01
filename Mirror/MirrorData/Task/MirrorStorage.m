@@ -306,19 +306,9 @@
 
 #pragma mark - Local database
 
-+ (void)changeDataWithTimezoneGap:(NSInteger)timezoneGap
-{
-    NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
-    for (int i=0; i<records.count; i++) {
-        records[i].startTime = records[i].startTime + timezoneGap;
-        if (records[i].endTime != 0) records[i].endTime = records[i].endTime + timezoneGap;
-    }
-    [MirrorStorage saveMirrorRecords:records];
-}
-
 + (void)saveMirrorTasks:(NSMutableArray<MirrorTaskModel *> *)tasks // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, [MirrorStorage retriveMirrorRecords]] requiringSecureCoding:YES error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, [MirrorStorage retriveMirrorRecords], [MirrorStorage retriveSecondsFromGMT]] requiringSecureCoding:YES error:nil];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
@@ -331,14 +321,18 @@
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
-    NSArray *biArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
-    NSMutableArray<MirrorTaskModel *> *tasks = biArr[0];
-    return tasks ?: [NSMutableArray new];
+    NSArray *triArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
+    if (triArr.count == 3 && [triArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [triArr[1] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [triArr[2] isKindOfClass:[NSNumber class]]) {
+        NSMutableArray<MirrorTaskModel *> *tasks = triArr[0];
+        return tasks;
+    } else {
+        return [NSMutableArray new];
+    }
 }
 
 + (void)saveMirrorRecords:(NSMutableArray<MirrorRecordModel *> *)records // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[[MirrorStorage retriveMirrorTasks], records] requiringSecureCoding:YES error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[[MirrorStorage retriveMirrorTasks], records, [MirrorStorage retriveSecondsFromGMT]] requiringSecureCoding:YES error:nil];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
@@ -351,15 +345,63 @@
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
-    NSArray *biArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
-    NSMutableArray<MirrorRecordModel *> *records = biArr[1];
-    for (int i=0; i<records.count; i++) {
-        records[i].originalIndex = i;
+    NSArray *triArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
+    if (triArr.count == 3 && [triArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [triArr[1] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [triArr[2] isKindOfClass:[NSNumber class]]) {
+        NSMutableArray<MirrorRecordModel *> *records = triArr[1];
+        for (int i=0; i<records.count; i++) {
+            records[i].originalIndex = i;
+        }
+        return records;
+    } else {
+        return [NSMutableArray new];
     }
-    return records ?: [NSMutableArray new];
 }
 
-+ (NSMutableArray<MirrorRecordModel *> *)retriveMirrorRecordsWithoutHidden // 解档
++ (void)saveSecondsFromGMT:(NSNumber *)secondFromGMT // 归档
+{
+    /*
+     Standard     0h                         2023年5月2日13时                 标准时间
+     Bejing      +8h(oldSecondsFromGMT)      2023年5月2日21时           （之前数字被切割的标准）
+     New York    -4h                         2023年5月2日9时       想要展示为2023年5月2日21时，数据库数据需要+12
+     London      +1h                         2023年5月2日14时      想要展示为2023年5月2日21时，数据库数据需要+7
+     Tokyo       +9h                         2023年5月2日22时      想要展示为2023年5月2日21时，数据库数据需要-1
+     */
+    NSInteger timezoneGap = [[MirrorStorage retriveSecondsFromGMT] integerValue] - [secondFromGMT integerValue];
+    if (timezoneGap==0) {
+        return;
+    } else {
+        // 改records
+        NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+        for (int i=0; i<records.count; i++) {
+            records[i].startTime = records[i].startTime + timezoneGap;
+            if (records[i].endTime != 0) records[i].endTime = records[i].endTime + timezoneGap;
+        }
+        [MirrorStorage saveMirrorRecords:records];
+        // 改timezone
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[[MirrorStorage retriveMirrorTasks], [MirrorStorage retriveMirrorRecords], secondFromGMT] requiringSecureCoding:YES error:nil];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        NSString *path = [paths objectAtIndex:0];
+        NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
+        [data writeToFile:filePath atomically:YES];
+    }
+}
+
++ (NSNumber *)retriveSecondsFromGMT // 解档
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *path = [paths objectAtIndex:0];
+    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
+    NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
+    NSArray *triArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:storedEncodedObject error:nil];
+    if (triArr.count == 3 && [triArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [triArr[1] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [triArr[2] isKindOfClass:[NSNumber class]]) {
+        NSNumber *secondFromGMT = triArr[2];
+        return secondFromGMT;
+    } else {
+        return @([NSTimeZone systemTimeZone].secondsFromGMT);
+    }
+}
+
++ (NSMutableArray<MirrorRecordModel *> *)p_retriveMirrorRecordsWithoutHidden
 {
     NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
     NSMutableDictionary *taskHiddenState = [NSMutableDictionary new];
@@ -469,7 +511,7 @@
 {
     BOOL printDetailsToDebug = NO; // debug用
     NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> *dict = [NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> new];
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecordsWithoutHidden];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage p_retriveMirrorRecordsWithoutHidden];
 
     for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
         MirrorRecordModel *record = allRecords[recordIndex];
@@ -526,7 +568,7 @@
     NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData = [NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> new];
     
     NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecordsWithoutHidden];
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage p_retriveMirrorRecordsWithoutHidden];
      
     if (allRecords.count == 0) return gridData;
     

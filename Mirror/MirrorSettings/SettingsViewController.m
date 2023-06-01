@@ -26,6 +26,7 @@
 #import "MirrorRecordModel.h"
 #import "MirrorSettings.h"
 #import "MirrorTimeText.h"
+#import "MirrorStorage.h"
 
 static CGFloat const kCellSpacing = 10; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -237,19 +238,21 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
             if (error) {
                 // 读取出错
             } else {
-                NSArray *biArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:data error:nil];
-                if (biArr.count == 2 && [biArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [biArr[0] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]]) {
+                NSArray *triArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:data error:nil];
+                if (triArr.count == 3 && [triArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [triArr[1] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [triArr[2] isKindOfClass:[NSNumber class]]) {
                     UIAlertController* alert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"import_data_?"] message:[MirrorLanguage mirror_stringWithKey:@"import_data_?_message"] preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction* importAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"import"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                         // 解析
-                        NSMutableArray<MirrorTaskModel *> *tasks = biArr[0];
-                        NSMutableArray<MirrorRecordModel *> *records = biArr[1];
+                        NSMutableArray<MirrorTaskModel *> *tasks = triArr[0];
+                        NSMutableArray<MirrorRecordModel *> *records = triArr[1];
+                        NSNumber *secondsFromGMT = triArr[2];
                         // 覆盖本地数据
-                        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, records] requiringSecureCoding:YES error:nil];
+                        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, records, secondsFromGMT] requiringSecureCoding:YES error:nil];
                         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
                         NSString *path = [paths objectAtIndex:0];
                         NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
-                        [data writeToFile:filePath atomically:YES];
+                        [data writeToFile:filePath atomically:YES]; // 所有的数据全部导入
+                        [MirrorStorage saveSecondsFromGMT:@([NSTimeZone systemTimeZone].secondsFromGMT)]; // 导入后修改数据以适应本地system timezone
                         [[NSNotificationCenter defaultCenter] postNotificationName:MirrorImportDataNotificaiton object:nil];
                     }];
                     UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:nil];

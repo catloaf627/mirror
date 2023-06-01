@@ -34,9 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)appliedPieChartRecord;
 + (void)switchChartTypeRecord;
 
-// Timezone
-+ (NSInteger)timeZoneGap:(NSInteger)newSecondsFromGMT;
-
 // 按照时间长短更新颜色深浅(heatmap)
 + (BOOL)appliedHeatmap;
 + (void)switchHeatmap;
