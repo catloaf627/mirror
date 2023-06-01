@@ -1,11 +1,11 @@
 //
-//  EditTasksViewController.m
+//  AllTasksViewController.m
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/26.
 //
 
-#import "EditTasksViewController.h"
+#import "AllTasksViewController.h"
 #import "MirrorMacro.h"
 #import "UIColor+MirrorColor.h"
 #import <Masonry/Masonry.h>
@@ -19,13 +19,13 @@
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface EditTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol, ExportJsonProtocol>
+@interface AllTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol, ExportJsonProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @end
 
-@implementation EditTasksViewController
+@implementation AllTasksViewController
 
 - (instancetype)init
 {

@@ -1,5 +1,5 @@
 //
-//  EditTasksViewController.h
+//  AllTasksViewController.h
 //  Mirror
 //
 //  Created by Yuqing Wang on 2023/4/26.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EditTasksViewController : UIViewController
+@interface AllTasksViewController : UIViewController
 
 @end
 
