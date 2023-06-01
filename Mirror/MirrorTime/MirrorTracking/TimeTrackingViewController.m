@@ -456,9 +456,10 @@ static CGFloat const kDashSpacing = 10;
 {
     if (!_differentDayLabel) {
         _differentDayLabel = [UILabel new];
-        _differentDayLabel.textColor = [UIColor redColor];
+        NSInteger color = [UIColor mirror_getPulseColorType:[MirrorStorage getTaskModelFromDB:self.taskName].color];
+        _differentDayLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         _differentDayLabel.font = [UIFont fontWithName:kHintFont size:13];
-        _differentDayLabel.backgroundColor = [UIColor colorWithRed:255 green:0 blue:0 alpha:0.1];
+        _differentDayLabel.backgroundColor = [UIColor mirrorColorNamed:color];
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
         style.alignment = NSTextAlignmentJustified;
         style.firstLineHeadIndent = 10.0f;
