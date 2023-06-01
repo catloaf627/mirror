@@ -99,6 +99,12 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)reloadData
 {
+    /*
+     调用reloadData后UI不刷新的bug折磨了我很久，一开始以为是其他页面遮挡了collection view导致的不刷新，多次改动collection view reload data的调用方式都没成功
+     最后发现根本原因是：在整个页面还没有setupUI的时候就被通知reloadData
+     例如：冷启后还没有进入TodayVC就切换了index settings，导致TodayVC还没有setup UI就被reload了，这以后再进入TodayVC切换settings调用reloadData，reload就不会生效了。
+     具体technical原因不明。最后的解决办法是给每个VC都添加isLoaded属性，根本没被load过的VC被通知reload的时候直接返回不进行任何操作。
+    */
     if (!_isLoaded) return;
     [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     [self.collectionView performBatchUpdates:^{
