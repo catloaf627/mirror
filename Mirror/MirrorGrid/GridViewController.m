@@ -137,15 +137,11 @@ static CGFloat const kCellSpacing = 3;
         self.histogramView.hidden = NO;
         self.piechartView.hidden = YES;
     }
-
-    [self.collectionView performBatchUpdates:^{
-        [self updateWeekdayView];
-        [self updateKeys];
-        [self updateGridData];
-        [self updateCharts];
-    } completion:^(BOOL finished) {
-        [self.collectionView reloadData];
-    }];
+    [self updateWeekdayView];
+    [self updateKeys];
+    [self updateGridData];
+    [self updateCharts];
+    [self.collectionView reloadData];
 }
 
 

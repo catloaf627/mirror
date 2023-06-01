@@ -105,11 +105,8 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (void)reloadData
 {
     if (!_isLoaded) return;
-    [self.collectionView performBatchUpdates:^{
-        self.data = [MirrorStorage tasksWithoutArchiveWithAddNew];
-    } completion:^(BOOL finished) {
-        [self.collectionView reloadData];
-    }];
+    self.data = [MirrorStorage tasksWithoutArchiveWithAddNew];
+    [self.collectionView reloadData];
 }
 
 - (void)p_setupUI
