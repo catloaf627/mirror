@@ -30,6 +30,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 @interface TimeViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
 
+@property (nonatomic, assign) BOOL isLoaded;
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -76,6 +77,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self p_setupUI];
+    _isLoaded = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -102,6 +104,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)reloadData
 {
+    if (!_isLoaded) return;
     [self.collectionView performBatchUpdates:^{
         self.data = [MirrorStorage tasksWithoutArchiveWithAddNew];
     } completion:^(BOOL finished) {

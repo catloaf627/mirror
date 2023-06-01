@@ -30,6 +30,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 @interface HistoryViewController () <UIViewControllerTransitioningDelegate>
 
+@property (nonatomic, assign) BOOL isLoaded;
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -61,7 +62,6 @@ static CGFloat const kLeftRightSpacing = 20;
         // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchWeekStartsOnNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchChartTypeDataNotification object:nil];
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
@@ -87,6 +87,7 @@ static CGFloat const kLeftRightSpacing = 20;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self p_setupUI];
+    _isLoaded = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -118,6 +119,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)reloadData
 {
+    if (!_isLoaded) return;
     // 如果是chart type变了顺便更新一下tab的图标
     [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
     // data source

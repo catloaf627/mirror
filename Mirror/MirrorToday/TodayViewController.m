@@ -26,6 +26,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 @interface TodayViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, EditPeriodForTodayProtocol, UIViewControllerTransitioningDelegate>
 
+@property (nonatomic, assign) BOOL isLoaded;
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -49,7 +50,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];// 比其他vc多监听一个index通知
         // 数据通知 (直接数据驱动UI，本地数据变动必然导致这里的UI变动)
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorImportDataNotificaiton object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorTaskStopNotification object:nil];
@@ -72,6 +73,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self p_setupUI];
+    _isLoaded = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -97,6 +99,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)reloadData
 {
+    if (!_isLoaded) return;
     [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     [self.collectionView performBatchUpdates:^{
         self.todayData = [MirrorStorage getTodayData];

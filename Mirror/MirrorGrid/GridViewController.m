@@ -32,6 +32,7 @@ static CGFloat const kCellSpacing = 3;
 
 @interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
 
+@property (nonatomic, assign) BOOL isLoaded;
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
@@ -64,7 +65,6 @@ static CGFloat const kCellSpacing = 3;
         // 设置通知
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchLanguageNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowIndexNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchWeekStartsOnNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchChartTypeRecordNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorSwitchShowShadeNotification object:nil];
@@ -91,6 +91,7 @@ static CGFloat const kCellSpacing = 3;
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self p_setupUI];
+    _isLoaded = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -128,6 +129,7 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)reloadData
 {
+    if (!_isLoaded) return;
     if ([MirrorSettings appliedPieChartRecord]) {
         self.piechartView.hidden = NO;
         self.histogramView.hidden = YES;
