@@ -111,8 +111,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
      具体technical原因不明。最后的解决办法是给每个VC都添加isLoaded属性，根本没被load过的VC被通知reload的时候直接返回不进行任何操作。
     */
     if (!_isLoaded) return;
-    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     self.todayData = [MirrorStorage getTodayData];
+    [self updateHint]; // reloaddata要顺便reload一下emptyhint的状态
     [self.collectionView reloadData];
 }
 

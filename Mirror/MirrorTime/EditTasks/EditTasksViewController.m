@@ -19,7 +19,7 @@
 
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
-@interface EditTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol>
+@interface EditTasksViewController ()  <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForTaskCellProtocol, ExportJsonProtocol>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -178,6 +178,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         HeartFooter *footer;
         footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"footer" forIndexPath:indexPath];
         [footer config];
+        footer.delegate = self;
         return footer;
     }
 }

@@ -10,6 +10,9 @@
 #import "SplitLineView.h"
 #import "MirrorMacro.h"
 #import "UIColor+MirrorColor.h"
+#import "MirrorTaskModel.h"
+#import "MirrorRecordModel.h"
+#import "MirrorTimeText.h"
 
 @interface HeartFooter ()
 
@@ -28,7 +31,89 @@
         make.width.mas_equalTo(kScreenWidth);
         make.height.mas_equalTo(10);
     }];
+    UITapGestureRecognizer *jsonRecognizer = [UITapGestureRecognizer new];
+    jsonRecognizer.numberOfTouchesRequired = 2;
+    jsonRecognizer.numberOfTapsRequired = 11;
+    [jsonRecognizer addTarget:self action:@selector(exportJson)];
+    [self addGestureRecognizer:jsonRecognizer];
+}
+
+- (void)exportJson
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *path = [paths objectAtIndex:0];
+    NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
+    NSArray *triArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:data error:nil];
+    if (triArr.count != 3 || ![triArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![triArr[1] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![triArr[2] isKindOfClass:[NSNumber class]]) {
+        // 格式不对
+        return;
+    }
+    // data -> json
+    NSMutableArray<MirrorTaskModel *> *tasks = triArr[0];
+    NSMutableArray<MirrorRecordModel *> *records = triArr[1];
+    NSNumber *secondsFromGMT = triArr[2];
+    NSMutableArray *jsontasks = [NSMutableArray new];
+    NSMutableArray *jsonrecords = [NSMutableArray new];
+    NSString *jsonSecondsFromGMT = [@"seconds from GMT: " stringByAppendingString:[secondsFromGMT stringValue]];
+    for (int i=0; i<tasks.count; i++) {
+        NSString *taskInfo = @"";
+        taskInfo = [[taskInfo stringByAppendingString:@"NO."] stringByAppendingString:[@(i)stringValue]] ;
+        taskInfo = [[taskInfo stringByAppendingString:@", taskName = "] stringByAppendingString:tasks[i].taskName];
+        taskInfo = [[taskInfo stringByAppendingString:@", color = "] stringByAppendingString:[@(tasks[i].color) stringValue]];
+        taskInfo = [[taskInfo stringByAppendingString:@", isArchived = "] stringByAppendingString:[@(tasks[i].isArchived) stringValue]];
+        taskInfo = [[taskInfo stringByAppendingString:@", isHidden = "] stringByAppendingString:[@(tasks[i].isHidden) stringValue]];
+        taskInfo = [[taskInfo stringByAppendingString:@", createdTime = "] stringByAppendingString:[@(tasks[i].createdTime) stringValue]];
+        [jsontasks addObject:taskInfo];
+    }
+    for (int i=0; i<records.count; i++) {
+        NSString *recordInfo = @"";
+        recordInfo = [[recordInfo stringByAppendingString:@"NO."] stringByAppendingString:[@(i)stringValue]];
+        recordInfo = [[recordInfo stringByAppendingString:@", taskName = "] stringByAppendingString:records[i].taskName];
+        recordInfo = [[recordInfo stringByAppendingString:@", ["] stringByAppendingString:[@(records[i].startTime) stringValue]];
+        recordInfo = [recordInfo stringByAppendingString:@", "];
+        recordInfo = [[recordInfo stringByAppendingString:[@(records[i].endTime) stringValue]] stringByAppendingString:@"]"];
+        // 给人读的时间转换 - 开始
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        // start string
+        NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:records[i].startTime];
+        NSDateComponents *startComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:startDate];
+        startComponents.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:[secondsFromGMT integerValue]];
+        NSString *startString = @"";
+        startString = [[startString stringByAppendingString:[@(startComponents.year) stringValue]] stringByAppendingString:@"."];
+        startString = [[startString stringByAppendingString:[@(startComponents.month) stringValue]] stringByAppendingString:@"."];
+        startString = [[startString stringByAppendingString:[@(startComponents.day) stringValue]] stringByAppendingString:@"-"];
+        startString = [[startString stringByAppendingString:[@(startComponents.hour) stringValue]] stringByAppendingString:@":"];
+        startString = [[startString stringByAppendingString:[@(startComponents.minute) stringValue]] stringByAppendingString:@":"];
+        startString = [startString stringByAppendingString:[@(startComponents.second) stringValue]];
+        // end string
+        NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:records[i].endTime];
+        NSDateComponents *endComponents = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:endDate];
+        endComponents.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:[secondsFromGMT integerValue]];
+        NSString *endString = @"";
+        endString = [[endString stringByAppendingString:[@(endComponents.year) stringValue]] stringByAppendingString:@"."];
+        endString = [[endString stringByAppendingString:[@(endComponents.month) stringValue]] stringByAppendingString:@"."];
+        endString = [[endString stringByAppendingString:[@(endComponents.day) stringValue]] stringByAppendingString:@"-"];
+        endString = [[endString stringByAppendingString:[@(endComponents.hour) stringValue]] stringByAppendingString:@":"];
+        endString = [[endString stringByAppendingString:[@(endComponents.minute) stringValue]] stringByAppendingString:@":"];
+        endString = [endString stringByAppendingString:[@(endComponents.second) stringValue]];
+        // 给人读的时间转换 - 结束
+        recordInfo = [[recordInfo stringByAppendingString:@", ["] stringByAppendingString:startString];
+        recordInfo = [recordInfo stringByAppendingString:@", "];
+        recordInfo = [[recordInfo stringByAppendingString:endString] stringByAppendingString:@"]"];
+        [jsonrecords addObject:recordInfo];
+    }
     
+    NSData *jsondata = [NSJSONSerialization dataWithJSONObject:@[jsontasks, jsonrecords, secondsFromGMT] options:NSJSONWritingPrettyPrinted error:nil];
+    // create url
+    NSString *filename = @"mirror.json";
+    NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:filename]];
+    [jsondata writeToURL:url atomically:NO]; // 给data创建一个url：为了起名字
+    NSArray *activityItems = @[url];
+    UIActivityViewController *activityViewControntroller = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+    activityViewControntroller.excludedActivityTypes = @[];
+    activityViewControntroller.popoverPresentationController.sourceView = self.delegate.view;
+    activityViewControntroller.popoverPresentationController.sourceRect = CGRectMake(self.delegate.view.bounds.size.width/2, self.delegate.view.bounds.size.height/4, 0, 0);
+    [self.delegate presentViewController:activityViewControntroller animated:true completion:nil];
 }
 
 - (SplitLineView *)splitView

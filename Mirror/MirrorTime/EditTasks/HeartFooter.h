@@ -9,8 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol ExportJsonProtocol <NSObject>
+
+@end
+
 @interface HeartFooter : UICollectionViewCell
 
+@property (nonatomic, weak) UIViewController<ExportJsonProtocol> *delegate;
 - (void)config;
 
 @end
