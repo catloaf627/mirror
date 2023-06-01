@@ -119,7 +119,9 @@
     
     // Time editing (这个页面需要的save，上面已经有了)
     [mirrorDict setValue:@[@"Starts at", @"开始时间"] forKey:@"starts_at"];
-    [mirrorDict setValue:@[@"OR", @"或者"] forKey:@"or"];
+    [mirrorDict setValue:@[@"OR", @"或"] forKey:@"or"];
+    [mirrorDict setValue:@[@"\"Now\" is occupied by the other task", @"当前时间已被其他任务占用"] forKey:@"now_is_occupied"];
+    
     [mirrorDict setValue:@[@"Start now", @"开始计时"] forKey:@"start_now"];
     [mirrorDict setValue:@[@" hours", @" 小时"] forKey:@"picker_hours"];
     [mirrorDict setValue:@[@" mins", @" 分钟"] forKey:@"picker_mins"];

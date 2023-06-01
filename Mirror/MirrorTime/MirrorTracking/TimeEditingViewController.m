@@ -24,7 +24,7 @@
 @property (nonatomic, strong) UIDatePicker *startPicker;
 @property (nonatomic, strong) UIPickerView *lastedPicker;
 @property (nonatomic, strong) UIButton *saveButton;
-@property (nonatomic, strong) UIView *splitView;
+@property (nonatomic, strong) SplitLineView *splitView;
 @property (nonatomic, strong) UIButton *startButton;
 
 // Data
@@ -297,7 +297,14 @@
         NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
         if (records.count > 0) {
             long formmerEndTime = records[records.count-1].endTime;
-            _startPicker.date = formmerEndTime > [[NSDate now] timeIntervalSince1970]  ? [NSDate dateWithTimeIntervalSince1970:formmerEndTime] : [NSDate now];
+            BOOL canStartAtNow = formmerEndTime <= [[NSDate now] timeIntervalSince1970];
+            if (canStartAtNow) {
+                _startPicker.date = [NSDate now];
+            } else {
+                _startPicker.date = [NSDate dateWithTimeIntervalSince1970:formmerEndTime];
+                [self.startButton setEnabled:NO];;
+                [self.splitView updateText:[MirrorLanguage mirror_stringWithKey:@"now_is_occupied"]];
+            }
             _startPicker.minimumDate = [NSDate dateWithTimeIntervalSince1970:formmerEndTime];
         } else {
             _startPicker.date = [NSDate now];
@@ -331,10 +338,10 @@
     return _saveButton;
 }
 
-- (UIView *)splitView
+- (SplitLineView *)splitView
 {
     if (!_splitView) {
-        _splitView = [[SplitLineView alloc] initWithText:@"or" color:[UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:[MirrorStorage getTaskModelFromDB:self.taskName].color]]];
+        _splitView = [[SplitLineView alloc] initWithText:[MirrorLanguage mirror_stringWithKey:@"or"] color:[UIColor mirrorColorNamed:[UIColor mirror_getPulseColorType:[MirrorStorage getTaskModelFromDB:self.taskName].color]]];
     }
     return _splitView;
 }
@@ -345,8 +352,10 @@
     if (!_startButton) {
         _startButton = [UIButton new];
         [_startButton setTitle:[MirrorLanguage mirror_stringWithKey:@"start_now"] forState:UIControlStateNormal];
+        [_startButton setTitle:[MirrorLanguage mirror_stringWithKey:@"start_now"] forState:UIControlStateDisabled];
         _startButton.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_startButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeBackground] forState:UIControlStateNormal];
+        [_startButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeTextHint] forState:UIControlStateDisabled];
         _startButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:20];
         _startButton.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeText].CGColor;
         _startButton.layer.borderWidth = 1;

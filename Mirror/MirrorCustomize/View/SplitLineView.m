@@ -11,7 +11,6 @@
 #import "UIColor+MirrorColor.h"
 
 static CGFloat const kIconWidth = 10;
-static CGFloat const kTextWidth = 15;
 static CGFloat const kCenterPadding = 3;
 static CGFloat const kLeftRightPadding = 50;
 static CGFloat const kLineHeight = 1;
@@ -72,7 +71,7 @@ static CGFloat const kLineHeight = 1;
         self.textLabel.text =  text;
         [self.textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.centerY.offset(0);
-            make.width.height.mas_equalTo(kTextWidth);
+            make.width.height.mas_equalTo([self textWidth:text]);
         }];
         
         [self addSubview:self.leftLine];
@@ -90,13 +89,21 @@ static CGFloat const kLineHeight = 1;
             make.right.offset(-kLeftRightPadding);
             make.left.mas_equalTo(self.textLabel.mas_right).offset(kCenterPadding);
             make.centerY.offset(0);
-            make.width.mas_equalTo((kScreenWidth - 2*kLeftRightPadding - 2*kCenterPadding - kIconWidth)/2);
             make.height.mas_equalTo(kLineHeight);
         }];
-        
     }
     return self;
 }
+
+- (void)updateText:(NSString *)text
+{
+    self.textLabel.text = text;
+    [self.textLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo([self textWidth:text]);
+    }];
+}
+
+#pragma mark - Getters
 
 - (UIView *)leftLine
 {
@@ -111,7 +118,7 @@ static CGFloat const kLineHeight = 1;
     if (!_textLabel) {
         _textLabel = [UILabel new];
         _textLabel.adjustsFontSizeToFitWidth = YES;
-        _textLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:15];
+        _textLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
     }
     return _textLabel;
 }
@@ -130,6 +137,14 @@ static CGFloat const kLineHeight = 1;
         _rightLine = [UIView new];
     }
     return _rightLine;
+}
+
+- (CGFloat)textWidth:(NSString *)text
+{
+    CGFloat height  = 15;
+    NSDictionary *textAttrs = @{NSFontAttributeName : [UIFont fontWithName:@"TrebuchetMS-Italic" size:14]};
+    CGFloat width = [text boundingRectWithSize:CGSizeMake(MAXFLOAT, height) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:textAttrs context:nil].size.width;
+    return width;
 }
 
 @end
