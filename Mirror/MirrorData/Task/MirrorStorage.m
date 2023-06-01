@@ -370,6 +370,12 @@
     if (timezoneGap==0) {
         return;
     } else {
+        // 改tasks (createtime)
+        NSMutableArray<MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
+        for (int i=0; i<tasks.count; i++) {
+            tasks[i].createdTime = tasks[i].createdTime + timezoneGap;
+        }
+        [MirrorStorage saveMirrorTasks:tasks];
         // 改records
         NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
         for (int i=0; i<records.count; i++) {

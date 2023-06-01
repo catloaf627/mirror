@@ -63,6 +63,20 @@
         taskInfo = [[taskInfo stringByAppendingString:@", isArchived = "] stringByAppendingString:[@(tasks[i].isArchived) stringValue]];
         taskInfo = [[taskInfo stringByAppendingString:@", isHidden = "] stringByAppendingString:[@(tasks[i].isHidden) stringValue]];
         taskInfo = [[taskInfo stringByAppendingString:@", createdTime = "] stringByAppendingString:[@(tasks[i].createdTime) stringValue]];
+        // 给人读的时间转换 - 开始
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDate *createdDate = [NSDate dateWithTimeIntervalSince1970:tasks[i].createdTime];
+        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:createdDate];
+        components.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:[secondsFromGMT integerValue]];
+        NSString *createdString = @"";
+        createdString = [[createdString stringByAppendingString:[@(components.year) stringValue]] stringByAppendingString:@"."];
+        createdString = [[createdString stringByAppendingString:[@(components.month) stringValue]] stringByAppendingString:@"."];
+        createdString = [[createdString stringByAppendingString:[@(components.day) stringValue]] stringByAppendingString:@"-"];
+        createdString = [[createdString stringByAppendingString:[@(components.hour) stringValue]] stringByAppendingString:@":"];
+        createdString = [[createdString stringByAppendingString:[@(components.minute) stringValue]] stringByAppendingString:@":"];
+        createdString = [createdString stringByAppendingString:[@(components.second) stringValue]];
+        taskInfo = [[[taskInfo stringByAppendingString:@"("] stringByAppendingString:createdString] stringByAppendingString:@")"];
+        // 给人读的时间转换 - 结束
         [jsontasks addObject:taskInfo];
     }
     for (int i=0; i<records.count; i++) {
@@ -103,7 +117,7 @@
         [jsonrecords addObject:recordInfo];
     }
     
-    NSData *jsondata = [NSJSONSerialization dataWithJSONObject:@[jsontasks, jsonrecords, secondsFromGMT] options:NSJSONWritingPrettyPrinted error:nil];
+    NSData *jsondata = [NSJSONSerialization dataWithJSONObject:@[jsontasks, jsonrecords, jsonSecondsFromGMT] options:NSJSONWritingPrettyPrinted error:nil];
     // create url
     NSString *filename = @"mirror.json";
     NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:filename]];
