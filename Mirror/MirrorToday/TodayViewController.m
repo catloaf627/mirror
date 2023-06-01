@@ -102,7 +102,12 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     /*
      调用reloadData后UI不刷新的bug折磨了我很久，一开始以为是其他页面遮挡了collection view导致的不刷新，多次改动collection view reload data的调用方式都没成功
      最后发现根本原因是：在整个页面还没有setupUI的时候就被通知reloadData
-     例如：冷启后还没有进入TodayVC就切换了index settings，导致TodayVC还没有setup UI就被reload了，这以后再进入TodayVC切换settings调用reloadData，reload就不会生效了。
+     例子1：冷启后还没有进入TodayVC就切换了index settings，导致TodayVC还没有setup UI就被reload了，这以后再进入TodayVC，修改今日数据或是修改index settings，UI不会更新。
+        现象：新添的数据看不到、修改了的数据不生效、更新数据后today header上的饼状图也不生效...
+     例子2:冷启后还没有进入GirdVC就切换了heatmap settings，导致GirdVC还没有setup UI就被reload了，这以后再进入GirdVC，修改hidden数据或是修改heatmap settings，UI不会更新。
+        现象：选择隐藏/显示某些tasks以后，grid不更新...
+     例子2:冷启后还没有进入HistoryVC就切换了piechart settings on data，导致HistoryVC还没有setup UI就被reload了，这以后再进入HistoryVC，修改hidden数据或是修改piechart settings on data，UI不会更新。
+        现象：切换日/周/月/年的时候，legend不跟着更新...
      具体technical原因不明。最后的解决办法是给每个VC都添加isLoaded属性，根本没被load过的VC被通知reload的时候直接返回不进行任何操作。
     */
     if (!_isLoaded) return;
