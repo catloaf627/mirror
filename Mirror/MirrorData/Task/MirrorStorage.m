@@ -652,4 +652,31 @@
     NSDate *dateWithoutSeconds = [gregorian dateFromComponents:components];
     return dateWithoutSeconds;
 }
+
+- (NSMutableArray<MirrorRecordModel *> *)pressureTestRecords // 压力测试，让当前数据翻倍
+{
+    NSInteger times = 500; // 想让数据量翻多少倍
+    NSInteger offset = 70; // 每个数据往前走多少天
+    NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+    NSMutableArray<MirrorRecordModel *> *fakeRecords = [NSMutableArray new];
+    BOOL shouldBreak = NO;
+    for (int i=0; i<times; i++) {
+        NSMutableArray<MirrorRecordModel *> *newRecords = [NSMutableArray new];;
+        for (int j=0; j<records.count; j++) {
+            CGFloat startTime =records[j].startTime - offset*86400*i;
+            CGFloat endTime = records[j].endTime - offset*86400*i;
+            if (startTime<0 || endTime<0) {
+                shouldBreak = YES;
+                break;
+            }
+            MirrorRecordModel *newRecord = [[MirrorRecordModel alloc] initWithTitle:records[j].taskName startTime:startTime endTime:endTime];
+            [newRecords addObject:newRecord];
+        }
+        if (shouldBreak) break;
+        [fakeRecords insertObjects:newRecords atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, newRecords.count)]];
+        NSLog(@"循环到了第%d轮, 已经生成了%lu条数据", i, (unsigned long)fakeRecords.count);
+    }
+    return fakeRecords;
+}
+
 @end
