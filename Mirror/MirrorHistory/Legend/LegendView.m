@@ -149,7 +149,6 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
     }
     if (index == NSNotFound) return;
     LegendCollectionViewCell *targetCell = (LegendCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
-    MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:taskname];
     UIColor *color = [UIColor clearColor];
     [UIView animateWithDuration:0.5 animations:^{
         targetCell.backgroundColor = color;
