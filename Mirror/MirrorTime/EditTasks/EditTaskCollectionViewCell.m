@@ -162,9 +162,9 @@ static CGFloat const kPadding = 20;
     }];
     
     UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:nil];
-
-    [deleteButtonAlert addAction:deleteAction];
+    
     [deleteButtonAlert addAction:cancelAction];
+    [deleteButtonAlert addAction:deleteAction];
     [self.delegate presentViewController:deleteButtonAlert animated:YES completion:nil];
 }
 
