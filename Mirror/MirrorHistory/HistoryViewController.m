@@ -28,7 +28,7 @@
 
 static CGFloat const kLeftRightSpacing = 20;
 
-@interface HistoryViewController () <UIViewControllerTransitioningDelegate>
+@interface HistoryViewController () <UIViewControllerTransitioningDelegate, PushAllRecordsDelegate>
 
 @property (nonatomic, assign) BOOL isLoaded;
 // Navibar
@@ -437,6 +437,7 @@ static CGFloat const kLeftRightSpacing = 20;
 {
     if (!_legendView) {
         _legendView = [[LegendView alloc] initWithData:self.data];
+        _legendView.delegate = self;
     }
     return _legendView;
 }

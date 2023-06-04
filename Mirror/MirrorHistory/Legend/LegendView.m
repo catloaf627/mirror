@@ -10,7 +10,7 @@
 #import "MirrorSettings.h"
 #import "MirrorStorage.h"
 #import "LegendCollectionViewCell.h"
-#import "TaskRecordsViewController.h"
+#import "AllRecordsViewController.h"
 
 static CGFloat const kCellHeight = 30; // 一个legend的高度
 static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
@@ -86,7 +86,12 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    if (self.data.count > indexPath.item && self.data[indexPath.item].records.count > 0) {
+        // 跳到这个日期（时间段）的这个task的第一条数据上
+        AllRecordsViewController *allRecordsVC = [AllRecordsViewController new];
+        allRecordsVC.scrollToIndex = @(((MirrorRecordModel *)self.data[indexPath.item].records[0]).originalIndex);
+        [self.delegate.navigationController pushViewController:allRecordsVC animated:YES];
+    }
 }
 
 #pragma mark - HistogramDelegate

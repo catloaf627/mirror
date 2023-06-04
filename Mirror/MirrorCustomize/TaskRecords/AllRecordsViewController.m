@@ -108,7 +108,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 {
     if (_scrollToIndex && indexPath.item == 0 && !_isStartedScroll) { // 展示第0个的时候scroll（一次生命周期只走一次）
         _isStartedScroll = YES;
-        [collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[_scrollToIndex integerValue] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:YES];
+        [collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[_scrollToIndex integerValue] inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
     }
     if (_scrollToIndex && indexPath.item == [_scrollToIndex integerValue] && !_isFinishedScroll) { // 展示第selected个的时候闪烁（一次生命周期只走一次）
         _isFinishedScroll = YES;

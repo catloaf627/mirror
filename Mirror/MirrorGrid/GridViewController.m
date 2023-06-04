@@ -30,7 +30,7 @@ static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellWidth = 30;
 static CGFloat const kCellSpacing = 3;
 
-@interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate>
+@interface GridViewController () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIViewControllerTransitioningDelegate, PushAllRecordsDelegate>
 
 @property (nonatomic, assign) BOOL isLoaded;
 // Navibar
@@ -567,6 +567,7 @@ static CGFloat const kCellSpacing = 3;
 {
     if (!_legendView) {
         _legendView = [[LegendView alloc] initWithData:[NSMutableArray new]];
+        _legendView.delegate = self;
     }
     return _legendView;
 }
