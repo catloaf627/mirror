@@ -238,7 +238,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
             if (error) {
                 // 读取出错
             } else {
-                NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:data error:nil];
+                NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSMutableDictionary.class, NSDictionary.class]] fromData:data error:nil];
                 if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
                     UIAlertController* alert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"import_data_?"] message:[MirrorLanguage mirror_stringWithKey:@"import_data_?_message"] preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction* importAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"import"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {

@@ -43,7 +43,7 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
-    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:data error:nil];
+    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSMutableDictionary.class, NSDictionary.class]] fromData:data error:nil];
     if (![dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
         // 格式不对
         return;

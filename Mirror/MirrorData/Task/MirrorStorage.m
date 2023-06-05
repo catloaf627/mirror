@@ -319,7 +319,7 @@
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
-    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
+    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSMutableDictionary.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
     if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
         NSMutableArray<MirrorTaskModel *> *tasks = dataDict[TASKS];
         return tasks;
@@ -343,7 +343,7 @@
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
-    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
+    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSMutableDictionary.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
     if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
         NSMutableArray<MirrorRecordModel *> *records = dataDict[RECORDS];
         for (int i=0; i<records.count; i++) {
@@ -352,6 +352,30 @@
         return records;
     } else {
         return [NSMutableArray new];
+    }
+}
+
++ (void)saveMirrorHistory:(NSMutableDictionary<NSString *, NSMutableDictionary *> *)history
+{
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:[MirrorStorage retriveMirrorTasks], RECORDS:[MirrorStorage retriveMirrorRecords], HISTORY:history, SECONDS:[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *path = [paths objectAtIndex:0];
+    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
+    [data writeToFile:filePath atomically:YES];
+}
+
++ (NSMutableDictionary<NSString *, NSMutableDictionary *> *)retriveMirrorHistory
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *path = [paths objectAtIndex:0];
+    NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
+    NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
+    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSMutableDictionary.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
+    if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[HISTORY] isKindOfClass:[NSMutableDictionary class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+        NSMutableDictionary<NSString *, NSMutableDictionary *> *history = dataDict[HISTORY];
+        return history;
+    } else {
+        return [NSMutableDictionary new];
     }
 }
 
@@ -396,7 +420,7 @@
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
-    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
+    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSMutableDictionary.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
     if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
         NSNumber *secondFromGMT = dataDict[SECONDS];
         return secondFromGMT;
@@ -656,15 +680,15 @@
 - (NSMutableArray<MirrorRecordModel *> *)pressureTestRecords // 压力测试，让当前数据翻倍
 {
     NSInteger times = 500; // 想让数据量翻多少倍
-    NSInteger offset = 70; // 每个数据往前走多少天
+    NSInteger offset = 11; // 每个数据往前走多少周
     NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
     NSMutableArray<MirrorRecordModel *> *fakeRecords = [NSMutableArray new];
     BOOL shouldBreak = NO;
     for (int i=0; i<times; i++) {
         NSMutableArray<MirrorRecordModel *> *newRecords = [NSMutableArray new];;
         for (int j=0; j<records.count; j++) {
-            CGFloat startTime =records[j].startTime - offset*86400*i;
-            CGFloat endTime = records[j].endTime - offset*86400*i;
+            CGFloat startTime =records[j].startTime - offset*7*86400*i;
+            CGFloat endTime = records[j].endTime - offset*7*86400*i;
             if (startTime<0 || endTime<0) {
                 shouldBreak = YES;
                 break;

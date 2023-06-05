@@ -78,6 +78,7 @@ typedef NS_ENUM(NSInteger, SpanType) {
 // 数据
 #define TASKS @"tasks"
 #define RECORDS @"records"
+#define HISTORY @"history"
 #define SECONDS @"seconds"
 
 
