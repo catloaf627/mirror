@@ -44,16 +44,18 @@
     NSString *path = [paths objectAtIndex:0];
     NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSMutableDictionary.class, NSDictionary.class]] fromData:data error:nil];
-    if (![dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+    if (![dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![dataDict[HISTORY] isKindOfClass:[NSMutableDictionary class]] || ![dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
         // 格式不对
         return;
     }
     // data -> json
     NSMutableArray<MirrorTaskModel *> *tasks = dataDict[TASKS];
     NSMutableArray<MirrorRecordModel *> *records = dataDict[RECORDS];
+    NSMutableDictionary<NSString*, NSMutableDictionary*> *history = dataDict[HISTORY];
     NSNumber *secondsFromGMT = dataDict[SECONDS];
     NSMutableArray *jsontasks = [NSMutableArray new];
     NSMutableArray *jsonrecords = [NSMutableArray new];
+    NSMutableArray *jsonhistory = [NSMutableArray new];
     NSString *jsonSecondsFromGMT = [@"seconds from GMT: " stringByAppendingString:[secondsFromGMT stringValue]];
     for (int i=0; i<tasks.count; i++) {
         NSString *taskInfo = @"";
@@ -117,7 +119,26 @@
         [jsonrecords addObject:recordInfo];
     }
     
-    NSData *jsondata = [NSJSONSerialization dataWithJSONObject:@[jsontasks, jsonrecords, jsonSecondsFromGMT] options:NSJSONWritingPrettyPrinted error:nil];
+    for (id date in history.allKeys) {
+        NSString *historyInfo = @"";
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *components = [gregorian components:(NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate dateWithTimeIntervalSince1970:[date integerValue]]];
+        components.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:[secondsFromGMT integerValue]];
+        historyInfo = [[historyInfo stringByAppendingString:[@(components.year) stringValue]] stringByAppendingString:@"."];
+        historyInfo = [[historyInfo stringByAppendingString:[@(components.month) stringValue]] stringByAppendingString:@"."];
+        historyInfo = [[historyInfo stringByAppendingString:[@(components.day) stringValue]] stringByAppendingString:@"-"];
+        historyInfo = [[historyInfo stringByAppendingString:[@(components.hour) stringValue]] stringByAppendingString:@":"];
+        historyInfo = [[historyInfo stringByAppendingString:[@(components.minute) stringValue]] stringByAppendingString:@":"];
+        historyInfo = [historyInfo stringByAppendingString:[@(components.second) stringValue]];
+        for (id taskName in history[date].allKeys) {
+            historyInfo = [[historyInfo stringByAppendingString:@"["] stringByAppendingString:taskName];
+            historyInfo = [[historyInfo stringByAppendingString:@": "] stringByAppendingString:[history[date][taskName] stringValue]];
+            historyInfo = [historyInfo stringByAppendingString:@"], "];
+        }
+        [jsonhistory addObject:historyInfo];
+    }
+    
+    NSData *jsondata = [NSJSONSerialization dataWithJSONObject:@[jsontasks, jsonrecords, jsonhistory, jsonSecondsFromGMT] options:NSJSONWritingPrettyPrinted error:nil];
     // create url
     NSString *filename = @"mirror.json";
     NSURL *url = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:filename]];

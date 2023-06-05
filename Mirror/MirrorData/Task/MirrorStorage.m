@@ -11,6 +11,7 @@
 #import "MirrorTool.h"
 #import "MirrorMacro.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import "MirrorTimeText.h"
 
 @implementation MirrorStorage
 
@@ -539,8 +540,34 @@
 {
     BOOL printDetailsToDebug = NO; // debug用
     NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> *dict = [NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> new];
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage p_retriveMirrorRecordsWithoutHidden];
+    
+    NSMutableArray<MirrorRecordModel *> *allRecords = [NSMutableArray new];
+    /*--------------------HISTORY PART-------------------*/
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:[NSDate now]];
+    components.timeZone = [NSTimeZone systemTimeZone];
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    long todayLine = [[gregorian dateFromComponents:components] timeIntervalSince1970];
+    long historyLine = todayLine - kNumOfEditableDay * 86400;
+    if (startTime < historyLine) { // 需要从历史里找再循环，不需要从历史里找（records已经cover），直接跳过
+        NSMutableDictionary<NSString *, NSMutableDictionary *> *allHistory = [MirrorStorage retriveMirrorHistory];
+        for (id key in allHistory.allKeys) {
+            if ([key integerValue]<= endTime && [key integerValue]>= startTime) {
+                for (id taskName in allHistory[key].allKeys) {
+                    // 在history里，一天同task的record已经被合并了。不再每一条知道具体的开始结束时间，只知道这一天这个task的总时间。
+                    long taskTotalTime = [allHistory[key][taskName] integerValue];
+                    MirrorRecordModel *record = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:[key integerValue] endTime:[key integerValue]+taskTotalTime];
+                    [allRecords addObject:record];
+                }
+            }
+        }
+    }
+    /*--------------------HISTORY PART-------------------*/
+    [allRecords addObjectsFromArray:[MirrorStorage p_retriveMirrorRecordsWithoutHidden]];
 
+    /*------------------------筛选------------------------*/
     for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
         MirrorRecordModel *record = allRecords[recordIndex];
         if (printDetailsToDebug) {
@@ -583,8 +610,13 @@
     NSMutableArray<MirrorTaskModel *> *tasks = [MirrorStorage retriveMirrorTasks];
     for (int i=0 ;i<tasks.count; i++) { // 按照任务在mirror_task里的顺序
         MirrorTaskModel *task = tasks[i];
-        if ([dict.allKeys containsObject:task.taskName]) { // 这个task在时间段内有数据
+        if ([dict.allKeys containsObject:task.taskName] && !task.isHidden) { // 这个task在时间段内有数据
             MirrorDataModel *chartModel = [[MirrorDataModel alloc] initWithTask:task records:dict[task.taskName]];
+            NSMutableArray<MirrorRecordModel *> *games = dict[@"打游戏"];
+            for (int i=0; i<games.count; i++) {
+                MirrorRecordModel *game = games[i];
+                NSLog(@"start: %@, lasted: %@", [MirrorTimeText YYYYmmddWeekdayWithStart:game.startTime], @(game.endTime-game.startTime));
+            }
             [res addObject:chartModel];
         }
     }
@@ -606,7 +638,7 @@
             if ([oneDayDict.allKeys containsObject:taskName] && !allTasks[i].isHidden) {
                 // 在history里，一天同task的record已经被合并了。不再每一条知道具体的开始结束时间，只知道这一天这个task的总时间。
                 long taskTotalTime = [oneDayDict[taskName] integerValue];
-                MirrorRecordModel *onlyRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:0 endTime:taskTotalTime];
+                MirrorRecordModel *onlyRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:[key integerValue] endTime:[key integerValue] + taskTotalTime];
                 MirrorDataModel *oneDayOneTask = [[MirrorDataModel alloc] initWithTask:allTasks[i] records:[@[onlyRecord] mutableCopy]];
                 [oneday addObject:oneDayOneTask];
             }
