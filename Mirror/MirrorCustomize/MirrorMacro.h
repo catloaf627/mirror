@@ -81,6 +81,7 @@ typedef NS_ENUM(NSInteger, SpanType) {
 #define HISTORY @"history"
 #define SECONDS @"seconds"
 
+#define kNumOfEditableDay (77) // 最近xx天可以修改records
 
 @interface MirrorMacro : NSObject
 

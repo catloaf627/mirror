@@ -603,7 +603,7 @@
         NSMutableArray<MirrorDataModel *> *oneday = [NSMutableArray new];
         for (int i = 0; i<allTasks.count; i++) {
             NSString *taskName = allTasks[i].taskName;
-            if ([oneDayDict.allKeys containsObject:taskName]) {
+            if ([oneDayDict.allKeys containsObject:taskName] && !allTasks[i].isHidden) {
                 // 在history里，一天同task的record已经被合并了。不再每一条知道具体的开始结束时间，只知道这一天这个task的总时间。
                 long taskTotalTime = [oneDayDict[taskName] integerValue];
                 MirrorRecordModel *onlyRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:0 endTime:taskTotalTime];
