@@ -238,16 +238,16 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
             if (error) {
                 // 读取出错
             } else {
-                NSArray *triArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:data error:nil];
-                if (triArr.count == 3 && [triArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [triArr[1] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [triArr[2] isKindOfClass:[NSNumber class]]) {
+                NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:data error:nil];
+                if ([dataDict[@"tasks"] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[@"records"] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[@"seconds"] isKindOfClass:[NSNumber class]]) {
                     UIAlertController* alert = [UIAlertController alertControllerWithTitle:[MirrorLanguage mirror_stringWithKey:@"import_data_?"] message:[MirrorLanguage mirror_stringWithKey:@"import_data_?_message"] preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction* importAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"import"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                         // 解析
-                        NSMutableArray<MirrorTaskModel *> *tasks = triArr[0];
-                        NSMutableArray<MirrorRecordModel *> *records = triArr[1];
-                        NSNumber *secondsFromGMT = triArr[2];
+                        NSMutableArray<MirrorTaskModel *> *tasks = dataDict[@"tasks"];
+                        NSMutableArray<MirrorRecordModel *> *records = dataDict[@"records"];
+                        NSNumber *secondsFromGMT = dataDict[@"seconds"];
                         // 覆盖本地数据
-                        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@[tasks, records, secondsFromGMT] requiringSecureCoding:YES error:nil];
+                        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{@"tasks":tasks, @"records":records, @"seconds":secondsFromGMT} requiringSecureCoding:YES error:nil];
                         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
                         NSString *path = [paths objectAtIndex:0];
                         NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];

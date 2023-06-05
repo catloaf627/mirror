@@ -43,15 +43,15 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
-    NSArray *triArr = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class,NSArray.class]] fromData:data error:nil];
-    if (triArr.count != 3 || ![triArr[0] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![triArr[1] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![triArr[2] isKindOfClass:[NSNumber class]]) {
+    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:data error:nil];
+    if (![dataDict[@"tasks"] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![dataDict[@"records"] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![dataDict[@"seconds"] isKindOfClass:[NSNumber class]]) {
         // 格式不对
         return;
     }
     // data -> json
-    NSMutableArray<MirrorTaskModel *> *tasks = triArr[0];
-    NSMutableArray<MirrorRecordModel *> *records = triArr[1];
-    NSNumber *secondsFromGMT = triArr[2];
+    NSMutableArray<MirrorTaskModel *> *tasks = dataDict[@"tasks"];
+    NSMutableArray<MirrorRecordModel *> *records = dataDict[@"records"];
+    NSNumber *secondsFromGMT = dataDict[@"seconds"];
     NSMutableArray *jsontasks = [NSMutableArray new];
     NSMutableArray *jsonrecords = [NSMutableArray new];
     NSString *jsonSecondsFromGMT = [@"seconds from GMT: " stringByAppendingString:[secondsFromGMT stringValue]];
