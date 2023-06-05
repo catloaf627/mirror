@@ -44,14 +44,14 @@
     NSString *path = [paths objectAtIndex:0];
     NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:data error:nil];
-    if (![dataDict[@"tasks"] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![dataDict[@"records"] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![dataDict[@"seconds"] isKindOfClass:[NSNumber class]]) {
+    if (![dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
         // 格式不对
         return;
     }
     // data -> json
-    NSMutableArray<MirrorTaskModel *> *tasks = dataDict[@"tasks"];
-    NSMutableArray<MirrorRecordModel *> *records = dataDict[@"records"];
-    NSNumber *secondsFromGMT = dataDict[@"seconds"];
+    NSMutableArray<MirrorTaskModel *> *tasks = dataDict[TASKS];
+    NSMutableArray<MirrorRecordModel *> *records = dataDict[RECORDS];
+    NSNumber *secondsFromGMT = dataDict[SECONDS];
     NSMutableArray *jsontasks = [NSMutableArray new];
     NSMutableArray *jsonrecords = [NSMutableArray new];
     NSString *jsonSecondsFromGMT = [@"seconds from GMT: " stringByAppendingString:[secondsFromGMT stringValue]];

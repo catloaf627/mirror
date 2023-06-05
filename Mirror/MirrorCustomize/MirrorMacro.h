@@ -75,6 +75,12 @@ typedef NS_ENUM(NSInteger, SpanType) {
 #define MirrorPeriodDeleteNotification @"MirrorPeriodDeleteNotification"
 #define MirrorPeriodEditNotification @"MirrorPeriodEditNotification"
 
+// 数据
+#define TASKS @"tasks"
+#define RECORDS @"records"
+#define SECONDS @"seconds"
+
+
 @interface MirrorMacro : NSObject
 
 @end

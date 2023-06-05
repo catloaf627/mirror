@@ -306,7 +306,7 @@
 
 + (void)saveMirrorTasks:(NSMutableArray<MirrorTaskModel *> *)tasks // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{@"tasks":tasks, @"records":[MirrorStorage retriveMirrorRecords], @"seconds":[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:tasks, RECORDS:[MirrorStorage retriveMirrorRecords], SECONDS:[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
@@ -320,8 +320,8 @@
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
-    if ([dataDict[@"tasks"] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[@"records"] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[@"seconds"] isKindOfClass:[NSNumber class]]) {
-        NSMutableArray<MirrorTaskModel *> *tasks = dataDict[@"tasks"];
+    if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+        NSMutableArray<MirrorTaskModel *> *tasks = dataDict[TASKS];
         return tasks;
     } else {
         return [NSMutableArray new];
@@ -330,7 +330,7 @@
 
 + (void)saveMirrorRecords:(NSMutableArray<MirrorRecordModel *> *)records // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{@"tasks":[MirrorStorage retriveMirrorTasks], @"records":records, @"seconds":[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:[MirrorStorage retriveMirrorTasks], RECORDS:records, SECONDS:[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
@@ -344,8 +344,8 @@
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
-    if ([dataDict[@"tasks"] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[@"records"] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[@"seconds"] isKindOfClass:[NSNumber class]]) {
-        NSMutableArray<MirrorRecordModel *> *records = dataDict[@"records"];
+    if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+        NSMutableArray<MirrorRecordModel *> *records = dataDict[RECORDS];
         for (int i=0; i<records.count; i++) {
             records[i].originalIndex = i;
         }
@@ -382,7 +382,7 @@
         }
         [MirrorStorage saveMirrorRecords:records];
         // 改timezone
-        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{@"tasks":[MirrorStorage retriveMirrorTasks], @"records":[MirrorStorage retriveMirrorRecords], @"seconds":secondFromGMT} requiringSecureCoding:YES error:nil];
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:[MirrorStorage retriveMirrorTasks], RECORDS:[MirrorStorage retriveMirrorRecords], SECONDS:secondFromGMT} requiringSecureCoding:YES error:nil];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSString *path = [paths objectAtIndex:0];
         NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
@@ -397,8 +397,8 @@
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
-    if ([dataDict[@"tasks"] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[@"records"] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[@"seconds"] isKindOfClass:[NSNumber class]]) {
-        NSNumber *secondFromGMT = dataDict[@"seconds"];
+    if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+        NSNumber *secondFromGMT = dataDict[SECONDS];
         return secondFromGMT;
     } else {
         return @([NSTimeZone systemTimeZone].secondsFromGMT);
