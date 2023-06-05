@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
  {originalIndex, 🌸, 05:00, 06:00}, {originalIndex, 🌸, 08:00, 09:00}, {originalIndex, 🌸, 11:00, 12:00}...
  适用场景：某任务totaltime、某任务所有records页面
  */
-+ (NSMutableArray<MirrorRecordModel *> *)getAllTaskRecords:(NSString *)taskName;
++ (NSMutableArray<MirrorRecordModel *> *)getAllTaskRecords:(NSString *)taskname;
 
 /*
  取出今天【所有任务】所有records，按照时间顺序

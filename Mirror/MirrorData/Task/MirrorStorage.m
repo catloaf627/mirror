@@ -471,20 +471,28 @@
     return targetTask;
 }
 
-// 取出一个任务从古至今的所有records
-+ (NSMutableArray<MirrorRecordModel *> *)getAllTaskRecords:(NSString *)taskName
++ (NSMutableArray<MirrorRecordModel *> *)getAllTaskRecords:(NSString *)taskname
 {
+    NSMutableArray *allTasksRecord = [NSMutableArray new];
+    /*--------------------RECORDS PART-------------------*/
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
-    NSMutableArray<MirrorRecordModel *> *taskRecords = [NSMutableArray new];
-    for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
-        MirrorRecordModel *record = allRecords[recordIndex];
-        if ([record.taskName isEqualToString:taskName]) {
-            MirrorRecordModel *recordCopy = [[MirrorRecordModel alloc] initWithTitle:record.taskName startTime:record.startTime endTime:record.endTime];
-            recordCopy.originalIndex = record.originalIndex;
-            [taskRecords addObject:recordCopy];
+    for (int i=0; i<allRecords.count; i++) {
+        if ([allRecords[i].taskName isEqualToString:taskname]) {
+            [allTasksRecord addObject:allRecords[i]];
         }
     }
-    return taskRecords;
+    NSMutableDictionary<NSString *, NSMutableDictionary *> *allHistory = [MirrorStorage retriveMirrorHistory];
+    for (id date in allHistory.allKeys) {
+        for (NSString *task in allHistory[date].allKeys) {
+            if ([task isEqualToString:taskname]) {
+                // 在history里，一天同task的record已经被合并了。不再每一条知道具体的开始结束时间，只知道这一天这个task的总时间。
+                long taskTotalTime = [allHistory[date][task] integerValue];
+                MirrorRecordModel *record = [[MirrorRecordModel alloc] initWithTitle:taskname startTime:[date integerValue] endTime:[date integerValue]+taskTotalTime];
+                [allTasksRecord addObject:record];
+            }
+        }
+    }
+    return allTasksRecord;
 }
 
 + (NSMutableArray<MirrorRecordModel *> *)getTodayData
