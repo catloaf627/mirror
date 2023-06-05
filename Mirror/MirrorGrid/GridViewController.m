@@ -314,20 +314,23 @@ static CGFloat const kCellSpacing = 3;
 - (void)updateKeys
 {
     _keys = [NSMutableArray<NSString *> new];
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+   
+    // 最小时间为最早创建的task的创建时间
     NSInteger minTimestamp = NSIntegerMax;
-    NSInteger maxTimestamp = NSIntegerMin;
-    for (int i=0; i<allRecords.count; i++) {
-        MirrorRecordModel *record = allRecords[i];
-            NSInteger timestamp = record.startTime;
-            if (record.endTime != 0 && timestamp < minTimestamp) {
-                minTimestamp = timestamp;
-            }
-            if (record.endTime != 0 && timestamp > maxTimestamp) {
-                maxTimestamp = timestamp;
-            }
+    NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
+    for (int i=0; i<allTasks.count; i++) {
+        if (allTasks[i].createdTime < minTimestamp) {
+            minTimestamp = allTasks[i].createdTime;
+        }
     }
-    // 2023.5.1 3:00 到 2023.5.3 19:00 算三天
+    minTimestamp = 0; // gizmo
+    // 最大时间为records记录中最后一条记录的结束时间
+    NSInteger maxTimestamp = NSIntegerMin;
+    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
+    if (allRecords.count > 0) {
+        maxTimestamp = allRecords[allRecords.count-1].endTime;
+    }
+    
     if (maxTimestamp != NSIntegerMin && minTimestamp != NSIntegerMax) { // 有 有效数据
         if (maxTimestamp < [[NSDate now] timeIntervalSince1970]) {
             maxTimestamp = [[NSDate now] timeIntervalSince1970]; // 如果现存最晚任务也在今天之前，设置最大时间为今天。

@@ -306,7 +306,7 @@
 
 + (void)saveMirrorTasks:(NSMutableArray<MirrorTaskModel *> *)tasks // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:tasks, RECORDS:[MirrorStorage retriveMirrorRecords], SECONDS:[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:tasks, RECORDS:[MirrorStorage retriveMirrorRecords], HISTORY:[MirrorStorage retriveMirrorHistory], SECONDS:[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
@@ -330,7 +330,7 @@
 
 + (void)saveMirrorRecords:(NSMutableArray<MirrorRecordModel *> *)records // 归档
 {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:[MirrorStorage retriveMirrorTasks], RECORDS:records, SECONDS:[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:[MirrorStorage retriveMirrorTasks], RECORDS:records, HISTORY:[MirrorStorage retriveMirrorHistory], SECONDS:[MirrorStorage retriveSecondsFromGMT]} requiringSecureCoding:YES error:nil];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
@@ -406,7 +406,7 @@
         }
         [MirrorStorage saveMirrorRecords:records];
         // 改timezone
-        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:[MirrorStorage retriveMirrorTasks], RECORDS:[MirrorStorage retriveMirrorRecords], SECONDS:secondFromGMT} requiringSecureCoding:YES error:nil];
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:@{TASKS:[MirrorStorage retriveMirrorTasks], RECORDS:[MirrorStorage retriveMirrorRecords], HISTORY:[MirrorStorage retriveMirrorHistory], SECONDS:secondFromGMT} requiringSecureCoding:YES error:nil];
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSString *path = [paths objectAtIndex:0];
         NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
@@ -594,8 +594,27 @@
 + (NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *)getGridData
 {
     NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData = [NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> new];
-    
     NSMutableArray<MirrorTaskModel *> *allTasks = [MirrorStorage retriveMirrorTasks];
+    
+    /*--------------------HISTORY PART-------------------*/
+    NSMutableDictionary<NSString *, NSMutableDictionary *> *allHistory = [MirrorStorage retriveMirrorHistory];
+    for (id key in allHistory.allKeys) {
+        NSMutableDictionary *oneDayDict = allHistory[key];
+        NSMutableArray<MirrorDataModel *> *oneday = [NSMutableArray new];
+        for (int i = 0; i<allTasks.count; i++) {
+            NSString *taskName = allTasks[i].taskName;
+            if ([oneDayDict.allKeys containsObject:taskName]) {
+                // 在history里，一天同task的record已经被合并了。不再每一条知道具体的开始结束时间，只知道这一天这个task的总时间。
+                long taskTotalTime = [oneDayDict[taskName] integerValue];
+                MirrorRecordModel *onlyRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:0 endTime:taskTotalTime];
+                MirrorDataModel *oneDayOneTask = [[MirrorDataModel alloc] initWithTask:allTasks[i] records:[@[onlyRecord] mutableCopy]];
+                [oneday addObject:oneDayOneTask];
+            }
+        }
+        [gridData setValue:oneday forKey:key];
+    }
+    
+    /*--------------------RECORDS PART-------------------*/
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage p_retriveMirrorRecordsWithoutHidden];
      
     if (allRecords.count == 0) return gridData;
