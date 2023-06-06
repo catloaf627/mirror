@@ -43,7 +43,7 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *path = [paths objectAtIndex:0];
     NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
-    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:data error:nil];
+    NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class, NSString.class, NSNumber.class]] fromData:data error:nil];
     BOOL taskIsValid = [dataDict.allKeys containsObject:TASKS] && [dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]];
     BOOL recordIsValid = [dataDict.allKeys containsObject:RECORDS] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]];
     BOOL secondIsValid = [dataDict.allKeys containsObject:SECONDS] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]];
