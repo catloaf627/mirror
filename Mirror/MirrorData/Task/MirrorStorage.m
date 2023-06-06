@@ -656,15 +656,15 @@
 + (NSMutableArray<MirrorRecordModel *> *)pressureTestRecords // 压力测试，让当前数据翻倍
 {
     NSInteger times = 500; // 想让数据量翻多少倍
-    NSInteger offset = 70; // 每个数据往前走多少天
+    NSInteger offset = 11; // 每个数据往前走多少周
     NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
     NSMutableArray<MirrorRecordModel *> *fakeRecords = [NSMutableArray new];
     BOOL shouldBreak = NO;
     for (int i=0; i<times; i++) {
         NSMutableArray<MirrorRecordModel *> *newRecords = [NSMutableArray new];;
         for (int j=0; j<records.count; j++) {
-            CGFloat startTime =records[j].startTime - offset*86400*i;
-            CGFloat endTime = records[j].endTime - offset*86400*i;
+            CGFloat startTime =records[j].startTime - offset*7*86400*i;
+            CGFloat endTime = records[j].endTime - offset*7*86400*i;
             if (startTime<0 || endTime<0) {
                 shouldBreak = YES;
                 break;
