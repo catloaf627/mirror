@@ -320,7 +320,10 @@
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
-    if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+    BOOL taskIsValid = [dataDict.allKeys containsObject:TASKS] && [dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]];
+    BOOL recordIsValid = [dataDict.allKeys containsObject:RECORDS] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]];
+    BOOL secondIsValid = [dataDict.allKeys containsObject:SECONDS] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]];
+    if (taskIsValid && recordIsValid && secondIsValid) {
         NSMutableArray<MirrorTaskModel *> *tasks = dataDict[TASKS];
         return tasks;
     } else {
@@ -344,7 +347,10 @@
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
-    if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+    BOOL taskIsValid = [dataDict.allKeys containsObject:TASKS] && [dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]];
+    BOOL recordIsValid = [dataDict.allKeys containsObject:RECORDS] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]];
+    BOOL secondIsValid = [dataDict.allKeys containsObject:SECONDS] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]];
+    if (taskIsValid && recordIsValid && secondIsValid) {
         NSMutableArray<MirrorRecordModel *> *records = dataDict[RECORDS];
         for (int i=0; i<records.count; i++) {
             records[i].originalIndex = i;
@@ -397,7 +403,10 @@
     NSString *filePath = [path stringByAppendingPathComponent:@"mirror.data"];
     NSData *storedEncodedObject = [NSData dataWithContentsOfFile:filePath options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:storedEncodedObject error:nil];
-    if ([dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+    BOOL taskIsValid = [dataDict.allKeys containsObject:TASKS] && [dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]];
+    BOOL recordIsValid = [dataDict.allKeys containsObject:RECORDS] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]];
+    BOOL secondIsValid = [dataDict.allKeys containsObject:SECONDS] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]];
+    if (taskIsValid && recordIsValid && secondIsValid) {
         NSNumber *secondFromGMT = dataDict[SECONDS];
         return secondFromGMT;
     } else {

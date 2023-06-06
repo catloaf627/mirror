@@ -44,7 +44,10 @@
     NSString *path = [paths objectAtIndex:0];
     NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:@"mirror.data"] options:0 error:nil];
     NSDictionary *dataDict = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[MirrorTaskModel.class, MirrorRecordModel.class, NSMutableArray.class, NSArray.class, NSDictionary.class]] fromData:data error:nil];
-    if (![dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]] || ![dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]] || ![dataDict[SECONDS] isKindOfClass:[NSNumber class]]) {
+    BOOL taskIsValid = [dataDict.allKeys containsObject:TASKS] && [dataDict[TASKS] isKindOfClass:[NSMutableArray<MirrorTaskModel *> class]];
+    BOOL recordIsValid = [dataDict.allKeys containsObject:RECORDS] && [dataDict[RECORDS] isKindOfClass:[NSMutableArray<MirrorRecordModel *> class]];
+    BOOL secondIsValid = [dataDict.allKeys containsObject:SECONDS] && [dataDict[SECONDS] isKindOfClass:[NSNumber class]];
+    if (!taskIsValid || !recordIsValid || !secondIsValid) {
         // 格式不对
         return;
     }
@@ -57,7 +60,7 @@
     NSString *jsonSecondsFromGMT = [@"seconds from GMT: " stringByAppendingString:[secondsFromGMT stringValue]];
     for (int i=0; i<tasks.count; i++) {
         NSString *taskInfo = @"";
-        taskInfo = [[taskInfo stringByAppendingString:@"NO."] stringByAppendingString:[@(i)stringValue]] ;
+        taskInfo = [[taskInfo stringByAppendingString:@"TASK."] stringByAppendingString:[@(i)stringValue]] ;
         taskInfo = [[taskInfo stringByAppendingString:@", taskName = "] stringByAppendingString:tasks[i].taskName];
         taskInfo = [[taskInfo stringByAppendingString:@", color = "] stringByAppendingString:[@(tasks[i].color) stringValue]];
         taskInfo = [[taskInfo stringByAppendingString:@", isArchived = "] stringByAppendingString:[@(tasks[i].isArchived) stringValue]];
@@ -81,7 +84,7 @@
     }
     for (int i=0; i<records.count; i++) {
         NSString *recordInfo = @"";
-        recordInfo = [[recordInfo stringByAppendingString:@"NO."] stringByAppendingString:[@(i)stringValue]];
+        recordInfo = [[recordInfo stringByAppendingString:@"RECORD."] stringByAppendingString:[@(i)stringValue]];
         recordInfo = [[recordInfo stringByAppendingString:@", taskName = "] stringByAppendingString:records[i].taskName];
         recordInfo = [[recordInfo stringByAppendingString:@", ["] stringByAppendingString:[@(records[i].startTime) stringValue]];
         recordInfo = [recordInfo stringByAppendingString:@", "];
