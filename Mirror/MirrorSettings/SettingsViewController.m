@@ -233,8 +233,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
             NSString *fileName = [newURL lastPathComponent];
             NSError *error = nil;
             NSData *data = [NSData dataWithContentsOfURL:newURL options:NSDataReadingMappedIfSafe error:&error];
-            NSLog(@"fileName : %@", fileName);
-            NSLog(@"fileData.bytes : %dKB \n bytes : %ldKB",1024*1024*10,data.length);
             if (error) {
                 // 读取出错
             } else {

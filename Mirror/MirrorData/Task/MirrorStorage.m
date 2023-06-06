@@ -483,7 +483,7 @@
     long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     long endTime = startTime + 86400;
     
-    BOOL printDetailsToDebug = YES; // debug用
+    BOOL printDetailsToDebug = NO; // debug用
     NSMutableArray<MirrorRecordModel *> *targetRecords = [NSMutableArray<MirrorRecordModel *> new];
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
 
