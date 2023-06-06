@@ -483,11 +483,11 @@
     long startTime = [[gregorian dateFromComponents:components] timeIntervalSince1970];
     long endTime = startTime + 86400;
     
-    BOOL printDetailsToDebug = NO; // debug用
+    BOOL printDetailsToDebug = YES; // debug用
     NSMutableArray<MirrorRecordModel *> *targetRecords = [NSMutableArray<MirrorRecordModel *> new];
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];
 
-    for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
+    for (int recordIndex=(int)allRecords.count-1; recordIndex>=0; recordIndex--) {
         MirrorRecordModel *record = allRecords[recordIndex];
         if (printDetailsToDebug) {
             NSLog(@"period数据：[%@,%@]，选取的时间段：[%@,%@]", [MirrorTool timeFromTimestamp:record.startTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:record.endTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:startTime printTimeStamp:NO], [MirrorTool timeFromTimestamp:endTime printTimeStamp:NO]);
@@ -499,6 +499,7 @@
         // r.end < starttime
         else if (record.endTime < startTime) {
             if (printDetailsToDebug) NSLog(@"✖️完整地发生在start time之前，不管");
+            break; // 正常情况下倒序找到today以后，发现record.endTime已经早于今日零点，这时候break就可以了，可以少循环一轮
         }
         // starttime<=r.start, r.end<=endtime
         else if (startTime <= record.startTime && record.endTime <= endTime) {
@@ -516,7 +517,7 @@
         // starttime<=r.start<=endtime, endtime<=r.end ✔️跨越了end time，取前半段【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
         // r.start<=starttime && endtime<=r.end ✖️囊括了整个starttime到endtime【省略，代码里不会存在records跨越start/end的情况（start/end必是某日的零点）】
     }
-    return targetRecords;
+    return [[[targetRecords reverseObjectEnumerator] allObjects] mutableCopy]; // 倒序
 }
 
 // 取出从startTime到endTime的所有条record，并按照MirrorDataModel的方式存储
