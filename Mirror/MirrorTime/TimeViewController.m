@@ -91,6 +91,7 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)restartVC
 {
+    if (!_isLoaded) return;
     // update navibar
     [[MirrorTabsManager sharedInstance] updateTimeTabItemWithTabController:self.tabBarController];
     if (self.tabBarController.selectedIndex == 0) {

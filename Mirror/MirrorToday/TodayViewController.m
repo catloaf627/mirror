@@ -84,6 +84,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 
 - (void)restartVC
 {
+    if (!_isLoaded) return;
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
     self.emptyHintLabel = nil;

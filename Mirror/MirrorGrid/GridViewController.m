@@ -107,6 +107,7 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)restartVC
 {
+    if (!_isLoaded) return;
     // 将vc.view里的所有subviews全部置为nil
     self.typeButton = nil;
     self.leftHint = nil;

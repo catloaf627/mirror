@@ -98,6 +98,7 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)restartVC
 {
+    if (!_isLoaded) return;
     // 将vc.view里的所有subviews全部置为nil
     self.typeSwitch = nil;
     self.interactionView = nil;
