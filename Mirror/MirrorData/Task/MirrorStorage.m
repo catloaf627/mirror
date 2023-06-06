@@ -653,7 +653,7 @@
     return dateWithoutSeconds;
 }
 
-- (NSMutableArray<MirrorRecordModel *> *)pressureTestRecords // 压力测试，让当前数据翻倍
++ (NSMutableArray<MirrorRecordModel *> *)pressureTestRecords // 压力测试，让当前数据翻倍
 {
     NSInteger times = 500; // 想让数据量翻多少倍
     NSInteger offset = 70; // 每个数据往前走多少天
@@ -677,6 +677,35 @@
         NSLog(@"循环到了第%d轮, 已经生成了%lu条数据", i, (unsigned long)fakeRecords.count);
     }
     return fakeRecords;
+}
+
++ (void)anotherDataStructureTest // 一种以某天0点时间为key的数据存储方式（字典存储），还没用在app里
+{
+    NSMutableDictionary<NSString *, NSMutableDictionary *> *data = [NSMutableDictionary new];
+
+    NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];
+
+    for (int i=0; i<records.count; i++) {
+        NSString *onedayKey = [MirrorStorage keyOfTime:records[i].startTime];
+        if ([data.allKeys containsObject:onedayKey]) { //存过这天的records
+            NSMutableDictionary *onedayValue = data[onedayKey];
+            NSString *tasknameKey = records[i].taskName;
+            if ([onedayValue.allKeys containsObject:tasknameKey]) { // 存过这天这个任务的时间
+                NSInteger value = [data[onedayKey][tasknameKey] integerValue];
+                value = value + (records[i].endTime - records[i].startTime);
+                [onedayValue setValue:@(value) forKey:tasknameKey];
+                [data setValue:onedayValue forKey:onedayKey];
+            } else { // 没存过今天这个任务的时间
+                [onedayValue setValue:@(records[i].endTime - records[i].startTime) forKey:tasknameKey];
+                [data setValue:onedayValue forKey:onedayKey];
+            }
+        } else { // 没存过今天的records
+            NSMutableDictionary *onedayValue = [NSMutableDictionary new];;
+            [onedayValue setValue:@(records[i].endTime - records[i].startTime) forKey:records[i].taskName];
+            [data setValue:onedayValue forKey:onedayKey];
+        }
+    }
+    NSLog(@"%@", data);
 }
 
 @end
