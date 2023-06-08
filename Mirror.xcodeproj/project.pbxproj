@@ -832,6 +832,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rachel.wangyuqing.Mirror;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -851,6 +852,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rachel.wangyuqing.Mirror;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
