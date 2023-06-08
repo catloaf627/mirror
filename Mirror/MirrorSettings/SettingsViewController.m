@@ -230,7 +230,6 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
         
         [fileCoordinator coordinateReadingItemAtURL:urls.firstObject options:0 error:&error byAccessor:^(NSURL *newURL) {
             // 读取文件
-            NSString *fileName = [newURL lastPathComponent];
             NSError *error = nil;
             NSData *data = [NSData dataWithContentsOfURL:newURL options:NSDataReadingMappedIfSafe error:&error];
             if (error) {
