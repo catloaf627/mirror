@@ -431,7 +431,7 @@ typedef NS_ENUM(NSInteger, MirrorSettingType) {
 {
     if (!_versionLabel) {
         _versionLabel = [UILabel new];
-        _versionLabel.text = @"Version.0";
+        _versionLabel.text = @"Version 1.0";
         _versionLabel.textColor = [UIColor mirrorColorNamed:MirrorColorTypeTextHint];
         _versionLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
         _versionLabel.textAlignment = NSTextAlignmentCenter;
