@@ -16,16 +16,6 @@
 
 #pragma mark - Time VC需要的信息
 
-+ (instancetype)sharedInstance
-{
-    static dispatch_once_t onceToken;
-    static MirrorStorage *instance = nil;
-    dispatch_once(&onceToken, ^{
-        instance = [[MirrorStorage alloc]init];
-    });
-    return instance;
-}
-
 + (NSString *)isGoingOnTask
 {
     NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage retriveMirrorRecords];

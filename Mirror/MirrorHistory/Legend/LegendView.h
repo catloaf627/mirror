@@ -13,13 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol PushAllRecordsDelegate <NSObject> // push viewcontroller用
-
-@end
-
 @interface LegendView : UIView <HistogramDelegate, PiechartDelegate>
 
-@property (nonatomic, weak) UIViewController<PushAllRecordsDelegate> *delegate;
 - (instancetype)initWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (void)updateWithData:(NSMutableArray<MirrorDataModel *> *)data;
 - (CGFloat)legendViewHeight;
