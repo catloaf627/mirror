@@ -23,7 +23,7 @@
 
 - (void)config
 {
-    NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX];
+    NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX shouldHideHidden:NO];
     long count = 0;
     for (int i=0; i<chartModels.count; i++) {
         count = count + [MirrorTool getTotalTimeOfPeriods:chartModels[i].records];
@@ -40,7 +40,7 @@
 
 - (void)configWithTaskname:(NSString *)taskname
 {
-    NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX];
+    NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX shouldHideHidden:NO];
     MirrorDataModel *chartModel = nil;
     for (int i=0; i<chartModels.count; i++) {
         if ([chartModels[i].taskModel.taskName isEqualToString:taskname]) {

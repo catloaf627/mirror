@@ -521,11 +521,11 @@
 }
 
 // 取出从startTime到endTime的所有条record，并按照MirrorDataModel的方式存储
-+ (NSMutableArray<MirrorDataModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime
++ (NSMutableArray<MirrorDataModel *> *)getAllRecordsInTaskOrderWithStart:(long)startTime end:(long)endTime shouldHideHidden:(BOOL)shouldHideHidden
 {
     BOOL printDetailsToDebug = NO; // debug用
     NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> *dict = [NSMutableDictionary<NSString *, NSMutableArray<MirrorRecordModel *> *> new];
-    NSMutableArray<MirrorRecordModel *> *allRecords = [MirrorStorage p_retriveMirrorRecordsWithoutHidden];
+    NSMutableArray<MirrorRecordModel *> *allRecords = shouldHideHidden ? [MirrorStorage p_retriveMirrorRecordsWithoutHidden] : [MirrorStorage retriveMirrorRecords];
 
     for (int recordIndex=0; recordIndex<allRecords.count; recordIndex++) {
         MirrorRecordModel *record = allRecords[recordIndex];
