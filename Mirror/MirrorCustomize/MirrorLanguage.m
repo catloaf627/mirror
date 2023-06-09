@@ -74,6 +74,7 @@
     [mirrorDict setValue:@[@"Long press to reorder tasks" , @"长按拖动可以编辑顺序"] forKey:@"hint0"];
     [mirrorDict setValue:@[@"Tap task name to edit" , @"轻点任务名可编辑"] forKey:@"hint1"];
     [mirrorDict setValue:@[@"Archived tasks will not be displayed on the main page" , @"已经归档的任务将不会展示在主页面"] forKey:@"hint2"];
+    [mirrorDict setValue:@[@"Too many data may cause app freeze" , @"数据记录过多可能导致软件卡顿"] forKey:@"hint3"];
     [mirrorDict setValue:@[@"Delete this task? ", @"确定删除这个任务？"] forKey:@"delete_task_?"];
     [mirrorDict setValue:@[@"Created at " , @"创建于 "] forKey:@"created_at"];
     [mirrorDict setValue:@[@"Edit tasks" , @"编辑任务"] forKey:@"edit_tasks"];

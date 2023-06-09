@@ -21,15 +21,20 @@
 
 @implementation TaskTotalHeader
 
-- (void)config
+- (void)config // All records的header
 {
-    NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX shouldHideHidden:NO];
-    long count = 0;
-    for (int i=0; i<chartModels.count; i++) {
-        count = count + [MirrorTool getTotalTimeOfPeriods:chartModels[i].records];
+    if ([MirrorStorage retriveMirrorRecords].count >= 5000) {
+        self.countLabel.text = [MirrorLanguage mirror_stringWithKey:@"hint3"];
+    } else {
+        NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX shouldHideHidden:NO];
+        long count = 0;
+        for (int i=0; i<chartModels.count; i++) {
+            count = count + [MirrorTool getTotalTimeOfPeriods:chartModels[i].records];
+        }
+        self.countLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:count]];
     }
+
     [self addSubview:self.countLabel];
-    self.countLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:count]];
     [self.countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(20);
         make.right.offset(-20);
@@ -38,19 +43,24 @@
     }];
 }
 
-- (void)configWithTaskname:(NSString *)taskname
+- (void)configWithTaskname:(NSString *)taskname // 某个task的header
 {
-    NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX shouldHideHidden:NO];
-    MirrorDataModel *chartModel = nil;
-    for (int i=0; i<chartModels.count; i++) {
-        if ([chartModels[i].taskModel.taskName isEqualToString:taskname]) {
-            chartModel = chartModels[i];
-            break;
+    if ([MirrorStorage retriveMirrorRecords].count >= 5000) {
+        self.countLabel.text = [MirrorLanguage mirror_stringWithKey:@"hint3"];
+    } else {
+        NSMutableArray<MirrorDataModel *> *chartModels = [MirrorStorage getAllRecordsInTaskOrderWithStart:0 end:LONG_MAX shouldHideHidden:NO];
+        MirrorDataModel *chartModel = nil;
+        for (int i=0; i<chartModels.count; i++) {
+            if ([chartModels[i].taskModel.taskName isEqualToString:taskname]) {
+                chartModel = chartModels[i];
+                break;
+            }
         }
+        long count = [MirrorTool getTotalTimeOfPeriods:chartModel.records];
+        self.countLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:count]];
     }
-    long count = [MirrorTool getTotalTimeOfPeriods:chartModel.records];
+
     [self addSubview:self.countLabel];
-    self.countLabel.text = [[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:count]];
     [self.countLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.offset(20);
         make.right.offset(-20);
