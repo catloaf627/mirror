@@ -18,6 +18,8 @@ typedef NS_ENUM(NSInteger, TaskNameExistsType) {
 
 @interface MirrorStorage : NSObject
 
++ (instancetype)sharedInstance;
+
 // TimeVC用
 
 + (NSString *)isGoingOnTask; // 返回为空意味着没有正在进行的task
