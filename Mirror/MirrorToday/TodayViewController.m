@@ -17,9 +17,7 @@
 #import "MirrorLanguage.h"
 #import "TodayPeriodCollectionViewCell.h"
 #import "TodayTotalHeader.h"
-#import "TaskRecordsViewController.h"
 #import "MirrorStorage.h"
-#import "AllRecordsViewController.h"
 
 static CGFloat const kLeftRightSpacing = 20;
 static CGFloat const kCellSpacing = 20; // cell之间的上下间距
@@ -30,7 +28,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 // Navibar
 @property (nonatomic, strong) UIButton *settingsButton;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
-@property (nonatomic, strong) UIButton *allRecordsButton;
 // Data source
 @property (nonatomic, strong) NSMutableArray<MirrorRecordModel *> *todayData;
 // UI
@@ -79,7 +76,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.allRecordsButton];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
 }
 
 - (void)restartVC
@@ -94,7 +91,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新navibar
     if (self.tabBarController.selectedIndex == 1) {
-        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.allRecordsButton];
+        [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:nil];
     }
     [self p_setupUI];
 }
@@ -152,21 +149,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     settingsVC.modalPresentationStyle = UIModalPresentationCustom;
     [self presentViewController:settingsVC animated:YES completion:nil];
 }
-
-- (void)goToAllRecords
-{
-    [self.navigationController pushViewController:[AllRecordsViewController new] animated:YES];
-}
-
 #pragma mark - Collection view delegate
 
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    AllRecordsViewController *allRecordsVC = [AllRecordsViewController new];
-    allRecordsVC.scrollToIndex = @(self.todayData[indexPath.item].originalIndex);
-    [self.navigationController pushViewController:allRecordsVC animated:YES];
-}
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -208,17 +192,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 }
 
 #pragma mark - Getters
-
-- (UIButton *)allRecordsButton
-{
-    if (!_allRecordsButton) {
-        _allRecordsButton = [UIButton new];
-        UIImage *iconImage = [[UIImage systemImageNamed:@"doc.plaintext"]  imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-        [_allRecordsButton setImage:[iconImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-        [_allRecordsButton addTarget:self action:@selector(goToAllRecords) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _allRecordsButton;
-}
 
 - (UICollectionView *)collectionView
 {

@@ -13,8 +13,6 @@
 #import <Masonry/Masonry.h>
 #import "MirrorSettings.h"
 #import "MirrorLanguage.h"
-#import "TaskRecordsViewController.h"
-#import "AllRecordsViewController.h"
 
 static CGFloat const kCellSpacing = 14; // histogram cell左右的距离
 

@@ -10,7 +10,7 @@
 #import "MirrorSettings.h"
 #import "MirrorStorage.h"
 #import "LegendCollectionViewCell.h"
-#import "AllRecordsViewController.h"
+#import "SpecificRecordsViewController.h"
 
 static CGFloat const kCellHeight = 30; // 一个legend的高度
 static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
@@ -86,7 +86,10 @@ static NSInteger const kNumOfCellPerRow = 3; // 一行固定放三个cell
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if (self.data.count > indexPath.item && self.data[indexPath.item].records.count > 0) {
+        SpecificRecordsViewController *recordsVC = [[SpecificRecordsViewController alloc] initWithRecords:self.data[indexPath.item].records];
+        [self.delegate.navigationController pushViewController:recordsVC animated:YES];
+    }
 }
 
 #pragma mark - HistogramDelegate

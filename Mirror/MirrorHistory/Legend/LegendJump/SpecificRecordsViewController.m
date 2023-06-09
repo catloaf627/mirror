@@ -1,0 +1,141 @@
+//
+//  SpecificRecordsViewController.m
+//  Mirror
+//
+//  Created by Yuqing Wang on 2023/6/9.
+//
+
+#import "SpecificRecordsViewController.h"
+#import <Masonry/Masonry.h>
+#import "UIColor+MirrorColor.h"
+#import "MirrorMacro.h"
+#import "TaskPeriodCollectionViewCell.h"
+#import "MirrorStorage.h"
+#import "MirrorLanguage.h"
+#import "MirrorNaviManager.h"
+
+static CGFloat const kCellSpacing = 20; // cell之间的上下间距
+
+@interface SpecificRecordsViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, VCForPeriodCellProtocol>
+
+@property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) NSMutableArray<MirrorRecordModel *> *records;
+@end
+
+@implementation SpecificRecordsViewController
+
+- (instancetype)initWithRecords:(NSMutableArray<MirrorRecordModel *> *)records
+{
+    self = [super init];
+    if (self) {
+        self.records = records;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)reloadData
+{
+    [self.collectionView reloadData];
+}
+
+- (void)restartVC
+{
+    // update navibar
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"all_records"] leftButton:nil rightButton:nil];
+    // 将vc.view里的所有subviews全部置为nil
+    self.collectionView = nil;
+    // 将vc.view里的所有subviews从父view上移除
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self  p_setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"all_records"] leftButton:nil rightButton:nil];
+}
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self p_setupUI];
+}
+
+- (void)p_setupUI
+{
+    // collection view
+    self.view.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+    [self.view addSubview:self.collectionView];
+    [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kCellSpacing);
+        make.right.mas_equalTo(self.view).offset(-kCellSpacing);
+        make.top.mas_equalTo(self.view).offset(self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height);
+        make.bottom.mas_equalTo(self.view);
+    }];
+}
+
+#pragma mark - UICollectionViewDataSource
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return self.records.count;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    TaskPeriodCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier] forIndexPath:indexPath];
+    MirrorRecordModel *record = self.records[indexPath.item];
+    [cell configWithTaskname:record.taskName periodIndex:record.originalIndex type:BottomRightTypeName];
+    cell.delegate = self;
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(kScreenWidth - 2*kCellSpacing, 80);
+}
+
+#pragma mark - Getters
+
+- (UICollectionView *)collectionView
+{
+    if (!_collectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        layout.minimumLineSpacing = 10;
+        _collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.backgroundColor = self.view.backgroundColor;
+        
+        [_collectionView registerClass:[TaskPeriodCollectionViewCell class] forCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier]];
+    }
+    return _collectionView;
+}
+
+- (NSMutableArray<MirrorRecordModel *> *)records
+{
+    if (!_records) {
+        _records = [NSMutableArray new];
+    }
+    return _records;
+}
+
+
+@end

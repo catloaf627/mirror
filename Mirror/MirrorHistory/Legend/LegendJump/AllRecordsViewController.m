@@ -5,13 +5,14 @@
 //  Created by Yuqing Wang on 2023/5/5.
 //
 
+/* DEBUG 专用VC*/
+
 #import "AllRecordsViewController.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorMacro.h"
 #import "TaskPeriodCollectionViewCell.h"
 #import "MirrorStorage.h"
-#import "TaskTotalHeader.h"
 #import "MirrorLanguage.h"
 #import "MirrorNaviManager.h"
 
@@ -141,23 +142,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return CGSizeMake(kScreenWidth - 2*kCellSpacing, 80);
 }
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionReusableView *header;
-    if (kind == UICollectionElementKindSectionHeader) {
-        header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header" forIndexPath:indexPath];
-        TaskTotalHeader* taskHeader = (TaskTotalHeader *)header;
-        [taskHeader config];
-        
-    }
-    return header;
-}
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
-{
-    return CGSizeMake(kScreenWidth, 40);
-}
-
 #pragma mark - Getters
 
 - (UICollectionView *)collectionView
@@ -171,7 +155,6 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
         _collectionView.backgroundColor = self.view.backgroundColor;
         
         [_collectionView registerClass:[TaskPeriodCollectionViewCell class] forCellWithReuseIdentifier:[TaskPeriodCollectionViewCell identifier]];
-        [_collectionView registerClass:[TaskTotalHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     }
     return _collectionView;
 }

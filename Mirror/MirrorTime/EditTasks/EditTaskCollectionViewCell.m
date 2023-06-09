@@ -16,7 +16,6 @@
 #import <Masonry/Masonry.h>
 #import "MirrorTimeText.h"
 #import "MirrorSettings.h"
-#import "TaskRecordsViewController.h"
 
 static CGFloat const kPadding = 20;
 
@@ -100,7 +99,7 @@ static CGFloat const kPadding = 20;
     
     [self addSubview:self.totalTimeButton];
     long totalTime = [MirrorTool getTotalTimeOfPeriods:[MirrorStorage getAllTaskRecords:self.taskName]];
-    [self.totalTimeButton setTitle:[[[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totalTime]] stringByAppendingString:@">"]forState:UIControlStateNormal];
+    [self.totalTimeButton setTitle:[[MirrorLanguage mirror_stringWithKey:@"total"] stringByAppendingString:[MirrorTimeText XdXhXmXsFull:totalTime]]forState:UIControlStateNormal];
     [self.totalTimeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(10);
         make.right.offset(-kPadding);
@@ -166,11 +165,6 @@ static CGFloat const kPadding = 20;
     [deleteButtonAlert addAction:cancelAction];
     [deleteButtonAlert addAction:deleteAction];
     [self.delegate presentViewController:deleteButtonAlert animated:YES completion:nil];
-}
-
-- (void)toToTaskPeriods
-{
-    [self.delegate.navigationController pushViewController:[[TaskRecordsViewController alloc] initWithTaskname:self.taskName] animated:YES];
 }
 
 #pragma mark - Getters
@@ -247,7 +241,6 @@ static CGFloat const kPadding = 20;
         _totalTimeButton.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:17];
         [_totalTimeButton setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeText] forState:UIControlStateNormal];
         _totalTimeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-        [_totalTimeButton addTarget:self action:@selector(toToTaskPeriods) forControlEvents:UIControlEventTouchUpInside];
     }
     return _totalTimeButton;
 }
