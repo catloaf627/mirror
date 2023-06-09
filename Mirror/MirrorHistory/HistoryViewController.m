@@ -98,6 +98,8 @@ static CGFloat const kLeftRightSpacing = 20;
 
 - (void)restartVC
 {
+    // 更新tabbar
+    [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
     if (!_isLoaded) return;
     // 将vc.view里的所有subviews全部置为nil
     self.typeSwitch = nil;
@@ -110,8 +112,7 @@ static CGFloat const kLeftRightSpacing = 20;
     self.piechartView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    // 更新tabbar 和 navibar
-    [[MirrorTabsManager sharedInstance] updateHistoryTabItemWithTabController:self.tabBarController];
+    // 更新navibar
     if (self.tabBarController.selectedIndex == 3) {
         [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:@"" leftButton:self.settingsButton rightButton:self.typeButton];
     }
