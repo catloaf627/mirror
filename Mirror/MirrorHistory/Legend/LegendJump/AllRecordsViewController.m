@@ -159,4 +159,8 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     return _collectionView;
 }
 
+- (void)updateUIAfterDeleteDataAtIndex:(NSInteger)index {
+    
+}
+
 @end

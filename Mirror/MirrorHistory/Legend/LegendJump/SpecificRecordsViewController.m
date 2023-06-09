@@ -30,7 +30,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
     if (self) {
         self.records = records;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartVC) name:MirrorSwitchThemeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodDeleteNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData) name:MirrorPeriodEditNotification object:nil];
     }
     return self;
@@ -110,6 +110,27 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGSizeMake(kScreenWidth - 2*kCellSpacing, 80);
+}
+
+#pragma mark - Update UI after delete a record
+
+// 只是简单删掉了被删掉的那个cell，数据源并没有得到彻底的update（original index的改动是手动计算的，并没有经过数据库重新计算、校对），这么写容易出现crash但也没什么更好的办法
+- (void)updateUIAfterDeleteDataAtIndex:(NSInteger)index
+{
+    NSInteger indexInThisVC = NSNotFound;
+    for (int i=0; i<self.records.count; i++) {
+        if (self.records[i].originalIndex == index) {
+            indexInThisVC = i;
+        } else if (self.records[i].originalIndex > index) {
+            self.records[i].originalIndex = self.records[i].originalIndex - 1; // 前面数据被删了，理论上自己的original index应该前移一位
+        } else if (self.records[i].originalIndex < index) {
+            // 保持不变
+        }
+    }
+    if (indexInThisVC != NSNotFound) {
+        [self.records removeObjectAtIndex:indexInThisVC];
+        [self.collectionView reloadData];
+    }
 }
 
 #pragma mark - Getters

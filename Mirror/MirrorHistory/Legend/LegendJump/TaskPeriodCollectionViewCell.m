@@ -137,6 +137,7 @@ static const CGFloat kVerticalPadding = 10;
 
     UIAlertAction* deleteAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"delete"] style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
         [MirrorStorage deletePeriodAtIndex:self.periodIndex];
+        [self.delegate updateUIAfterDeleteDataAtIndex:self.periodIndex];
     }];
     
     UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[MirrorLanguage mirror_stringWithKey:@"cancel"] style:UIAlertActionStyleDefault handler:nil];

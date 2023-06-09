@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, BottomRightType) {
 
 @protocol VCForPeriodCellProtocol <NSObject>
 
+-(void)updateUIAfterDeleteDataAtIndex:(NSInteger)index;
+
 @end
 
 @interface TaskPeriodCollectionViewCell : UICollectionViewCell
