@@ -7,8 +7,6 @@
 
 #import "ReportBugCollectionViewCell.h"
 
-static MirrorColorType const colorType = MirrorColorTypeCellGray;
-
 @implementation ReportBugCollectionViewCell
 
 + (NSString *)identifier
@@ -18,7 +16,7 @@ static MirrorColorType const colorType = MirrorColorTypeCellGray;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"contact_me" color:colorType];
+    [super configCellWithTitle:@"contact_me" color:MirrorColorTypeCellGray];
     self.toggle.hidden = YES;
 }
 

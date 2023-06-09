@@ -7,8 +7,6 @@
 
 #import "ExportImportCollectionViewCell.h"
 
-static MirrorColorType const colorType = MirrorColorTypeCellPurple;
-
 @implementation ExportImportCollectionViewCell
 
 + (NSString *)identifier
@@ -18,7 +16,7 @@ static MirrorColorType const colorType = MirrorColorTypeCellPurple;
 
 - (void)configCell
 {
-    [super configCellWithTitle:@"export_import_data" color:colorType];
+    [super configCellWithTitle:@"export_import_data" color:MirrorColorTypeCellPurple];
     self.toggle.hidden = YES;
 }
 
