@@ -291,7 +291,6 @@
         _startPicker.datePickerMode = UIDatePickerModeDateAndTime;
         _startPicker.timeZone = [NSTimeZone systemTimeZone];
         _startPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
-        _startPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _startPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         // 如果上一个任务的结束时间在未来，设置start picker和未来那个数字对齐，否则，使用现在的时间
         NSMutableArray<MirrorRecordModel *> *records = [MirrorStorage retriveMirrorRecords];

@@ -173,7 +173,6 @@ static const CGFloat kVerticalPadding = 10;
         _startPicker.datePickerMode = UIDatePickerModeTime;
         _startPicker.timeZone = [NSTimeZone systemTimeZone];
         _startPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
-        _startPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _startPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_startPicker addTarget:self action:@selector(changeStartTime) forControlEvents:UIControlEventEditingDidEnd];
     }
@@ -199,7 +198,6 @@ static const CGFloat kVerticalPadding = 10;
         _endPicker.datePickerMode = UIDatePickerModeTime;
         _endPicker.timeZone = [NSTimeZone systemTimeZone];
         _endPicker.preferredDatePickerStyle = UIDatePickerStyleCompact;
-        _endPicker.overrideUserInterfaceStyle = [MirrorSettings appliedDarkMode] ? UIUserInterfaceStyleDark:UIUserInterfaceStyleLight;
         _endPicker.tintColor = [UIColor mirrorColorNamed:MirrorColorTypeText];
         [_endPicker addTarget:self action:@selector(changeEndTime) forControlEvents:UIControlEventEditingDidEnd];
     }
