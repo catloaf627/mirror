@@ -24,7 +24,6 @@ static CGFloat const kPadding = 20;
 @property (nonatomic, strong) NSString *taskName;
 // UI
 @property (nonatomic, strong) UITextField *taskNameField;
-@property (nonatomic, strong) UIButton *createAtLabel;
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UICollectionView *collectionView; // 色块collectionview
 @property (nonatomic, strong) UIButton *archiveButton;
@@ -59,30 +58,21 @@ static CGFloat const kPadding = 20;
     self.taskNameField.text = self.taskName;
     [self.taskNameField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.offset(kPadding);
-        make.width.mas_equalTo(1*(self.frame.size.width - 3*kPadding - 30)/3);
+        make.width.mas_equalTo(self.frame.size.width - 3*kPadding - 30);
         make.height.mas_equalTo(20);
-    }];
-    
-    [self addSubview:self.createAtLabel];
-    [self.createAtLabel setTitle:[[MirrorLanguage mirror_stringWithKey:@"created_at"] stringByAppendingString: [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:createdTime]]] forState:UIControlStateNormal];
-    [self.createAtLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.taskNameField);
-        make.left.mas_equalTo(self.taskNameField.mas_right).offset(kPadding);
-        make.width.mas_equalTo(2*(self.frame.size.width - 3*kPadding - 30)/3);
-        make.height.mas_equalTo(14);
     }];
     
     [self addSubview:self.deleteButton];
     [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.taskNameField);
-        make.left.mas_equalTo(self.createAtLabel.mas_right);
+        make.right.offset(-kPadding);
         make.width.height.mas_equalTo(30);
     }];
     
     [self addSubview:self.collectionView];
     [self.collectionView reloadData];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.createAtLabel.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.taskNameField.mas_bottom).offset(10);
         make.centerX.offset(0);
         make.width.mas_equalTo([self p_colorBlockWidth] * kMaxColorNum);
         make.height.mas_equalTo([self p_colorBlockWidth]);
@@ -181,17 +171,6 @@ static CGFloat const kPadding = 20;
         _taskNameField.textAlignment = NSTextAlignmentLeft;
     }
     return _taskNameField;
-}
-
-- (UIButton *)createAtLabel
-{
-    if (!_createAtLabel) {
-        _createAtLabel = [UIButton new];
-        _createAtLabel.titleLabel.font = [UIFont fontWithName:@"TrebuchetMS-Italic" size:14];
-        [_createAtLabel setTitleColor:[UIColor mirrorColorNamed:MirrorColorTypeTextHint] forState:UIControlStateNormal];
-        _createAtLabel.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    }
-    return _createAtLabel;
 }
 
 - (UICollectionView *)collectionView
