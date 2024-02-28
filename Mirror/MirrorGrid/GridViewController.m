@@ -41,16 +41,23 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) NSMutableArray<NSString *> *keys;
 @property (nonatomic, strong) NSMutableDictionary<NSString*, NSMutableArray<MirrorDataModel *> *> *gridData;
 @property (nonatomic, assign) NSInteger startTimestamp;
+
 @property (nonatomic, assign) NSInteger selectedCellIndex;
+@property (nonatomic, assign) NSInteger selectedCellIndexesStart;
+@property (nonatomic, assign) NSInteger selectedCellIndexesEnd;
 // UI
+///grid
 @property (nonatomic, strong) UILabel *leftHint;
 @property (nonatomic, strong) UILabel *rightHint;
 @property (nonatomic, strong) UIView *weekdayView;
 @property (nonatomic, strong) UICollectionView *collectionView;
+///one day (single selection)
 @property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic, strong) LegendView *legendView;
 @property (nonatomic, strong) HistogramView *histogramView;
 @property (nonatomic, strong) PiechartView *piechartView;
+///several days (multiple selection)
+//@property (nonatomic, strong) UICollectionView *lineChart;
 
 @end
 
@@ -92,6 +99,8 @@ static CGFloat const kCellSpacing = 3;
     [super viewDidLoad];
     [self p_setupUI];
     _isLoaded = YES;
+    _selectedCellIndexesStart = -1;
+    _selectedCellIndexesEnd = -1;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -393,7 +402,16 @@ static CGFloat const kCellSpacing = 3;
     _gridData = [MirrorStorage getGridData];
 }
 
-- (void)updateCharts // legend & histogram & piechart
+- (void)updateCharts
+{
+    if (_selectedCellIndexesStart == -1 || _selectedCellIndexesEnd == -1) { // single select
+        [self updateSingleSelectChart];
+    } else { // multi select
+        [self updateMultiSelectChart];
+    }
+}
+
+- (void)updateSingleSelectChart // legend & histogram & piechart
 {
     if (self.keys.count <= _selectedCellIndex) { // 空数据保护
         return;
@@ -433,6 +451,16 @@ static CGFloat const kCellSpacing = 3;
             }
         }];
     }
+}
+
+- (void)updateMultiSelectChart
+{
+    NSInteger start = _selectedCellIndexesStart < _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
+    NSInteger end = _selectedCellIndexesStart > _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
+    if (self.keys.count <= start || self.keys.count <= end) { // 空数据保护
+        return;
+    }
+    // gizmo update折线图
 }
 
 - (void)updateWeekdayView
@@ -535,6 +563,8 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    _selectedCellIndexesStart = -1;
+    _selectedCellIndexesEnd = -1;
     [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
     _selectedCellIndex = indexPath.item; // 选择
     [self updateCharts];
@@ -554,13 +584,61 @@ static CGFloat const kCellSpacing = 3;
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     GridCollectionViewCell *cell =[collectionView dequeueReusableCellWithReuseIdentifier:[GridCollectionViewCell identifier] forIndexPath:indexPath];
-    [cell configWithData:self.gridData[self.keys[indexPath.item]] isSelected:indexPath.item==_selectedCellIndex];
+    if (_selectedCellIndexesStart == -1 || _selectedCellIndexesEnd == -1) { // single select
+        [cell configWithData:self.gridData[self.keys[indexPath.item]] isSelected:indexPath.item==_selectedCellIndex];
+    } else { // multi select
+        NSInteger start = _selectedCellIndexesStart < _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
+        NSInteger end = _selectedCellIndexesStart > _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
+        NSLog(@"start %ld, end %ld", start, end);
+        [cell configWithData:self.gridData[self.keys[indexPath.item]] isSelected:(indexPath.item<=end && indexPath.item>=start)];
+    }
+    
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGSizeMake(kCellWidth, kCellWidth);
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    NSLog(@"gizmo scrollViewWillBeginDragging");
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    NSLog(@"gizmo scrollViewDidEndDragging");
+}
+
+#pragma mark - Actions
+
+- (void)longPress:(UILongPressGestureRecognizer *)longPress
+{
+    NSIndexPath *indexPath = [_collectionView indexPathForItemAtPoint:[longPress locationInView:_collectionView]];
+    if (indexPath.length == 0) return; // 触点在缝里(spacing)不算
+    
+    BOOL changes = false;
+    if (longPress.state == UIGestureRecognizerStateBegan && _selectedCellIndexesStart != indexPath.item) {
+        _selectedCellIndexesStart = indexPath.item;
+        changes = true;
+    }
+    if (longPress.state == UIGestureRecognizerStateChanged && _selectedCellIndexesEnd != indexPath.item) {
+        _selectedCellIndexesEnd = indexPath.item;
+        changes = true;
+    }
+    if (longPress.state == UIGestureRecognizerStateEnded && _selectedCellIndexesEnd != indexPath.item) {
+        _selectedCellIndexesEnd = indexPath.item;
+        changes = true;
+    }
+    
+    if (changes) {
+        [self.collectionView reloadData];
+        [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+        [self updateCharts]; // gizmo update折线图
+    }
 }
 
 #pragma mark - Getters
@@ -645,6 +723,9 @@ static CGFloat const kCellSpacing = 3;
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.backgroundColor = self.view.backgroundColor;
+//        _collectionView.allowsMultipleSelection = YES;
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+        [_collectionView addGestureRecognizer:longPress];
         [_collectionView registerClass:[GridCollectionViewCell class] forCellWithReuseIdentifier:[GridCollectionViewCell identifier]];
     }
     return _collectionView;

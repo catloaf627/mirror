@@ -51,9 +51,11 @@
     if (isSelected) {
         self.layer.borderColor = [UIColor mirrorColorNamed:MirrorColorTypeText].CGColor;
         self.layer.borderWidth = 2;
+        self.layer.cornerRadius = 2;
     } else {
         self.layer.borderColor = [UIColor clearColor].CGColor;
         self.layer.borderWidth = 0;
+        self.layer.cornerRadius = 0;
     }
 }
 
