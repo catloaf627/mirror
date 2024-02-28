@@ -25,18 +25,18 @@
     UIWindowScene *windowScene = (UIWindowScene *)scene;
     _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    // UITabBarControllerDelegate
+    // Init tabbarController (使用mirrorTabController避免重复init)
     UITabBarController *tabbarController = [[MirrorTabsManager sharedInstance] mirrorTabController];
     tabbarController.delegate = self;
     
-    //init navigation controller with tabbar controller (nc needs a root view)
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tabbarController];
-    [navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-    navigationController.navigationBar.shadowImage = [UIImage new];
+    // Init navibarController (使用mirrorNaviControllerWithRootViewController:避免重复init)
+    UINavigationController *navigationController = [[MirrorNaviManager sharedInstance] mirrorNaviControllerWithRootViewController:tabbarController];
     
+    // Setup Window
     _window.rootViewController = navigationController;
     [_window makeKeyAndVisible];
     _window.windowScene = windowScene;
+    NSLog(@"SceneDelegate %@, %@", tabbarController, navigationController); // 监控：只有一个tabbarController，只有一个navibarController
 }
 
 

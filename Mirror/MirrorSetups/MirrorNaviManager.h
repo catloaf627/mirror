@@ -13,8 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MirrorNaviManager : NSObject
 
 + (instancetype)sharedInstance;
+- (UINavigationController *)mirrorNaviControllerWithRootViewController:tabbarController;
 
-- (void)updateNaviItemWithNaviController:(UINavigationController *)naviController title:(NSString *)title leftButton:(nullable UIButton *)leftButton rightButton:(nullable UIButton *)rightButton;
+- (void)updateNaviItemWithTitle:(NSString *)title leftButton:(nullable UIButton *)leftButton rightButton:(nullable UIButton *)rightButton;
 
 
 @end

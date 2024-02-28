@@ -7,6 +7,7 @@
 
 #import "AppDelegate.h"
 #import "MirrorTabsManager.h"
+#import "MirrorNaviManager.h"
 #import "MirrorSettings.h"
 #import "MirrorStorage.h"
 #import "MirrorMacro.h"
@@ -21,18 +22,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // 由于删除了storyboard，所以需要自己手动创建UIWindow
     _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    // Init tabbarController (使用mirrorTabController避免重复init)
     UITabBarController *tabbarController = [[MirrorTabsManager sharedInstance] mirrorTabController];
-    //@protovol <UITabBarControllerDelegate>
     tabbarController.delegate = self;
     
-    //init navigation controller with tabbar controller (nc needs a root view)
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:tabbarController];
-    [navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-    navigationController.navigationBar.shadowImage = [UIImage new];
+    // Init navibarController (使用mirrorNaviControllerWithRootViewController:避免重复init)
+    UINavigationController *navigationController = [[MirrorNaviManager sharedInstance] mirrorNaviControllerWithRootViewController:tabbarController];
     
+    // Setup Window
     _window.rootViewController = navigationController;
     [_window makeKeyAndVisible];
-    
+    NSLog(@"AppDelegate %@, %@", tabbarController, navigationController); // 监控：只有一个tabbarController，只有一个navibarController
     return YES;
 }
 

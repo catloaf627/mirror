@@ -19,7 +19,7 @@
 
 @interface MirrorTabsManager ()
 
-@property (nonatomic, strong) UITabBarController *mirrorTabVC;
+@property (nonatomic, strong) UITabBarController *controller;
 
 @end
 
@@ -37,27 +37,27 @@
 
 - (UITabBarController *)mirrorTabController
 {
-    if (!_mirrorTabVC) {
+    if (!_controller) {
         TimeViewController *timeTrackerVC = [[TimeViewController alloc]init];
         TodayViewController *todayVC = [[TodayViewController alloc]init];
         GridViewController *gridVC = [[GridViewController alloc] init];
         HistoryViewController *historyVC = [[HistoryViewController alloc] init];
         //create a tabbar controller
-        _mirrorTabVC  = [[UITabBarController alloc] init];
+        _controller  = [[UITabBarController alloc] init];
         
         //add 4 view controllers to tabbar controller
-        [_mirrorTabVC setViewControllers:@[timeTrackerVC, todayVC, gridVC, historyVC]];
-        _mirrorTabVC.selectedIndex = 0;
-        _mirrorTabVC.tabBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
-        _mirrorTabVC.tabBar.backgroundImage = [UIImage new];
-        _mirrorTabVC.tabBar.shadowImage = [UIImage new];
+        [_controller setViewControllers:@[timeTrackerVC, todayVC, gridVC, historyVC]];
+        _controller.selectedIndex = 0;
+        _controller.tabBar.barTintColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
+        _controller.tabBar.backgroundImage = [UIImage new];
+        _controller.tabBar.shadowImage = [UIImage new];
 
-        [self updateTimeTabItemWithTabController:_mirrorTabVC];
-        [self updateTodayTabItemWithTabController:_mirrorTabVC];
-        [self updateGridTabItemWithTabController:_mirrorTabVC];
-        [self updateHistoryTabItemWithTabController:_mirrorTabVC];
+        [self updateTimeTabItemWithTabController:_controller];
+        [self updateTodayTabItemWithTabController:_controller];
+        [self updateGridTabItemWithTabController:_controller];
+        [self updateHistoryTabItemWithTabController:_controller];
     }
-    return _mirrorTabVC;
+    return _controller;
 }
 
 - (void)updateTimeTabItemWithTabController:(UITabBarController *)tabbarController

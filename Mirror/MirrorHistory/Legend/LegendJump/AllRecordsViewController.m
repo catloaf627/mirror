@@ -52,7 +52,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)restartVC
 {
     // update navibar
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"all_records"] leftButton:nil rightButton:nil];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"all_records"] leftButton:nil rightButton:nil];
     // 将vc.view里的所有subviews全部置为nil
     self.collectionView = nil;
     // 将vc.view里的所有subviews从父view上移除
@@ -63,7 +63,7 @@ static CGFloat const kCellSpacing = 20; // cell之间的上下间距
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[MirrorNaviManager sharedInstance] updateNaviItemWithNaviController:self.navigationController title:[MirrorLanguage mirror_stringWithKey:@"all_records"] leftButton:nil rightButton:nil];
+    [[MirrorNaviManager sharedInstance] updateNaviItemWithTitle:[MirrorLanguage mirror_stringWithKey:@"all_records"] leftButton:nil rightButton:nil];
 }
 
 
