@@ -55,7 +55,7 @@
     } else {
         self.layer.borderColor = [UIColor clearColor].CGColor;
         self.layer.borderWidth = 0;
-        self.layer.cornerRadius = 0;
+        self.layer.cornerRadius = 2;
     }
 }
 

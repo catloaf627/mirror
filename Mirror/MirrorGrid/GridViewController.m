@@ -623,6 +623,7 @@ static CGFloat const kCellSpacing = 3;
     BOOL changes = false;
     if (longPress.state == UIGestureRecognizerStateBegan && _selectedCellIndexesStart != indexPath.item) {
         _selectedCellIndexesStart = indexPath.item;
+        _selectedCellIndexesEnd = indexPath.item;
         changes = true;
     }
     if (longPress.state == UIGestureRecognizerStateChanged && _selectedCellIndexesEnd != indexPath.item) {
