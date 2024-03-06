@@ -18,6 +18,7 @@
 #import "LegendView.h"
 #import "HistogramView.h"
 #import "PiechartView.h"
+#import "LinechartView.h"
 #import "MirrorTimeText.h"
 #import "MirrorTool.h"
 #import "MirrorTabsManager.h"
@@ -57,7 +58,7 @@ static CGFloat const kCellSpacing = 3;
 @property (nonatomic, strong) HistogramView *histogramView;
 @property (nonatomic, strong) PiechartView *piechartView;
 ///several days (multiple selection)
-//@property (nonatomic, strong) UICollectionView *lineChart;
+@property (nonatomic, strong) LinechartView *linechartView;
 
 @end
 
@@ -402,16 +403,7 @@ static CGFloat const kCellSpacing = 3;
     _gridData = [MirrorStorage getGridData];
 }
 
-- (void)updateCharts
-{
-    if (_selectedCellIndexesStart == -1 || _selectedCellIndexesEnd == -1) { // single select
-        [self updateSingleSelectChart];
-    } else { // multi select
-        [self updateMultiSelectChart];
-    }
-}
-
-- (void)updateSingleSelectChart // legend & histogram & piechart
+- (void)updateCharts // legend & histogram & piechart
 {
     if (self.keys.count <= _selectedCellIndex) { // 空数据保护
         return;
@@ -453,14 +445,46 @@ static CGFloat const kCellSpacing = 3;
     }
 }
 
-- (void)updateMultiSelectChart
+- (void)updateMultiSelectStart:(NSInteger)newstart
+{
+    NSLog(@"start");
+    _selectedCellIndexesStart = newstart;
+}
+
+- (void)updateMultiSelectEnd:(NSInteger)newend
+{
+    NSLog(@"end");
+    _selectedCellIndexesEnd = newend;
+    [self updateLinechart];
+    [self.collectionView reloadData];
+    [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
+}
+
+- (void)updateLinechart // linechart
 {
     NSInteger start = _selectedCellIndexesStart < _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
     NSInteger end = _selectedCellIndexesStart > _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
-    if (self.keys.count <= start || self.keys.count <= end) { // 空数据保护
-        return;
+    // data source
+    NSMutableArray<NSMutableArray<MirrorDataModel *> *> *dataArr = [NSMutableArray new];
+    for (NSInteger i=start; i<=end; i++) {
+        NSMutableArray<MirrorDataModel *> *data = self.gridData[self.keys[i]];
+        if (data == nil) {
+            data = [NSMutableArray new];
+        }
+        [dataArr addObject:data];
     }
-    // gizmo update折线图
+    if (self.linechartView) {
+        [self.linechartView updateLineChart:self.linechartView withDataArr:dataArr];
+    } else {
+        self.linechartView = [[LinechartView alloc] initWithDataArr:dataArr];
+    }
+    [self.view addSubview: self.linechartView];
+    [ self.linechartView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.top.mas_equalTo(self.dateLabel.mas_bottom).offset(20);
+        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
+    }];
 }
 
 - (void)updateWeekdayView
@@ -565,6 +589,7 @@ static CGFloat const kCellSpacing = 3;
 {
     _selectedCellIndexesStart = -1;
     _selectedCellIndexesEnd = -1;
+    [self.linechartView removeFromSuperview];
     [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
     _selectedCellIndex = indexPath.item; // 选择
     [self updateCharts];
@@ -589,7 +614,6 @@ static CGFloat const kCellSpacing = 3;
     } else { // multi select
         NSInteger start = _selectedCellIndexesStart < _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
         NSInteger end = _selectedCellIndexesStart > _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
-        NSLog(@"start %ld, end %ld", start, end);
         [cell configWithData:self.gridData[self.keys[indexPath.item]] isSelected:(indexPath.item<=end && indexPath.item>=start)];
     }
     
@@ -620,25 +644,15 @@ static CGFloat const kCellSpacing = 3;
     NSIndexPath *indexPath = [_collectionView indexPathForItemAtPoint:[longPress locationInView:_collectionView]];
     if (indexPath.length == 0) return; // 触点在缝里(spacing)不算
     
-    BOOL changes = false;
-    if (longPress.state == UIGestureRecognizerStateBegan && _selectedCellIndexesStart != indexPath.item) {
-        _selectedCellIndexesStart = indexPath.item;
-        _selectedCellIndexesEnd = indexPath.item;
-        changes = true;
+    if (longPress.state == UIGestureRecognizerStateBegan) {
+        [self updateMultiSelectStart:indexPath.item];
+        [self updateMultiSelectEnd:indexPath.item];
     }
-    if (longPress.state == UIGestureRecognizerStateChanged && _selectedCellIndexesEnd != indexPath.item) {
-        _selectedCellIndexesEnd = indexPath.item;
-        changes = true;
+    if (longPress.state == UIGestureRecognizerStateChanged && _selectedCellIndexesEnd != indexPath.item && indexPath.length != 0) {
+        [self updateMultiSelectEnd:indexPath.item];
     }
-    if (longPress.state == UIGestureRecognizerStateEnded && _selectedCellIndexesEnd != indexPath.item) {
-        _selectedCellIndexesEnd = indexPath.item;
-        changes = true;
-    }
-    
-    if (changes) {
-        [self.collectionView reloadData];
-        [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
-        [self updateCharts]; // gizmo update折线图
+    if (longPress.state == UIGestureRecognizerStateEnded) {
+        [self updateMultiSelectEnd:indexPath.item];
     }
 }
 
