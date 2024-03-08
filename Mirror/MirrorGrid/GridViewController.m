@@ -100,8 +100,6 @@ static CGFloat const kCellSpacing = 3;
     [super viewDidLoad];
     [self p_setupUI];
     _isLoaded = YES;
-    _selectedCellIndexesStart = -1;
-    _selectedCellIndexesEnd = -1;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -225,7 +223,16 @@ static CGFloat const kCellSpacing = 3;
         }
     }];
     self.piechartView.hidden = ![MirrorSettings appliedPieChartRecord];
-
+    [self.view addSubview:self.linechartView];
+    [self.linechartView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
+        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
+        make.top.mas_equalTo(self.dateLabel.mas_bottom).offset(20);
+        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
+    }];
+    self.linechartView.hidden = YES;
+    _selectedCellIndexesStart = -1;
+    _selectedCellIndexesEnd = -1;
     UIScreenEdgePanGestureRecognizer *edgeRecognizer = [UIScreenEdgePanGestureRecognizer new];
     edgeRecognizer.edges = UIRectEdgeLeft;
     [edgeRecognizer addTarget:self action:@selector(edgeGestureRecognizerAction:)];
@@ -447,13 +454,11 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)updateMultiSelectStart:(NSInteger)newstart
 {
-    NSLog(@"start");
     _selectedCellIndexesStart = newstart;
 }
 
 - (void)updateMultiSelectEnd:(NSInteger)newend
 {
-    NSLog(@"end");
     _selectedCellIndexesEnd = newend;
     [self updateLinechart];
     [self.collectionView reloadData];
@@ -473,18 +478,8 @@ static CGFloat const kCellSpacing = 3;
         }
         [dataArr addObject:data];
     }
-    if (self.linechartView) {
-        [self.linechartView updateLineChart:self.linechartView withDataArr:dataArr];
-    } else {
-        self.linechartView = [[LinechartView alloc] initWithDataArr:dataArr];
-    }
-    [self.view addSubview: self.linechartView];
-    [ self.linechartView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).offset(kLeftRightSpacing);
-        make.right.mas_equalTo(self.view).offset(-kLeftRightSpacing);
-        make.top.mas_equalTo(self.dateLabel.mas_bottom).offset(20);
-        make.bottom.mas_equalTo(self.view).offset(-kTabBarHeight - 20);
-    }];
+    self.linechartView.hidden = NO;
+    [self.linechartView refactorData:dataArr];
 }
 
 - (void)updateWeekdayView
@@ -589,7 +584,7 @@ static CGFloat const kCellSpacing = 3;
 {
     _selectedCellIndexesStart = -1;
     _selectedCellIndexesEnd = -1;
-    [self.linechartView removeFromSuperview];
+    self.linechartView.hidden = YES;
     [[[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight] impactOccurred];
     _selectedCellIndex = indexPath.item; // 选择
     [self updateCharts];
@@ -629,12 +624,12 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    NSLog(@"gizmo scrollViewWillBeginDragging");
+//    NSLog(@"gizmo scrollViewWillBeginDragging");
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    NSLog(@"gizmo scrollViewDidEndDragging");
+//    NSLog(@"gizmo scrollViewDidEndDragging");
 }
 
 #pragma mark - Actions
@@ -683,6 +678,14 @@ static CGFloat const kCellSpacing = 3;
         _piechartView.delegate = self.legendView;
     }
     return _piechartView;
+}
+
+- (LinechartView *)linechartView
+{
+    if (!_linechartView) {
+        _linechartView = [LinechartView new];
+    }
+    return _linechartView;
 }
 
 - (UILabel *)leftHint

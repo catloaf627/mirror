@@ -48,6 +48,7 @@
 		4AA353382A25D9BB00920404 /* ExportImportCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA353372A25D9BB00920404 /* ExportImportCollectionViewCell.m */; };
 		4AA3533B2A25DBDA00920404 /* ReportBugCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA3533A2A25DBDA00920404 /* ReportBugCollectionViewCell.m */; };
 		4AA353412A25E3FA00920404 /* HintHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AA353402A25E3FA00920404 /* HintHeader.m */; };
+		4AB1182E2B9851F7003CED03 /* LineChartCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB1182D2B9851F7003CED03 /* LineChartCollectionViewCell.m */; };
 		4AB9C8BA29E911C8002358E2 /* HistogramCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */; };
 		4AC1FDBD2A0384A600CDCED9 /* MirrorRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBC2A0384A600CDCED9 /* MirrorRecordModel.m */; };
 		4AC1FDC02A03B05100CDCED9 /* MirrorDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AC1FDBF2A03B05100CDCED9 /* MirrorDataModel.m */; };
@@ -152,6 +153,8 @@
 		4AA3533A2A25DBDA00920404 /* ReportBugCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReportBugCollectionViewCell.m; sourceTree = "<group>"; };
 		4AA3533F2A25E3FA00920404 /* HintHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HintHeader.h; sourceTree = "<group>"; };
 		4AA353402A25E3FA00920404 /* HintHeader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HintHeader.m; sourceTree = "<group>"; };
+		4AB1182C2B9851F7003CED03 /* LineChartCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LineChartCollectionViewCell.h; sourceTree = "<group>"; };
+		4AB1182D2B9851F7003CED03 /* LineChartCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LineChartCollectionViewCell.m; sourceTree = "<group>"; };
 		4AB9C8B829E911C8002358E2 /* HistogramCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HistogramCollectionViewCell.h; sourceTree = "<group>"; };
 		4AB9C8B929E911C8002358E2 /* HistogramCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HistogramCollectionViewCell.m; sourceTree = "<group>"; };
 		4AC1FDBB2A0384A600CDCED9 /* MirrorRecordModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MirrorRecordModel.h; sourceTree = "<group>"; };
@@ -264,6 +267,8 @@
 			children = (
 				4A10185C2B90876E00AA9677 /* LinechartView.h */,
 				4A10185D2B90876E00AA9677 /* LinechartView.m */,
+				4AB1182C2B9851F7003CED03 /* LineChartCollectionViewCell.h */,
+				4AB1182D2B9851F7003CED03 /* LineChartCollectionViewCell.m */,
 			);
 			path = Linechart;
 			sourceTree = "<group>";
@@ -663,6 +668,7 @@
 				4A88212929F6035E009E422C /* CellAnimation.m in Sources */,
 				4AA353412A25E3FA00920404 /* HintHeader.m in Sources */,
 				4A32A40529F8CAC500DCCF57 /* EditTaskCollectionViewCell.m in Sources */,
+				4AB1182E2B9851F7003CED03 /* LineChartCollectionViewCell.m in Sources */,
 				4A410A2829EA51750007003B /* LegendCollectionViewCell.m in Sources */,
 				4A379B5728E42AC200785CAE /* TimeTrackerAddTaskCollectionViewCell.m in Sources */,
 				4A88211629F26104009E422C /* TodayPeriodCollectionViewCell.m in Sources */,
