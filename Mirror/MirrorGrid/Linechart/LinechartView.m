@@ -11,6 +11,8 @@
 #import "MirrorDataModel.h"
 #import "MirrorTool.h"
 
+static CGFloat const kMinCellWidth = 14; // histogram cell左右的距离
+
 @interface LinechartView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -59,6 +61,14 @@
 
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.data.count;
+}
+
+#pragma mark - UICollectionViewDelegateFlowLayout
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat width =  kMinCellWidth > self.bounds.size.width/self.data.count - 1 ? kMinCellWidth : self.bounds.size.width/self.data.count - 1; // gizmo 最后把-1删掉
+    return CGSizeMake(width, self.bounds.size.height);
 }
 
 #pragma mark - Refactor Data
@@ -131,6 +141,8 @@
     if (!_collectionView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
         _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+        layout.minimumLineSpacing = 1;
+        layout.minimumInteritemSpacing = 1; //gizmo 最后改成0
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
