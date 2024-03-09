@@ -48,7 +48,6 @@ static CGFloat const kPadding = 20;
 {
     MirrorTaskModel *task = [MirrorStorage getTaskModelFromDB:self.taskName];
     UIColor *color = [UIColor mirrorColorNamed:task.color];
-    long createdTime = task.createdTime;
     BOOL isArchived = task.isArchived;
     
     self.backgroundColor = color;

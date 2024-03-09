@@ -129,9 +129,6 @@
     [mirrorDict setValue:@[@" hour", @" 小时"] forKey:@"picker_hour"];
     [mirrorDict setValue:@[@" min", @" 分钟"] forKey:@"picker_min"];
     
-    // Grid VC
-    [mirrorDict setValue:@[@"Activities", @"活动记录"] forKey:@"activities"];
-    
     // All records
     [mirrorDict setValue:@[@"All records", @"所有记录"] forKey:@"all_records"];
     [mirrorDict setValue:@[@"Records", @"记录"] forKey:@"records"];
