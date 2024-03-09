@@ -1,33 +1,33 @@
 //
-//  HintHeader.m
+//  HintFooter.m
 //  Mirror
 //
-//  Created by Yuqing Wang on 2023/5/30.
+//  Created by Yuqing Wang on 2024/3/9.
 //
 
-#import "HintHeader.h"
+#import "HintFooter.h"
 #import <Masonry/Masonry.h>
 #import "UIColor+MirrorColor.h"
 #import "MirrorLanguage.h"
 
-@interface HintHeader ()
+@interface HintFooter ()
 
 @property (nonatomic, strong) UILabel *hintLabel;
 
 @end
 
-@implementation HintHeader
+@implementation HintFooter
 
 - (void)config
 {
     [self addSubview:self.hintLabel];
-    NSArray *hints = @[[MirrorLanguage mirror_stringWithKey:@"alltasks_hint0"], [MirrorLanguage mirror_stringWithKey:@"alltasks_hint1"], [MirrorLanguage mirror_stringWithKey:@"alltasks_hint2"], [MirrorLanguage mirror_stringWithKey:@"alltasks_hint3"]];
+    NSArray *hints = @[[MirrorLanguage mirror_stringWithKey:@"timeVC_hint0"], [MirrorLanguage mirror_stringWithKey:@"timeVC_hint1"], [MirrorLanguage mirror_stringWithKey:@"timeVC_hint2"], [MirrorLanguage mirror_stringWithKey:@"timeVC_hint3"]];
     NSString *hint = hints[arc4random() % hints.count]; // 随机选一个hint
     self.hintLabel.text = hint;
     [self.hintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.offset(20);
-        make.right.offset(-20);
-        make.bottom.offset(-10); // 和下面的cell的距离 与 cell之间的距离保持一致
+        make.left.offset(10);
+        make.right.offset(-10);
+        make.top.offset(10); // 和下面的cell的距离 与 cell之间的距离保持一致
         make.height.mas_equalTo(20);
     }];
 }
