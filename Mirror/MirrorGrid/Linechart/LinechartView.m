@@ -11,7 +11,7 @@
 #import "MirrorDataModel.h"
 #import "MirrorTool.h"
 
-static CGFloat const kMinCellWidth = 14; // histogram cell左右的距离
+static CGFloat const kMinCellWidth = 14;
 
 @interface LinechartView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -67,7 +67,7 @@ static CGFloat const kMinCellWidth = 14; // histogram cell左右的距离
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat width =  kMinCellWidth > self.bounds.size.width/self.data.count - 1 ? kMinCellWidth : self.bounds.size.width/self.data.count - 1; // gizmo 最后把-1删掉
+    CGFloat width =  kMinCellWidth > self.bounds.size.width/self.data.count ? kMinCellWidth : self.bounds.size.width/self.data.count;
     return CGSizeMake(width, self.bounds.size.height);
 }
 
@@ -141,12 +141,12 @@ static CGFloat const kMinCellWidth = 14; // histogram cell左右的距离
     if (!_collectionView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
         _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
-        layout.minimumLineSpacing = 1;
-        layout.minimumInteritemSpacing = 1; //gizmo 最后改成0
+        layout.minimumLineSpacing = 0;
+        layout.minimumInteritemSpacing = 0;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
-        _collectionView.backgroundColor = [UIColor systemPinkColor];
+        _collectionView.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
         [_collectionView registerClass:[LineChartCollectionViewCell class] forCellWithReuseIdentifier:[LineChartCollectionViewCell identifier]];
     }
     return _collectionView;

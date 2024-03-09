@@ -467,6 +467,9 @@ static CGFloat const kCellSpacing = 3;
 
 - (void)updateLinechart // linechart
 {
+    if (_selectedCellIndexesStart==-1 || _selectedCellIndexesEnd==-1) { // 空数据保护
+        return;
+    }
     NSInteger start = _selectedCellIndexesStart < _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
     NSInteger end = _selectedCellIndexesStart > _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
     // data source
