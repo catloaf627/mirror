@@ -79,15 +79,15 @@ static CGFloat const kMinCellWidth = 14;
     // update maxtime
     self.maxtime = 0;
     
-    NSMutableArray *allTaskModels = [NSMutableArray new];
+    NSMutableArray *allTasknames = [NSMutableArray new];
     for (int i=0; i<originalData.count; i++) {
         NSMutableArray<MirrorDataModel *> *oneday = originalData[i];
         for (int j=0; j<oneday.count; j++) {
             MirrorDataModel *onedayonetask = oneday[j];
             long time = [MirrorTool getTotalTimeOfPeriods:onedayonetask.records];
             if (time > self.maxtime) self.maxtime = time; // 更新最久一次task的时间
-            if (![allTaskModels containsObject:onedayonetask.taskModel.taskName]) { // 更新所有task的名单
-                [allTaskModels addObject:onedayonetask.taskModel.taskName];
+            if (![allTasknames containsObject:onedayonetask.taskModel.taskName]) { // 更新所有task的名单
+                [allTasknames addObject:onedayonetask.taskModel.taskName];
             }
         }
     }
@@ -98,19 +98,28 @@ static CGFloat const kMinCellWidth = 14;
     for (int i=0; i<originalData.count; i++) {
         NSMutableArray<MirrorDataModel *> *oneday = originalData[i];
         NSMutableDictionary<NSString *, NSNumber *> *onedayDict = [NSMutableDictionary new];
-        for (int j=0; j<oneday.count; j++) {
-            MirrorDataModel *onedayonetask = oneday[j];
-            if ([allTaskModels containsObject:onedayonetask.taskModel.taskName]) { // 原数据里就有这个task
-                // 将这个task存进self.data
-                NSString *key = onedayonetask.taskModel.taskName;
-                NSNumber *value = @([MirrorTool getTotalTimeOfPeriods:onedayonetask.records]);
+        for (int j=0; j<allTasknames.count; j++) {
+            BOOL taskExisted = NO;
+            NSMutableArray<MirrorRecordModel *> *periods = [@[] mutableCopy];
+            for (int taskIndex=0; taskIndex<oneday.count; taskIndex++) {
+                NSString *taskname0 = allTasknames[j];
+                NSString *taskname1 = oneday[taskIndex].taskModel.taskName;
+                if ([taskname0 isEqualToString:taskname1]) {
+                    taskExisted = YES;
+                    periods = oneday[taskIndex].records;
+                    break;
+                }
+            }
+            if (taskExisted) {
+                NSString *key = allTasknames[j];
+                NSNumber *value = @([MirrorTool getTotalTimeOfPeriods:periods]);
                 [onedayDict setValue:value forKey:key];
-            } else { // 原数据里没有这个task
-                // 将这个空records存进self.data
-                NSString *key = onedayonetask.taskModel.taskName;
-                NSNumber *value = @([MirrorTool getTotalTimeOfPeriods:[@[] mutableCopy]]);
+            } else {
+                NSString *key = allTasknames[j];
+                NSNumber *value = @([MirrorTool getTotalTimeOfPeriods:periods]);
                 [onedayDict setValue:value forKey:key];
             }
+            
         }
         [self.data addObject:onedayDict];
     }

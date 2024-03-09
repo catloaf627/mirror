@@ -31,12 +31,7 @@ static CGFloat const kPointSize = 10;
                     rightdaydata:(NSMutableDictionary<NSString *, NSNumber *> *)rightdaydata
                          maxtime:(long)maxtime
 {
-    for (id key in onedaydata.allKeys) {
-        NSLog(@"这天 %ld", [onedaydata[key] longValue]);
-        if (!_isLeft) NSLog(@"前一天 %ld", [leftdaydata[key] longValue]);
-        if (!_isRight) NSLog(@"前一天 %ld", [rightdaydata[key] longValue]);
-    }
-
+    NSLog(@"onedaydata count %lu", (unsigned long)onedaydata.count);
     self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     _isLeft = leftdaydata == nil;
     _isRight = rightdaydata == nil;
