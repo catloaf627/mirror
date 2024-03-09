@@ -110,6 +110,7 @@ static CGFloat const kLeftRightSpacing = 20;
     self.legendView = nil;
     self.histogramView = nil;
     self.piechartView = nil;
+    self.emptyHintLabel = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新navibar
