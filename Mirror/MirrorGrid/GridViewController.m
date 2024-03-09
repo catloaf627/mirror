@@ -472,6 +472,9 @@ static CGFloat const kCellSpacing = 3;
     }
     NSInteger start = _selectedCellIndexesStart < _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
     NSInteger end = _selectedCellIndexesStart > _selectedCellIndexesEnd ? _selectedCellIndexesStart : _selectedCellIndexesEnd;
+    NSString *startDate = [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:[[[[NSNumberFormatter alloc] init] numberFromString:self.keys[start]] doubleValue]]];
+    NSString *endDate = [MirrorTimeText YYYYmmdd:[NSDate dateWithTimeIntervalSince1970:[[[[NSNumberFormatter alloc] init] numberFromString:self.keys[end]] doubleValue]]];
+    self.dateLabel.text = [[startDate stringByAppendingString:@" - "] stringByAppendingString:endDate];
     // data source
     NSMutableArray<NSMutableArray<MirrorDataModel *> *> *dataArr = [NSMutableArray new];
     for (NSInteger i=start; i<=end; i++) {
