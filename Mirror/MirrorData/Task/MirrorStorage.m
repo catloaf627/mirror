@@ -12,6 +12,8 @@
 #import "MirrorMacro.h"
 #import <AudioToolbox/AudioToolbox.h>
 
+static NSInteger const kMaxTaskCnt = 8;
+
 @implementation MirrorStorage
 
 #pragma mark - Time VC需要的信息
@@ -34,8 +36,10 @@
             [tasksWithoutArchive addObject:tasks[i]];
         }
     }
-    MirrorTaskModel *fakemodel = [[MirrorTaskModel alloc] initWithTitle:@"" createdTime:0 colorType:0 isArchived:NO isHidden:NO isAddTask:YES];
-    [tasksWithoutArchive addObject:fakemodel];
+    if (tasks.count < kMaxTaskCnt) {
+        MirrorTaskModel *fakemodel = [[MirrorTaskModel alloc] initWithTitle:@"" createdTime:0 colorType:0 isArchived:NO isHidden:NO isAddTask:YES];
+        [tasksWithoutArchive addObject:fakemodel];
+    }
     return tasksWithoutArchive;
 }
 
