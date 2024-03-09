@@ -128,6 +128,7 @@ static CGFloat const kCellSpacing = 3;
     self.legendView = nil;
     self.histogramView = nil;
     self.piechartView = nil;
+    self.linechartView = nil;
     // 将vc.view里的所有subviews从父view上移除
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     // 更新navibar
@@ -152,6 +153,7 @@ static CGFloat const kCellSpacing = 3;
     [self updateGridData];
     [self updateCharts];
     [self.collectionView reloadData];
+    [self updateLinechart];
 }
 
 

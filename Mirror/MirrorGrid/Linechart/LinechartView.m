@@ -35,7 +35,7 @@ static CGFloat const kMinCellWidth = 14;
 
 - (void)p_setupUI
 {
-    self.backgroundColor = [UIColor systemPinkColor];
+    self.backgroundColor = [UIColor mirrorColorNamed:MirrorColorTypeBackground];
     [self addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.mas_equalTo(self).offset(0);
