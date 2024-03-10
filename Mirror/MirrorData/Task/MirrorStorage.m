@@ -235,9 +235,9 @@ static NSInteger const kMaxTaskCnt = 8;
         NSDateComponents *endComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:endDate];
         startComponents.timeZone = [NSTimeZone systemTimeZone];
         endComponents.timeZone = [NSTimeZone systemTimeZone];
-        BOOL isDefinitelyTheSomeDay = startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day; // 日期一模一样
+        BOOL isDefinitelyTheSameDay = startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day; // 日期一模一样
         BOOL isTechnicallyTheSameDay = endComponents.hour == 0 && endComponents.minute == 0 && endComponents.second == 0 && ([endDate timeIntervalSince1970] - [startDate timeIntervalSince1970]) <= 86400; // 日期不一样结束时间为0点，且持续时间<=一天
-        if (isDefinitelyTheSomeDay || isTechnicallyTheSameDay) { // 开始和结束在同一天，直接记录 (存在原处)
+        if (isDefinitelyTheSameDay || isTechnicallyTheSameDay) { // 开始和结束在同一天，直接记录 (存在原处)
             recordToBeEditted.endTime = round([date timeIntervalSince1970]);
             records[records.count -1] = recordToBeEditted;
         } else { //开始和结束不在同一天，在00:00处切割分段
