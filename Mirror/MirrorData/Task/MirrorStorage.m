@@ -227,42 +227,42 @@ static NSInteger const kMaxTaskCnt = 8;
     long length = end - start;
     NSLog(@"%@计时结束 %ld", taskName, length);
     
-        if (length >= kMinSeconds) { // 一分钟以上开始记录（00:00处切割）
-            NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:start];
-            NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:end];
-            NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-            NSDateComponents *startComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
-            NSDateComponents *endComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:endDate];
-            startComponents.timeZone = [NSTimeZone systemTimeZone];
-            endComponents.timeZone = [NSTimeZone systemTimeZone];
-            BOOL isDefinitelyTheSomeDay = startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day; // 日期一模一样
-            BOOL isTechnicallyTheSameDay = endComponents.hour == 0 && endComponents.minute == 0 && endComponents.second == 0 && ([endDate timeIntervalSince1970] - [startDate timeIntervalSince1970]) <= 86400; // 日期不一样结束时间为0点，且持续时间<=一天
-            if (isDefinitelyTheSomeDay || isTechnicallyTheSameDay) { // 开始和结束在同一天，直接记录 (存在原处)
-                recordToBeEditted.endTime = round([date timeIntervalSince1970]);
-                records[records.count -1] = recordToBeEditted;
-            } else { //开始和结束不在同一天，在00:00处切割分段
-                NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
-                endComponent0.hour = 23;
-                endComponent0.minute = 59;
-                endComponent0.second = 59;
-                long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970] + 1;
-                recordToBeEditted.endTime = endTime0;
-                records[records.count -1] = recordToBeEditted;
+    if (length >= kMinSeconds) { // 一分钟以上开始记录（00:00处切割）
+        NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:start];
+        NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:end];
+        NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+        NSDateComponents *startComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
+        NSDateComponents *endComponents = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:endDate];
+        startComponents.timeZone = [NSTimeZone systemTimeZone];
+        endComponents.timeZone = [NSTimeZone systemTimeZone];
+        BOOL isDefinitelyTheSomeDay = startComponents.year == endComponents.year && startComponents.month == endComponents.month && startComponents.day == endComponents.day; // 日期一模一样
+        BOOL isTechnicallyTheSameDay = endComponents.hour == 0 && endComponents.minute == 0 && endComponents.second == 0 && ([endDate timeIntervalSince1970] - [startDate timeIntervalSince1970]) <= 86400; // 日期不一样结束时间为0点，且持续时间<=一天
+        if (isDefinitelyTheSomeDay || isTechnicallyTheSameDay) { // 开始和结束在同一天，直接记录 (存在原处)
+            recordToBeEditted.endTime = round([date timeIntervalSince1970]);
+            records[records.count -1] = recordToBeEditted;
+        } else { //开始和结束不在同一天，在00:00处切割分段
+            NSDateComponents *endComponent0 = [gregorian components:NSCalendarUnitYear | NSCalendarUnitMonth| NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute| NSCalendarUnitSecond fromDate:startDate];
+            endComponent0.hour = 23;
+            endComponent0.minute = 59;
+            endComponent0.second = 59;
+            long endTime0 = [[gregorian dateFromComponents:endComponent0] timeIntervalSince1970] + 1;
+            recordToBeEditted.endTime = endTime0;
+            records[records.count -1] = recordToBeEditted;
 
-                long startTimei = endTime0;
-                long endTimei = startTimei + 86400;
-                while (endTimei < end) {
-                    MirrorRecordModel *newRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:startTimei endTime:endTimei];
-                    [records addObject:newRecord];
-                    startTimei = startTimei + 86400;
-                    endTimei = startTimei + 86400;
-                }
-                MirrorRecordModel *newRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:startTimei endTime:end];
-                [records addObject:newRecord];// 最后一个分段（新插入）
+            long startTimei = endTime0;
+            long endTimei = startTimei + 86400;
+            while (endTimei < end) {
+                MirrorRecordModel *newRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:startTimei endTime:endTimei];
+                [records addObject:newRecord];
+                startTimei = startTimei + 86400;
+                endTimei = startTimei + 86400;
             }
-        } else {
-            [records removeObjectAtIndex:records.count-1];
+            MirrorRecordModel *newRecord = [[MirrorRecordModel alloc] initWithTitle:taskName startTime:startTimei endTime:end];
+            [records addObject:newRecord];// 最后一个分段（新插入）
         }
+    } else {
+        [records removeObjectAtIndex:records.count-1];
+    }
     [MirrorStorage saveMirrorRecords:records];
 }
 
