@@ -142,82 +142,82 @@
 
 + (UIColor *)mirror_lightPink
 {
-    return [UIColor colorWithRed:224/255.0 green:205/255.0 blue:207/255.0 alpha:1]; // 莫兰迪粉
+    return [UIColor colorWithRed:224/255.0 green:205/255.0 blue:207/255.0 alpha:1]; // 莫兰迪粉 #E0CDCF
 }
 
 + (UIColor *)mirror_darkPink
 {
-    return [UIColor colorWithRed:170/255.0 green:117/255.0 blue:120/255.0 alpha:1]; // 莫兰迪深粉
+    return [UIColor colorWithRed:170/255.0 green:117/255.0 blue:120/255.0 alpha:1]; // 莫兰迪深粉 #AA7578
 }
 
 + (UIColor *)mirror_lightOrange
 {
-    return [UIColor colorWithRed:233/255.0 green:217/255.0 blue:209/255.0 alpha:1]; // 莫兰迪橘
+    return [UIColor colorWithRed:233/255.0 green:217/255.0 blue:209/255.0 alpha:1]; // 莫兰迪橘 #E9D9D1
 }
 
 + (UIColor *)mirror_darkOrange
 {
-    return [UIColor colorWithRed:160/255.0 green:106/255.0 blue:80/255.0 alpha:1]; // 莫兰迪深橘
+    return [UIColor colorWithRed:160/255.0 green:106/255.0 blue:80/255.0 alpha:1]; // 莫兰迪深橘 #A06A50
 }
 
 + (UIColor *)mirror_lightYellow
 {
-    return [UIColor colorWithRed:243/255.0 green:230/255.0 blue:211/255.0 alpha:1]; // 莫兰迪黄
+    return [UIColor colorWithRed:243/255.0 green:230/255.0 blue:211/255.0 alpha:1]; // 莫兰迪黄 #F3E6D3
 }
 
 + (UIColor *)mirror_darkYellow
 {
-    return [UIColor colorWithRed:168/255.0 green:132/255.0 blue:98/255.0 alpha:1]; // 莫兰迪深黄（棕）
+    return [UIColor colorWithRed:168/255.0 green:132/255.0 blue:98/255.0 alpha:1]; // 莫兰迪深黄（棕）#A88462
 }
 
 + (UIColor *)mirror_lightGreen
 {
-    return [UIColor colorWithRed:224/255.0 green:235/255.0 blue:223/255.0 alpha:1]; // 莫兰迪绿
+    return [UIColor colorWithRed:224/255.0 green:235/255.0 blue:223/255.0 alpha:1]; // 莫兰迪绿 #E0EBDF
 }
 
 + (UIColor *)mirror_darkGreen
 {
-    return [UIColor colorWithRed:103/255.0 green:119/255.0 blue:91/255.0 alpha:1]; // 莫兰迪深绿
+    return [UIColor colorWithRed:103/255.0 green:119/255.0 blue:91/255.0 alpha:1]; // 莫兰迪深绿 #67755B
 }
 
 + (UIColor *)mirror_lightTeal
 {
-    return [UIColor colorWithRed:212/255.0 green:231/255.0 blue:234/255.0 alpha:1]; // 莫兰迪青
+    return [UIColor colorWithRed:212/255.0 green:231/255.0 blue:234/255.0 alpha:1]; // 莫兰迪青 #D4E7EA
 }
 
 + (UIColor *)mirror_darkTeal
 {
-    return [UIColor colorWithRed:62/255.0 green:130/255.0 blue:141/255.0 alpha:1]; // 莫兰迪深青
+    return [UIColor colorWithRed:62/255.0 green:130/255.0 blue:141/255.0 alpha:1]; // 莫兰迪深青 #3E828D
 }
 
 + (UIColor *)mirror_lightBlue
 {
-    return [UIColor colorWithRed:198/255.0 green:208/255.0 blue:220/255.0 alpha:1]; // 莫兰迪蓝
+    return [UIColor colorWithRed:198/255.0 green:208/255.0 blue:220/255.0 alpha:1]; // 莫兰迪蓝 #C6D0DC
 }
 
 + (UIColor *)mirror_darkBlue
 {
-    return [UIColor colorWithRed:104/255.0 green:120/255.0 blue:137/255.0 alpha:1]; // 莫兰迪深蓝
+    return [UIColor colorWithRed:104/255.0 green:120/255.0 blue:137/255.0 alpha:1]; // 莫兰迪深蓝 #687889
 }
 
 + (UIColor *)mirror_lightPurple
 {
-    return [UIColor colorWithRed:216/255.0 green:207/255.0 blue:226/255.0 alpha:1]; // 莫兰迪紫
+    return [UIColor colorWithRed:216/255.0 green:207/255.0 blue:226/255.0 alpha:1]; // 莫兰迪紫 #D8CFE2
 }
 
 + (UIColor *)mirror_darkPurple
 {
-    return [UIColor colorWithRed:105/255.0 green:100/255.0 blue:123/255.0 alpha:1]; // 莫兰迪深紫
+    return [UIColor colorWithRed:105/255.0 green:100/255.0 blue:123/255.0 alpha:1]; // 莫兰迪深紫 #69647B
 }
 
 + (UIColor *)mirror_lightGray
 {
-    return [UIColor colorWithRed:218/255.0 green:218/255.0 blue:218/255.0 alpha:1]; // 莫兰迪灰
+    return [UIColor colorWithRed:218/255.0 green:218/255.0 blue:218/255.0 alpha:1]; // 莫兰迪灰 #DADADA
 }
 
 + (UIColor *)mirror_darkGray
 {
-    return [UIColor colorWithRed:104/255.0 green:104/255.0 blue:104/255.0 alpha:1]; // 莫兰迪深灰
+    return [UIColor colorWithRed:104/255.0 green:104/255.0 blue:104/255.0 alpha:1]; // 莫兰迪深灰 #686868
 }
 
 @end

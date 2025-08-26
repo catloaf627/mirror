@@ -9,6 +9,7 @@ target 'Mirror' do
 
   # Add your pods here ↓
   pod 'Masonry', '~> 1.1'
+  pod 'LookinServer', :configurations => ['Debug']
 end
 
 # --- Why this block is needed ---
