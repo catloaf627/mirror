@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AllTasksViewController : UIViewController
+@interface AllTasksViewController_dep : UIViewController
 
 @end
 

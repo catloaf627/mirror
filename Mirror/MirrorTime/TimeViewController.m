@@ -22,9 +22,11 @@
 #import "SettingsViewController.h"
 #import "LeftAnimation.h"
 #import "CellAnimation.h"
-#import "AllTasksViewController.h"
+#import "AllTasksViewController_dep.h"
 #import "MirrorLanguage.h"
 #import "HintFooter.h"
+
+#import "Mirror-Swift.h"
 
 static CGFloat const kCellSpacing = 16; // cell之间的上下间距
 static CGFloat const kCollectionViewPadding = 20; // 左右留白
@@ -140,7 +142,8 @@ static CGFloat const kCollectionViewPadding = 20; // 左右留白
 
 - (void)goToAllTasks
 {
-    [self.navigationController pushViewController:[AllTasksViewController new] animated:YES];
+    [self.navigationController pushViewController:[AllTasksViewController_dep new] animated:YES];
+//    [self.navigationController pushViewController:[AllTasksViewController new] animated:YES]; // gizmo
 }
 
 
